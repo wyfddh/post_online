@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tj720.dao.PostLoginMapper">
+
+    <resultMap id="BaseResultMap" type="com.tj720.model.common.pubuser.PubUser" >
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="user_id" property="userId" jdbcType="VARCHAR" />
+        <result column="user_name" property="userName" jdbcType="VARCHAR" />
+        <result column="sex" property="sex" jdbcType="VARCHAR" />
+        <result column="birthday" property="birthday" jdbcType="TIMESTAMP" />
+        <result column="province_id" property="provinceId" jdbcType="VARCHAR" />
+        <result column="city_id" property="cityId" jdbcType="VARCHAR" />
+        <result column="job" property="job" jdbcType="VARCHAR" />
+        <result column="single_name" property="singleName" jdbcType="VARCHAR" />
+        <result column="phone" property="phone" jdbcType="VARCHAR" />
+        <result column="password" property="password" jdbcType="VARCHAR" />
+        <result column="sure_password" property="surePassword" jdbcType="VARCHAR" />
+        <result column="qq_openid" property="qqOpenid" jdbcType="VARCHAR" />
+        <result column="weixin_unionid" property="weixinUnionid" jdbcType="VARCHAR" />
+        <result column="avatarUrl" property="avatarurl" jdbcType="VARCHAR" />
+        <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="VARCHAR" />
+        <result column="updater" property="updater" jdbcType="VARCHAR" />
+        <result column="sequence" property="sequence" jdbcType="INTEGER" />
+        <result column="status" property="status" jdbcType="INTEGER" />
+        <result column="isdelete" property="isdelete" jdbcType="INTEGER" />
+        <result column="other1" property="other1" jdbcType="VARCHAR" />
+        <result column="other2" property="other2" jdbcType="VARCHAR" />
+        <result column="other3" property="other3" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="getUserByUserNameOrPhone" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+          *
+        from post_pub_user
+        where user_name = #{loginName} or phone = #{loginName}
+        and status = '1'
+    </select>
+
+    <select id="getUserByPhone" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+          *
+        from post_pub_user
+        where phone = #{phone}
+        and status = '1'
+    </select>
+
+    <select id="getUserByUserName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select
+          *
+        from post_pub_user
+        where user_name = #{userName}
+        and status = '1'
+    </select>
+
+    <insert id="insertPubUser" parameterType="com.tj720.model.common.pubuser.PubUser">
+        insert into post_pub_user(id, user_name, birthday, phone, password, sure_password, create_time, update_time, creator, updater)
+        values (#{id}, #{userName}, #{birthday}, #{phone}, #{password}, #{surePassword}, now(), now(), #{creator}, #{updater})
+    </insert>
+
+    <update id="updatePubUserPhone" parameterType="com.tj720.model.common.pubuser.PubUser">
+        update post_pub_user set
+        phone = #{phone}, update_time = now(), updater = #{updater}
+        where id = #{id} and isdelete = 0 and status = 1
+    </update>
+
+    <update id="changePubUserInfo" parameterType="com.tj720.model.common.pubuser.PubUser">
+        update post_pub_user set
+        update_time = now(), updater = #{updater}
+        <if test="null != avatarurl and avatarurl != ''">,avatarUrl = #{avatarurl}</if>
+        <if test="null != sex and sex != ''">,sex = #{sex}</if>
+        <if test="null != birthday">, birthday = #{birthday}</if>
+        <if test="null != provinceId and provinceId != ''">, province_id = #{provinceId}</if>
+        <if test="null != cityId and cityId != ''">, city_id = #{cityId}</if>
+        <if test="null != job and job != ''">, job = #{job}</if>
+        <if test="null != singleName ">, single_name = #{singleName}</if>
+        where id = #{id}
+        and  status = '1'
+    </update>
+
+    <update id="updatePubUserPassword" parameterType="com.tj720.model.common.pubuser.PubUserDto">
+        update post_pub_user set
+        password = #{password}, sure_password = #{surePassword}, updater = #{updater}, update_time = now()
+        where id = #{id}
+        and  status = '1'
+    </update>
+
+    <select id="getUserById" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select * from post_pub_user
+        where id = #{id}
+        and status = '1'
+
+    </select>
+
+    <select id="getCollectCountByTypeAndUserId" parameterType="com.tj720.model.common.postwebcollect.PostWebCollect" resultType="java.lang.Integer">
+        select count(1)
+        from post_web_collect
+        where user_id = #{userId} and type = #{type}
+        and status = 1
+    </select>
+    <!--查询预约-->
+    <select id="getBookManage" resultType="java.lang.Integer">
+        select count(1)
+        from post_booking_manage
+        where user_id = #{userId}
+    </select>
+    <!--查询策展-->
+    <select id="getPublicCurator" resultType="java.lang.Integer">
+        select count(1)
+        from post_theme_show where user_id = #{userId}
+        and data_state = 1 and theme_source = '2'
+    </select>
+</mapper>

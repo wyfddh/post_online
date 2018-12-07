@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tj720.dao.PostVolunteerActivitiesMapper">
+    <sql id="Base_Column">
+        a.id                          id,
+        a.activities_name             activitiesName,
+        a.activities_place            activitiesPlace,
+        a.start_time                  startTime,
+        a.end_time                    endTime,
+        a.end_sign_time               endSignTime,
+        a.need_number                 needNumber,
+        a.sign_require                signRequire,
+        a.cover_id                    coverId,
+        a.remark                      remark,
+        a.isdelete                    isdelete,
+        a.create_by                   createBy,
+        a.create_date                 createDate,
+        a.update_by                   updateBy,
+        a.update_date                 updateDate
+    </sql>
+
+    <select id="getActivitiesCount" parameterType="com.tj720.model.common.volunteer.PostVolunteerActivitiesDto" resultType="java.lang.Integer">
+        select count(1)
+        from post_volunteer_activities
+        where isdelete = 0 
+        <if test="null != activitiesStatus and activitiesStatus == 1">
+            and now() &lt;= end_time
+        </if>
+        <if test="null != activitiesStatus and activitiesStatus == 2">
+            and now() &gt; end_time
+        </if>
+        <if test="null != activitiesName and activitiesName !=''">
+            and activities_name like concat('%', #{activitiesName}, '%')
+        </if>
+    </select>
+
+    <select id="getActivitiesList" parameterType="com.tj720.model.common.volunteer.PostVolunteerActivitiesDto" resultType="com.tj720.model.common.volunteer.PostVolunteerActivitiesVo">
+        select
+        <include refid="Base_Column"/>
+        from post_volunteer_activities a
+        where isdelete = 0
+        <if test="null != activitiesStatus and activitiesStatus == 1">
+            and now() &lt;= a.end_time
+        </if>
+        <if test="null != activitiesStatus and activitiesStatus == 2">
+            and now() &gt; a.end_time
+        </if>
+        <if test="null != activitiesName and activitiesName !=''">
+            and a.activities_name like concat('%', #{activitiesName}, '%')
+        </if>
+
+        <if test="orderBy == 1" >
+            order by update_date desc
+        </if>
+        <if test="orderBy == 2" >
+            order by create_date desc
+        </if>
+        <if test="start != null and size != null">
+            limit #{start},#{size}
+        </if>
+    </select>
+
+    <select id="getActivitiesListByUser" resultType="com.tj720.model.common.volunteer.PostVolunteerActivitiesVo">
+        select
+        <include refid="Base_Column"/>
+        from post_volunteer_activities a,post_volunteer_apply p
+        where a.isdelete = 0
+        and p.activities_id = a.id
+        <if test="userId != null and userId != ''">
+         and  p.user_id = #{userId}
+        </if>
+        order by a.create_date desc
+        <if test="start != null and size != null">
+            limit #{start},#{size}
+        </if>
+    </select>
+
+    <select id="countActivitiesListByUser" resultType="java.lang.Integer">
+        select
+        count(1)
+        from post_volunteer_activities a,post_volunteer_apply p
+        where a.isdelete = 0
+        and p.activities_id = a.id
+        <if test="userId != null and userId != ''">
+          and  p.user_id = #{userId}
+        </if>
+    </select>
+
+    <insert id="addActivities" parameterType="com.tj720.model.common.volunteer.PostVolunteerActivities">
+        insert into post_volunteer_activities(id, activities_name, activities_place, start_time, end_time, end_sign_time, need_number, 
+        <if test="null != signRequire and signRequire != ''">
+          sign_require,
+        </if>
+        cover_id,
+        <if test="null != remark and remark != ''">
+          remark,
+        </if>
+        create_by, create_date, update_by, update_date)
+        values (#{id}, #{activitiesName}, #{activitiesPlace}, #{startTime}, #{endTime}, #{endSignTime}, #{needNumber},
+        <if test="null != signRequire and signRequire != ''">
+          #{signRequire},
+        </if>
+        #{coverId},
+        <if test="null != remark and remark != ''">
+          #{remark},
+        </if>
+        #{createBy}, now(), #{updateBy}, now())
+    </insert>
+
+    <select id="getActivitiesById" parameterType="java.lang.String" resultType="com.tj720.model.common.volunteer.PostVolunteerActivitiesVo">
+        select
+        <include refid="Base_Column"/>
+        from post_volunteer_activities a
+        where isdelete = 0 and id = #{id}
+    </select>
+
+    <update id="updateActivities" parameterType="com.tj720.model.common.volunteer.PostVolunteerActivities">
+        update post_volunteer_activities set
+            activities_name = #{activitiesName},
+            activities_place = #{activitiesPlace},
+            start_time = #{startTime},
+            end_time = #{endTime},
+            end_sign_time = #{endSignTime},
+            need_number = #{needNumber},
+            <if test="null != signRequire">
+                sign_require = #{signRequire},
+            </if>
+            cover_id = #{coverId},
+            <if test="null != remark">
+                remark = #{remark},
+            </if>
+            update_date = now(), update_by = #{updateBy}
+        where id = #{id}
+    </update>
+
+    
+    <update id="updateByPrimaryKeySelective"  parameterType="com.tj720.model.common.volunteer.PostVolunteerActivities">
+        update post_volunteer_activities
+        <set>
+            <if test="activitiesName != null">
+                activities_name = #{activitiesName,jdbcType=VARCHAR},
+            </if>
+            <if test="activitiesPlace != null">
+                activities_place = #{activitiesPlace,jdbcType=VARCHAR},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endTime != null">
+                end_time = #{endTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="endSignTime != null">
+                end_sign_time = #{endSignTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="needNumber != null">
+                need_number = #{needNumber,jdbcType=INTEGER},
+            </if>
+            <if test="signRequire != null">
+                sign_require = #{signRequire,jdbcType=VARCHAR},
+            </if>
+            <if test="coverId != null">
+                cover_id = #{coverId,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="isdelete != null">
+                isdelete = #{isdelete,jdbcType=BIT},
+            </if>
+            <if test="createBy != null">
+                create_by = #{createBy,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate != null">
+                create_date = #{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateBy != null">
+                update_by = #{updateBy,jdbcType=VARCHAR},
+            </if>
+            <if test="updateDate != null">
+                update_date = #{updateDate,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    
+    
+
+    <!--web端志愿者查询列表-->
+    <select id="getWebActivitiesList" parameterType="com.tj720.model.common.volunteer.PostVolunteerActivitiesDto" resultType="com.tj720.model.common.volunteer.PostVolunteerActivitiesVo">
+        select
+        <include refid="Base_Column"/>
+        from post_volunteer_activities a
+        where isdelete = 0
+        <if test="null != activitiesStatus and activitiesStatus == 1">
+            and now() &lt;= a.end_time
+        </if>
+        <if test="null != activitiesStatus and activitiesStatus == 2">
+            and now() &gt; a.end_time
+        </if>
+        <if test="null != activitiesName and activitiesName !=''">
+            and a.activities_name like concat('%', #{activitiesName}, '%')
+        </if>
+
+        <if test="orderBy == 1" >
+            order by update_date desc
+        </if>
+        <if test="orderBy == 2" >
+            order by create_date desc
+        </if>
+        <if test="start != null and size != null">
+            limit #{start},#{size}
+        </if>
+    </select>
+
+
+    <select id="getWebActivitiesCount" parameterType="com.tj720.model.common.volunteer.PostVolunteerActivitiesDto"
+            resultType="java.lang.Integer">
+        select count(1)
+        from post_volunteer_activities
+        where isdelete = 0
+        <if test="null != activitiesStatus and activitiesStatus == 1">
+            and now() &lt;= end_time
+        </if>
+        <if test="null != activitiesStatus and activitiesStatus == 2">
+            and now() &gt; end_time
+        </if>
+        <if test="null != activitiesName and activitiesName !=''">
+            and activities_name like concat('%', #{activitiesName}, '%')
+        </if>
+    </select>
+
+    <select id="countActivitiesJoined" parameterType="java.util.Map" resultType="java.lang.Integer">
+        select
+          count(1)
+        from post_volunteer_apply
+        where activities_id = #{activitiesId} and apply_phone = #{phone} and isdelete = 0
+    </select>
+
+
+</mapper>

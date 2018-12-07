@@ -1,0 +1,157 @@
+
+<html>
+<head>
+    <script src="../../../statics/libs/jquery-1.10.2.min.js"></script>
+    <link rel="stylesheet" href="../../../statics/css/font-awesome.min.css">
+    <!--layui ztree样式-->
+    <link rel="stylesheet" href="../../../statics/plugins/layui/css/layui.css" media="all">
+    <script src="../../../statics/plugins/layer/layer.js"></script>
+    <script src="../../../statics/plugins/layui/layui.js"></script>
+    <!--样式-->
+    <link rel="stylesheet" href="../../../common/css/cyStyle.css">
+    <link rel="stylesheet" href="../../../common/css/cyType.css">
+    <link rel="stylesheet" href="../../../statics/css/public/cezhan/videoDetail.css">
+    <script src="../../../statics/plugins/editgrid/plugin/My97DatePicker/WdatePicker.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../../../statics/plugins/echarts/echarts.js"></script>
+
+    <style type="text/css">
+        .img1 img {
+            width: 157px;
+            height: 91px;
+        }
+    </style>
+
+
+</head>
+<body>
+<div class="layui-card">
+    <form action=""  id="curatorForm"  class="layui-form">
+        <div class="layui-card-header">
+            <div class="flexLeft">
+                <span class="carFont">策展信息</span>
+            </div>
+        </div>
+
+        <div class="layui-card-body">
+
+            <div class="cardOne mt24">
+                <div class="title"><img src="" alt=""><span>基本信息</span></div>
+                <div class="OneBody mt24">
+                    <div class="oneHeard">
+                        <div class="oneLeft">
+                            <span>操作人：</span>
+                            <span id="userName">admin</span>
+                            <span >|</span>
+                            <span id="orgName">系统管理员</span>
+                        </div>
+                        <div class="oneRight">
+                            <span>日期：</span>
+                            <span id="nowDate">2018-8-21</span>
+                        </div>
+                    </div>
+                    <div class="oneBody mt24">
+                        <ul class="myTable">
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*主题展名称</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" id="themeName" name="themeName" required  lay-verify="required"
+                                           placeholder="请输入标题" autocomplete="off" class="layui-input">
+
+                                </div>
+                            </li>
+
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*主题展描述</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <textarea type="text" id="themeDescribe" name="themeDescribe" required  placeholder="请输入标题"
+                                              autocomplete="off" class="layui-input" ></textarea>
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR myheight">*主题展图片</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6 pl30" id="picUpload"
+                                     style="height: 136px">
+                                    <div class="picDiv1"></div>
+                                    <a class="uploadBtn">
+                                        <span class="uploadIcon"></span>
+                                        <span class="uploadTxt">上传图片</span>
+                                        <span class="uploadTip">图片建议尺寸为600*450px</span>
+                                    </a>
+                                </div>
+                                <!--
+                                <div class="layui-form-item m0 layui-col-md3 layui-col-sm3 pl30">
+                                    <a  id="picUpload" href="javascript:void (0)" class="imgs"></a>
+                                </div>-->
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="cardOne mt24">
+            <div class="title"><img src="" alt=""><span>关联藏品</span></div>
+
+            <div class="OneBody">
+                <div class="mt24">
+                    <p class="myfont">已添加标注信息如下</p>
+                    <div class="layui-row" style="height: 250px">
+                        <div class="layui-col-md12 layui-col-sm12">
+                            <table class="layui-table" id="collectInfo" lay-filter="collectInfo"></table>
+                            <script type="text/html" id="barDemo">
+                                <a class="layui-btn layui-btn-xs" lay-event="edit">查看</a>
+                                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            <div class="cardOne">
+                <div class="title"><img src="" alt=""><span>审核</span></div>
+            <div class="OneBody mt24">
+                <div class="oneHeard">
+                    <div class="oneLeft">
+                        <span>操作人：</span>
+                        <span id="userName1">admin</span>
+                        <span >|</span>
+                        <span id="orgName1">系统管理员</span>
+                    </div>
+                    <div class="oneRight">
+                        <span>日期：</span>
+                        <span id="nowDate1">2018-8-21</span>
+                    </div>
+                </div>
+                <div class="oneBody" >
+                    <ul class="myTable">
+                        <li class="layui-row">
+                            <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*操作</div>
+                            <div class="layui-form-item  layui-col-md6 layui-col-sm6 m0 pl30">
+                                <input type="radio" id="result1" name="processResult" value="1" title="采用">
+                                <input type="radio" id="result0"  name="processResult" value="0" title="不采用">
+                            </div>
+                        </li>
+
+                        <li class="layui-row">
+                            <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">备注</div>
+                            <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                <input type="text" name="remark" id="remark" required  lay-verify="required"
+                                       placeholder="请输入标题"
+                                       autocomplete="off" class="layui-input">
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            </div>
+
+
+
+        </div>
+    </form>
+</div>
+
+<script src="../../../statics/js/component.js"></script>
+<script src="../../../statics/js/common.js"></script>
+<script src="../../../statics/js/public/cezhan/cezhanDetail.js"></script>
+</body>
+</html>

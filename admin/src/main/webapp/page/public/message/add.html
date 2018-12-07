@@ -1,0 +1,129 @@
+
+<html>
+<head>
+    <script src="../../../statics/libs/jquery-1.10.2.min.js"></script>
+    <link rel="stylesheet" href="../../../statics/css/font-awesome.min.css">
+    <!--layui ztree样式-->
+    <link rel="stylesheet" href="../../../statics/plugins/layui/css/layui.css" media="all">
+    <script src="../../../statics/plugins/layer/layer.js"></script>
+    <script src="../../../statics/plugins/layui/layui.js"></script>
+    <!--样式-->
+    <link rel="stylesheet" href="../../../common/css/cyStyle.css">
+    <link rel="stylesheet" href="../../../common/css/cyType.css">
+    <link rel="stylesheet" href="../../../statics/css/public/message/videoDetail.css">
+    <link rel="stylesheet" href="../../../common/css/videoDetail_add.css">
+    <script src="../../../statics/plugins/editgrid/plugin/My97DatePicker/WdatePicker.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="../../../statics/plugins/echarts/echarts.js"></script>
+
+    <style type="text/css">
+        .layui-layedit{
+            margin-top: 10px;
+        }
+        .layui-card:nth-child(1) .layui-form-item {
+            padding: 10px;
+        }
+       .tableTR{
+            width:240px!important;
+        }
+        .layui-row input{
+            margin: 0px !important;
+        }
+    </style>
+
+</head>
+<body>
+<div class="layui-card">
+    <form action="" id="infoForm" class="layui-form">
+        <div class="layui-card-header">
+            <div class="flexLeft">
+                <span class="carFont">资讯内容</span>
+            </div>
+            <!--<div class=" flexRight ">
+                <button class="layui-btn layui-btn-green myBtn">
+                    导出数据
+                </button>
+                <button class="layui-btn searchBtn myBtn active" >
+                    最近7天
+                </button>
+                <button class="layui-btn searchBtn myBtn">
+                    最近30天
+                </button>
+                <div class="layui-inline" style="height: 32px">
+                    <input readonly="readonly" type="text" name="endDate" id="endDate" maxlength="20" value=""
+                           placeholder="请选择截止时间" class="layui-input Wdate"
+                           onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',readOnly:true,minDate:'#F{$dp.$D(\'startDate\')}',dchanging:cDayFunc})">
+                </div>
+            </div>-->
+        </div>
+
+        <div class="layui-card-body">
+
+            <div class="cardOne mt24">
+
+                <div class="oneBody">
+                    <ul class="myTable">
+                        <li class="layui-row">
+                            <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*资讯主题</div>
+                            <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                <input type="text" id="informationTheme" name="informationTheme" required  lay-verify="required"
+                                       placeholder="请输入资讯主题" autocomplete="off" class="layui-input">
+                            </div>
+                        </li>
+
+                        <li class="layui-row">
+                            <div class="layui-inline layui-col-md2  layui-col-sm2 tableTR">*资讯类型</div>
+                            <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                <select name="informationType"  id="informationType" lay-verify="required" placeholder="请输入资讯类型">
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                        </li>
+                        <li class="layui-row picture">
+                            <div class="layui-inline layui-col-md2  layui-col-sm2 tableTR myheight">*资讯封面</div>
+                            <div class="layui-form-item m0 layui-col-md6 layui-col-sm6 pl30" id="picUpload" lay-verify="img-required">
+                                <div class="picDiv"></div>
+                                <a class="uploadBtn">
+                                    <span class="uploadIcon"></span>
+                                    <span class="uploadTxt">上传图片</span>
+                                    <span class="uploadTip">图片建议尺寸为600*450px</span>
+                                </a>
+                            </div>
+                        </li>
+                        <li class="layui-row" style="height:370px;">
+                            <div class="layui-form-item m0 layui-col-md10 layui-col-sm10"
+                                 style="height:300px;width:100%;" lay-verify="edit-required">
+                                <textarea id="informationContent" name="informationContent"></textarea>
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="layui-hide">
+            <input type="text" name="id" id="id">
+            <input type="text" id="type" value="1">
+            <input type="text" id="picids" name="picids">
+        </div>
+
+
+        <div class="layui-form-item mt34">
+            <div class="layui-input-block bodyBtn">
+                <button class="layui-btn" lay-submit lay-filter="formDemo">保存</button>
+                <button type="reset" class="layui-btn layui-btn-primary">取消</button>
+            </div>
+        </div>
+</div>
+</form>
+</div>
+
+<script type="text/javascript" src="../../../statics/plugins/layui/layui.js"></script>
+<script src="../../../statics/js/component.js"></script>
+<script src="../../../statics/js/common.js"></script>
+<script type="text/javascript" src="../../../statics/upload/uploadSingleImg.js"></script>
+<script src="../../../statics/js/public/message/messageAdd.js"></script>
+</body>
+</html>

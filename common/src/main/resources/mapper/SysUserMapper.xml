@@ -1,0 +1,569 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tj720.dao.SysUserMapper" >
+    <resultMap id="BaseResultMap" type="com.tj720.model.common.system.user.SysUser" >
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="user_name" property="userName" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="email" property="email" jdbcType="VARCHAR" />
+        <result column="phone" property="phone" jdbcType="VARCHAR" />
+        <result column="password" property="password" jdbcType="VARCHAR" />
+        <result column="sure_password" property="surePassword" jdbcType="VARCHAR" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="VARCHAR" />
+        <result column="updater" property="updater" jdbcType="VARCHAR" />
+        <result column="sequence" property="sequence" jdbcType="INTEGER" />
+        <result column="status" property="status" jdbcType="INTEGER" />
+        <result column="isdelete" property="isdelete" jdbcType="INTEGER" />
+        <result column="other1" property="other1" jdbcType="VARCHAR" />
+        <result column="other2" property="other2" jdbcType="VARCHAR" />
+        <result column="other3" property="other3" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <!--<sql id="Example_Where_Clause" >-->
+        <!--<where >-->
+            <!--<foreach collection="oredCriteria" item="criteria" separator="or" >-->
+                <!--<if test="criteria.valid" >-->
+                    <!--<trim prefix="(" suffix=")" prefixOverrides="and" >-->
+                        <!--<foreach collection="criteria.criteria" item="criterion" >-->
+                            <!--<choose >-->
+                                <!--<when test="criterion.noValue" >-->
+                                    <!--and ${criterion.condition}-->
+                                <!--</when>-->
+                                <!--<when test="criterion.singleValue" >-->
+                                    <!--and ${criterion.condition} #{criterion.value}-->
+                                <!--</when>-->
+                                <!--<when test="criterion.betweenValue" >-->
+                                    <!--and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}-->
+                                <!--</when>-->
+                                <!--<when test="criterion.listValue" >-->
+                                    <!--and ${criterion.condition}-->
+                                    <!--<foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >-->
+                                        <!--#{listItem}-->
+                                    <!--</foreach>-->
+                                <!--</when>-->
+                            <!--</choose>-->
+                        <!--</foreach>-->
+                    <!--</trim>-->
+                <!--</if>-->
+            <!--</foreach>-->
+        <!--</where>-->
+    <!--</sql>-->
+
+    <!--<sql id="Update_By_Example_Where_Clause" >-->
+        <!--<where >-->
+            <!--<foreach collection="example.oredCriteria" item="criteria" separator="or" >-->
+                <!--<if test="criteria.valid" >-->
+                    <!--<trim prefix="(" suffix=")" prefixOverrides="and" >-->
+                        <!--<foreach collection="criteria.criteria" item="criterion" >-->
+                            <!--<choose >-->
+                                <!--<when test="criterion.noValue" >-->
+                                    <!--and ${criterion.condition}-->
+                                <!--</when>-->
+                                <!--<when test="criterion.singleValue" >-->
+                                    <!--and ${criterion.condition} #{criterion.value}-->
+                                <!--</when>-->
+                                <!--<when test="criterion.betweenValue" >-->
+                                    <!--and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}-->
+                                <!--</when>-->
+                                <!--<when test="criterion.listValue" >-->
+                                    <!--and ${criterion.condition}-->
+                                    <!--<foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >-->
+                                        <!--#{listItem}-->
+                                    <!--</foreach>-->
+                                <!--</when>-->
+                            <!--</choose>-->
+                        <!--</foreach>-->
+                    <!--</trim>-->
+                <!--</if>-->
+            <!--</foreach>-->
+        <!--</where>-->
+    <!--</sql>-->
+
+    <sql id="Base_Column_List" >
+        id, user_name, name, email, phone, password, sure_password, remark, create_time,
+        update_time, creator, updater, sequence, status, isdelete, other1, other2, other3
+    </sql>
+
+    <!--<select id="selectByExample" resultMap="BaseResultMap" parameterType="com.tj720.model.common.system.user.SysUserExample" >-->
+        <!--select-->
+        <!--<if test="distinct" >-->
+            <!--distinct-->
+        <!--</if>-->
+        <!--<include refid="Base_Column_List" />-->
+        <!--from sys_user-->
+        <!--<if test="_parameter != null" >-->
+            <!--<include refid="Example_Where_Clause" />-->
+        <!--</if>-->
+        <!--<if test="orderByClause != null" >-->
+            <!--order by '${orderByClause}'-->
+        <!--</if>-->
+    <!--</select>-->
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from sys_user
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from sys_user
+        where id = #{id,jdbcType=VARCHAR}
+    </delete>
+    <!--<delete id="deleteByExample" parameterType="com.tj720.model.common.system.user.SysUserExample" >-->
+        <!--delete from sys_user-->
+        <!--<if test="_parameter != null" >-->
+            <!--<include refid="Example_Where_Clause" />-->
+        <!--</if>-->
+    <!--</delete>-->
+    <insert id="insert" parameterType="com.tj720.model.common.system.user.SysUser" >
+        insert into sys_user (id, user_name, name,
+        email, phone, password,
+        sure_password, remark, create_time,
+        update_time, creator, updater,
+        sequence, status, isdelete,
+        other1, other2, other3
+        )
+        values (#{id,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+        #{email,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR},
+        #{surePassword,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+        #{updateTime,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR},
+        #{sequence,jdbcType=INTEGER}, #{status,jdbcType=INTEGER}, #{isdelete,jdbcType=INTEGER},
+        #{other1,jdbcType=VARCHAR}, #{other2,jdbcType=VARCHAR}, #{other3,jdbcType=VARCHAR}
+        )
+    </insert>
+    <insert id="insertSelective" parameterType="com.tj720.model.common.system.user.SysUser" >
+        insert into sys_user
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="userName != null" >
+                user_name,
+            </if>
+            <if test="name != null" >
+                name,
+            </if>
+            <if test="email != null" >
+                email,
+            </if>
+            <if test="phone != null" >
+                phone,
+            </if>
+            <if test="password != null" >
+                password,
+            </if>
+            <if test="surePassword != null" >
+                sure_password,
+            </if>
+            <if test="remark != null" >
+                remark,
+            </if>
+            <if test="createTime != null" >
+                create_time,
+            </if>
+            <if test="updateTime != null" >
+                update_time,
+            </if>
+            <if test="creator != null" >
+                creator,
+            </if>
+            <if test="updater != null" >
+                updater,
+            </if>
+            <if test="sequence != null" >
+                sequence,
+            </if>
+            <if test="status != null" >
+                status,
+            </if>
+            <if test="isdelete != null" >
+                isdelete,
+            </if>
+            <if test="other1 != null" >
+                other1,
+            </if>
+            <if test="other2 != null" >
+                other2,
+            </if>
+            <if test="other3 != null" >
+                other3,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="userName != null" >
+                #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null" >
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null" >
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null" >
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null" >
+                #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="surePassword != null" >
+                #{surePassword,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creator != null" >
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="updater != null" >
+                #{updater,jdbcType=VARCHAR},
+            </if>
+            <if test="sequence != null" >
+                #{sequence,jdbcType=INTEGER},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="isdelete != null" >
+                #{isdelete,jdbcType=INTEGER},
+            </if>
+            <if test="other1 != null" >
+                #{other1,jdbcType=VARCHAR},
+            </if>
+            <if test="other2 != null" >
+                #{other2,jdbcType=VARCHAR},
+            </if>
+            <if test="other3 != null" >
+                #{other3,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <!--<select id="countByExample" parameterType="com.tj720.model.common.system.user.SysUserExample" resultType="java.lang.Integer" >-->
+        <!--select count(*) from sys_user-->
+        <!--<if test="_parameter != null" >-->
+            <!--<include refid="Example_Where_Clause" />-->
+        <!--</if>-->
+    <!--</select>-->
+    <!--<update id="updateByExampleSelective" parameterType="map" >-->
+        <!--update sys_user-->
+        <!--<set >-->
+            <!--<if test="record.id != null" >-->
+                <!--id = #{record.id,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="record.userName != null" >-->
+                <!--user_name = #{record.userName,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="record.name != null" >-->
+                <!--name = #{record.name,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="record.email != null" >-->
+                <!--email = #{record.email,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="record.phone != null" >-->
+                <!--phone = #{record.phone,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="record.password != null" >-->
+                <!--password = #{record.password,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="record.surePassword != null" >-->
+                <!--sure_password = #{record.surePassword,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="record.remark != null" >-->
+                <!--remark = #{record.remark,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="record.createTime != null" >-->
+                <!--create_time = #{record.createTime,jdbcType=TIMESTAMP},-->
+            <!--</if>-->
+            <!--<if test="record.updateTime != null" >-->
+                <!--update_time = #{record.updateTime,jdbcType=TIMESTAMP},-->
+            <!--</if>-->
+            <!--<if test="record.creator != null" >-->
+                <!--creator = #{record.creator,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="record.updater != null" >-->
+                <!--updater = #{record.updater,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="record.sequence != null" >-->
+                <!--sequence = #{record.sequence,jdbcType=INTEGER},-->
+            <!--</if>-->
+            <!--<if test="record.status != null" >-->
+                <!--status = #{record.status,jdbcType=INTEGER},-->
+            <!--</if>-->
+            <!--<if test="record.isdelete != null" >-->
+                <!--isdelete = #{record.isdelete,jdbcType=INTEGER},-->
+            <!--</if>-->
+            <!--<if test="record.other1 != null" >-->
+                <!--other1 = #{record.other1,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="record.other2 != null" >-->
+                <!--other2 = #{record.other2,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="record.other3 != null" >-->
+                <!--other3 = #{record.other3,jdbcType=VARCHAR},-->
+            <!--</if>-->
+        <!--</set>-->
+        <!--<if test="_parameter != null" >-->
+            <!--<include refid="Update_By_Example_Where_Clause" />-->
+        <!--</if>-->
+    <!--</update>-->
+    <!--<update id="updateByExample" parameterType="map" >-->
+        <!--update sys_user-->
+        <!--set id = #{record.id,jdbcType=VARCHAR},-->
+        <!--user_name = #{record.userName,jdbcType=VARCHAR},-->
+        <!--name = #{record.name,jdbcType=VARCHAR},-->
+        <!--email = #{record.email,jdbcType=VARCHAR},-->
+        <!--phone = #{record.phone,jdbcType=VARCHAR},-->
+        <!--password = #{record.password,jdbcType=VARCHAR},-->
+        <!--sure_password = #{record.surePassword,jdbcType=VARCHAR},-->
+        <!--remark = #{record.remark,jdbcType=VARCHAR},-->
+        <!--create_time = #{record.createTime,jdbcType=TIMESTAMP},-->
+        <!--update_time = #{record.updateTime,jdbcType=TIMESTAMP},-->
+        <!--creator = #{record.creator,jdbcType=VARCHAR},-->
+        <!--updater = #{record.updater,jdbcType=VARCHAR},-->
+        <!--sequence = #{record.sequence,jdbcType=INTEGER},-->
+        <!--status = #{record.status,jdbcType=INTEGER},-->
+        <!--isdelete = #{record.isdelete,jdbcType=INTEGER},-->
+        <!--other1 = #{record.other1,jdbcType=VARCHAR},-->
+        <!--other2 = #{record.other2,jdbcType=VARCHAR},-->
+        <!--other3 = #{record.other3,jdbcType=VARCHAR}-->
+        <!--<if test="_parameter != null" >-->
+            <!--<include refid="Update_By_Example_Where_Clause" />-->
+        <!--</if>-->
+    <!--</update>-->
+
+
+    <update id="updateUserPassword" parameterType="com.tj720.model.common.system.user.SysUserDto">
+        update sys_user  set
+        password = #{password}, sure_password = #{surePassword}, updater = #{updater}, update_time = now()
+        where id = #{id}
+    </update>
+
+
+    <update id="updateByPrimaryKeySelective" parameterType="com.tj720.model.common.system.user.SysUser" >
+        update sys_user
+        <set >
+            <if test="userName != null" >
+                user_name = #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="name != null" >
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="email != null" >
+                email = #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="phone != null" >
+                phone = #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="password != null" >
+                password = #{password,jdbcType=VARCHAR},
+            </if>
+            <if test="surePassword != null" >
+                sure_password = #{surePassword,jdbcType=VARCHAR},
+            </if>
+            <if test="remark != null" >
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null" >
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creator != null" >
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="updater != null" >
+                updater = #{updater,jdbcType=VARCHAR},
+            </if>
+            <if test="sequence != null" >
+                sequence = #{sequence,jdbcType=INTEGER},
+            </if>
+            <if test="status != null" >
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="isdelete != null" >
+                isdelete = #{isdelete,jdbcType=INTEGER},
+            </if>
+            <if test="other1 != null" >
+                other1 = #{other1,jdbcType=VARCHAR},
+            </if>
+            <if test="other2 != null" >
+                other2 = #{other2,jdbcType=VARCHAR},
+            </if>
+            <if test="other3 != null" >
+                other3 = #{other3,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.tj720.model.common.system.user.SysUser" >
+        update sys_user
+        set user_name = #{userName,jdbcType=VARCHAR},
+        name = #{name,jdbcType=VARCHAR},
+        email = #{email,jdbcType=VARCHAR},
+        phone = #{phone,jdbcType=VARCHAR},
+        password = #{password,jdbcType=VARCHAR},
+        sure_password = #{surePassword,jdbcType=VARCHAR},
+        remark = #{remark,jdbcType=VARCHAR},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        creator = #{creator,jdbcType=VARCHAR},
+        updater = #{updater,jdbcType=VARCHAR},
+        sequence = #{sequence,jdbcType=INTEGER},
+        status = #{status,jdbcType=INTEGER},
+        isdelete = #{isdelete,jdbcType=INTEGER},
+        other1 = #{other1,jdbcType=VARCHAR},
+        other2 = #{other2,jdbcType=VARCHAR},
+        other3 = #{other3,jdbcType=VARCHAR}
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+
+    <select id="selectSysUserCount" resultType="java.lang.Integer" parameterType="java.util.Map">
+        select count(1)
+        from sys_user su, sys_user_dept sud,sys_department sd,sys_role sr,sys_role_auth sra
+        where 1 = 1 and su.isdelete = 0
+        and su.id= sud.user_id
+        and sud.dept_id=sd.department_id AND su.id = sra.party_id and sra.role_id = sr.id
+        <if test="name != null and key != ''">
+            and (su.user_name like concat('%',#{name},'%')
+            or su.name like concat('%',#{name},'%'))
+        </if>
+        <if test="departmentName != null and departmentName != ''">
+            and sd.department_name = #{departmentName}
+        </if>
+        <if test="orderBy == 1" >
+            order by su.update_time desc
+        </if>
+        <if test="orderBy == 2" >
+            order by su.create_time desc
+        </if>
+    </select>
+
+    <select id="getSysUserList" resultType="com.tj720.model.common.system.user.SysUserDto"
+            parameterType="java.util.Map">
+        select su.id, su.user_name as "userName", su.name, su.email, su.phone, su.remark,
+        sd.department_name as "deptName", sr.name as "roleName",
+        su.create_time as "createTime", su.status
+        from sys_user su, sys_user_dept sud,sys_department sd,sys_role sr,sys_role_auth sra
+        where 1 = 1 and su.isdelete = 0
+        and su.id= sud.user_id
+        and sud.dept_id=sd.department_id AND su.id = sra.party_id and sra.role_id = sr.id
+        <if test="name != null and key != ''">
+            and (su.user_name like concat('%',#{name},'%')
+            or su.name like concat('%',#{name},'%'))
+        </if>
+        <if test="departmentName != null and departmentName != ''">
+            and sd.department_name = #{departmentName}
+        </if>
+        <if test="orderBy == 1" >
+            order by su.update_time desc
+        </if>
+        <if test="orderBy == 2" >
+            order by su.create_time desc
+        </if>
+        limit #{start},#{end}
+    </select>
+
+    <select id="getSysUserById" resultType="com.tj720.model.common.system.user.SysUserDto"
+            parameterType="java.lang.String">
+        select su.id, su.user_name as "userName", su.name, su.email, su.phone, su.remark,
+        sd.parent_id as 'pId',
+        sd.department_id as 'deptId', sd.department_name as "deptName",
+        sr.id as 'roleId',
+        sr.name as "roleName", su.password,
+        su.sure_password as 'surePassword'
+        from sys_user su, sys_user_dept sud,sys_department sd,sys_role sr,sys_role_auth sra
+        where 1 = 1 and su.isdelete = 0
+        <if test="id != null and id != ''">
+            and su.id = #{id}
+        </if>
+        and su.id= sud.user_id
+        and sud.dept_id=sd.department_id AND su.id = sra.party_id and sra.role_id = sr.id
+
+    </select>
+
+
+    <select id="getUserById"  resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        a.*
+        from
+        sys_user a,
+        sys_user_dept b
+        where
+        a.id = b.user_id
+        and b.dept_id = #{deptId}
+        limit 1
+    </select>
+
+    <select id="getUserByDepartmentName" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        a.id,a.name
+        from sys_user a
+        left join sys_user_dept b on b.user_id = a.id
+        where
+        b.dept_id in (select c.department_id from sys_department c where c.department_name like concat('%',#{name},'%')
+--         and c.isdelete = 0
+        )
+        and a.status = 1
+        and a.isdelete = 0
+        order by a.sequence desc,a.update_time desc
+
+    </select>
+    <select id="getUserByRoleCode" resultMap="BaseResultMap" parameterType="java.lang.String">
+        SELECT
+        a.id,a.name
+        from sys_user a
+        left join sys_role_auth b on a.id = b.party_id
+        left join sys_role c on b.role_id = c.id
+        where
+        c.role_code = #{code}
+        and a.status = 1
+        and a.isdelete = 0
+        order by a.sequence desc,a.update_time desc
+    </select>
+
+
+    <!--获取所有用户信息-->
+    <select id="getAllUserInfo" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+         from sys_user
+    </select>
+    <select id="getByMap" resultMap="BaseResultMap" parameterType="java.util.Map">
+        select
+        <include refid="Base_Column_List" />
+        from sys_user
+        where 1=1
+        <if test="id != null and id != ''">
+            and id = #{id}
+        </if>
+        <if test="userName != null and userName != ''" >
+            and user_name = #{userName}
+        </if>
+        <if test="isdelete != null and isdelete != ''">
+            and isdelete = #{isdelete,jdbcType=INTEGER}
+        </if>
+    </select>
+    <select id="countByMap" parameterType="java.util.Map">
+        select count(1) from sys_user
+        where 1=1
+        <if test="userId != null and userId != ''">
+            and id = #{userId}
+        </if>
+        <if test="isdelete != null and isdelete != ''">
+            and isdelete = #{isdelete,jdbcType=INTEGER}
+        </if>
+    </select>
+
+</mapper>

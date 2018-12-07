@@ -1,0 +1,95 @@
+
+<html>
+<head>
+    <script src="../../statics/libs/jquery-1.10.2.min.js"></script>
+    <link rel="stylesheet" href="../../statics/css/font-awesome.min.css">
+    <!--layui ztree样式-->
+    <link rel="stylesheet" href="../../statics/plugins/layui/css/layui.css" media="all">
+    <script src="../../statics/plugins/layer/layer.js"></script>
+    <script src="../../statics/plugins/layui/layui.js"></script>
+    <!--样式-->
+    <link rel="stylesheet" href="../../common/css/cyStyle.css">
+    <link rel="stylesheet" href="../../common/css/cyType.css">
+    <link rel="stylesheet" href="../../statics/css/literature/applyList.css">
+    <script src="../../statics/plugins/editgrid/plugin/My97DatePicker/WdatePicker.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+<div class="layui-card">
+    <form class="layui-form" action="">
+        <div class="layui-card-header">
+            <div class="flexLeft">
+                <img src="../../statics/images/videoList/Group 6.png" alt="">
+                <span class="carFont">筛选查询</span>
+            </div>
+            <div class="layui-btn-group flexRight">
+                <button class="layui-btn layui-btn-green" lay-submit="" lay-filter="moreSearch">
+                    <i class="fa fa-chevron-up">&nbsp;</i>收起筛选
+                </button>
+                <button class="layui-btn search-btn myBtn"  lay-submit="" lay-filter="formDemo">
+                    <!--<i class="fa fa-search">&nbsp;</i>-->查询
+                </button>
+                <button type="reset" class="layui-btn myBtn"lay-filter="clear"><!--<i class="fa fa-refresh">&nbsp;</i>-->重置</button>
+            </div>
+        </div>
+        <div class="layui-card-body">
+            <div class="layui-row aa">
+                <div class="layui-form-item layui-col-md4 layui-col-sm4 ">
+                    <label class="layui-form-label">输入搜索:</label>
+                    <div class="layui-input-block">
+                        <input type="text" id="key" name="key" placeholder="资料名称/申请人" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-col-md4 layui-col-sm4">
+                    <label class="layui-form-label">所属部门:</label>
+                    <div class="layui-input-block">
+                        <select name="department" id="department">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item layui-col-md4 layui-col-sm4">
+                    <label class="layui-form-label">申请状态:</label>
+                    <div class="layui-input-block">
+                        <select name="approveStatus" id="approveStatus">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="layui-card">
+    <div class="layui-card-header">
+        <div class="flexLeft">
+            <img src="../../statics/images/videoList/Shape2.png" alt="">
+            <span class="carFont">数据列表</span>
+        </div>
+        <div class="flexRight">
+            <form action="" class="layui-form">
+                <button type="button" class="layui-btn  myBtn" id="addNew" title="发起申请" data-url="page/literature/applyAdd.html">
+                    发起申请
+                </button>
+                <div class="layui-input-inline" style="width:100px;">
+                    <select id="orderBy" name="orderBy" lay-filter='orderBy'>
+                        <option value="">排序方式</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="layui-card-body">
+
+        <table class="layui-hide" id="applyList" lay-filter="applyList"></table>
+
+        <script type="text/html" id="toolbarDemo">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-sm" lay-event="getCheckData" id="batchApprove">批量审批</button>
+            </div>
+        </script>
+    </div>
+</div>
+<script src="../../statics/js/common.js"></script>
+<script src="../../statics/js/literature/applyList.js"></script>
+</body>
+</html>

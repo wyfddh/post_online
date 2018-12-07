@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tj720.dao.EducationMapper" >
+  <resultMap id="BaseResultMap" type="com.tj720.model.common.education.Education" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="education_id" property="educationId" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="pic_id" property="picId" jdbcType="VARCHAR" />
+    <result column="msg" property="msg" jdbcType="LONGVARCHAR" />
+    <result column="msg_pic_id" property="msgPicId" jdbcType="VARCHAR" />
+    <result column="isdelete" property="isdelete" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="updater" property="updater" jdbcType="VARCHAR" />
+    <result column="other1" property="other1" jdbcType="VARCHAR" />
+    <result column="other2" property="other2" jdbcType="VARCHAR" />
+    <result column="other3" property="other3" jdbcType="VARCHAR" />
+    <result column="rowNum" property="rowNum" jdbcType="INTEGER" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, education_id, title, pic_id, msg, msg_pic_id, isdelete, sort, create_time, update_time, 
+    creator, updater, other1, other2, other3
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from post_education
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from post_education
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="insert" parameterType="com.tj720.model.common.education.Education" >
+    insert into post_education (id, education_id, title, 
+      pic_id, msg, msg_pic_id, 
+      isdelete, sort, create_time, 
+      update_time, creator, updater, 
+      other1, other2, other3
+      )
+    values (#{id,jdbcType=VARCHAR}, #{educationId,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, 
+      #{picId,jdbcType=VARCHAR}, #{msg,jdbcType=LONGVARCHAR}, #{msgPicId,jdbcType=VARCHAR},
+      #{isdelete,jdbcType=VARCHAR}, #{sort,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, 
+      #{other1,jdbcType=VARCHAR}, #{other2,jdbcType=VARCHAR}, #{other3,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tj720.model.common.education.Education" >
+    insert into post_education
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="educationId != null" >
+        education_id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="picId != null" >
+        pic_id,
+      </if>
+      <if test="msg != null" >
+        msg,
+      </if>
+      <if test="msgPicId != null" >
+        msg_pic_id,
+      </if>
+      <if test="isdelete != null" >
+        isdelete,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="updater != null" >
+        updater,
+      </if>
+      <if test="other1 != null" >
+        other1,
+      </if>
+      <if test="other2 != null" >
+        other2,
+      </if>
+      <if test="other3 != null" >
+        other3,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="educationId != null" >
+        #{educationId,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="picId != null" >
+        #{picId,jdbcType=VARCHAR},
+      </if>
+      <if test="msg != null" >
+        #{msg,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="msgPicId != null" >
+        #{msgPicId,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null" >
+        #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="other1 != null" >
+        #{other1,jdbcType=VARCHAR},
+      </if>
+      <if test="other2 != null" >
+        #{other2,jdbcType=VARCHAR},
+      </if>
+      <if test="other3 != null" >
+        #{other3,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.tj720.model.common.education.Education" >
+    update post_education
+    <set >
+      <if test="educationId != null" >
+        education_id = #{educationId,jdbcType=VARCHAR},
+      </if>
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="picId != null" >
+        pic_id = #{picId,jdbcType=VARCHAR},
+      </if>
+      <if test="msg != null" >
+        msg = #{msg,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="msgPicId != null" >
+        msg_pic_id = #{msgPicId,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null" >
+        isdelete = #{isdelete,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null" >
+        updater = #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="other1 != null" >
+        other1 = #{other1,jdbcType=VARCHAR},
+      </if>
+      <if test="other2 != null" >
+        other2 = #{other2,jdbcType=VARCHAR},
+      </if>
+      <if test="other3 != null" >
+        other3 = #{other3,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tj720.model.common.education.Education" >
+    update post_education
+    set education_id = #{educationId,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR},
+      pic_id = #{picId,jdbcType=VARCHAR},
+      msg = #{msg,jdbcType=LONGVARCHAR},
+      msg_pic_id = #{msgPicId,jdbcType=VARCHAR},
+      isdelete = #{isdelete,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      creator = #{creator,jdbcType=VARCHAR},
+      updater = #{updater,jdbcType=VARCHAR},
+      other1 = #{other1,jdbcType=VARCHAR},
+      other2 = #{other2,jdbcType=VARCHAR},
+      other3 = #{other3,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateEducationByIds" parameterType = "java.util.List">
+    update post_education set isdelete = 1 where id in
+    <foreach collection="ids" open="(" item="id" separator="," close=")">
+      #{id}
+    </foreach>
+  </update>
+
+  <select id="selectCountByEducation" parameterType="java.util.Map"
+          resultType="java.lang.Integer">
+    SELECT
+    count(1)
+    FROM post_education where isdelete = '0'
+    <if test="title != null and title != ''">
+      and title like concat('%',#{title},'%')
+    </if>
+    <if test="startTime != null and startTime !=''">
+      and  date(create_time) = #{startTime}
+    </if>
+    <if test="orderBy == 1" >
+      order by update_time desc
+    </if>
+    <if test="orderBy == 2" >
+      order by create_time desc
+    </if>
+  </select>
+
+  <select id="selectListByEducation" parameterType="java.util.Map"
+          resultMap="BaseResultMap">
+    SELECT
+    *
+    FROM post_education where isdelete = '0'
+
+    <if test="title != null and title != ''">
+      and title like concat('%',#{title},'%')
+    </if>
+    <if test="startTime != null and startTime !=''">
+      and  date(create_time) = #{startTime}
+    </if>
+    <if test="orderBy == 1" >
+      order by update_time desc
+    </if>
+    <if test="orderBy == 2" >
+      order by create_time desc
+    </if>
+    limit #{start},#{end}
+  </select>
+
+
+  <select id="selectByParams" parameterType="java.util.Map" resultMap="BaseResultMap">
+    SELECT
+    *
+    FROM post_education where isdelete = '0'
+
+    <if test="name != null and key != ''">
+      and name = #{name}
+    </if>
+    <if test="type != null and type != ''">
+      and type = #{type}
+    </if>
+    <if test="sonType != null and sonType != ''">
+      and son_type = #{sonType}
+    </if>
+  </select>
+
+
+
+  <!--Web层-->
+  <select id="selectWebEduByKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from post_education
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+
+  <select id="countWebEdu" parameterType="java.util.Map"
+          resultType="java.lang.Integer">
+    SELECT
+    count(1)
+    FROM post_education where isdelete = '0'
+    <if test="title != null and title != ''">
+      and title like concat('%',#{title},'%')
+    </if>
+    <if test="startTime != null and startTime != ''" >
+      and create_time <![CDATA[ >= ]]> #{startTime}
+    </if>
+    <if test="endTime != null and endTime != ''" >
+      and create_time <![CDATA[ <= ]]> #{endTime}
+    </if>
+    <if test="orderBy == 1" >
+      order by update_time desc
+    </if>
+    <if test="orderBy == 2" >
+      order by create_time desc
+    </if>
+  </select>
+
+  <select id="selectListWebByEducation" parameterType="java.util.Map"
+          resultMap="BaseResultMap">
+    SELECT
+    (@rowno:=@rowno+1) AS rowNum,a.*
+    FROM post_education a, (select @rowno:=0+ #{start}) b where isdelete = '0'
+    <if test="title != null and title != ''">
+      and title like concat('%',#{title},'%')
+    </if>
+    <if test="startTime != null and startTime != ''" >
+      and create_time <![CDATA[ >= ]]> #{startTime}
+    </if>
+    <if test="endTime != null and endTime != ''" >
+      and create_time <![CDATA[ <= ]]> #{endTime}
+    </if>
+    <if test="orderBy == 1" >
+      order by update_time desc
+    </if>
+    <if test="orderBy == 2" >
+      order by create_time desc
+    </if>
+    limit #{start},#{end}
+  </select>
+
+
+
+  <select id="getDetailEducationById" resultType="com.tj720.model.common.education.Education"
+          parameterType="java.lang.Integer">
+    select a.*, (@rowno:=@rowno+1) AS rowNum from post_education a,(select
+    @rowno:=0+ #{start}) b where a.isdelete=0
+    order by a.update_time desc
+    limit #{start},1
+</select>
+
+
+
+
+
+</mapper>

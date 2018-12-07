@@ -1,0 +1,146 @@
+
+<html>
+<head>
+    <script src="../../../statics/libs/jquery-1.10.2.min.js"></script>
+    <link rel="stylesheet" href="../../../statics/css/font-awesome.min.css">
+    <!--layui ztree样式-->
+    <link rel="stylesheet" href="../../../statics/plugins/layui/css/layui.css" media="all">
+    <script src="../../../statics/plugins/layer/layer.js"></script>
+    <script src="../../../statics/plugins/layui/layui.js"></script>
+    <!--样式-->
+    <link rel="stylesheet" href="../../../common/css/cyStyle.css">
+    <link rel="stylesheet" href="../../../common/css/cyType.css">
+    <link rel="stylesheet" href="../../../statics/css/public/young/videoDetail_one.css">
+    <script src="../../../statics/plugins/editgrid/plugin/My97DatePicker/WdatePicker.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="../../../statics/plugins/echarts/echarts.js"></script>
+</head>
+<body>
+<div class="layui-card">
+    <form action=""  class="layui-form">
+        <!--<div class="layui-card-header">
+            <div class="flexLeft">
+                <span class="carFont">藏品信息</span>
+            </div>
+            <div class=" flexRight ">
+                <button class="layui-btn layui-btn-green myBtn">
+                    导出数据
+                </button>
+                <button class="layui-btn searchBtn myBtn active" >
+                    最近7天
+                </button>
+                <button class="layui-btn searchBtn myBtn">
+                    最近30天
+                </button>
+                <div class="layui-inline" style="height: 32px">
+                    <input readonly="readonly" type="text" name="endDate" id="endDate" maxlength="20" value=""
+                           placeholder="请选择截止时间" class="layui-input Wdate"
+                           onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',readOnly:true,minDate:'#F{$dp.$D(\'startDate\')}',dchanging:cDayFunc})">
+                </div>
+            </div>
+        </div>-->
+
+        <div class="layui-card-body">
+            <div class="layui-card-header">
+                    <span class="carFont">活动详情</span>
+            </div>
+            <div class="cardOne mt24">
+                <div class="title"><img src="" alt=""><span>基本信息</span></div>
+
+                <div class="OneBody mt24">
+                    <div class="oneHeard">
+                        <div class="oneLeft">
+                            <span>操作人：</span>
+                            <span>admin</span>
+                            <span>系统管理员</span>
+                        </div>
+                        <div class="oneRight">
+                            <span>日期：</span>
+                            <span>2018-8-21</span>
+                        </div>
+                    </div>
+                    <div class="oneBody">
+                        <ul class="myTable">
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*活动名称</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="title" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*活动地点</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="title" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*开始时间</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input readonly="readonly" type="text" name="startDate" id="startDate" maxlength="20" value=""
+                                           placeholder="请选择开始时间" class="layui-input Wdate"
+                                           onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',readOnly:true,maxDate:'#F{$dp.$D(\'endDate\')}'})">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*结束时间</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input readonly="readonly" type="text" name="startDate" id="startDate1" maxlength="20" value=""
+                                           placeholder="请选择开始时间" class="layui-input Wdate"
+                                           onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',readOnly:true,maxDate:'#F{$dp.$D(\'endDate\')}'})">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*报名截止时间</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input readonly="readonly" type="text" name="startDate" id="startDate2" maxlength="20" value=""
+                                           placeholder="请选择开始时间" class="layui-input Wdate"
+                                           onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',readOnly:true,maxDate:'#F{$dp.$D(\'endDate\')}'})">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*需求人数</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="title" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">申请要求</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="title" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*活动封面</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <button type="button" class="layui-btn" id="test1">
+                                        <i class="layui-icon">&#xe67c;</i>选择上传文件
+                                    </button>
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">备注</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="layui-form-item mt34">
+                <div class="layui-input-block bodyBtn">
+                    <button class="layui-btn" lay-submit lay-filter="formDemo">保存</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">取消</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="../../../statics/js/public/young/videoDetail_one.js"></script>
+</body>
+</html>

@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tj720.dao.PostInformationManageMapper">
+  <resultMap id="BaseResultMap" type="com.tj720.model.common.informationmanage.PostInformationManage">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="datum_ids" jdbcType="VARCHAR" property="datumIds" />
+    <result column="information_theme" jdbcType="VARCHAR" property="informationTheme" />
+    <result column="information_type" jdbcType="VARCHAR" property="informationType" />
+    <result column="information_content" jdbcType="LONGVARCHAR" property="informationContent" />
+    <result column="data_state" jdbcType="VARCHAR" property="dataState" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="updater" jdbcType="VARCHAR" property="updater" />
+    <result column="other1" jdbcType="VARCHAR" property="other1" />
+    <result column="other2" jdbcType="VARCHAR" property="other2" />
+    <result column="other3" jdbcType="VARCHAR" property="other3" />
+    <result column="rowNum" property="rowNum" jdbcType="INTEGER" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, datum_ids, information_theme, information_type, information_content, data_state,
+    create_time, update_time, creator, updater, other1, other2, other3
+  </sql>
+
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from post_information_manage
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+
+  <select id="getInformationList" resultMap="BaseResultMap"  parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from  post_information_manage
+    where 1=1  and  data_state = 1
+    <if test="informationType != null and informationType != ''">
+      and information_type like concat('%',#{informationType},'%')
+    </if>
+    <if test="createTime != null and createTime !=''">
+      and  date(create_time) = #{createTime}
+    </if>
+    <if test="orderBy == 1" >
+      order by update_time desc
+    </if>
+    <if test="orderBy == 2" >
+      order by create_time desc
+    </if>
+    limit #{currentPage},#{size}
+  </select>
+
+
+  <select id="count" resultType="int">
+    select count(*) from  post_information_manage
+    where 1=1 and  data_state = 1
+    <if test="informationType != null and informationType != ''">
+      and information_type like concat('%',#{informationType},'%')
+    </if>
+    <if test="createTime != null and createTime !=''">
+      and  date(create_time) = #{createTime}
+    </if>
+    <if test="orderBy == 1" >
+      order by update_time desc
+    </if>
+    <if test="orderBy == 2" >
+      order by create_time desc
+    </if>
+  </select>
+
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from post_information_manage
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+
+
+
+  <insert id="insert" parameterType="com.tj720.model.common.informationmanage.PostInformationManage">
+    insert into post_information_manage (id, datum_ids, information_theme,
+      information_type, information_content, data_state,
+      create_time, update_time, creator,
+      updater, other1, other2,
+      other3)
+    values (#{id,jdbcType=VARCHAR}, #{datumIds,jdbcType=VARCHAR}, #{informationTheme,jdbcType=VARCHAR},
+      #{informationType,jdbcType=VARCHAR}, #{informationContent,jdbcType=LONGVARCHAR}, #{dataState,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR},
+      #{updater,jdbcType=VARCHAR}, #{other1,jdbcType=VARCHAR}, #{other2,jdbcType=VARCHAR},
+      #{other3,jdbcType=VARCHAR})
+  </insert>
+
+
+  <insert id="insertSelective" parameterType="com.tj720.model.common.informationmanage.PostInformationManage">
+    insert into post_information_manage
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="datumIds != null">
+        datum_ids,
+      </if>
+      <if test="informationTheme != null">
+        information_theme,
+      </if>
+      <if test="informationType != null">
+        information_type,
+      </if>
+      <if test="informationContent != null">
+        information_content,
+      </if>
+      <if test="dataState != null">
+        data_state,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="creator != null">
+        creator,
+      </if>
+      <if test="updater != null">
+        updater,
+      </if>
+      <if test="other1 != null">
+        other1,
+      </if>
+      <if test="other2 != null">
+        other2,
+      </if>
+      <if test="other3 != null">
+        other3,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="datumIds != null">
+        #{datumIds,jdbcType=VARCHAR},
+      </if>
+      <if test="informationTheme != null">
+        #{informationTheme,jdbcType=VARCHAR},
+      </if>
+      <if test="informationType != null">
+        #{informationType,jdbcType=VARCHAR},
+      </if>
+      <if test="informationContent != null">
+        #{informationContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="dataState != null">
+        #{dataState,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="other1 != null">
+        #{other1,jdbcType=VARCHAR},
+      </if>
+      <if test="other2 != null">
+        #{other2,jdbcType=VARCHAR},
+      </if>
+      <if test="other3 != null">
+        #{other3,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+
+
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.tj720.model.common.informationmanage.PostInformationManage">
+    update post_information_manage
+    <set>
+      <if test="datumIds != null">
+        datum_ids = #{datumIds,jdbcType=VARCHAR},
+      </if>
+      <if test="informationTheme != null">
+        information_theme = #{informationTheme,jdbcType=VARCHAR},
+      </if>
+      <if test="informationType != null">
+        information_type = #{informationType,jdbcType=VARCHAR},
+      </if>
+      <if test="informationContent != null">
+        information_content = #{informationContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="dataState != null">
+        data_state = #{dataState,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        updater = #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="other1 != null">
+        other1 = #{other1,jdbcType=VARCHAR},
+      </if>
+      <if test="other2 != null">
+        other2 = #{other2,jdbcType=VARCHAR},
+      </if>
+      <if test="other3 != null">
+        other3 = #{other3,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+
+
+
+  <update id="updateByPrimaryKey" parameterType="com.tj720.model.common.informationmanage.PostInformationManage">
+     update post_information_manage
+      set datum_ids = #{datumIds,jdbcType=VARCHAR},
+        information_theme = #{informationTheme,jdbcType=VARCHAR},
+        information_type = #{informationType,jdbcType=VARCHAR},
+        information_content = #{informationContent,jdbcType=LONGVARCHAR},
+        data_state = #{dataState,jdbcType=VARCHAR},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        creator = #{creator,jdbcType=VARCHAR},
+        updater = #{updater,jdbcType=VARCHAR},
+        other1 = #{other1,jdbcType=VARCHAR},
+        other2 = #{other2,jdbcType=VARCHAR},
+        other3 = #{other3,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+
+  <update id="updateInformationyByIds" parameterType = "java.util.List">
+    update  post_information_manage set data_state = 1 where id in
+    <foreach collection="ids" open="(" item="id" separator="," close=")">
+      #{id}
+    </foreach>
+  </update>
+
+
+
+
+
+  <!--Web层-->
+  <select id="selectWebInfoByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from post_information_manage
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+
+
+  <select id="getInformationWebList" resultMap="BaseResultMap"  parameterType="java.util.Map">
+    select
+    (@rowno:=@rowno+1) AS rowNum,a.*
+    from  post_information_manage a,(select @rowno:=0+ #{currentPage}) b
+    where 1=1  and  data_state = 1
+    <if test="informationType != null and informationType != ''">
+      and information_type like concat('%',#{informationType},'%')
+    </if>
+    <if test="createTime != null and createTime !=''">
+      and  date(create_time) = #{createTime}
+    </if>
+    <if test="orderBy == 1" >
+      order by update_time desc
+    </if>
+    <if test="orderBy == 2" >
+      order by create_time desc
+    </if>
+    limit #{currentPage},#{size}
+  </select>
+
+
+
+  <select id="countWeb" resultType="int">
+    select count(*) from  post_information_manage
+    where 1=1 and  data_state = 1
+    <if test="informationType != null and informationType != ''">
+      and information_type like concat('%',#{informationType},'%')
+    </if>
+    <if test="createTime != null and createTime !=''">
+      and  date(create_time) = #{createTime}
+    </if>
+    <if test="orderBy == 1" >
+      order by update_time desc
+    </if>
+    <if test="orderBy == 2" >
+      order by create_time desc
+    </if>
+  </select>
+
+
+
+  <select id="getDetailInfoById" resultType="com.tj720.model.common.informationmanage.PostInformationManage" parameterType="java.util.Map">
+    select a.id,a.datum_ids as datumIds,a.information_theme as informationTheme,a.information_content as
+    informationContent,a.information_type  as informationType,
+     (@rowno:=@rowno+1) AS
+    rowNum from
+    post_information_manage
+    a,(select
+    @rowno:=0+ #{start})b where a.data_state = 1
+    <if test="informationType != null and informationType != ''">
+      and  information_type = #{informationType}
+    </if>
+    order by a.update_time desc
+    limit #{start},1
+  </select>
+
+
+
+</mapper>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tj720.dao.PostLiteratureApprovalMapper">
+  <resultMap id="BaseResultMap" type="com.tj720.model.literature.PostLiteratureApproval">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="approve_id" jdbcType="VARCHAR" property="approveId" />
+    <result column="operation" jdbcType="VARCHAR" property="operation" />
+    <result column="appoint_approve_id" jdbcType="VARCHAR" property="appointApproveId" />
+    <result column="approve_remark" jdbcType="VARCHAR" property="approveRemark" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, approve_id, operation, appoint_approve_id, approve_remark, update_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from post_literature_approval
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from post_literature_approval
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tj720.model.literature.PostLiteratureApproval">
+    insert into post_literature_approval (id, approve_id, operation, 
+      appoint_approve_id, approve_remark, update_time
+      )
+    values (#{id,jdbcType=VARCHAR}, #{approveId,jdbcType=VARCHAR}, #{operation,jdbcType=VARCHAR}, 
+      #{appointApproveId,jdbcType=VARCHAR}, #{approveRemark,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tj720.model.literature.PostLiteratureApproval">
+    insert into post_literature_approval
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="approveId != null">
+        approve_id,
+      </if>
+      <if test="operation != null">
+        operation,
+      </if>
+      <if test="appointApproveId != null">
+        appoint_approve_id,
+      </if>
+      <if test="approveRemark != null">
+        approve_remark,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="approveId != null">
+        #{approveId,jdbcType=VARCHAR},
+      </if>
+      <if test="operation != null">
+        #{operation,jdbcType=VARCHAR},
+      </if>
+      <if test="appointApproveId != null">
+        #{appointApproveId,jdbcType=VARCHAR},
+      </if>
+      <if test="approveRemark != null">
+        #{approveRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tj720.model.literature.PostLiteratureApproval">
+    update post_literature_approval
+    <set>
+      <if test="approveId != null">
+        approve_id = #{approveId,jdbcType=VARCHAR},
+      </if>
+      <if test="operation != null">
+        operation = #{operation,jdbcType=VARCHAR},
+      </if>
+      <if test="appointApproveId != null">
+        appoint_approve_id = #{appointApproveId,jdbcType=VARCHAR},
+      </if>
+      <if test="approveRemark != null">
+        approve_remark = #{approveRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tj720.model.literature.PostLiteratureApproval">
+    update post_literature_approval
+    set approve_id = #{approveId,jdbcType=VARCHAR},
+      operation = #{operation,jdbcType=VARCHAR},
+      appoint_approve_id = #{appointApproveId,jdbcType=VARCHAR},
+      approve_remark = #{approveRemark,jdbcType=VARCHAR},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

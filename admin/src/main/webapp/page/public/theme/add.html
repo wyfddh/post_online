@@ -1,0 +1,187 @@
+
+<html>
+<head>
+    <script src="../../../statics/libs/jquery-1.10.2.min.js"></script>
+    <link rel="stylesheet" href="../../../statics/css/font-awesome.min.css">
+    <!--layui ztree样式-->
+    <link rel="stylesheet" href="../../../statics/plugins/layui/css/layui.css" media="all">
+    <script src="../../../statics/plugins/layer/layer.js"></script>
+    <script src="../../../statics/plugins/layui/layui.js"></script>
+    <!--样式-->
+    <link rel="stylesheet" href="../../../common/css/cyStyle.css">
+    <link rel="stylesheet" href="../../../common/css/cyType.css">
+    <link rel="stylesheet" href="../../../statics/css/public/theme/videoDetail.css">
+    <link rel="stylesheet" href="../../../common/css/videoDetail_add.css">
+    <link rel="stylesheet" href="../../../common/css/formSelects-v4.css">
+    <script src="../../../statics/plugins/editgrid/plugin/My97DatePicker/WdatePicker.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="../../../statics/plugins/echarts/echarts.js"></script>
+
+    <style type="text/css">
+        .uploadBtn{
+            margin-top: 9px;
+            display: block;
+            margin-left: 20px !important;
+        }
+        .abc:after{
+            content:".";
+            display:block;
+            height:0;
+            clear:left;
+            visibility:hidden;
+        }
+        .layui-input-block {
+            text-align: center;
+        }
+
+    </style>
+
+
+</head>
+<body>
+<div class="layui-card">
+    <form action="" id="themeshowForm"  class="layui-form">
+        <div class="layui-card-header">
+            <div class="flexLeft">
+                <span class="carFont">主题展信息</span>
+            </div>
+        </div>
+
+        <div class="layui-card-body">
+
+            <div class="cardOne mt24 layui-row">
+                <div class="title"><img src="" alt=""><span>基本信息</span></div>
+                <div class="OneBody mt24">
+                    <div class="oneHeard">
+                        <div class="oneLeft">
+                            <span>操作人：</span>
+                            <span id="userName">admin</span>
+                            <span >|</span>
+                            <span id="orgName">系统管理员</span>
+                        </div>
+                        <div class="oneRight">
+                            <span>日期：</span>
+                            <span id="nowDate">2018-8-21</span>
+                        </div>
+                    </div>
+                    <div class="oneBody mt24">
+                        <ul class="myTable">
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*主题展名称</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text"  id="themeName" name="themeName" required
+                                           lay-verify="required" placeholder="请输入主题展名称" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+                            </li>
+
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR" style="height: 220px">*主题展描述</div>
+                                <div class="layui-form-item m0 layui-col-md8 layui-col-sm8">
+                                    <textarea type="text" id="themeDescribe" name="themeDescribe" required
+                                              lay-verify="required" placeholder="请输入主题展描述"
+                                              autocomplete="off" class="layui-input"  style="padding: 5px;height:200px;"></textarea>
+                                </div>
+                            </li>
+
+                            <li class="layui-row picture">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR myheight">*主题展图片</div>
+                                <div class="layui-form-item m0 layui-col-md3 layui-col-sm3 pl30" id="picUpload" lay-verify="img-required">
+                                    <div class="picDiv"></div>
+                                    <a class="uploadBtn">
+                                        <span class="uploadIcon"></span>
+                                        <span class="uploadTxt">上传图片</span>
+                                        <span class="uploadTip">图片建议尺寸为600*450px</span>
+                                    </a>
+                                </div>
+                                <input type="hidden" id="picids" name="picids"/>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="cardOne mt24 layui-row">
+                <div class="title"><img src="" alt=""><span>关联藏品</span></div>
+
+                <div class="OneBody abc">
+                    <div class="mt24 abc">
+                        <div class="addLable layui-row">
+                            <ul class="lableList layui-inline layui-col-md12 layui-col-sm12">
+                                <li class="layui-row">
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label" style="width: 110px">添加关联藏品</label>
+                                        <div class="layui-input-inline">
+                                            <select name="collectId" id="collectId" lay-filter="collect">
+                                                <option value="">请选择</option>
+                                            </select>
+                                        </div>
+                                        <div class="layui-input-inline">
+                                            <select name="city" id="city"  ms-duplex="@city_code" lay-filter="city">
+                                                <option value="">请选择</option>
+                                            </select>
+                                        </div>
+                                  <!--  <div class="layui-form-item mFree layui-col-md5 layui-col-sm5">
+                                        <input type="text" name="title" required  lay-verify="" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                                    </div>-->
+                                        <div class="layui-input-inline" style="width: 400px">
+                                                <select id="org" name="org" xm-select="select1" xm-select-search="" xm-select-height="24px">
+                                                <option value="">全部</option>
+                                            </select>
+                                        </div>
+                                        <div class="layui-input-inline" style="width: auto!important;">
+                                            <a href="javascript:void (0);" class="layui-col-md2 layui-col-sm2 addBtn"></a>
+                                        </div>
+                                    </div>
+                                  <!--  <div style="width: 600px; display: inline-block; vertical-align: top;">
+                                        <select id="org" name="org" xm-select="select1" xm-select-search="">
+                                            <option value="">全部</option>
+                                        </select>
+                                    </div>-->
+                                </li>
+                            </ul>
+                        </div>
+                        <p class="myfont">已添加标注信息如下</p>
+                            <div class="layui-col-md12 layui-col-sm12 layui-row abc">
+                                <table class="layui-table" id="collectInfo" lay-filter="collectInfo"></table>
+                                <script type="text/html" id="barDemo">
+                                    <a class="layui-btn layui-btn-xs" lay-event="edit">查看</a>
+                                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+                                </script>
+                            </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+            <div class="layui-form-item mt34 layui-row">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formDemo">保存</button>
+                    <button type="reset" id="reset" class="layui-btn layui-btn-primary">取消</button>
+                </div>
+            </div>
+
+            <div class="layui-hide">
+                <input type="text" name="id" id="id">
+            </div>
+
+            <!--操作-->
+            <script type="text/html" id="collectBar">
+                <a class="layui-btn layui-btn-xs showButton" lay-event="detail" data-url="page/public/collect/detail.html?id={{d.id}}" title="查看藏品详情">查看</a>
+                <a class="layui-btn layui-btn-xs delButton" lay-event="del">删除</a>
+            </script>
+
+
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript" src="../../../statics/plugins/layui/layui.js"></script>
+<script src="../../../statics/js/component.js"></script>
+<script src="../../../statics/js/common.js"></script>
+<script type="text/javascript" src="../../../statics/upload/uploadSingleImg.js"></script>
+<script src="../../../statics/js/public/theme/themeAdd.js"></script>
+<script src="../../../common/js/formSelects-v4.js"></script>
+</body>
+</html>

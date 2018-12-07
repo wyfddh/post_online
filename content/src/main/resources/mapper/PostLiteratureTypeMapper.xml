@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tj720.dao.PostLiteratureTypeMapper">
+    <select id="getLiteratureTypeByPid" parameterType="java.lang.String" resultType="com.tj720.model.literature.PostLiteratureType">
+      select
+          id              id,
+          pid             pid,
+          type_name       typeName
+        from post_literature_type where data_state = 1
+        <if test="pid != null and pid != ''">
+          and pid = #{pid}
+        </if>
+    </select>
+  <select id="getTypeById" parameterType="java.lang.String" resultType="com.tj720.model.literature.PostLiteratureType">
+    select id as id, type_name as typeName from
+    post_literature_type
+    where data_state = 1
+    and id = #{id}
+  </select>
+</mapper>

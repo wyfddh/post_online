@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tj720.dao.PostShortcutentranceMapper" >
+  <resultMap id="BaseResultMap" type="com.tj720.model.common.video.PostShortcutentrance" >
+    <id column="xid" property="xid" jdbcType="VARCHAR" />
+    <result column="party_id" property="partyId" jdbcType="VARCHAR" />
+    <result column="owner" property="owner" jdbcType="VARCHAR" />
+    <result column="own_type" property="ownType" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="updater" property="updater" jdbcType="VARCHAR" />
+    <result column="ext1" property="ext1" jdbcType="VARCHAR" />
+    <result column="ext2" property="ext2" jdbcType="VARCHAR" />
+    <result column="ext3" property="ext3" jdbcType="VARCHAR" />
+  </resultMap>
+  <!--<sql id="Example_Where_Clause" >-->
+    <!--<where >-->
+      <!--<foreach collection="oredCriteria" item="criteria" separator="or" >-->
+        <!--<if test="criteria.valid" >-->
+          <!--<trim prefix="(" suffix=")" prefixOverrides="and" >-->
+            <!--<foreach collection="criteria.criteria" item="criterion" >-->
+              <!--<choose >-->
+                <!--<when test="criterion.noValue" >-->
+                  <!--and ${criterion.condition}-->
+                <!--</when>-->
+                <!--<when test="criterion.singleValue" >-->
+                  <!--and ${criterion.condition} #{criterion.value}-->
+                <!--</when>-->
+                <!--<when test="criterion.betweenValue" >-->
+                  <!--and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}-->
+                <!--</when>-->
+                <!--<when test="criterion.listValue" >-->
+                  <!--and ${criterion.condition}-->
+                  <!--<foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >-->
+                    <!--#{listItem}-->
+                  <!--</foreach>-->
+                <!--</when>-->
+              <!--</choose>-->
+            <!--</foreach>-->
+          <!--</trim>-->
+        <!--</if>-->
+      <!--</foreach>-->
+    <!--</where>-->
+  <!--</sql>-->
+  <!--<sql id="Update_By_Example_Where_Clause" >-->
+    <!--<where >-->
+      <!--<foreach collection="example.oredCriteria" item="criteria" separator="or" >-->
+        <!--<if test="criteria.valid" >-->
+          <!--<trim prefix="(" suffix=")" prefixOverrides="and" >-->
+            <!--<foreach collection="criteria.criteria" item="criterion" >-->
+              <!--<choose >-->
+                <!--<when test="criterion.noValue" >-->
+                  <!--and ${criterion.condition}-->
+                <!--</when>-->
+                <!--<when test="criterion.singleValue" >-->
+                  <!--and ${criterion.condition} #{criterion.value}-->
+                <!--</when>-->
+                <!--<when test="criterion.betweenValue" >-->
+                  <!--and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}-->
+                <!--</when>-->
+                <!--<when test="criterion.listValue" >-->
+                  <!--and ${criterion.condition}-->
+                  <!--<foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >-->
+                    <!--#{listItem}-->
+                  <!--</foreach>-->
+                <!--</when>-->
+              <!--</choose>-->
+            <!--</foreach>-->
+          <!--</trim>-->
+        <!--</if>-->
+      <!--</foreach>-->
+    <!--</where>-->
+  <!--</sql>-->
+  <sql id="Base_Column_List" >
+    xid, party_id, party_type, owner, own_type, create_time, update_time, creator, updater, 
+    ext1, ext2, ext3
+  </sql>
+  <!--<select id="selectByExample" resultMap="BaseResultMap" parameterType="com.tj720.model.common.video.PostShortcutentranceExample" >-->
+    <!--select-->
+    <!--<if test="distinct" >-->
+      <!--distinct-->
+    <!--</if>-->
+    <!--<include refid="Base_Column_List" />-->
+    <!--from post_shortcutentrance-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Example_Where_Clause" />-->
+    <!--</if>-->
+    <!--<if test="orderByClause != null" >-->
+      <!--order by ${orderByClause}-->
+    <!--</if>-->
+  <!--</select>-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from post_shortcutentrance
+    where xid = #{xid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from post_shortcutentrance
+    where xid = #{xid,jdbcType=VARCHAR}
+  </delete>
+  <!--<delete id="deleteByExample" parameterType="com.tj720.model.common.video.PostShortcutentranceExample" >-->
+    <!--delete from post_shortcutentrance-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</delete>-->
+  <insert id="insert" parameterType="com.tj720.model.common.video.PostShortcutentrance" >
+    insert into post_shortcutentrance (xid, party_id, party_type, 
+      owner, own_type, create_time, 
+      update_time, creator, updater, 
+      ext1, ext2, ext3)
+    values (#{xid,jdbcType=VARCHAR}, #{partyId,jdbcType=VARCHAR}, #{partyType,jdbcType=VARCHAR}, 
+      #{owner,jdbcType=VARCHAR}, #{ownType,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, 
+      #{ext1,jdbcType=VARCHAR}, #{ext2,jdbcType=VARCHAR}, #{ext3,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tj720.model.common.video.PostShortcutentrance" >
+    insert into post_shortcutentrance
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="xid != null" >
+        xid,
+      </if>
+      <if test="partyId != null" >
+        party_id,
+      </if>
+      <if test="partyType != null" >
+        party_type,
+      </if>
+      <if test="owner != null" >
+        owner,
+      </if>
+      <if test="ownType != null" >
+        own_type,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="updater != null" >
+        updater,
+      </if>
+      <if test="ext1 != null" >
+        ext1,
+      </if>
+      <if test="ext2 != null" >
+        ext2,
+      </if>
+      <if test="ext3 != null" >
+        ext3,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="xid != null" >
+        #{xid,jdbcType=VARCHAR},
+      </if>
+      <if test="partyId != null" >
+        #{partyId,jdbcType=VARCHAR},
+      </if>
+      <if test="partyType != null" >
+        #{partyType,jdbcType=VARCHAR},
+      </if>
+      <if test="owner != null" >
+        #{owner,jdbcType=VARCHAR},
+      </if>
+      <if test="ownType != null" >
+        #{ownType,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null" >
+        #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="ext1 != null" >
+        #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="ext3 != null" >
+        #{ext3,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <!--<select id="countByExample" parameterType="com.tj720.model.common.video.PostShortcutentranceExample" resultType="java.lang.Integer" >-->
+    <!--select count(*) from post_shortcutentrance-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</select>-->
+  <!--<update id="updateByExampleSelective" parameterType="map" >-->
+    <!--update post_shortcutentrance-->
+    <!--<set >-->
+      <!--<if test="record.xid != null" >-->
+        <!--xid = #{record.xid,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.partyId != null" >-->
+        <!--party_id = #{record.partyId,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.partyType != null" >-->
+        <!--party_type = #{record.partyType,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.owner != null" >-->
+        <!--owner = #{record.owner,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.ownType != null" >-->
+        <!--own_type = #{record.ownType,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.createTime != null" >-->
+        <!--create_time = #{record.createTime,jdbcType=TIMESTAMP},-->
+      <!--</if>-->
+      <!--<if test="record.updateTime != null" >-->
+        <!--update_time = #{record.updateTime,jdbcType=TIMESTAMP},-->
+      <!--</if>-->
+      <!--<if test="record.creator != null" >-->
+        <!--creator = #{record.creator,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.updater != null" >-->
+        <!--updater = #{record.updater,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.ext1 != null" >-->
+        <!--ext1 = #{record.ext1,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.ext2 != null" >-->
+        <!--ext2 = #{record.ext2,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.ext3 != null" >-->
+        <!--ext3 = #{record.ext3,jdbcType=VARCHAR},-->
+      <!--</if>-->
+    <!--</set>-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Update_By_Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</update>-->
+  <!--<update id="updateByExample" parameterType="map" >-->
+    <!--update post_shortcutentrance-->
+    <!--set xid = #{record.xid,jdbcType=VARCHAR},-->
+      <!--party_id = #{record.partyId,jdbcType=VARCHAR},-->
+      <!--party_type = #{record.partyType,jdbcType=VARCHAR},-->
+      <!--owner = #{record.owner,jdbcType=VARCHAR},-->
+      <!--own_type = #{record.ownType,jdbcType=VARCHAR},-->
+      <!--create_time = #{record.createTime,jdbcType=TIMESTAMP},-->
+      <!--update_time = #{record.updateTime,jdbcType=TIMESTAMP},-->
+      <!--creator = #{record.creator,jdbcType=VARCHAR},-->
+      <!--updater = #{record.updater,jdbcType=VARCHAR},-->
+      <!--ext1 = #{record.ext1,jdbcType=VARCHAR},-->
+      <!--ext2 = #{record.ext2,jdbcType=VARCHAR},-->
+      <!--ext3 = #{record.ext3,jdbcType=VARCHAR}-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Update_By_Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</update>-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.tj720.model.common.video.PostShortcutentrance" >
+    update post_shortcutentrance
+    <set >
+      <if test="partyId != null" >
+        party_id = #{partyId,jdbcType=VARCHAR},
+      </if>
+      <if test="partyType != null" >
+        party_type = #{partyType,jdbcType=VARCHAR},
+      </if>
+      <if test="owner != null" >
+        owner = #{owner,jdbcType=VARCHAR},
+      </if>
+      <if test="ownType != null" >
+        own_type = #{ownType,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null" >
+        updater = #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="ext1 != null" >
+        ext1 = #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        ext2 = #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="ext3 != null" >
+        ext3 = #{ext3,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where xid = #{xid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tj720.model.common.video.PostShortcutentrance" >
+    update post_shortcutentrance
+    set party_id = #{partyId,jdbcType=VARCHAR},
+      party_type = #{partyType,jdbcType=VARCHAR},
+      owner = #{owner,jdbcType=VARCHAR},
+      own_type = #{ownType,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      creator = #{creator,jdbcType=VARCHAR},
+      updater = #{updater,jdbcType=VARCHAR},
+      ext1 = #{ext1,jdbcType=VARCHAR},
+      ext2 = #{ext2,jdbcType=VARCHAR},
+      ext3 = #{ext3,jdbcType=VARCHAR}
+    where xid = #{xid,jdbcType=VARCHAR}
+  </update>
+
+  <select id="getShortcutEntrance" resultType="java.util.HashMap">
+     select f.id,f.functionName as name,f.iconRemark as icon,f.type,f.functionUrl as url
+    from post_shortcutentrance s left join sys_function f
+    on (s.party_id = f.id )
+    where s.owner = #{currentUserId}
+    and s.own_type = 'user'
+    and s.party_type = #{type}
+  </select>
+  <insert id="batchAddShortcutEntrance">
+    INSERT INTO
+    post_shortcutentrance(party_id, party_type,owner, own_type, create_time,update_time,creator,updater)
+    VALUES
+    <foreach collection="list" item="item" index="index" separator=",">
+      (#{item.partyId},#{item.partyType},#{item.owner},#{item.ownType}, #{item.createTime},#{item.updateTime}
+      ,#{item.creator},#{item.updater}
+      )
+    </foreach>
+  </insert>
+  <delete id="deleteShortcutEntrance">
+    delete from post_shortcutentrance
+    where owner = #{currentUserId}
+    and own_type = 'user'
+    and party_type = #{type}
+  </delete>
+</mapper>

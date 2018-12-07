@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tj720.dao.PostCollectionTypeMapper" >
+  <resultMap id="BaseResultMap" type="com.tj720.model.common.collectiontype.PostCollectionType" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="theme_show_id" property="themeShowId" jdbcType="VARCHAR" />
+    <result column="collect_id" property="collectId" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="isdelete" property="isdelete" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="VARCHAR" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+    <result column="other1" property="other1" jdbcType="VARCHAR" />
+    <result column="other2" property="other2" jdbcType="VARCHAR" />
+    <result column="other3" property="other3" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, theme_show_id, collect_id, status, isdelete, sort, create_by, create_date, update_by,
+    update_date, other1, other2, other3
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from post_collection_type
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectByThemeId" parameterType="java.lang.String" resultType="com.tj720.model.common.collectiontype.PostCollectionType">
+    select
+    a.id,
+    a.theme_show_id,
+    a.collect_id
+    from post_collection_type a,post_collection b
+    where a.theme_show_id = #{themeShowId}
+      and a.collect_id = b.id
+      and a.status = '1'
+      and b.isdelete = 0
+  </select>
+
+  <delete id="deleteByThemeId" parameterType="java.lang.String">
+    delete from post_collection_type
+    where theme_show_id = #{themeShowId}
+  </delete>
+
+  <insert id="batchSave" parameterType="java.util.List">
+    insert into post_collection_type (id, theme_show_id, collect_id,
+    status, isdelete, sort,
+    other1, other2, other3
+    )
+    values
+    <foreach collection="list" item="item" index="index" separator=",">
+      (#{item.id}, #{item.themeShowId}, #{item.collectId},
+      #{item.status}, #{item.isdelete}, #{item.sort},
+      #{item.other1}, #{item.other2}, #{item.other3}
+      )
+    </foreach>
+  </insert>
+
+
+
+
+  <insert id="insert" parameterType="com.tj720.model.common.collectiontype.PostCollectionType" >
+    insert into post_collection_type (id, theme_show_id, collect_id,
+      status, isdelete, sort,
+      create_by, create_date, update_by,
+      update_date, other1, other2,
+      other3)
+    values (#{id,jdbcType=VARCHAR}, #{themeShowId,jdbcType=VARCHAR}, #{collectId,jdbcType=VARCHAR},
+      #{status,jdbcType=VARCHAR}, #{isdelete,jdbcType=VARCHAR}, #{sort,jdbcType=VARCHAR},
+      #{createBy,jdbcType=VARCHAR}, #{createDate,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR},
+      #{updateDate,jdbcType=TIMESTAMP}, #{other1,jdbcType=VARCHAR}, #{other2,jdbcType=VARCHAR},
+      #{other3,jdbcType=VARCHAR})
+  </insert>
+
+
+
+  <update id="updateByPrimaryKey" parameterType="com.tj720.model.common.collectiontype.PostCollectionType" >
+    update post_collection_type
+    set theme_show_id = #{themeShowId,jdbcType=VARCHAR},
+      collect_id = #{collectId,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      isdelete = #{isdelete,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=VARCHAR},
+      other1 = #{other1,jdbcType=VARCHAR},
+      other2 = #{other2,jdbcType=VARCHAR},
+      other3 = #{other3,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <select id="selectCollectByThemeId" parameterType="java.lang.String" resultType="com.tj720.model.common.collect.CollectDto">
+    select
+        b.id                id,
+        b.colle_id          colleId,
+        b.msg               msg,
+        b.pictureids        pictureids,
+        b.name              name,
+        b.type_id           typeId,
+        b.son_type_id       sonTypeId,
+        b.commend           commend,
+        b.isdelete          isdelete,
+        b.sort              sort,
+        b.create_time       createTime,
+        b.update_time       updateTime,
+        b.creator           creator,
+        b.updater           updater,
+        b.other1            other1,
+        b.other2            other2,
+        b.other3
+      from post_collection_type a
+      inner join post_collection b on (a.collect_id = b.id and b.isdelete = 0)
+      where a.theme_show_id = #{id}
+  </select>
+</mapper>

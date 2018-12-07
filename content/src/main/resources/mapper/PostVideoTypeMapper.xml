@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tj720.dao.PostVideoTypeMapper" >
+  <resultMap id="BaseResultMap" type="com.tj720.model.common.video.PostVideoType" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="type_code" property="typeCode" jdbcType="VARCHAR" />
+    <result column="type_level" property="typeLevel" jdbcType="VARCHAR" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="sort" property="sort" jdbcType="VARCHAR" />
+    <result column="pid" property="pid" jdbcType="VARCHAR" />
+    <result column="type_mark" property="typeMark" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="updater" property="updater" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="ext1" property="ext1" jdbcType="VARCHAR" />
+    <result column="ext2" property="ext2" jdbcType="VARCHAR" />
+    <result column="ext3" property="ext3" jdbcType="VARCHAR" />
+  </resultMap>
+  <!--<sql id="Example_Where_Clause" >-->
+    <!--<where >-->
+      <!--<foreach collection="oredCriteria" item="criteria" separator="or" >-->
+        <!--<if test="criteria.valid" >-->
+          <!--<trim prefix="(" suffix=")" prefixOverrides="and" >-->
+            <!--<foreach collection="criteria.criteria" item="criterion" >-->
+              <!--<choose >-->
+                <!--<when test="criterion.noValue" >-->
+                  <!--and ${criterion.condition}-->
+                <!--</when>-->
+                <!--<when test="criterion.singleValue" >-->
+                  <!--and ${criterion.condition} #{criterion.value}-->
+                <!--</when>-->
+                <!--<when test="criterion.betweenValue" >-->
+                  <!--and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}-->
+                <!--</when>-->
+                <!--<when test="criterion.listValue" >-->
+                  <!--and ${criterion.condition}-->
+                  <!--<foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >-->
+                    <!--#{listItem}-->
+                  <!--</foreach>-->
+                <!--</when>-->
+              <!--</choose>-->
+            <!--</foreach>-->
+          <!--</trim>-->
+        <!--</if>-->
+      <!--</foreach>-->
+    <!--</where>-->
+  <!--</sql>-->
+  <!--<sql id="Update_By_Example_Where_Clause" >-->
+    <!--<where >-->
+      <!--<foreach collection="example.oredCriteria" item="criteria" separator="or" >-->
+        <!--<if test="criteria.valid" >-->
+          <!--<trim prefix="(" suffix=")" prefixOverrides="and" >-->
+            <!--<foreach collection="criteria.criteria" item="criterion" >-->
+              <!--<choose >-->
+                <!--<when test="criterion.noValue" >-->
+                  <!--and ${criterion.condition}-->
+                <!--</when>-->
+                <!--<when test="criterion.singleValue" >-->
+                  <!--and ${criterion.condition} #{criterion.value}-->
+                <!--</when>-->
+                <!--<when test="criterion.betweenValue" >-->
+                  <!--and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}-->
+                <!--</when>-->
+                <!--<when test="criterion.listValue" >-->
+                  <!--and ${criterion.condition}-->
+                  <!--<foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >-->
+                    <!--#{listItem}-->
+                  <!--</foreach>-->
+                <!--</when>-->
+              <!--</choose>-->
+            <!--</foreach>-->
+          <!--</trim>-->
+        <!--</if>-->
+      <!--</foreach>-->
+    <!--</where>-->
+  <!--</sql>-->
+  <sql id="Base_Column_List" >
+    id, type_code, type_level, name, sort, pid, type_mark, remark, status, creator, updater, 
+    create_time, update_time, ext1, ext2, ext3
+  </sql>
+  <!--<select id="selectByExample" resultMap="BaseResultMap" parameterType="com.tj720.model.common.video.PostVideoTypeExample" >-->
+    <!--select-->
+    <!--<if test="distinct" >-->
+      <!--distinct-->
+    <!--</if>-->
+    <!--<include refid="Base_Column_List" />-->
+    <!--from post_video_type-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Example_Where_Clause" />-->
+    <!--</if>-->
+    <!--<if test="orderByClause != null" >-->
+      <!--order by ${orderByClause}-->
+    <!--</if>-->
+  <!--</select>-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from post_video_type
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from post_video_type
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <!--<delete id="deleteByExample" parameterType="com.tj720.model.common.video.PostVideoTypeExample" >-->
+    <!--delete from post_video_type-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</delete>-->
+  <insert id="insert" parameterType="com.tj720.model.common.video.PostVideoType" >
+    insert into post_video_type (id, type_code, type_level, 
+      name, sort, pid, type_mark, 
+      remark, status, creator, 
+      updater, create_time, update_time, 
+      ext1, ext2, ext3)
+    values (#{id,jdbcType=VARCHAR}, #{typeCode,jdbcType=VARCHAR}, #{typeLevel,jdbcType=VARCHAR}, 
+      #{name,jdbcType=VARCHAR}, #{sort,jdbcType=VARCHAR}, #{pid,jdbcType=VARCHAR}, #{typeMark,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{creator,jdbcType=VARCHAR}, 
+      #{updater,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{ext1,jdbcType=VARCHAR}, #{ext2,jdbcType=VARCHAR}, #{ext3,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tj720.model.common.video.PostVideoType" >
+    insert into post_video_type
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="typeCode != null" >
+        type_code,
+      </if>
+      <if test="typeLevel != null" >
+        type_level,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+      <if test="pid != null" >
+        pid,
+      </if>
+      <if test="typeMark != null" >
+        type_mark,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="updater != null" >
+        updater,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="ext1 != null" >
+        ext1,
+      </if>
+      <if test="ext2 != null" >
+        ext2,
+      </if>
+      <if test="ext3 != null" >
+        ext3,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="typeCode != null" >
+        #{typeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="typeLevel != null" >
+        #{typeLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        #{sort,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null" >
+        #{pid,jdbcType=VARCHAR},
+      </if>
+      <if test="typeMark != null" >
+        #{typeMark,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null" >
+        #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ext1 != null" >
+        #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="ext3 != null" >
+        #{ext3,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <!--<select id="countByExample" parameterType="com.tj720.model.common.video.PostVideoTypeExample" resultType="java.lang.Integer" >-->
+    <!--select count(*) from post_video_type-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</select>-->
+  <!--<update id="updateByExampleSelective" parameterType="map" >-->
+    <!--update post_video_type-->
+    <!--<set >-->
+      <!--<if test="record.id != null" >-->
+        <!--id = #{record.id,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.typeCode != null" >-->
+        <!--type_code = #{record.typeCode,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.typeLevel != null" >-->
+        <!--type_level = #{record.typeLevel,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.name != null" >-->
+        <!--name = #{record.name,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.sort != null" >-->
+        <!--sort = #{record.sort,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.pid != null" >-->
+        <!--pid = #{record.pid,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.typeMark != null" >-->
+        <!--type_mark = #{record.typeMark,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.remark != null" >-->
+        <!--remark = #{record.remark,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.status != null" >-->
+        <!--status = #{record.status,jdbcType=TINYINT},-->
+      <!--</if>-->
+      <!--<if test="record.creator != null" >-->
+        <!--creator = #{record.creator,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.updater != null" >-->
+        <!--updater = #{record.updater,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.createTime != null" >-->
+        <!--create_time = #{record.createTime,jdbcType=TIMESTAMP},-->
+      <!--</if>-->
+      <!--<if test="record.updateTime != null" >-->
+        <!--update_time = #{record.updateTime,jdbcType=TIMESTAMP},-->
+      <!--</if>-->
+      <!--<if test="record.ext1 != null" >-->
+        <!--ext1 = #{record.ext1,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.ext2 != null" >-->
+        <!--ext2 = #{record.ext2,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.ext3 != null" >-->
+        <!--ext3 = #{record.ext3,jdbcType=VARCHAR},-->
+      <!--</if>-->
+    <!--</set>-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Update_By_Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</update>-->
+  <!--<update id="updateByExample" parameterType="map" >-->
+    <!--update post_video_type-->
+    <!--set id = #{record.id,jdbcType=VARCHAR},-->
+      <!--type_code = #{record.typeCode,jdbcType=VARCHAR},-->
+      <!--type_level = #{record.typeLevel,jdbcType=VARCHAR},-->
+      <!--name = #{record.name,jdbcType=VARCHAR},-->
+      <!--sort = #{record.sort,jdbcType=VARCHAR},-->
+      <!--pid = #{record.pid,jdbcType=VARCHAR},-->
+      <!--type_mark = #{record.typeMark,jdbcType=VARCHAR},-->
+      <!--remark = #{record.remark,jdbcType=VARCHAR},-->
+      <!--status = #{record.status,jdbcType=TINYINT},-->
+      <!--creator = #{record.creator,jdbcType=VARCHAR},-->
+      <!--updater = #{record.updater,jdbcType=VARCHAR},-->
+      <!--create_time = #{record.createTime,jdbcType=TIMESTAMP},-->
+      <!--update_time = #{record.updateTime,jdbcType=TIMESTAMP},-->
+      <!--ext1 = #{record.ext1,jdbcType=VARCHAR},-->
+      <!--ext2 = #{record.ext2,jdbcType=VARCHAR},-->
+      <!--ext3 = #{record.ext3,jdbcType=VARCHAR}-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Update_By_Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</update>-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.tj720.model.common.video.PostVideoType" >
+    update post_video_type
+    <set >
+      <if test="typeCode != null" >
+        type_code = #{typeCode,jdbcType=VARCHAR},
+      </if>
+      <if test="typeLevel != null" >
+        type_level = #{typeLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null" >
+        sort = #{sort,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null" >
+        pid = #{pid,jdbcType=VARCHAR},
+      </if>
+      <if test="typeMark != null" >
+        type_mark = #{typeMark,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null" >
+        updater = #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ext1 != null" >
+        ext1 = #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        ext2 = #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="ext3 != null" >
+        ext3 = #{ext3,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tj720.model.common.video.PostVideoType" >
+    update post_video_type
+    set type_code = #{typeCode,jdbcType=VARCHAR},
+      type_level = #{typeLevel,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=VARCHAR},
+      pid = #{pid,jdbcType=VARCHAR},
+      type_mark = #{typeMark,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      status = #{status,jdbcType=TINYINT},
+      creator = #{creator,jdbcType=VARCHAR},
+      updater = #{updater,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      ext1 = #{ext1,jdbcType=VARCHAR},
+      ext2 = #{ext2,jdbcType=VARCHAR},
+      ext3 = #{ext3,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <select id="queryPostVideoTypeList" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from post_video_type
+    where 1=1
+    <if test="keywords != null and keywords!=''">
+      and (name like concat('%',#{keywords},'%')
+      or type_code like concat('%',#{keywords},'%')
+      )
+    </if>
+    <if test="level != null and level!=''">
+      and type_level = #{level}
+    </if>
+    <if test="status != null and status!=''">
+      and status = #{status}
+    </if>
+    order by
+
+    <if test="orderBy == 1">
+      update_time desc
+    </if>
+    <if test="orderBy == 2">
+      create_time desc
+    </if>
+    limit #{currentPage},#{size}
+  </select>
+
+  <select id="countPostVideoTypeList" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+    select
+    count(1)
+    from post_video_type
+    where 1=1
+    <if test="keywords != null and keywords!=''">
+      and (name like concat('%',#{keywords},'%')
+      or type_code like concat('%',#{keywords},'%')
+      )
+    </if>
+    <if test="level != null and level!=''">
+      and type_level = #{level}
+    </if>
+    <if test="status != null and status!=''">
+      and status = #{status}
+    </if>
+  </select>
+
+  <select id="queryPostVideoTypeById" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from post_video_type
+    where id = #{id}
+  </select>
+
+  <select id="queryPostVideoTypeListTree" resultType="com.tj720.model.common.system.menu.MenuTreeDto">
+    select id,name as functionname,pid from
+    post_video_type
+  </select>
+
+  <select id="queryPostVideoTypeListDist" resultType="com.tj720.model.common.video.PostVideoType">
+    select id,name from post_video_type
+    where 1=1
+    <if test="currentId != null and currentId != ''">
+      and id != #{currentId}
+    </if>
+  </select>
+  <select id="selectByMap" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from post_video_type
+    where 1=1
+    <if test="name != null and name != ''">
+      and name = #{name}
+    </if>
+  </select>
+</mapper>

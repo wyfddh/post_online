@@ -1,0 +1,1882 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tj720.dao.PostVideoMapper" >
+<resultMap id="BaseResultMap" type="com.tj720.model.common.video.PostVideo" >
+  <id column="id" property="id" jdbcType="VARCHAR" />
+  <result column="video_code" property="videoCode" jdbcType="VARCHAR" />
+  <result column="video_name" property="videoName" jdbcType="VARCHAR" />
+  <result column="video_type" property="videoType" jdbcType="VARCHAR" />
+  <result column="relative_object" property="relativeObject" jdbcType="VARCHAR" />
+  <result column="relative_collection" property="relativeCollection" jdbcType="VARCHAR" />
+  <result column="relative_collection_name" property="relativeCollectionName" jdbcType="VARCHAR"/>
+  <result column="source" property="source" jdbcType="VARCHAR" />
+  <result column="attachment" property="attachment" jdbcType="VARCHAR" />
+  <result column="upload_org" property="uploadOrg" jdbcType="VARCHAR" />
+  <result column="status" property="status" jdbcType="VARCHAR" />
+  <result column="auth_setting" property="authSetting" jdbcType="VARCHAR" />
+  <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+  <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  <result column="creator" property="creator" jdbcType="VARCHAR" />
+  <result column="updater" property="updater" jdbcType="VARCHAR" />
+  <result column="content" property="content" jdbcType="VARCHAR" />
+  <result column="make_time" property="makeTime" jdbcType="TIMESTAMP" />
+  <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+  <result column="save_type" property="saveType" jdbcType="VARCHAR" />
+  <result column="sequence" property="sequence" jdbcType="INTEGER" />
+  <result column="video_mark" property="videoMark" jdbcType="VARCHAR" />
+  <result column="keywords" property="keywords" jdbcType="VARCHAR" />
+  <result column="video_time" property="videoTime" jdbcType="VARCHAR" />
+  <result column="video_size" property="videoSize" jdbcType="VARCHAR" />
+  <result column="approval" property="approval" jdbcType="VARCHAR" />
+  <result column="other1" property="other1" jdbcType="VARCHAR" />
+  <result column="other2" property="other2" jdbcType="VARCHAR" />
+  <result column="other3" property="other3" jdbcType="VARCHAR" />
+</resultMap>
+
+  <resultMap id="BaseResultMap2" type="com.tj720.model.common.Attachment" >
+    <id column="att_id" property="attId" jdbcType="VARCHAR" />
+    <result column="att_name" property="attName" jdbcType="VARCHAR" />
+    <result column="att_size" property="attSize" jdbcType="BIGINT" />
+    <result column="att_path" property="attPath" jdbcType="VARCHAR" />
+    <result column="att_isJunk" property="attIsjunk" jdbcType="CHAR" />
+    <result column="att_date" property="attDate" jdbcType="TIMESTAMP" />
+    <result column="att_type" property="attType" jdbcType="VARCHAR" />
+    <result column="attr_user" property="attrUser" jdbcType="VARCHAR" />
+    <result column="att_fk_id" property="attFkId" jdbcType="VARCHAR" />
+    <result column="att_file_type" property="attFileType" jdbcType="INTEGER" />
+    <result column="att_source" property="attSource" jdbcType="VARCHAR" />
+    <result column="is_main" property="isMain" jdbcType="CHAR" />
+  </resultMap>
+
+  <resultMap id="UploadApproval" type="com.tj720.model.common.video.UploadApprovalDto" >
+    <id column="xid" property="xid" jdbcType="VARCHAR" />
+    <result column="video_code" property="videoCode" jdbcType="VARCHAR" />
+    <result column="video_name" property="videoName" jdbcType="VARCHAR" />
+    <result column="source" property="source" jdbcType="VARCHAR" />
+    <result column="upload_org" property="uploadOrg" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+    <result column="save_type" property="saveType" jdbcType="VARCHAR" />
+    <result column="party_id" property="partyId" jdbcType="VARCHAR" />
+    <result column="auth" property="auth" jdbcType="VARCHAR" />
+  </resultMap>
+<!--<sql id="Example_Where_Clause" >-->
+  <!--<where >-->
+    <!--<foreach collection="oredCriteria" item="criteria" separator="or" >-->
+      <!--<if test="criteria.valid" >-->
+        <!--<trim prefix="(" suffix=")" prefixOverrides="and" >-->
+          <!--<foreach collection="criteria.criteria" item="criterion" >-->
+            <!--<choose >-->
+              <!--<when test="criterion.noValue" >-->
+                <!--and ${criterion.condition}-->
+              <!--</when>-->
+              <!--<when test="criterion.singleValue" >-->
+                <!--and ${criterion.condition} #{criterion.value}-->
+              <!--</when>-->
+              <!--<when test="criterion.betweenValue" >-->
+                <!--and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}-->
+              <!--</when>-->
+              <!--<when test="criterion.listValue" >-->
+                <!--and ${criterion.condition}-->
+                <!--<foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >-->
+                  <!--#{listItem}-->
+                <!--</foreach>-->
+              <!--</when>-->
+            <!--</choose>-->
+          <!--</foreach>-->
+        <!--</trim>-->
+      <!--</if>-->
+    <!--</foreach>-->
+  <!--</where>-->
+<!--</sql>-->
+<!--<sql id="Update_By_Example_Where_Clause" >-->
+  <!--<where >-->
+    <!--<foreach collection="example.oredCriteria" item="criteria" separator="or" >-->
+      <!--<if test="criteria.valid" >-->
+        <!--<trim prefix="(" suffix=")" prefixOverrides="and" >-->
+          <!--<foreach collection="criteria.criteria" item="criterion" >-->
+            <!--<choose >-->
+              <!--<when test="criterion.noValue" >-->
+                <!--and ${criterion.condition}-->
+              <!--</when>-->
+              <!--<when test="criterion.singleValue" >-->
+                <!--and ${criterion.condition} #{criterion.value}-->
+              <!--</when>-->
+              <!--<when test="criterion.betweenValue" >-->
+                <!--and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}-->
+              <!--</when>-->
+              <!--<when test="criterion.listValue" >-->
+                <!--and ${criterion.condition}-->
+                <!--<foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >-->
+                  <!--#{listItem}-->
+                <!--</foreach>-->
+              <!--</when>-->
+            <!--</choose>-->
+          <!--</foreach>-->
+        <!--</trim>-->
+      <!--</if>-->
+    <!--</foreach>-->
+  <!--</where>-->
+<!--</sql>-->
+<sql id="Base_Column_List" >
+  id, video_code, video_name, video_type, relative_object, relative_collection, relative_collection_name,source,
+  attachment, upload_org, status, auth_setting, create_time, update_time, creator,
+  updater, content, make_time, remarks, save_type, sequence, video_mark, keywords,
+  video_time, video_size, approval, other1, other2, other3
+</sql>
+
+  <sql id="Base_Column_List1" >
+    id, video_code, video_name, video_type, relative_object, relative_collection, relative_collection_name, source,
+    attachment, upload_org, status, auth_setting, create_time, update_time, creator,
+    updater, content, make_time, remarks, save_type, sequence, video_mark, keywords,
+    video_time, video_size, approval, other1, other2
+  </sql>
+<!--<select id="selectByExample" resultMap="BaseResultMap" parameterType="com.tj720.model.common.video.PostVideoExample" >-->
+  <!--select-->
+  <!--<if test="distinct" >-->
+    <!--distinct-->
+  <!--</if>-->
+  <!--<include refid="Base_Column_List" />-->
+  <!--from post_video-->
+  <!--<if test="_parameter != null" >-->
+    <!--<include refid="Example_Where_Clause" />-->
+  <!--</if>-->
+  <!--<if test="orderByClause != null" >-->
+    <!--order by ${orderByClause}-->
+  <!--</if>-->
+<!--</select>-->
+<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+  select
+  <include refid="Base_Column_List" />
+  from post_video
+  where id = #{id,jdbcType=VARCHAR}
+</select>
+<delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+  delete from post_video
+  where id = #{id,jdbcType=VARCHAR}
+</delete>
+<!--<delete id="deleteByExample" parameterType="com.tj720.model.common.video.PostVideoExample" >-->
+  <!--delete from post_video-->
+  <!--<if test="_parameter != null" >-->
+    <!--<include refid="Example_Where_Clause" />-->
+  <!--</if>-->
+<!--</delete>-->
+<insert id="insert" parameterType="com.tj720.model.common.video.PostVideo" >
+  insert into post_video (id, video_code, video_name,
+  video_type, relative_object, relative_collection,
+  source, attachment, upload_org,
+  status, auth_setting, create_time,
+  update_time, creator, updater,
+  content, make_time, remarks,
+  save_type, sequence, video_mark,
+  keywords, video_time, video_size,
+  approval, other1, other2,
+  other3)
+  values (#{id,jdbcType=VARCHAR}, #{videoCode,jdbcType=VARCHAR}, #{videoName,jdbcType=VARCHAR},
+  #{videoType,jdbcType=VARCHAR}, #{relativeObject,jdbcType=VARCHAR}, #{relativeCollection,jdbcType=VARCHAR},
+  #{source,jdbcType=VARCHAR}, #{attachment,jdbcType=VARCHAR}, #{uploadOrg,jdbcType=VARCHAR},
+  #{status,jdbcType=VARCHAR}, #{authSetting,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+  #{updateTime,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR},
+  #{content,jdbcType=VARCHAR}, #{makeTime,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR},
+  #{saveType,jdbcType=VARCHAR}, #{sequence,jdbcType=INTEGER}, #{videoMark,jdbcType=VARCHAR},
+  #{keywords,jdbcType=VARCHAR}, #{videoTime,jdbcType=VARCHAR}, #{videoSize,jdbcType=VARCHAR},
+  #{approval,jdbcType=VARCHAR}, #{other1,jdbcType=VARCHAR}, #{other2,jdbcType=VARCHAR},
+  #{other3,jdbcType=VARCHAR})
+</insert>
+<insert id="insertSelective" parameterType="com.tj720.model.common.video.PostVideo" >
+  insert into post_video
+  <trim prefix="(" suffix=")" suffixOverrides="," >
+    <if test="id != null" >
+      id,
+    </if>
+    <if test="videoCode != null" >
+      video_code,
+    </if>
+    <if test="videoName != null" >
+      video_name,
+    </if>
+    <if test="videoType != null" >
+      video_type,
+    </if>
+    <if test="relativeObject != null" >
+      relative_object,
+    </if>
+    <if test="relativeCollection != null" >
+      relative_collection,
+    </if>
+    <if test="source != null" >
+      source,
+    </if>
+    <if test="attachment != null" >
+      attachment,
+    </if>
+    <if test="uploadOrg != null" >
+      upload_org,
+    </if>
+    <if test="status != null" >
+      status,
+    </if>
+    <if test="authSetting != null" >
+      auth_setting,
+    </if>
+    <if test="createTime != null" >
+      create_time,
+    </if>
+    <if test="updateTime != null" >
+      update_time,
+    </if>
+    <if test="creator != null" >
+      creator,
+    </if>
+    <if test="updater != null" >
+      updater,
+    </if>
+    <if test="content != null" >
+      content,
+    </if>
+    <if test="makeTime != null" >
+      make_time,
+    </if>
+    <if test="remarks != null" >
+      remarks,
+    </if>
+    <if test="saveType != null" >
+      save_type,
+    </if>
+    <if test="sequence != null" >
+      sequence,
+    </if>
+    <if test="videoMark != null" >
+      video_mark,
+    </if>
+    <if test="keywords != null" >
+      keywords,
+    </if>
+    <if test="videoTime != null" >
+      video_time,
+    </if>
+    <if test="videoSize != null" >
+      video_size,
+    </if>
+    <if test="approval != null" >
+      approval,
+    </if>
+    <if test="other1 != null" >
+      other1,
+    </if>
+    <if test="other2 != null" >
+      other2,
+    </if>
+    <if test="other3 != null" >
+      other3,
+    </if>
+  </trim>
+  <trim prefix="values (" suffix=")" suffixOverrides="," >
+    <if test="id != null" >
+      #{id,jdbcType=VARCHAR},
+    </if>
+    <if test="videoCode != null" >
+      #{videoCode,jdbcType=VARCHAR},
+    </if>
+    <if test="videoName != null" >
+      #{videoName,jdbcType=VARCHAR},
+    </if>
+    <if test="videoType != null" >
+      #{videoType,jdbcType=VARCHAR},
+    </if>
+    <if test="relativeObject != null" >
+      #{relativeObject,jdbcType=VARCHAR},
+    </if>
+    <if test="relativeCollection != null" >
+      #{relativeCollection,jdbcType=VARCHAR},
+    </if>
+    <if test="source != null" >
+      #{source,jdbcType=VARCHAR},
+    </if>
+    <if test="attachment != null" >
+      #{attachment,jdbcType=VARCHAR},
+    </if>
+    <if test="uploadOrg != null" >
+      #{uploadOrg,jdbcType=VARCHAR},
+    </if>
+    <if test="status != null" >
+      #{status,jdbcType=VARCHAR},
+    </if>
+    <if test="authSetting != null" >
+      #{authSetting,jdbcType=VARCHAR},
+    </if>
+    <if test="createTime != null" >
+      #{createTime,jdbcType=TIMESTAMP},
+    </if>
+    <if test="updateTime != null" >
+      #{updateTime,jdbcType=TIMESTAMP},
+    </if>
+    <if test="creator != null" >
+      #{creator,jdbcType=VARCHAR},
+    </if>
+    <if test="updater != null" >
+      #{updater,jdbcType=VARCHAR},
+    </if>
+    <if test="content != null" >
+      #{content,jdbcType=VARCHAR},
+    </if>
+    <if test="makeTime != null" >
+      #{makeTime,jdbcType=TIMESTAMP},
+    </if>
+    <if test="remarks != null" >
+      #{remarks,jdbcType=VARCHAR},
+    </if>
+    <if test="saveType != null" >
+      #{saveType,jdbcType=VARCHAR},
+    </if>
+    <if test="sequence != null" >
+      #{sequence,jdbcType=INTEGER},
+    </if>
+    <if test="videoMark != null" >
+      #{videoMark,jdbcType=VARCHAR},
+    </if>
+    <if test="keywords != null" >
+      #{keywords,jdbcType=VARCHAR},
+    </if>
+    <if test="videoTime != null" >
+      #{videoTime,jdbcType=VARCHAR},
+    </if>
+    <if test="videoSize != null" >
+      #{videoSize,jdbcType=VARCHAR},
+    </if>
+    <if test="approval != null" >
+      #{approval,jdbcType=VARCHAR},
+    </if>
+    <if test="other1 != null" >
+      #{other1,jdbcType=VARCHAR},
+    </if>
+    <if test="other2 != null" >
+      #{other2,jdbcType=VARCHAR},
+    </if>
+    <if test="other3 != null" >
+      #{other3,jdbcType=VARCHAR},
+    </if>
+  </trim>
+</insert>
+<!--<select id="countByExample" parameterType="com.tj720.model.common.video.PostVideoExample" resultType="java.lang.Integer" >-->
+  <!--select count(*) from post_video-->
+  <!--<if test="_parameter != null" >-->
+    <!--<include refid="Example_Where_Clause" />-->
+  <!--</if>-->
+<!--</select>-->
+<!--<update id="updateByExampleSelective" parameterType="map" >-->
+  <!--update post_video-->
+  <!--<set >-->
+    <!--<if test="record.id != null" >-->
+      <!--id = #{record.id,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="record.videoCode != null" >-->
+      <!--video_code = #{record.videoCode,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="record.videoName != null" >-->
+      <!--video_name = #{record.videoName,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="record.videoType != null" >-->
+      <!--video_type = #{record.videoType,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="record.relativeObject != null" >-->
+      <!--relative_object = #{record.relativeObject,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="record.relativeCollection != null" >-->
+      <!--relative_collection = #{record.relativeCollection,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="record.source != null" >-->
+      <!--source = #{record.source,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="record.attachment != null" >-->
+      <!--attachment = #{record.attachment,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="record.uploadOrg != null" >-->
+      <!--upload_org = #{record.uploadOrg,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="record.status != null" >-->
+      <!--status = #{record.status,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="record.authSetting != null" >-->
+      <!--auth_setting = #{record.authSetting,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="record.createTime != null" >-->
+      <!--create_time = #{record.createTime,jdbcType=TIMESTAMP},-->
+    <!--</if>-->
+    <!--<if test="record.updateTime != null" >-->
+      <!--update_time = #{record.updateTime,jdbcType=TIMESTAMP},-->
+    <!--</if>-->
+    <!--<if test="record.creator != null" >-->
+      <!--creator = #{record.creator,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="record.updater != null" >-->
+      <!--updater = #{record.updater,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="record.content != null" >-->
+      <!--content = #{record.content,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="record.makeTime != null" >-->
+      <!--make_time = #{record.makeTime,jdbcType=TIMESTAMP},-->
+    <!--</if>-->
+    <!--<if test="record.remarks != null" >-->
+      <!--remarks = #{record.remarks,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="record.saveType != null" >-->
+      <!--save_type = #{record.saveType,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="record.sequence != null" >-->
+      <!--sequence = #{record.sequence,jdbcType=INTEGER},-->
+    <!--</if>-->
+    <!--<if test="record.videoMark != null" >-->
+      <!--video_mark = #{record.videoMark,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="record.keywords != null" >-->
+      <!--keywords = #{record.keywords,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="record.videoTime != null" >-->
+      <!--video_time = #{record.videoTime,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="record.videoSize != null" >-->
+      <!--video_size = #{record.videoSize,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="record.approval != null" >-->
+      <!--approval = #{record.approval,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="record.other1 != null" >-->
+      <!--other1 = #{record.other1,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="record.other2 != null" >-->
+      <!--other2 = #{record.other2,jdbcType=VARCHAR},-->
+    <!--</if>-->
+    <!--<if test="record.other3 != null" >-->
+      <!--other3 = #{record.other3,jdbcType=VARCHAR},-->
+    <!--</if>-->
+  <!--</set>-->
+  <!--<if test="_parameter != null" >-->
+    <!--<include refid="Update_By_Example_Where_Clause" />-->
+  <!--</if>-->
+<!--</update>-->
+<!--<update id="updateByExample" parameterType="map" >-->
+  <!--update post_video-->
+  <!--set id = #{record.id,jdbcType=VARCHAR},-->
+  <!--video_code = #{record.videoCode,jdbcType=VARCHAR},-->
+  <!--video_name = #{record.videoName,jdbcType=VARCHAR},-->
+  <!--video_type = #{record.videoType,jdbcType=VARCHAR},-->
+  <!--relative_object = #{record.relativeObject,jdbcType=VARCHAR},-->
+  <!--relative_collection = #{record.relativeCollection,jdbcType=VARCHAR},-->
+  <!--source = #{record.source,jdbcType=VARCHAR},-->
+  <!--attachment = #{record.attachment,jdbcType=VARCHAR},-->
+  <!--upload_org = #{record.uploadOrg,jdbcType=VARCHAR},-->
+  <!--status = #{record.status,jdbcType=VARCHAR},-->
+  <!--auth_setting = #{record.authSetting,jdbcType=VARCHAR},-->
+  <!--create_time = #{record.createTime,jdbcType=TIMESTAMP},-->
+  <!--update_time = #{record.updateTime,jdbcType=TIMESTAMP},-->
+  <!--creator = #{record.creator,jdbcType=VARCHAR},-->
+  <!--updater = #{record.updater,jdbcType=VARCHAR},-->
+  <!--content = #{record.content,jdbcType=VARCHAR},-->
+  <!--make_time = #{record.makeTime,jdbcType=TIMESTAMP},-->
+  <!--remarks = #{record.remarks,jdbcType=VARCHAR},-->
+  <!--save_type = #{record.saveType,jdbcType=VARCHAR},-->
+  <!--sequence = #{record.sequence,jdbcType=INTEGER},-->
+  <!--video_mark = #{record.videoMark,jdbcType=VARCHAR},-->
+  <!--keywords = #{record.keywords,jdbcType=VARCHAR},-->
+  <!--video_time = #{record.videoTime,jdbcType=VARCHAR},-->
+  <!--video_size = #{record.videoSize,jdbcType=VARCHAR},-->
+  <!--approval = #{record.approval,jdbcType=VARCHAR},-->
+  <!--other1 = #{record.other1,jdbcType=VARCHAR},-->
+  <!--other2 = #{record.other2,jdbcType=VARCHAR},-->
+  <!--other3 = #{record.other3,jdbcType=VARCHAR}-->
+  <!--<if test="_parameter != null" >-->
+    <!--<include refid="Update_By_Example_Where_Clause" />-->
+  <!--</if>-->
+<!--</update>-->
+<update id="updateByPrimaryKeySelective" parameterType="com.tj720.model.common.video.PostVideo" >
+  update post_video
+  <set >
+    <if test="videoCode != null" >
+      video_code = #{videoCode,jdbcType=VARCHAR},
+    </if>
+    <if test="videoName != null" >
+      video_name = #{videoName,jdbcType=VARCHAR},
+    </if>
+    <if test="videoType != null" >
+      video_type = #{videoType,jdbcType=VARCHAR},
+    </if>
+    <if test="relativeObject != null" >
+      relative_object = #{relativeObject,jdbcType=VARCHAR},
+    </if>
+    <if test="relativeCollection != null" >
+      relative_collection = #{relativeCollection,jdbcType=VARCHAR},
+    </if>
+    <if test="source != null" >
+      source = #{source,jdbcType=VARCHAR},
+    </if>
+    <if test="attachment != null" >
+      attachment = #{attachment,jdbcType=VARCHAR},
+    </if>
+    <if test="uploadOrg != null" >
+      upload_org = #{uploadOrg,jdbcType=VARCHAR},
+    </if>
+    <if test="status != null" >
+      status = #{status,jdbcType=VARCHAR},
+    </if>
+    <if test="authSetting != null" >
+      auth_setting = #{authSetting,jdbcType=VARCHAR},
+    </if>
+    <if test="createTime != null" >
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+    </if>
+    <if test="updateTime != null" >
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+    </if>
+    <if test="creator != null" >
+      creator = #{creator,jdbcType=VARCHAR},
+    </if>
+    <if test="updater != null" >
+      updater = #{updater,jdbcType=VARCHAR},
+    </if>
+    <if test="content != null" >
+      content = #{content,jdbcType=VARCHAR},
+    </if>
+    <if test="makeTime != null" >
+      make_time = #{makeTime,jdbcType=TIMESTAMP},
+    </if>
+    <if test="remarks != null" >
+      remarks = #{remarks,jdbcType=VARCHAR},
+    </if>
+    <if test="saveType != null" >
+      save_type = #{saveType,jdbcType=VARCHAR},
+    </if>
+    <if test="sequence != null" >
+      sequence = #{sequence,jdbcType=INTEGER},
+    </if>
+    <if test="videoMark != null" >
+      video_mark = #{videoMark,jdbcType=VARCHAR},
+    </if>
+    <if test="keywords != null" >
+      keywords = #{keywords,jdbcType=VARCHAR},
+    </if>
+    <if test="videoTime != null" >
+      video_time = #{videoTime,jdbcType=VARCHAR},
+    </if>
+    <if test="videoSize != null" >
+      video_size = #{videoSize,jdbcType=VARCHAR},
+    </if>
+    <if test="approval != null" >
+      approval = #{approval,jdbcType=VARCHAR},
+    </if>
+    <if test="other1 != null" >
+      other1 = #{other1,jdbcType=VARCHAR},
+    </if>
+    <if test="other2 != null" >
+      other2 = #{other2,jdbcType=VARCHAR},
+    </if>
+    <if test="other3 != null" >
+      other3 = #{other3,jdbcType=VARCHAR},
+    </if>
+  </set>
+  where id = #{id,jdbcType=VARCHAR}
+</update>
+<update id="updateByPrimaryKey" parameterType="com.tj720.model.common.video.PostVideo" >
+  update post_video
+  set video_code = #{videoCode,jdbcType=VARCHAR},
+  video_name = #{videoName,jdbcType=VARCHAR},
+  video_type = #{videoType,jdbcType=VARCHAR},
+  relative_object = #{relativeObject,jdbcType=VARCHAR},
+  relative_collection = #{relativeCollection,jdbcType=VARCHAR},
+  source = #{source,jdbcType=VARCHAR},
+  attachment = #{attachment,jdbcType=VARCHAR},
+  upload_org = #{uploadOrg,jdbcType=VARCHAR},
+  status = #{status,jdbcType=VARCHAR},
+  auth_setting = #{authSetting,jdbcType=VARCHAR},
+  create_time = #{createTime,jdbcType=TIMESTAMP},
+  update_time = #{updateTime,jdbcType=TIMESTAMP},
+  creator = #{creator,jdbcType=VARCHAR},
+  updater = #{updater,jdbcType=VARCHAR},
+  content = #{content,jdbcType=VARCHAR},
+  make_time = #{makeTime,jdbcType=TIMESTAMP},
+  remarks = #{remarks,jdbcType=VARCHAR},
+  save_type = #{saveType,jdbcType=VARCHAR},
+  sequence = #{sequence,jdbcType=INTEGER},
+  video_mark = #{videoMark,jdbcType=VARCHAR},
+  keywords = #{keywords,jdbcType=VARCHAR},
+  video_time = #{videoTime,jdbcType=VARCHAR},
+  video_size = #{videoSize,jdbcType=VARCHAR},
+  approval = #{approval,jdbcType=VARCHAR},
+  other1 = #{other1,jdbcType=VARCHAR},
+  other2 = #{other2,jdbcType=VARCHAR},
+  other3 = #{other3,jdbcType=VARCHAR}
+  where id = #{id,jdbcType=VARCHAR}
+</update>
+
+<!--查询影视资料列表（非影视部）-->
+<select id="getPostVideoList" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+
+ select <include refid="Base_Column_List1" />
+  <!--   若状态为草稿或提交中，则判断提交人是不是当前用户，若不是则返回'0'-->
+  ,case
+  when ((status = 1 or status = 2)
+  and other1 != #{userId}
+  ) then '0'
+<!--   若状态为待审批，则判断审批人是不是当前用户，若不是则返回'0'-->
+  when (status = 3
+  and approval != #{userId})
+  then '0'
+<!--   若状态为已发布，则直接返回'1'-->
+  when (status = 4)
+  then '0'
+  else '1'
+  end as other3
+  from
+  (
+<!--   查询本部门影视资料列表-->
+  select
+  <include refid="Base_Column_List"/>
+  FROM post_video where 1=1
+  <if test="keywords != null and keywords != ''">
+    and (video_name like concat('%',#{keywords},'%')
+    or video_code like concat('%',#{keywords},'%')
+    or relative_collection like concat('%',#{keywords},'%')
+    )
+  </if>
+  <if test="videoMark != null and videoMark != ''">
+    and video_mark = #{videoMark}
+  </if>
+  <if test="status != null and status != ''">
+    and status = #{status}
+  </if>
+  <if test="uploadOrg != null and uploadOrg !=''">
+    and upload_org = #{uploadOrg}
+  </if>
+  UNION
+  <!--查询当前申请人影视资料列表-->
+  select
+  <include refid="Base_Column_List"/>
+  from post_video
+  where 1=1
+  <if test="keywords != null and keywords != ''">
+    and (video_name like concat('%',#{keywords},'%')
+    or video_code like concat('%',#{keywords},'%')
+    or relative_collection like concat('%',#{keywords},'%')
+    )
+  </if>
+  <if test="videoMark != null and videoMark != ''">
+    and video_mark = #{videoMark}
+  </if>
+  <if test="status != null and status != ''">
+    and status = #{status}
+  </if>
+  <if test="userId != null and userId !=''">
+    and other1 = #{userId}
+  </if>
+  ) t
+  order by
+  t.sequence,
+  t.update_time desc
+  limit #{currentPage},#{size}
+</select>
+<!--统计影视资料列表-->
+<select id="countPostVideoList" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+
+  select count(1) from
+  (
+    <!--查询本部门影视资料列表-->
+    select
+    <include refid="Base_Column_List" />
+    from post_video
+    where 1=1
+    <if test="keywords != null and keywords != ''">
+      and (video_name like concat('%',#{keywords},'%')
+      or video_code like concat('%',#{keywords},'%')
+      or relative_collection like concat('%',#{keywords},'%')
+      )
+    </if>
+  <if test="videoMark != null and videoMark != ''">
+    and video_mark = #{videoMark}
+  </if>
+    <if test="status != null and status != ''">
+      and status = #{status}
+    </if>
+    <if test="uploadOrg != null and uploadOrg !=''">
+      and upload_org = #{uploadOrg}
+    </if>
+    union
+    <!--查询当前申请人影视资料列表-->
+    select
+    <include refid="Base_Column_List" />
+    from post_video
+    where 1=1
+    <if test="keywords != null and keywords != ''">
+      and (video_name like concat('%',#{keywords},'%')
+      or video_code like concat('%',#{keywords},'%')
+      or relative_collection like concat('%',#{keywords},'%')
+      )
+    </if>
+  <if test="videoMark != null and videoMark != ''">
+    and video_mark = #{videoMark}
+  </if>
+    <if test="status != null and status != ''">
+      and status = #{status}
+    </if>
+    <if test="userId != null and userId !=''">
+      and other1 = #{userId}
+    </if>
+  )t
+</select>
+
+  <select id="countVedilListForCompreQuery" parameterType="java.util.Map" resultType="java.lang.Integer">
+    select
+      count(1)
+    from post_video
+    where status = 4 and auth_setting &lt;&gt; 1
+    <if test="keywords != null and keywords != ''">
+      and (video_name like concat('%',#{keywords},'%')
+      or video_code like concat('%',#{keywords},'%')
+      or relative_collection like concat('%',#{keywords},'%')
+      )
+    </if>
+    <if test="videoMark != null and videoMark != ''">
+      and video_mark = #{videoMark}
+    </if>
+  </select>
+
+  <select id="queryVedilListForCompreQuery" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select
+      <include refid="Base_Column_List" />
+    from post_video
+    where status = 4 and auth_setting &lt;&gt; 1
+    <if test="keywords != null and keywords != ''">
+      and (video_name like concat('%',#{keywords},'%')
+      or video_code like concat('%',#{keywords},'%')
+      or relative_collection like concat('%',#{keywords},'%')
+      )
+    </if>
+    <if test="videoMark != null and videoMark != ''">
+      and video_mark = #{videoMark}
+    </if>
+    <if test="null == orderBy or orderBy == 0">
+    order by
+      sequence,
+      update_time
+    desc
+    </if>
+    <if test="orderBy == 1" >
+      order by sequence,update_time desc
+    </if>
+    <if test="orderBy == 2" >
+      order by sequence,create_time desc
+    </if>
+    limit #{currentPage},#{size}
+  </select>
+
+  <!--查询影视资料列表（影视部）-->
+  <select id="getPostVideoListPlus" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+
+    select <include refid="Base_Column_List1" />
+    <!--   若状态为草稿或提交中，则判断提交人是不是当前用户，若不是则返回'0'-->
+    ,case
+    when ((status = 1 or status = 2)
+    and other1 != #{userId}
+    ) then '0'
+    <!--   若状态为待审批，则判断审批人是不是当前用户，若不是则返回'0'-->
+    when (status = 3
+    and approval != #{userId})
+    then '0'
+    <!--   若状态为已发布，则直接返回'1'-->
+    when (status = 4)
+    then '0'
+    else '1'
+    end as other3
+    from
+    (
+    <!--   查询本部门影视资料列表-->
+    select
+    <include refid="Base_Column_List"/>
+    from post_video
+    where 1=1
+    <if test="keywords != null and keywords != ''">
+      and (video_name like concat('%',#{keywords},'%')
+      or video_code like concat('%',#{keywords},'%')
+      or relative_collection like concat('%',#{keywords},'%')
+      )
+    </if>
+    <if test="videoMark != null and videoMark != ''">
+      and video_mark = #{videoMark}
+    </if>
+    <if test="status != null and status != ''">
+      and status = #{status}
+    </if>
+    <if test="uploadOrg != null and uploadOrg !=''">
+      and upload_org = #{uploadOrg}
+    </if>
+    UNION
+    <!--查询当前审批人影视资料列表-->
+    select
+    <include refid="Base_Column_List"/>
+    from post_video
+    where 1=1
+    <if test="keywords != null and keywords != ''">
+      and (video_name like concat('%',#{keywords},'%')
+      or video_code like concat('%',#{keywords},'%')
+      or relative_collection like concat('%',#{keywords},'%')
+      )
+    </if>
+    <if test="videoMark != null and videoMark != ''">
+      and video_mark = #{videoMark}
+    </if>
+    and (status = '3' or status = '4')
+    <if test="status != null and status != ''">
+      and status = #{status}
+    </if>
+    <if test="userId != null and userId !=''">
+      and approval = #{userId}
+    </if>
+    ) t
+    order by
+    t.sequence,
+    t.update_time desc
+    limit #{currentPage},#{size}
+  </select>
+
+  <!--查询影视资料列表（影视部）-->
+  <select id="countPostVideoListPlus" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+
+    select count(1)
+    from
+    (
+    <!--   查询本部门影视资料列表-->
+    select
+    <include refid="Base_Column_List"/>
+    from post_video
+    where 1=1
+    <if test="keywords != null and keywords != ''">
+      and (video_name like concat('%',#{keywords},'%')
+      or video_code like concat('%',#{keywords},'%')
+      or relative_collection like concat('%',#{keywords},'%')
+      )
+    </if>
+    <if test="videoMark != null and videoMark != ''">
+      and video_mark = #{videoMark}
+    </if>
+    <if test="status != null and status != ''">
+      and status = #{status}
+    </if>
+    <if test="uploadOrg != null and uploadOrg !=''">
+      and upload_org = #{uploadOrg}
+    </if>
+    UNION
+    <!--查询当前审批人影视资料列表-->
+    select
+    <include refid="Base_Column_List"/>
+    from post_video
+    where 1=1
+    <if test="keywords != null and keywords != ''">
+      and (video_name like concat('%',#{keywords},'%')
+      or video_code like concat('%',#{keywords},'%')
+      or relative_collection like concat('%',#{keywords},'%')
+      )
+    </if>
+    <if test="videoMark != null and videoMark != ''">
+      and video_mark = #{videoMark}
+    </if>
+      and (status = '3' or status = '4')
+    <if test="userId != null and userId !=''">
+      and approval = #{userId}
+    </if>
+    ) t
+  </select>
+
+
+<!--根据影视资料id查询影视资料信息-->
+<select id="getPostVideo" resultMap="BaseResultMap">
+  select
+  <include refid="Base_Column_List"/>
+   from post_video
+  where 1=1
+  and id = #{id}
+</select>
+
+<update id="bacthUpdateAuthSetting">
+  UPDATE post_video
+  set auth_setting = #{authSetting}
+  where id in
+  <foreach collection="list" item="item" separator="," open="(" close=")">
+    #{item}
+  </foreach>
+</update>
+
+
+  <!--查询上传审批列表-->
+  <select id="getUploadApprovalList" parameterType="java.util.HashMap" resultMap="UploadApproval">
+      SELECT
+      a.xid,
+      a.party_id,
+      b.save_type,
+      b.video_code,
+      b.video_name,
+      b.source,
+      b.upload_org,
+      b.`status`,
+      b.remarks
+      ,case when
+      b.approval = #{currentUserId}
+    then '0'
+    else '1'
+    end as auth
+  FROM
+      wf_action a
+  LEFT JOIN post_video b ON a.party_id = b.id
+  WHERE
+      a.party_type = '1'
+    and b.status != '1'
+    <if test="keywords != null and keywords != ''">
+      and (b.video_name like concat('%',#{keywords},'%')
+      or b.video_code like concat('%',#{keywords},'%')
+
+      )
+    </if>
+    <if test="source != null and source != ''">
+      and b.source = #{source}
+    </if>
+    <if test="status != null and status != ''">
+      and b.status = #{status}
+    </if>
+    order by
+    a.update_time desc
+    limit #{currentPage},#{size}
+
+  </select>
+
+  <select id="countUploadApprovalList" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+    SELECT
+    count(1)
+    FROM
+    wf_action a
+    LEFT JOIN post_video b ON a.party_id = b.id
+    WHERE
+    a.party_type = '1'
+    and b.status != '1'
+    <if test="keywords != null and keywords != ''">
+      and (b.video_name like concat('%',#{keywords},'%')
+      or b.video_code like concat('%',#{keywords},'%')
+      )
+    </if>
+    <if test="source != null and source != ''">
+      and b.source = #{source}
+    </if>
+    <if test="status != null and status != ''">
+      and b.status = #{status}
+    </if>
+  </select>
+
+  <select id="getPostVideoQueryList" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List1"/>
+    ,case when auth_setting = '3'
+    then '0'
+    when getOrgPid(upload_org) = getOrgPid(#{uploadOrg})
+    then '0'
+    when
+          exists(select w.xid from wf_action w where w.apply = #{currentUserId}
+           and w.apply_status = '2' and w.party_id = id and w.party_type = '2')
+    then '0'
+    else '1'
+    end as other3
+    from
+    (
+    <!--查询其他部门已发布的公开资料-->
+    select
+    p.id, p.video_code, p.video_name, p.video_type, p.relative_object, p.relative_collection, p.source,
+    p.attachment, p.upload_org, p.status, p.auth_setting, p.create_time, p.update_time, p.creator,
+    p.updater, p.content, p.make_time, p.remarks, p.save_type,p.sequence, p.video_mark, p.keywords,
+    p.video_time, p.video_size, p.approval, p.other1, p.other2, p.other3,p.relative_collection_name
+    from post_video p
+    where p.status = '4'
+    and p.auth_setting != '1'
+    <if test="keywords != null and keywords != ''">
+      and (p.video_name like concat('%',#{keywords},'%')
+      or p.video_code like concat('%',#{keywords},'%')
+      or p.keywords like concat('%',#{keywords},'%')
+      )
+    </if>
+    <if test="videoMark != null and videoMark != ''">
+      and p.video_mark = #{videoMark}
+    </if>
+    <if test="status != null and status != ''">
+      and p.status = #{status}
+    </if>
+    union
+    <!--查询本部门的资料-->
+    select
+    p.id, p.video_code, p.video_name, p.video_type, p.relative_object, p.relative_collection, p.source,
+    p.attachment, p.upload_org, p.status, p.auth_setting, p.create_time, p.update_time, p.creator,
+    p.updater, p.content, p.make_time, p.remarks, p.save_type,p.sequence, p.video_mark, p.keywords,
+    p.video_time, p.video_size, p.approval, p.other1, p.other2, p.other3,p.relative_collection_name
+    from post_video p
+    where
+    getOrgPid(p.upload_org) = getOrgPid(#{uploadOrg})
+    and p.auth_setting != '1'
+    <if test="keywords != null and keywords != ''">
+      and (p.video_name like concat('%',#{keywords},'%')
+      or p.video_code like concat('%',#{keywords},'%')
+      or p.keywords like concat('%',#{keywords},'%')
+      )
+    </if>
+    <if test="videoMark != null and videoMark != ''">
+      and p.video_mark = #{videoMark}
+    </if>
+    <if test="status != null and status != ''">
+      and p.status = #{status}
+    </if>
+    ) t
+    order by
+    t.update_time desc
+    limit #{currentPage},#{size}
+  </select>
+
+  <select id="countPostVideoQueryList" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+    select count(1) from (
+    select
+    p.id, p.video_code, p.video_name, p.video_type, p.relative_object, p.relative_collection, p.source,
+    p.attachment, p.upload_org, p.status, p.auth_setting, p.create_time, p.update_time, p.creator,
+    p.updater, p.content, p.make_time, p.remarks, p.save_type,p.sequence, p.video_mark, p.keywords,
+    p.video_time, p.video_size, p.approval, p.other1, p.other2, p.other3,p.relative_collection_name
+    from post_video p
+    where p.status = '4'
+    and p.auth_setting != '1'
+    <if test="keywords != null and keywords != ''">
+      and (p.video_name like concat('%',#{keywords},'%')
+      or p.video_code like concat('%',#{keywords},'%')
+      or p.keywords like concat('%',#{keywords},'%')
+      )
+    </if>
+    <if test="videoMark != null and videoMark != ''">
+      and p.video_mark = #{videoMark}
+    </if>
+    <if test="status != null and status != ''">
+      and p.status = #{status}
+    </if>
+    union
+    select
+    p.id, p.video_code, p.video_name, p.video_type, p.relative_object, p.relative_collection, p.source,
+    p.attachment, p.upload_org, p.status, p.auth_setting, p.create_time, p.update_time, p.creator,
+    p.updater, p.content, p.make_time, p.remarks, p.save_type,p.sequence, p.video_mark, p.keywords,
+    p.video_time, p.video_size, p.approval, p.other1, p.other2, p.other3,p.relative_collection_name
+    from post_video p
+    where
+    getOrgPid(p.upload_org) = getOrgPid(#{uploadOrg})
+    and p.auth_setting != '1'
+    <if test="keywords != null and keywords != ''">
+      and (p.video_name like concat('%',#{keywords},'%')
+      or p.video_code like concat('%',#{keywords},'%')
+      or p.keywords like concat('%',#{keywords},'%')
+      )
+    </if>
+    <if test="videoMark != null and videoMark != ''">
+      and p.video_mark = #{videoMark}
+    </if>
+    <if test="status != null and status != ''">
+      and p.status = #{status}
+    </if>
+    ) t
+  </select>
+
+  <select id="getPostVideoQueryListPlus" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List1"/>
+    ,'0' as other3
+    from post_video
+    where status = '4'
+    and
+    (auth_setting != '1' or (auth_setting = '1' and getOrgPid(upload_org) = getOrgPid(#{uploadOrg})))
+    <if test="keywords != null and keywords != ''">
+      and (video_name like concat('%',#{keywords},'%')
+      or video_code like concat('%',#{keywords},'%')
+      or keywords like concat('%',#{keywords},'%')
+      )
+    </if>
+    <if test="videoMark != null and videoMark != ''">
+      and video_mark = #{videoMark}
+    </if>
+    <if test="status != null and status != ''">
+      and status = #{status}
+    </if>
+    order by
+    update_time desc
+    limit #{currentPage},#{size}
+  </select>
+
+  <select id="countPostVideoQueryListPlus" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+    select
+    count(1)
+    from post_video
+    where status = '4'
+    and auth_setting != '1'
+    <if test="keywords != null and keywords != ''">
+      and (video_name like concat('%',#{keywords},'%')
+      or video_code like concat('%',#{keywords},'%')
+      or keywords like concat('%',#{keywords},'%')
+      )
+    </if>
+    <if test="videoMark != null and videoMark != ''">
+      and video_mark = #{videoMark}
+    </if>
+    <if test="status != null and status != ''">
+      and status = #{status}
+    </if>
+
+  </select>
+
+  <select id="getQueryVideoList" parameterType="java.util.HashMap" resultType="com.tj720.model.common.video.QueryVideoDto">
+      SELECT
+          a.xid as id,
+          b.video_code as videoCode,
+          b.video_name as videoName,
+          a.apply,
+          a.apply_org as applyOrg,
+          a.action_name as applyReason,
+          a.apply_time as applyTime,
+          a.apply_status as applyStatus,
+          a.remark,
+          a.party_id as partyId
+      FROM
+          wf_action a
+      LEFT JOIN post_video b ON a.party_id = b.id
+      WHERE
+          a.party_type = '2'
+      AND
+            apply = #{apply}
+      <if test="keywords != null and keywords!= ''">
+        and
+        (b.video_name like concat('%',#{keywords},'%')
+        or a.apply  like concat('%',#{keywords},'%')
+          )
+      </if>
+      <if test="applyOrg != null and applyOrg != ''">
+        and a.apply_org = #{applyOrg}
+      </if>
+      <if test="applyStatus != null and applyStatus != ''">
+        and a.apply_status = #{applyStatus}
+      </if>
+      order by
+      a.update_time desc
+      limit #{currentPage},#{size}
+  </select>
+
+  <select id="countQueryVideoList" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+    SELECT
+    count(1)
+    FROM
+    wf_action a
+    LEFT JOIN post_video b ON a.party_id = b.id
+    WHERE
+    a.party_type = '2'
+    AND apply = #{apply}
+    <if test="keywords != null and keywords!= ''">
+      and
+      (b.video_name like concat('%',#{keywords},'%')
+      or a.apply  like concat('%',#{keywords},'%')
+      )
+    </if>
+    <if test="applyOrg != null and applyOrg != ''">
+      and a.apply_org = #{applyOrg}
+    </if>
+    <if test="applyStatus != null and applyStatus != ''">
+      and a.apply_status = #{applyStatus}
+    </if>
+
+  </select>
+
+  <select id="getQueryApprovalVideoList" parameterType="java.util.HashMap" resultType="com.tj720.model.common.video.QueryVideoDto">
+    SELECT
+    a.xid as id,
+    b.video_code as videoCode,
+    b.video_name as videoName,
+    a.apply,
+    a.apply_org as applyOrg,
+    a.action_name as applyReason,
+    a.apply_time as applyTime,
+    a.apply_status as applyStatus,
+    a.remark,
+    a.party_id as partyId
+    ,(select max(w.apply) from wf_detail w where w.process_id = a.xid
+    and w.`status` = 1
+    ) as approval
+    FROM
+    wf_action a
+    LEFT JOIN post_video b ON a.party_id = b.id
+    WHERE
+    a.party_type = '2'
+    and a.apply_status != '0'
+    <if test="keywords != null and keywords!= ''">
+      and
+      (b.video_name like concat('%',#{keywords},'%')
+      or a.apply  like concat('%',#{keywords},'%')
+      )
+    </if>
+    <if test="applyOrg != null and applyOrg != ''">
+      and a.apply_org = #{applyOrg}
+    </if>
+    <if test="applyStatus != null and applyStatus != ''">
+      and a.apply_status = #{applyStatus}
+    </if>
+    order by
+    a.update_time desc
+    limit #{currentPage},#{size}
+  </select>
+
+  <select id="countQueryApprovalVideoList" parameterType="java.util.HashMap" resultType="java.lang.Integer">
+    SELECT
+    count(1)
+    FROM
+    wf_action a
+    LEFT JOIN post_video b ON a.party_id = b.id
+    WHERE
+    a.party_type = '2'
+    and a.apply_status != '0'
+    <if test="keywords != null and keywords!= ''">
+      and
+      (b.video_name like concat('%',#{keywords},'%')
+      or a.apply  like concat('%',#{keywords},'%')
+      )
+    </if>
+    <if test="applyOrg != null and applyOrg != ''">
+      and a.apply_org = #{applyOrg}
+    </if>
+    <if test="applyStatus != null and applyStatus != ''">
+      and a.apply_status = #{applyStatus}
+    </if>
+    order by
+    a.update_time desc
+
+  </select>
+  <!--查询关键词列表-->
+  <select id="queryKeywordsList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    select t.keywords,count(1) as videoCount
+    from (
+           select a.id,substring_index(substring_index(a.keywords, ',', b.help_topic_id + 1), ',', -1) keywords
+           from post_video a
+                  join
+                  mysql.help_topic b
+                  on
+                    (b.help_topic_id &lt; (length(a.keywords) - length(replace(a.keywords, ',', '')) + 1)
+                      and a.keywords is not null and a.keywords != ''
+                      )
+           where a.keywords is not null
+           order by a.id
+         ) t
+    GROUP BY t.keywords
+             limit #{currentPage},#{size}
+  </select>
+
+  <select id="countKeywordsList" resultType="java.lang.Integer">
+    select count(1) from (
+    select t.keywords,count(1) as videoCount
+    from (
+      select a.id,substring_index(substring_index(a.keywords,',',b.help_topic_id+1),',',-1) keywords
+      from post_video a join
+      mysql.help_topic b
+       on (b.help_topic_id &lt; (length(a.keywords) - length(replace(a.keywords, ',', '')) + 1)
+        and a.keywords is not null and a.keywords != ''
+        )
+      order by a.id
+      ) t GROUP BY t.keywords
+    ) s
+  </select>
+
+  <select id="getVideoCjTable" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+        SELECT
+        case
+        when
+        t.dict_code = 'T' then '图片'
+        when
+        t.dict_code = 'S' then '视频'
+        when
+        t.dict_code = 'Y' then '音频'
+        else p.save_type
+        end
+        as 'saveType'
+    ,
+        CASE
+    WHEN p.video_type = 'W' THEN
+        count(1)
+    ELSE
+        0
+    END AS 'W',
+     CASE
+    WHEN p.video_type = 'Z' THEN
+        count(1)
+    ELSE
+        0
+    END AS 'Z',
+     CASE
+    WHEN p.video_type = 'S' THEN
+        count(1)
+    ELSE
+        0
+    END AS 'S',
+     CASE
+    WHEN p.video_type = 'P' THEN
+        count(1)
+    ELSE
+        0
+    END AS 'P',
+     CASE
+    WHEN p.video_type = 'B' THEN
+        count(1)
+    ELSE
+        0
+    END AS 'B',
+     CASE
+    WHEN p.video_type = 'Q' THEN
+        count(1)
+    ELSE
+        0
+    END AS 'Q'
+    FROM
+        post_video p
+    RIGHT JOIN sys_dict t on
+    (
+    p.save_type = t.dict_code
+    <if test="status != null and status !=''">
+      and p.status = #{status}
+    </if>
+    <if test="startTime != null and startTime !=''">
+      and left(p.update_time,10) BETWEEN #{startTime} and #{endTime}
+    </if>
+    )
+    where t.dict_type = 'video_save_type'
+
+    GROUP BY
+        t.dict_code
+  </select>
+
+  <select id="getVideoCjPie" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    SELECT
+    CASE
+    WHEN t.dict_code = 'T' THEN
+    '图片'
+    WHEN t.dict_code = 'S' THEN
+    '视频'
+    WHEN t.dict_code = 'Y' THEN
+    '音频'
+    ELSE
+    p.save_type
+    END AS 'name',
+    count(p.save_type) AS 'value'
+    FROM
+    post_video p
+    RIGHT JOIN sys_dict t ON (
+    p.save_type = t.dict_code
+    <if test="status != null and status !=''">
+      and p.status = #{status}
+    </if>
+    <if test="startTime != null and startTime !=''">
+      and left(p.update_time,10) BETWEEN #{startTime} and #{endTime}
+    </if>
+    )
+    WHERE
+    t.dict_type = 'video_save_type'
+    GROUP BY
+    t.dict_code
+  </select>
+
+
+  <select id="getVideoCjLine" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    select c.date as updateTime,
+    count(case when p.save_type = 'T'
+    then 1
+    else null
+    end)
+    as '图片',
+    count(case when p.save_type = 'S'
+    then 1
+    else null
+    end)
+    as '视频',
+    count(case when p.save_type = 'Y'
+    then 1
+    else null
+    end)
+    as '音频'
+    from
+    post_video p
+    RIGHT JOIN calendar c
+    on(
+    c.date = left(p.update_time,10)
+    and left(p.update_time,10) between #{startTime} and #{endTime}
+    <if test="status != null and status !=''">
+      and p.status = #{status}
+    </if>
+    )
+    where c.date between #{startTime} and #{endTime}
+    group by c.date
+  </select>
+
+  <select id="getVideoCjBar" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    select
+    case
+    when
+    getOrgPidName(s.department_id) = '保管部'
+    then '保管部'
+    when
+    getOrgPidName(s.department_id) = '影视部'
+    then '影视部'
+    when
+    getOrgPidName(s.department_id) = '资料室'
+    then '资料室'
+    when
+    getOrgPidName(s.department_id) = '社教'
+    then '社教'
+    when
+    getOrgPidName(s.department_id) = '展陈'
+    then '展陈'
+    ELSE '其他'
+    END as orgName
+    ,
+    count(case when p.save_type = 'T'
+    then 1
+    else null
+    end)
+    as '图片',
+    count(case when p.save_type = 'S'
+    then 1
+    else null
+    end)
+    as '视频',
+    count(case when p.save_type = 'Y'
+    then 1
+    else null
+    end)
+    as '音频'
+    from
+    post_video p right JOIN sys_department s
+    on
+    (p.upload_org = s.department_id
+    <if test="status != null and status !=''">
+      and p.status = #{status}
+    </if>
+    <if test="startTime != null and startTime !=''">
+      and left(p.update_time,10) BETWEEN #{startTime} and #{endTime}
+    </if>
+    )
+    where s.department_id !=0
+    group by getOrgPidName(s.department_id)
+  </select>
+
+  <select id="getVideoCjBarPlus" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    select
+    getOrgPidName(s.department_id)
+     as orgName
+    ,
+    count(case when p.save_type = 'T'
+    then 1
+    else null
+    end)
+    as '图片',
+    count(case when p.save_type = 'S'
+    then 1
+    else null
+    end)
+    as '视频',
+    count(case when p.save_type = 'Y'
+    then 1
+    else null
+    end)
+    as '音频'
+    from
+    post_video p right JOIN sys_department s
+    on
+    (p.upload_org = s.department_id
+    <if test="status != null and status !=''">
+      and p.status = #{status}
+    </if>
+    <if test="startTime != null and startTime !=''">
+      and left(p.update_time,10) BETWEEN #{startTime} and #{endTime}
+    </if>
+    )
+    where s.department_id !=0
+    group by getOrgPidName(s.department_id)
+    order by count(p.save_type) desc
+    limit 0,5
+  </select>
+
+  <select id="getVideoCxTable" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    SELECT
+    case when
+    s.dict_code = '2'
+    then '申请'
+    when s.dict_code = '4'
+    then '下载'
+    end as type
+    ,
+    count(
+    CASE
+    WHEN t.action_name = '1' THEN
+    1
+    ELSE
+    NULL
+    END
+    ) AS 'zc',
+    count(
+    CASE
+    WHEN t.action_name = '2' THEN
+    1
+    ELSE
+    NULL
+    END
+    ) AS 'sj',
+    count(
+    CASE
+    WHEN t.action_name = '3' THEN
+    1
+    ELSE
+    NULL
+    END
+    ) AS 'yj',
+    count(
+    CASE
+    WHEN t.action_name = '4' THEN
+    1
+    ELSE
+    NULL
+    END
+    ) AS 'xwfb',
+    count(
+    CASE
+    WHEN t.action_name = '5' THEN
+    1
+    ELSE
+    NULL
+    END
+    ) AS 'qt'
+    FROM
+    wf_action t
+    RIGHT JOIN sys_dict s
+    on (
+    s.dict_code = t.apply_status
+    and t.party_type = '2'
+    <if test="startTime != null and startTime !=''">
+      and left(t.update_time,10) BETWEEN #{startTime} and #{endTime}
+    </if>
+    )
+    WHERE
+    s.dict_type = 'video_status'
+    and s.dict_code != '1' and s.dict_code != '3'
+    and s.dict_code != '5'
+    GROUP BY
+    s.dict_code
+  </select>
+
+  <select id="getVideoCxPie" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    SELECT
+    CASE
+    WHEN t.dict_code = '1' THEN
+    '展陈'
+    WHEN t.dict_code = '2' THEN
+    '社教'
+    WHEN t.dict_code = '3' THEN
+    '研究'
+    WHEN t.dict_code = '4' THEN
+    '新闻发布'
+    WHEN t.dict_code = '5' THEN
+    '其他'
+    ELSE
+    t.dict_code
+    END AS 'name',
+    count(p.action_name) AS 'value'
+    FROM
+    wf_action p
+    RIGHT JOIN sys_dict t ON (
+    p.action_name = t.dict_code
+    <if test="startTime != null and startTime !=''">
+      and left(update_time,10) BETWEEN #{startTime} and #{endTime}
+    </if>
+    )
+    WHERE
+    t.dict_type = 'apply_reason'
+    GROUP BY
+    t.dict_code
+  </select>
+
+  <select id="getVideoCxLine" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    select  c.date as updateTime,
+    count(case when p.apply_status = '2'
+    then 1
+    else null
+    end)
+    as '申请',
+    count(case when p.apply_status = '4'
+    then 1
+    else null
+    end)
+    as '下载'
+    from
+    wf_action p
+    RIGHT JOIN calendar c
+    on(
+    c.date = left(p.update_time,10)
+    and left(p.update_time,10) between #{startTime} and #{endTime}
+    )
+    where c.date between #{startTime} and #{endTime}
+    group by c.date
+  </select>
+
+  <select id="getVideoCxBarPlus" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    select
+    getOrgPidName(s.department_id)
+    as orgName
+    ,
+    count(case when p.apply_status = '2'
+    then 1
+    else null
+    end)
+    as '申请',
+    count(case when p.apply_status = '4'
+    then 1
+    else null
+    end)
+    as '下载'
+    from
+    wf_action p right JOIN sys_department s
+    on
+    (p.apply_org = s.department_id
+    <if test="startTime != null and startTime !=''">
+      and left(p.update_time,10) BETWEEN #{startTime} and #{endTime}
+    </if>
+    )
+    where s.department_id !=0
+    group by getOrgPidName(s.department_id)
+    order by count(p.action_name) desc
+    limit 0,5
+  </select>
+
+  <select id="getVideoCxBarTop10" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    select
+    getUserNameById(s.id)
+    as apply
+    ,
+    count(case when p.apply_status = '2'
+    then 1
+    else null
+    end)
+    as '申请',
+    count(case when p.apply_status = '4'
+    then 1
+    else null
+    end)
+    as '下载'
+    from
+    wf_action p
+    right join sys_user s
+    on (
+    p.apply = s.id
+    <if test="startTime != null and startTime !=''">
+      and left(p.update_time,10) BETWEEN #{startTime} and #{endTime}
+    </if>
+    )
+    where 1=1
+    group by getUserNameById(s.id)
+    order by count(p.apply_status) desc
+    limit 0,10
+  </select>
+
+  <!--查询待办-->
+  <select id="getUndoTask" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+      SELECT
+          CASE
+      WHEN a.party_type = '1' THEN
+          '资料上传'
+      WHEN a.party_type = '2' THEN
+          '资料查询'
+      ELSE
+          a.party_type
+      END AS actionType,
+       p.video_name AS actionName,
+       w.action_time AS actionTime,
+        a.xid AS processInstId,
+       p.id AS partyId
+      FROM
+          wf_detail w
+      LEFT JOIN wf_action a ON w.process_id = a.xid
+      LEFT JOIN post_video p ON p.id = a.party_id
+      WHERE
+          w. STATUS = 1
+          and w.apply = #{currentUserId}
+          order by w.update_time desc
+            limit 0,6
+  </select>
+  <!--查询已办-->
+  <select id="getDoneTask" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+      SELECT
+          CASE
+      WHEN a.party_type = '1' THEN
+          '资料上传'
+      WHEN a.party_type = '2' THEN
+          '资料查询'
+      ELSE
+          a.party_type
+      END AS actionType,
+       p.video_name AS actionName,
+      a.update_time AS actionTime,
+        a.xid AS processInstId,
+             p.id AS partyId
+      FROM
+          wf_action a,
+          post_video p
+      WHERE
+          a.party_id = p.id
+       AND EXISTS (
+          SELECT
+              f.xid
+          FROM
+              wf_detail f
+          WHERE
+              f.process_id = a.xid
+          AND f.apply = #{currentUserId}
+          and f.status = 2
+      )
+      order by a.update_time desc
+        limit 0,6
+  </select>
+  <!--查询已办-->
+  <select id="getFinishTask" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+      SELECT
+          CASE
+      WHEN a.party_type = '1' THEN
+          '资料上传'
+      WHEN a.party_type = '2' THEN
+          '资料查询'
+      ELSE
+          a.party_type
+      END AS actionType,
+       p.video_name AS actionName,
+      a.update_time AS actionTime,
+        a.xid AS processInstId,
+             p.id AS partyId
+      FROM
+          wf_action a,
+          post_video p
+      WHERE
+          a.party_id = p.id
+       AND EXISTS (
+          SELECT
+              f.xid
+          FROM
+              wf_detail f
+          WHERE
+              f.process_id = a.xid
+          AND f.apply = #{currentUserId}
+          and f.status = 3
+      )
+      order by a.update_time desc
+        limit 0,6
+  </select>
+
+  <select id="getVideoCjCount" resultType="java.util.HashMap">
+      select
+      count(
+      case when save_type = 'T'
+      then 1
+      else null
+      end) as Tcount,
+      count(
+      case when save_type = 'S'
+      then 1
+      else null
+      end) as Scount,
+      count(
+      case when save_type = 'Y'
+      then 1
+      else null
+      end) as Ycount
+       from post_video
+      where `status` = 4
+  </select>
+
+  <select id="getVideoOpenCount" resultType="java.lang.Integer">
+      select count(1) as openVideoCount from post_video
+      where `status` = '4'
+      and auth_setting != 1
+  </select>
+
+  <select id="getVideoCxApply" resultType="java.lang.Integer">
+    select count(1) as applyCount from wf_action
+    where party_type = '2'
+  </select>
+  <select id="getVideoCxApproval" resultType="java.lang.Integer">
+    select count(1) as approvalCount from wf_action
+    where party_type = '2'
+    and apply_status = '2'
+  </select>
+
+  <select id="checkUserOrg" resultType="com.tj720.model.common.system.user.SysUser">
+    select * from sys_user s
+    where
+      s.id in (
+      select t.user_id from sys_user_dept t
+      where
+          getOrgPid(t.dept_id) = (select dd.department_id from sys_department dd where dd.other1 = #{orgCode})
+    )
+    <if test="userId != null and userId != ''">
+      and s.id  = #{userId}
+    </if>
+  </select>
+
+  <select id="getOrgPidByUser" resultType="java.lang.String">
+    select d.parent_id from sys_department d where d.department_id =
+  (select max(t.dept_id) from sys_user_dept t where t.user_id = #{userId})
+  </select>
+
+  <select id="getPostVideoAttachment" resultMap="BaseResultMap2">
+        select a.* from post_video p
+        left join post_attachment a
+        on (p.attachment = a.att_fk_id)
+        where p.id = #{postVideoId}
+  </select>
+
+
+  <select id="getProcessUserStatus" resultType="java.lang.String">
+      select min(w.status) from wf_detail w,wf_action a,post_video p
+      where w.process_id = a.xid and a.party_id = p.id
+      and w.apply = #{userId} and p.id = #{postVideoId}
+      and a.party_type = #{type}
+  </select>
+
+  <select id="getPostVideoForExhib" parameterType="com.tj720.model.common.video.PostVideo" resultMap="BaseResultMap">
+    select id videoId,
+    <include refid="Base_Column_List"/>
+    from post_video
+    where status = 4
+    <if test="keywords != null and keywords != ''">
+      and (video_name like concat('%',#{keywords},'%')
+      or video_code like concat('%',#{keywords},'%')
+      or relative_collection like concat('%',#{keywords},'%')
+      )
+    </if>
+    <if test="null != saveType and saveType != ''">
+      and save_type = #{saveType}
+    </if>
+    limit 0, 200
+  </select>
+
+  <select id="getVideoListByKeywords" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from post_video
+    where
+    keywords = #{keyId}
+  </select>
+  <select id="selectByMap" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from post_video
+    where 1=1
+    <if test="videoCode != null and videoCode != ''">
+      and video_code = #{videoCode}
+    </if>
+    <if test="videoName != null and videoName != ''">
+      and video_name = #{videoName}
+    </if>
+  </select>
+  
+</mapper>

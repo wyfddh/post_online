@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tj720.dao.PostCollectHomeMapper">
+  <resultMap id="BaseResultMap" type="com.tj720.model.common.collecthome.PostCollectHome">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="datum_ids" jdbcType="VARCHAR" property="datumIds" />
+    <result column="collect_home_theme" jdbcType="VARCHAR" property="collectHomeTheme" />
+    <result column="information_content" jdbcType="LONGVARCHAR" property="informationContent" />
+    <result column="data_state" jdbcType="VARCHAR" property="dataState" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="updater" jdbcType="VARCHAR" property="updater" />
+    <result column="other1" jdbcType="VARCHAR" property="other1" />
+    <result column="other2" jdbcType="VARCHAR" property="other2" />
+    <result column="other3" jdbcType="VARCHAR" property="other3" />
+    <result column="rowNum" property="rowNum" jdbcType="INTEGER" />
+  </resultMap>
+
+
+  <!--<sql id="Example_Where_Clause">-->
+    <!--<where>-->
+      <!--<foreach collection="oredCriteria" item="criteria" separator="or">-->
+        <!--<if test="criteria.valid">-->
+          <!--<trim prefix="(" prefixOverrides="and" suffix=")">-->
+            <!--<foreach collection="criteria.criteria" item="criterion">-->
+              <!--<choose>-->
+                <!--<when test="criterion.noValue">-->
+                  <!--and ${criterion.condition}-->
+                <!--</when>-->
+                <!--<when test="criterion.singleValue">-->
+                  <!--and ${criterion.condition} #{criterion.value}-->
+                <!--</when>-->
+                <!--<when test="criterion.betweenValue">-->
+                  <!--and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}-->
+                <!--</when>-->
+                <!--<when test="criterion.listValue">-->
+                  <!--and ${criterion.condition}-->
+                  <!--<foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">-->
+                    <!--#{listItem}-->
+                  <!--</foreach>-->
+                <!--</when>-->
+              <!--</choose>-->
+            <!--</foreach>-->
+          <!--</trim>-->
+        <!--</if>-->
+      <!--</foreach>-->
+    <!--</where>-->
+  <!--</sql>-->
+  <!--<sql id="Update_By_Example_Where_Clause">-->
+    <!--<where>-->
+      <!--<foreach collection="example.oredCriteria" item="criteria" separator="or">-->
+        <!--<if test="criteria.valid">-->
+          <!--<trim prefix="(" prefixOverrides="and" suffix=")">-->
+            <!--<foreach collection="criteria.criteria" item="criterion">-->
+              <!--<choose>-->
+                <!--<when test="criterion.noValue">-->
+                  <!--and ${criterion.condition}-->
+                <!--</when>-->
+                <!--<when test="criterion.singleValue">-->
+                  <!--and ${criterion.condition} #{criterion.value}-->
+                <!--</when>-->
+                <!--<when test="criterion.betweenValue">-->
+                  <!--and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}-->
+                <!--</when>-->
+                <!--<when test="criterion.listValue">-->
+                  <!--and ${criterion.condition}-->
+                  <!--<foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">-->
+                    <!--#{listItem}-->
+                  <!--</foreach>-->
+                <!--</when>-->
+              <!--</choose>-->
+            <!--</foreach>-->
+          <!--</trim>-->
+        <!--</if>-->
+      <!--</foreach>-->
+    <!--</where>-->
+  <!--</sql>-->
+
+  <sql id="Base_Column_List">
+    id, datum_ids, collect_home_theme, information_content, data_state, create_time, 
+    update_time, creator, updater, other1, other2, other3
+  </sql>
+
+  <!--<select id="selectByExample" parameterType="com.tj720.model.common.collecthome.PostCollectHomeExample"-->
+          <!--resultMap="BaseResultMap">-->
+    <!--select-->
+    <!--<if test="distinct">-->
+      <!--distinct-->
+    <!--</if>-->
+    <!--<include refid="Base_Column_List" />-->
+    <!--from post_collect_home-->
+    <!--<if test="_parameter != null">-->
+      <!--<include refid="Example_Where_Clause" />-->
+    <!--</if>-->
+    <!--<if test="orderByClause != null">-->
+      <!--order by ${orderByClause}-->
+    <!--</if>-->
+  <!--</select>-->
+
+
+  <select id="getHomeList" resultMap="BaseResultMap"  parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from  post_collect_home
+    where 1=1  and  data_state = 1
+    <if test="collectHomeTheme != null and collectHomeTheme != ''">
+      and collect_home_theme like concat('%',#{collectHomeTheme},'%')
+    </if>
+    <if test="createTime != null and createTime !=''">
+      and  date(create_time) = #{createTime}
+    </if>
+    <if test="orderBy == 1" >
+      order by update_time desc
+    </if>
+    <if test="orderBy == 2" >
+      order by create_time desc
+    </if>
+    limit #{currentPage},#{size}
+  </select>
+
+
+  <select id="count" resultType="int">
+    select count(*) from  post_collect_home
+    where 1=1 and  data_state = 1
+  <if test="collectHomeTheme != null and collectHomeTheme != ''">
+      and collect_home_theme like concat('%',#{collectHomeTheme},'%')
+  </if>
+    <if test="createTime != null and createTime !=''">
+      and  date(create_time) = #{createTime}
+    </if>
+    <if test="orderBy == 1" >
+      order by update_time desc
+    </if>
+    <if test="orderBy == 2" >
+      order by create_time desc
+    </if>
+  </select>
+
+
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from  post_collect_home
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+
+    <select id="getHomeOptions" resultMap="BaseResultMap">
+    select id,collect_home_theme
+    from  post_collect_home
+    where data_state &gt; 0
+  </select>
+
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from post_collect_home
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+
+  <!--<delete id="deleteByExample" parameterType="com.tj720.model.common.collecthome.PostCollectHomeExample">-->
+    <!--delete from post_collect_home-->
+    <!--<if test="_parameter != null">-->
+      <!--<include refid="Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</delete>-->
+
+  <insert id="insert" parameterType="com.tj720.model.common.collecthome.PostCollectHome">
+    insert into post_collect_home (id, datum_ids, collect_home_theme, 
+      information_content, data_state, create_time, 
+      update_time, creator, updater, 
+      other1, other2, other3
+      )
+    values (#{id,jdbcType=VARCHAR}, #{datumIds,jdbcType=VARCHAR}, #{collectHomeTheme,jdbcType=VARCHAR}, 
+      #{informationContent,jdbcType=LONGVARCHAR}, #{dataState,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+      #{updateTime,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, 
+      #{other1,jdbcType=VARCHAR}, #{other2,jdbcType=VARCHAR}, #{other3,jdbcType=VARCHAR}
+      )
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.tj720.model.common.collecthome.PostCollectHome">
+    insert into post_collect_home
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="datumIds != null">
+        datum_ids,
+      </if>
+      <if test="collectHomeTheme != null">
+        collect_home_theme,
+      </if>
+      <if test="informationContent != null">
+        information_content,
+      </if>
+      <if test="dataState != null">
+        data_state,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="creator != null">
+        creator,
+      </if>
+      <if test="updater != null">
+        updater,
+      </if>
+      <if test="other1 != null">
+        other1,
+      </if>
+      <if test="other2 != null">
+        other2,
+      </if>
+      <if test="other3 != null">
+        other3,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="datumIds != null">
+        #{datumIds,jdbcType=VARCHAR},
+      </if>
+      <if test="collectHomeTheme != null">
+        #{collectHomeTheme,jdbcType=VARCHAR},
+      </if>
+      <if test="informationContent != null">
+        #{informationContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="dataState != null">
+        #{dataState,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="other1 != null">
+        #{other1,jdbcType=VARCHAR},
+      </if>
+      <if test="other2 != null">
+        #{other2,jdbcType=VARCHAR},
+      </if>
+      <if test="other3 != null">
+        #{other3,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <!--<select id="countByExample" parameterType="com.tj720.model.common.collecthome.PostCollectHomeExample"-->
+          <!--resultType="java.lang.Long">-->
+    <!--select count(*) from post_collect_home-->
+    <!--<if test="_parameter != null">-->
+      <!--<include refid="Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</select>-->
+
+
+  <!--<update id="updateByExampleSelective" parameterType="map">-->
+    <!--update post_collect_home-->
+    <!--<set>-->
+      <!--<if test="record.id != null">-->
+        <!--id = #{record.id,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.datumIds != null">-->
+        <!--datum_ids = #{record.datumIds,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.collectHomeTheme != null">-->
+        <!--collect_home_theme = #{record.collectHomeTheme,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.informationContent != null">-->
+        <!--information_content = #{record.informationContent,jdbcType=LONGVARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.dataState != null">-->
+        <!--data_state = #{record.dataState,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.createTime != null">-->
+        <!--create_time = #{record.createTime,jdbcType=TIMESTAMP},-->
+      <!--</if>-->
+      <!--<if test="record.updateTime != null">-->
+        <!--update_time = #{record.updateTime,jdbcType=TIMESTAMP},-->
+      <!--</if>-->
+      <!--<if test="record.creator != null">-->
+        <!--creator = #{record.creator,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.updater != null">-->
+        <!--updater = #{record.updater,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.other1 != null">-->
+        <!--other1 = #{record.other1,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.other2 != null">-->
+        <!--other2 = #{record.other2,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.other3 != null">-->
+        <!--other3 = #{record.other3,jdbcType=VARCHAR},-->
+      <!--</if>-->
+    <!--</set>-->
+    <!--<if test="_parameter != null">-->
+      <!--<include refid="Update_By_Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</update>-->
+
+
+
+  <!--<update id="updateByExample" parameterType="map">-->
+    <!--update post_collect_home-->
+    <!--set id = #{record.id,jdbcType=VARCHAR},-->
+      <!--datum_ids = #{record.datumIds,jdbcType=VARCHAR},-->
+      <!--collect_home_theme = #{record.collectHomeTheme,jdbcType=VARCHAR},-->
+      <!--information_content = #{record.informationContent,jdbcType=LONGVARCHAR},-->
+      <!--data_state = #{record.dataState,jdbcType=VARCHAR},-->
+      <!--create_time = #{record.createTime,jdbcType=TIMESTAMP},-->
+      <!--update_time = #{record.updateTime,jdbcType=TIMESTAMP},-->
+      <!--creator = #{record.creator,jdbcType=VARCHAR},-->
+      <!--updater = #{record.updater,jdbcType=VARCHAR},-->
+      <!--other1 = #{record.other1,jdbcType=VARCHAR},-->
+      <!--other2 = #{record.other2,jdbcType=VARCHAR},-->
+      <!--other3 = #{record.other3,jdbcType=VARCHAR}-->
+    <!--<if test="_parameter != null">-->
+      <!--<include refid="Update_By_Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</update>-->
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.tj720.model.common.collecthome.PostCollectHome">
+    update post_collect_home
+    <set>
+      <if test="datumIds != null">
+        datum_ids = #{datumIds,jdbcType=VARCHAR},
+      </if>
+      <if test="collectHomeTheme != null">
+        collect_home_theme = #{collectHomeTheme,jdbcType=VARCHAR},
+      </if>
+      <if test="informationContent != null">
+        information_content = #{informationContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="dataState != null">
+        data_state = #{dataState,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        updater = #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="other1 != null">
+        other1 = #{other1,jdbcType=VARCHAR},
+      </if>
+      <if test="other2 != null">
+        other2 = #{other2,jdbcType=VARCHAR},
+      </if>
+      <if test="other3 != null">
+        other3 = #{other3,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+
+  <update id="updateByPrimaryKey" parameterType="com.tj720.model.common.collecthome.PostCollectHome">
+    update post_collect_home
+    set datum_ids = #{datumIds,jdbcType=VARCHAR},
+      collect_home_theme = #{collectHomeTheme,jdbcType=VARCHAR},
+      information_content = #{informationContent,jdbcType=LONGVARCHAR},
+      data_state = #{dataState,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      creator = #{creator,jdbcType=VARCHAR},
+      updater = #{updater,jdbcType=VARCHAR},
+      other1 = #{other1,jdbcType=VARCHAR},
+      other2 = #{other2,jdbcType=VARCHAR},
+      other3 = #{other3,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+
+    <update id="updateHomeByIds" parameterType = "java.util.List">
+        update  post_collect_home set data_state = 1 where id in
+        <foreach collection="ids" open="(" item="id" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+
+
+  <!--Web层-->
+  <select id="getHomeWebList" resultMap="BaseResultMap"  parameterType="java.util.Map">
+    select
+    (@rowno:=@rowno+1) AS rowNum,a.*
+    from  post_collect_home a, (select @rowno:=0+ #{currentPage}) b
+    where 1=1  and  data_state = 1
+    <if test="collectHomeTheme != null and collectHomeTheme != ''">
+      and collect_home_theme like concat('%',#{collectHomeTheme},'%')
+    </if>
+    <if test="createTime != null and createTime !=''">
+      and  date(create_time) = #{createTime}
+    </if>
+    order by update_time  desc
+    limit #{currentPage},#{size}
+  </select>
+
+
+  <select id="countWeb" resultType="int">
+    select count(*) from  post_collect_home
+    where 1=1 and  data_state = 1
+    <if test="collectHomeTheme != null and collectHomeTheme != ''">
+      and collect_home_theme like concat('%',#{collectHomeTheme},'%')
+    </if>
+    <if test="createTime != null and createTime !=''">
+      and  date(create_time) = #{createTime}
+    </if>
+    order by update_time  desc
+  </select>
+
+
+
+  <select id="selectByWebHome" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from  post_collect_home
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+
+  <select id="getDetailHomeById" resultType="com.tj720.model.common.collecthome.PostCollectHome"
+          parameterType="java.lang.Integer">
+    select a.id,a.datum_ids as datumIds ,a.collect_home_theme as collectHomeTheme ,a.information_content as informationContent
+     ,a.create_time as createTime ,
+    (@rowno:=@rowno+1) AS
+    rowNum from post_collect_home
+    a,(select
+    @rowno:=0+ #{start}) b where a.data_state = 1
+    order by a.update_time desc
+    limit #{start},1
+</select>
+
+
+
+
+</mapper>

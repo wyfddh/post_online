@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="admin" />
+        <module name="common" />
+        <module name="content" />
+        <module name="model" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="admin" target="1.8" />
+      <module name="common" target="1.8" />
+      <module name="content" target="1.8" />
+      <module name="model" target="1.8" />
+      <module name="museum" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="admin" options="-extdirs src\main\webapp\WEB-INF\lib" />
+      <module name="common" options="-extdirs src\main\webapp\WEB-INF\lib" />
+      <module name="content" options="-extdirs src\main\webapp\WEB-INF\lib" />
+      <module name="model" options="-extdirs src\main\webapp\WEB-INF\lib" />
+    </option>
+  </component>
+</project>

@@ -1,0 +1,448 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tj720.dao.WfActionMapper" >
+  <resultMap id="BaseResultMap" type="com.tj720.model.common.wf.WfAction" >
+    <id column="xid" property="xid" jdbcType="VARCHAR" />
+    <result column="party_id" property="partyId" jdbcType="VARCHAR" />
+    <result column="party_type" property="partyType" jdbcType="VARCHAR" />
+    <result column="action_type" property="actionType" jdbcType="VARCHAR" />
+    <result column="action_name" property="actionName" jdbcType="VARCHAR" />
+    <result column="apply" property="apply" jdbcType="VARCHAR" />
+    <result column="apply_org" property="applyOrg" jdbcType="VARCHAR" />
+    <result column="apply_status" property="applyStatus" jdbcType="VARCHAR" />
+    <result column="approval" property="approval" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="apply_time" property="applyTime" jdbcType="TIMESTAMP" />
+    <result column="creat_time" property="creatTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="updater" property="updater" jdbcType="VARCHAR" />
+    <result column="ext1" property="ext1" jdbcType="VARCHAR" />
+    <result column="ext2" property="ext2" jdbcType="VARCHAR" />
+    <result column="ext3" property="ext3" jdbcType="VARCHAR" />
+  </resultMap>
+  <!--<sql id="Example_Where_Clause" >-->
+    <!--<where >-->
+      <!--<foreach collection="oredCriteria" item="criteria" separator="or" >-->
+        <!--<if test="criteria.valid" >-->
+          <!--<trim prefix="(" suffix=")" prefixOverrides="and" >-->
+            <!--<foreach collection="criteria.criteria" item="criterion" >-->
+              <!--<choose >-->
+                <!--<when test="criterion.noValue" >-->
+                  <!--and ${criterion.condition}-->
+                <!--</when>-->
+                <!--<when test="criterion.singleValue" >-->
+                  <!--and ${criterion.condition} #{criterion.value}-->
+                <!--</when>-->
+                <!--<when test="criterion.betweenValue" >-->
+                  <!--and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}-->
+                <!--</when>-->
+                <!--<when test="criterion.listValue" >-->
+                  <!--and ${criterion.condition}-->
+                  <!--<foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >-->
+                    <!--#{listItem}-->
+                  <!--</foreach>-->
+                <!--</when>-->
+              <!--</choose>-->
+            <!--</foreach>-->
+          <!--</trim>-->
+        <!--</if>-->
+      <!--</foreach>-->
+    <!--</where>-->
+  <!--</sql>-->
+  <!--<sql id="Update_By_Example_Where_Clause" >-->
+    <!--<where >-->
+      <!--<foreach collection="example.oredCriteria" item="criteria" separator="or" >-->
+        <!--<if test="criteria.valid" >-->
+          <!--<trim prefix="(" suffix=")" prefixOverrides="and" >-->
+            <!--<foreach collection="criteria.criteria" item="criterion" >-->
+              <!--<choose >-->
+                <!--<when test="criterion.noValue" >-->
+                  <!--and ${criterion.condition}-->
+                <!--</when>-->
+                <!--<when test="criterion.singleValue" >-->
+                  <!--and ${criterion.condition} #{criterion.value}-->
+                <!--</when>-->
+                <!--<when test="criterion.betweenValue" >-->
+                  <!--and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}-->
+                <!--</when>-->
+                <!--<when test="criterion.listValue" >-->
+                  <!--and ${criterion.condition}-->
+                  <!--<foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >-->
+                    <!--#{listItem}-->
+                  <!--</foreach>-->
+                <!--</when>-->
+              <!--</choose>-->
+            <!--</foreach>-->
+          <!--</trim>-->
+        <!--</if>-->
+      <!--</foreach>-->
+    <!--</where>-->
+  <!--</sql>-->
+  <sql id="Base_Column_List" >
+    xid, party_id, party_type, action_type, action_name, apply, apply_org, apply_status, 
+    approval, remark, apply_time, creat_time, update_time, creator, updater, ext1, ext2, 
+    ext3
+  </sql>
+  <!--<select id="selectByExample" resultMap="BaseResultMap" parameterType="com.tj720.model.common.wf.WfActionExample" >-->
+    <!--select-->
+    <!--<if test="distinct" >-->
+      <!--distinct-->
+    <!--</if>-->
+    <!--<include refid="Base_Column_List" />-->
+    <!--from wf_action-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Example_Where_Clause" />-->
+    <!--</if>-->
+    <!--<if test="orderByClause != null" >-->
+      <!--order by ${orderByClause}-->
+    <!--</if>-->
+  <!--</select>-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from wf_action
+    where xid = #{xid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from wf_action
+    where xid = #{xid,jdbcType=VARCHAR}
+  </delete>
+  <!--<delete id="deleteByExample" parameterType="com.tj720.model.common.wf.WfActionExample" >-->
+    <!--delete from wf_action-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</delete>-->
+  <insert id="insert" parameterType="com.tj720.model.common.wf.WfAction" >
+    insert into wf_action (xid, party_id, party_type, 
+      action_type, action_name, apply, 
+      apply_org, apply_status, approval, 
+      remark, apply_time, creat_time, 
+      update_time, creator, updater, 
+      ext1, ext2, ext3)
+    values (#{xid,jdbcType=VARCHAR}, #{partyId,jdbcType=VARCHAR}, #{partyType,jdbcType=VARCHAR}, 
+      #{actionType,jdbcType=VARCHAR}, #{actionName,jdbcType=VARCHAR}, #{apply,jdbcType=VARCHAR}, 
+      #{applyOrg,jdbcType=VARCHAR}, #{applyStatus,jdbcType=VARCHAR}, #{approval,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{applyTime,jdbcType=TIMESTAMP}, #{creatTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, 
+      #{ext1,jdbcType=VARCHAR}, #{ext2,jdbcType=VARCHAR}, #{ext3,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tj720.model.common.wf.WfAction" >
+    insert into wf_action
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="xid != null" >
+        xid,
+      </if>
+      <if test="partyId != null" >
+        party_id,
+      </if>
+      <if test="partyType != null" >
+        party_type,
+      </if>
+      <if test="actionType != null" >
+        action_type,
+      </if>
+      <if test="actionName != null" >
+        action_name,
+      </if>
+      <if test="apply != null" >
+        apply,
+      </if>
+      <if test="applyOrg != null" >
+        apply_org,
+      </if>
+      <if test="applyStatus != null" >
+        apply_status,
+      </if>
+      <if test="approval != null" >
+        approval,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="applyTime != null" >
+        apply_time,
+      </if>
+      <if test="creatTime != null" >
+        creat_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="updater != null" >
+        updater,
+      </if>
+      <if test="ext1 != null" >
+        ext1,
+      </if>
+      <if test="ext2 != null" >
+        ext2,
+      </if>
+      <if test="ext3 != null" >
+        ext3,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="xid != null" >
+        #{xid,jdbcType=VARCHAR},
+      </if>
+      <if test="partyId != null" >
+        #{partyId,jdbcType=VARCHAR},
+      </if>
+      <if test="partyType != null" >
+        #{partyType,jdbcType=VARCHAR},
+      </if>
+      <if test="actionType != null" >
+        #{actionType,jdbcType=VARCHAR},
+      </if>
+      <if test="actionName != null" >
+        #{actionName,jdbcType=VARCHAR},
+      </if>
+      <if test="apply != null" >
+        #{apply,jdbcType=VARCHAR},
+      </if>
+      <if test="applyOrg != null" >
+        #{applyOrg,jdbcType=VARCHAR},
+      </if>
+      <if test="applyStatus != null" >
+        #{applyStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="approval != null" >
+        #{approval,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="applyTime != null" >
+        #{applyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatTime != null" >
+        #{creatTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null" >
+        #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="ext1 != null" >
+        #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="ext3 != null" >
+        #{ext3,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <!--<select id="countByExample" parameterType="com.tj720.model.common.wf.WfActionExample" resultType="java.lang.Integer" >-->
+    <!--select count(*) from wf_action-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</select>-->
+  <!--<update id="updateByExampleSelective" parameterType="map" >-->
+    <!--update wf_action-->
+    <!--<set >-->
+      <!--<if test="record.xid != null" >-->
+        <!--xid = #{record.xid,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.partyId != null" >-->
+        <!--party_id = #{record.partyId,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.partyType != null" >-->
+        <!--party_type = #{record.partyType,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.actionType != null" >-->
+        <!--action_type = #{record.actionType,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.actionName != null" >-->
+        <!--action_name = #{record.actionName,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.apply != null" >-->
+        <!--apply = #{record.apply,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.applyOrg != null" >-->
+        <!--apply_org = #{record.applyOrg,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.applyStatus != null" >-->
+        <!--apply_status = #{record.applyStatus,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.approval != null" >-->
+        <!--approval = #{record.approval,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.remark != null" >-->
+        <!--remark = #{record.remark,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.applyTime != null" >-->
+        <!--apply_time = #{record.applyTime,jdbcType=TIMESTAMP},-->
+      <!--</if>-->
+      <!--<if test="record.creatTime != null" >-->
+        <!--creat_time = #{record.creatTime,jdbcType=TIMESTAMP},-->
+      <!--</if>-->
+      <!--<if test="record.updateTime != null" >-->
+        <!--update_time = #{record.updateTime,jdbcType=TIMESTAMP},-->
+      <!--</if>-->
+      <!--<if test="record.creator != null" >-->
+        <!--creator = #{record.creator,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.updater != null" >-->
+        <!--updater = #{record.updater,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.ext1 != null" >-->
+        <!--ext1 = #{record.ext1,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.ext2 != null" >-->
+        <!--ext2 = #{record.ext2,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.ext3 != null" >-->
+        <!--ext3 = #{record.ext3,jdbcType=VARCHAR},-->
+      <!--</if>-->
+    <!--</set>-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Update_By_Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</update>-->
+  <!--<update id="updateByExample" parameterType="map" >-->
+    <!--update wf_action-->
+    <!--set xid = #{record.xid,jdbcType=VARCHAR},-->
+      <!--party_id = #{record.partyId,jdbcType=VARCHAR},-->
+      <!--party_type = #{record.partyType,jdbcType=VARCHAR},-->
+      <!--action_type = #{record.actionType,jdbcType=VARCHAR},-->
+      <!--action_name = #{record.actionName,jdbcType=VARCHAR},-->
+      <!--apply = #{record.apply,jdbcType=VARCHAR},-->
+      <!--apply_org = #{record.applyOrg,jdbcType=VARCHAR},-->
+      <!--apply_status = #{record.applyStatus,jdbcType=VARCHAR},-->
+      <!--approval = #{record.approval,jdbcType=VARCHAR},-->
+      <!--remark = #{record.remark,jdbcType=VARCHAR},-->
+      <!--apply_time = #{record.applyTime,jdbcType=TIMESTAMP},-->
+      <!--creat_time = #{record.creatTime,jdbcType=TIMESTAMP},-->
+      <!--update_time = #{record.updateTime,jdbcType=TIMESTAMP},-->
+      <!--creator = #{record.creator,jdbcType=VARCHAR},-->
+      <!--updater = #{record.updater,jdbcType=VARCHAR},-->
+      <!--ext1 = #{record.ext1,jdbcType=VARCHAR},-->
+      <!--ext2 = #{record.ext2,jdbcType=VARCHAR},-->
+      <!--ext3 = #{record.ext3,jdbcType=VARCHAR}-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Update_By_Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</update>-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.tj720.model.common.wf.WfAction" >
+    update wf_action
+    <set >
+      <if test="partyId != null" >
+        party_id = #{partyId,jdbcType=VARCHAR},
+      </if>
+      <if test="partyType != null" >
+        party_type = #{partyType,jdbcType=VARCHAR},
+      </if>
+      <if test="actionType != null" >
+        action_type = #{actionType,jdbcType=VARCHAR},
+      </if>
+      <if test="actionName != null" >
+        action_name = #{actionName,jdbcType=VARCHAR},
+      </if>
+      <if test="apply != null" >
+        apply = #{apply,jdbcType=VARCHAR},
+      </if>
+      <if test="applyOrg != null" >
+        apply_org = #{applyOrg,jdbcType=VARCHAR},
+      </if>
+      <if test="applyStatus != null" >
+        apply_status = #{applyStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="approval != null" >
+        approval = #{approval,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="applyTime != null" >
+        apply_time = #{applyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creatTime != null" >
+        creat_time = #{creatTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null" >
+        updater = #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="ext1 != null" >
+        ext1 = #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        ext2 = #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="ext3 != null" >
+        ext3 = #{ext3,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where xid = #{xid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tj720.model.common.wf.WfAction" >
+    update wf_action
+    set party_id = #{partyId,jdbcType=VARCHAR},
+      party_type = #{partyType,jdbcType=VARCHAR},
+      action_type = #{actionType,jdbcType=VARCHAR},
+      action_name = #{actionName,jdbcType=VARCHAR},
+      apply = #{apply,jdbcType=VARCHAR},
+      apply_org = #{applyOrg,jdbcType=VARCHAR},
+      apply_status = #{applyStatus,jdbcType=VARCHAR},
+      approval = #{approval,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      apply_time = #{applyTime,jdbcType=TIMESTAMP},
+      creat_time = #{creatTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      creator = #{creator,jdbcType=VARCHAR},
+      updater = #{updater,jdbcType=VARCHAR},
+      ext1 = #{ext1,jdbcType=VARCHAR},
+      ext2 = #{ext2,jdbcType=VARCHAR},
+      ext3 = #{ext3,jdbcType=VARCHAR}
+    where xid = #{xid,jdbcType=VARCHAR}
+  </update>
+  <select id="getWfActionByPartyId" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+    from wf_action
+    where party_id = #{partyId}
+    and party_type = #{partyType}
+    <if test="apply != null and apply != ''">
+      and apply = #{apply}
+    </if>
+  </select>
+
+  <select id="getWfActionByPartyIdAndStatus" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List" />
+    from wf_action
+    where party_id = #{partyId}
+    and party_type = #{partyType}
+    <if test="apply != null and apply != ''">
+      and apply = #{apply}
+    </if>
+    <if test="status != null and status != ''">
+      and apply_status = #{status}
+    </if>
+  </select>
+
+
+  <select id="getWfActionByNotice" resultMap="BaseResultMap">
+    select w.*
+    from wf_action w
+    left join sys_notice s
+    on w.xid = s.other1
+    where s.id = #{id}
+  </select>
+
+</mapper>

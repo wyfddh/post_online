@@ -1,0 +1,261 @@
+
+<html>
+<head>
+    <script src="../../statics/libs/jquery-1.10.2.min.js"></script>
+    <link rel="stylesheet" href="../../statics/css/font-awesome.min.css">
+    <!--layui ztree样式-->
+    <link rel="stylesheet" href="../../statics/plugins/layui/css/layui.css" media="all">
+    <script src="../../statics/plugins/layer/layer.js"></script>
+    <script src="../../statics/plugins/layui/layui.js"></script>
+    <!--样式-->
+    <link rel="stylesheet" href="../../common/css/cyStyle.css">
+    <link rel="stylesheet" href="../../common/css/cyType.css">
+    <link rel="stylesheet" href="../../statics/css/Exhibition/videoDetail.css">
+    <script src="../../statics/plugins/editgrid/plugin/My97DatePicker/WdatePicker.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="../../statics/plugins/echarts/echarts.js"></script>
+
+    <style type="text/css">
+     /*   .oneBody .layui-row input{
+            margin: 0px 0;
+      }*/
+      .layui-input {
+          margin-top: 10px;
+      }
+    </style>
+
+</head>
+<body>
+<div class="layui-card">
+    <form action="" id="exhibitionForm"  class="layui-form">
+        <div class="layui-card-header">
+            <div class="flexLeft">
+                <span class="carFont">展陈详情</span>
+            </div>
+        </div>
+
+        <div class="layui-card-body">
+
+            <div class="cardOne mt24">
+                <div class="title"><img src="" alt=""><span>基本信息</span></div>
+
+                <div class="OneBody mt24">
+                    <div class="oneHeard">
+                        <div class="oneLeft">
+                            <span>操作人：</span>
+                            <span id="userName">admin</span>
+                            <span >|</span>
+                            <span id="orgName">系统管理员</span>
+                        </div>
+                        <div class="oneRight">
+                            <span>日期：</span>
+                            <span id="nowDate">2018-8-21</span>
+                        </div>
+                    </div>
+                    <!--<form id="mainForm" class="layui-form" lay-filter="mainForm">-->
+                    <div class="oneBody">
+                        <ul class="myTable" lay-filter="exhibTable">
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*展陈名称</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="exhibName" autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*策划时间</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input readonly="readonly" type="text"  autocomplete="off" name="planTime" id="planTime"
+                                           maxlength="20" value="" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*开始时间</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input readonly="readonly" type="text"  autocomplete="off" name="startTime" id="startTime"
+                                           maxlength="20" value="" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*结束时间</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input readonly="readonly" type="text"  autocomplete="off" name="endTime" id="endTime" maxlength="20"
+                                           value="" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">关键词</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="inportWord" readonly="readonly"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">展厅数量</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="roomNum" readonly="readonly" autocomplete="off"
+                                           class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">受众定位</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="audience" readonly="readonly" autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">展陈说明</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="exhibMessage" readonly="readonly" autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">展陈宗旨</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="exhibAim" readonly="readonly" autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">备注</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="remark" readonly="readonly" autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--</form>-->
+                </div>
+            </div>
+
+
+            <div class="cardOne mt24">
+                <div class="title">
+                    <img src="" alt=""><span>展厅信息</span>
+                    <div class="layui-row" style="height: 250px">
+                        <div class="layui-col-md10 layui-col-sm10">
+                            <table class="layui-table" id="tableRoom" lay-filter="tableRoom"></table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="OneBody">
+                    <div class="oneHeard">
+
+                    </div>
+                    <div class="mt24">
+                        <div class="layui-row" style="height: 250px">
+                            <div class="layui-col-md10 layui-col-sm10">
+                                <table class="layui-table" id="test1" lay-filter="test"></table>
+                                <script type="text/html" id="barDemo1">
+                                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cardOne mt24">
+                <div class="title"><img src="" alt=""><span>关联藏品</span></div>
+
+                <div class="OneBody">
+                    <div class="oneHeard">
+
+                    </div>
+                    <div class="mt24">
+                        <div class="layui-row" style="height: 250px">
+                            <div class="layui-col-md10 layui-col-sm10">
+                                <table class="layui-table" id="test2" lay-filter="test"></table>
+                                <script type="text/html" id="barDemo2">
+                                    <a class="layui-btn layui-btn-xs" lay-event="edit">查看</a>
+                                    <!--<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cardOne mt24">
+                <div class="title"><img src="" alt=""><span>关联影视资料</span></div>
+
+                <div class="OneBody">
+                    <div class="oneHeard">
+
+                    </div>
+                    <div class="mt24">
+                        <div class="layui-row" style="height: 250px">
+                            <div class="layui-col-md10 layui-col-sm10">
+                                <table class="layui-table" id="videoDemo" lay-filter="videoDemo"></table>
+                                <script type="text/html" id="barDemo">
+                                    <a class="layui-btn layui-btn-xs" lay-event="edit">查看</a>
+
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cardOne mt24">
+                <div class="title"><img src="" alt=""><span>查看资料</span></div>
+
+                <div class="OneBody mt24">
+                    <div class="oneHeard">
+
+                    </div>
+                    <div class="mt24">
+                        <ul class="imgList">
+                           <!-- <li class="imgItem" data-type="img">
+                                <img src="" alt   ="">
+                                <p class="myfont">开心的托马斯</p>
+                            </li>
+                            <li class="imgItem" data-type="video">
+                                <img src="" alt="">
+                                <p class="myfont">开心的托马斯</p>
+                            </li>
+                            <li class="imgItem" data-type="audio">
+                                <img src="" alt="">
+                                <p class="myfont">开心的托马斯</p>
+                            </li>
+                            <li class="imgItem">
+                                <img src="" alt="">
+                                <p class="myfont">开心的托马斯</p>
+                            </li>
+                            <li class="imgItem">
+                                <img src="" alt="">
+                                <p class="myfont">开心的托马斯</p>
+                            </li>
+                            <li class="imgItem">
+                                <img src="" alt="">
+                                <p class="myfont">开心的托马斯</p>
+                            </li>
+                            <li class="imgItem">
+                                <img src="" alt="">
+                                <p class="myfont">开心的托马斯</p>
+                            </li>
+                            <li class="imgItem">
+                                <img src="" alt="">
+                                <p class="myfont">开心的托马斯</p>
+                            </li>
+                            <li class="imgItem">
+                                <img src="" alt="">
+                                <p class="myfont">开心的托马斯</p>
+                            </li>-->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!--<div class="layui-form-item mt34">
+                <div class="layui-input-block bodyBtn">
+                    <button class="layui-btn" lay-submit lay-filter="formDemo">保存</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">取消</button>
+                </div>
+            </div>-->
+        </div>
+    </form>
+</div>
+
+<script src="../../statics/js/common.js"></script>
+<script src="../../statics/js/component.js"></script>
+<script src="../../statics/js/formatDatasUtil.js"></script>
+<script src="../../statics/js/Exhibition/videoDetail.js"></script>
+</body>
+</html>

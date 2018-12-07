@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tj720.dao.PostStampStoryMapper">
+  <resultMap id="BaseResultMap" type="com.tj720.model.common.stampstory.PostStampStory">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="datum_ids" jdbcType="VARCHAR" property="datumIds" />
+    <result column="story_title" jdbcType="VARCHAR" property="storyTitle" />
+    <result column="story_type" jdbcType="VARCHAR" property="storyType" />
+    <result column="story_content" jdbcType="LONGVARCHAR" property="storyContent" />
+    <result column="data_state" jdbcType="VARCHAR" property="dataState" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="updater" jdbcType="VARCHAR" property="updater" />
+    <result column="other1" jdbcType="VARCHAR" property="other1" />
+    <result column="other2" jdbcType="VARCHAR" property="other2" />
+    <result column="other3" jdbcType="VARCHAR" property="other3" />
+    <result column="rowNum" property="rowNum" jdbcType="INTEGER" />
+  </resultMap>
+
+  <sql id="Base_Column_List">
+    id, datum_ids, story_title, story_type, story_content, data_state, create_time, update_time, 
+    creator, updater, other1, other2, other3
+  </sql>
+
+
+  <select id="getStampStoryList" resultMap="BaseResultMap"  parameterType="java.util.Map">
+    select
+    <include refid="Base_Column_List" />
+    from  post_stamp_story
+    where 1=1  and  data_state = 1
+    <if test="storyType != null and storyType != ''">
+      and story_type = #{storyType}
+    </if>
+    <if test="createTime != null and createTime !=''">
+      and  date(create_time) = #{createTime}
+    </if>
+    <if test="orderBy == 1" >
+      order by update_time desc
+    </if>
+    <if test="orderBy == 2" >
+      order by create_time desc
+    </if>
+    limit #{currentPage},#{size}
+  </select>
+
+
+  <select id="count" resultType="int">
+    select count(*) from  post_stamp_story
+    where 1=1 and  data_state = 1
+    <if test="storyType != null and storyType != ''">
+      and story_type = #{storyType}
+    </if>
+    <if test="createTime != null and createTime !=''">
+      and  date(create_time) = #{createTime}
+    </if>
+    <if test="orderBy == 1" >
+      order by update_time desc
+    </if>
+    <if test="orderBy == 2" >
+      order by create_time desc
+    </if>
+  </select>
+
+
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from post_stamp_story
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <select id="getStoryTypeOptions" resultMap="BaseResultMap">
+    select id,story_type
+    from post_stamp_story
+    where data_state &gt; 0
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from post_stamp_story
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+
+
+  <insert id="insert" parameterType="com.tj720.model.common.stampstory.PostStampStory">
+    insert into post_stamp_story (id, datum_ids, story_title, 
+      story_type, story_content, data_state, 
+      create_time, update_time, creator, 
+      updater, other1, other2, 
+      other3)
+    values (#{id,jdbcType=VARCHAR}, #{datumIds,jdbcType=VARCHAR}, #{storyTitle,jdbcType=VARCHAR}, 
+      #{storyType,jdbcType=VARCHAR}, #{storyContent,jdbcType=LONGVARCHAR}, #{dataState,jdbcType=VARCHAR},
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, 
+      #{updater,jdbcType=VARCHAR}, #{other1,jdbcType=VARCHAR}, #{other2,jdbcType=VARCHAR}, 
+      #{other3,jdbcType=VARCHAR})
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.tj720.model.common.stampstory.PostStampStory">
+    insert into post_stamp_story
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="datumIds != null">
+        datum_ids,
+      </if>
+      <if test="storyTitle != null">
+        story_title,
+      </if>
+      <if test="storyType != null">
+        story_type,
+      </if>
+      <if test="storyContent != null">
+        story_content,
+      </if>
+      <if test="dataState != null">
+        data_state,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="creator != null">
+        creator,
+      </if>
+      <if test="updater != null">
+        updater,
+      </if>
+      <if test="other1 != null">
+        other1,
+      </if>
+      <if test="other2 != null">
+        other2,
+      </if>
+      <if test="other3 != null">
+        other3,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="datumIds != null">
+        #{datumIds,jdbcType=VARCHAR},
+      </if>
+      <if test="storyTitle != null">
+        #{storyTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="storyType != null">
+        #{storyType,jdbcType=VARCHAR},
+      </if>
+      <if test="storyContent != null">
+        #{storyContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="dataState != null">
+        #{dataState,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="other1 != null">
+        #{other1,jdbcType=VARCHAR},
+      </if>
+      <if test="other2 != null">
+        #{other2,jdbcType=VARCHAR},
+      </if>
+      <if test="other3 != null">
+        #{other3,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.tj720.model.common.stampstory.PostStampStory">
+    update post_stamp_story
+    <set>
+      <if test="datumIds != null">
+        datum_ids = #{datumIds,jdbcType=VARCHAR},
+      </if>
+      <if test="storyTitle != null">
+        story_title = #{storyTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="storyType != null">
+        story_type = #{storyType,jdbcType=VARCHAR},
+      </if>
+      <if test="storyContent != null">
+        story_content = #{storyContent,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="dataState != null">
+        data_state = #{dataState,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        updater = #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="other1 != null">
+        other1 = #{other1,jdbcType=VARCHAR},
+      </if>
+      <if test="other2 != null">
+        other2 = #{other2,jdbcType=VARCHAR},
+      </if>
+      <if test="other3 != null">
+        other3 = #{other3,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+
+  <update id="updateByPrimaryKey" parameterType="com.tj720.model.common.stampstory.PostStampStory">
+    update post_stamp_story
+    set datum_ids = #{datumIds,jdbcType=VARCHAR},
+      story_title = #{storyTitle,jdbcType=VARCHAR},
+      story_type = #{storyType,jdbcType=VARCHAR},
+      story_content = #{storyContent,jdbcType=LONGVARCHAR},
+      data_state = #{dataState,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      creator = #{creator,jdbcType=VARCHAR},
+      updater = #{updater,jdbcType=VARCHAR},
+      other1 = #{other1,jdbcType=VARCHAR},
+      other2 = #{other2,jdbcType=VARCHAR},
+      other3 = #{other3,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+
+
+
+  <!--Web层-->
+  <select id="getStampStoryWebList" resultMap="BaseResultMap"  parameterType="java.util.Map">
+    select
+    (@rowno:=@rowno+1) AS rowNum,a.*
+    from  post_stamp_story a, (select @rowno:=0+ #{currentPage}) b
+    where 1=1  and  data_state = 1
+    <if test="storyType != null and storyType != ''">
+      and story_type= #{storyType}
+    </if>
+    <if test="createTime != null and createTime !=''">
+      and  date(create_time) = #{createTime}
+    </if>
+    order by update_time  desc
+    limit #{currentPage},#{size}
+  </select>
+
+
+  <select id="countWeb" resultType="int">
+    select count(*) from  post_stamp_story
+    where 1=1 and  data_state = 1
+    <if test="storyType != null and storyType != ''">
+      and story_type = #{storyType}
+    </if>
+    <if test="createTime != null and createTime !=''">
+      and  date(create_time) = #{createTime}
+    </if>
+    order by update_time  desc
+  </select>
+
+
+
+  <select id="selectWebStoyrByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from post_stamp_story
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+
+
+  <select id="getDetailStoryById" resultType="com.tj720.model.common.stampstory.PostStampStory">
+    select a.id,a.story_type as storyType,a.story_title as storyTitle,
+    a.story_content as storyContent,a.story_type  as storyType,
+    a.create_time as createTime,
+    (@rowno:=@rowno+1) AS
+    rowNum from
+    post_stamp_story
+    a,(select
+    @rowno:=0+ #{start})b where a.data_state = 1
+    <if test="storyType != null and storyType != ''">
+      and  story_type = #{storyType}
+    </if>
+    order by a.update_time desc
+    limit #{start},1
+  </select>
+
+
+
+  <!--Web层-->
+
+
+
+
+
+</mapper>

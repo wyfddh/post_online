@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tj720.dao.SysDepartmentMapper" >
+  <resultMap id="BaseResultMap" type="com.tj720.model.common.system.department.SysDepartment" >
+    <id column="department_id" property="departmentId" jdbcType="VARCHAR" />
+    <result column="parent_id" property="parentId" jdbcType="VARCHAR" />
+    <result column="department_name" property="departmentName" jdbcType="VARCHAR" />
+    <result column="department_level" property="departmentLevel" jdbcType="VARCHAR" />
+    <result column="department_code" property="departmentCode" jdbcType="VARCHAR" />
+    <result column="job_description" property="jobDescription" jdbcType="VARCHAR" />
+    <result column="user_amount" property="userAmount" jdbcType="VARCHAR" />
+    <result column="sequence" property="sequence" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="updater" property="updater" jdbcType="VARCHAR" />
+    <result column="isdelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="other1" property="other1" jdbcType="VARCHAR" />
+    <result column="other2" property="other2" jdbcType="VARCHAR" />
+    <result column="other3" property="other3" jdbcType="VARCHAR" />
+  </resultMap>
+
+
+
+  <sql id="Department_List">
+    department_id, parent_id, department_name, department_level, department_code, job_description, user_amount,
+    sequence, status, create_time, isdelete, other1, other2, other3
+  </sql>
+
+  <sql id="Department_List1">
+    d.department_id, d.parent_id, d.department_name, d.department_level, d.department_code, d.job_description,
+    d.sequence, d.status, d.create_time, d.isdelete, d.other1, d.other2, d.other3
+  </sql>
+
+
+
+  <select id="getAllDeptList" resultType="com.tj720.model.common.system.menu.MenuTreeDto">
+    select
+    department_id as id, parent_id  as pid, department_name as functionname
+    from sys_department
+  </select>
+
+
+
+  <select id="departmentList"  resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Department_List1" />
+    ,
+    (SELECT
+    count(t.user_id)
+    FROM
+    sys_user_dept t
+    WHERE
+    t.dept_id = d.department_id)
+    AS user_amount
+    FROM
+    sys_department d
+    <if test="orderBy == '2'">
+      order by d.create_time desc,d.sequence desc
+    </if>
+    <if test="orderBy == '1'">
+      order by d.update_time desc,d.sequence desc
+    </if>
+    <if test="start != null and end != null">
+      limit #{start},#{end}
+    </if>
+  </select>
+
+
+  <select id="count" resultType="int">
+    select count(1)
+    FROM
+    sys_department d
+  </select>
+
+  <select id="getChildCount" parameterType="java.lang.String" resultType="int">
+		SELECT count(*) from sys_department
+		 where parent_id= #{departmentId}
+	</select>
+
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    d.department_id, d.parent_id, e.department_name as partment_name, d.department_name,
+    d.department_level, d.job_description, d.user_amount,
+    d.sequence, d.status, d.create_time, d.isdelete, d.other1, d.other2, d.other3
+    from sys_department d
+    left join sys_department e
+    on d.parent_id=e.department_id
+    where d.department_id = #{departmentId}
+  </select>
+
+
+    <select id="getDeptById"  resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+            a.*
+        from
+            sys_department a,
+            sys_user_dept b
+        where
+            a.department_id = b.dept_id
+        and b.user_id = #{userId}
+        limit 1
+    </select>
+
+
+
+  <select id="getDeptOptions"  resultMap="BaseResultMap" >
+		select  department_id ,department_name  from sys_department where status=1
+  </select>
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from sys_department
+    where department_id = #{departmentId}
+  </delete>
+
+  <insert id="insertSelective" parameterType="com.tj720.model.common.system.department.SysDepartment">
+    insert into sys_department
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="departmentId != null">
+        department_id,
+      </if>
+      <if test="parentId != null">
+        parent_id,
+      </if>
+      <if test="departmentName != null">
+        department_name,
+      </if>
+      <if test="departmentLevel != null">
+        department_level,
+      </if>
+      <if test="departmentCode != null">
+        department_code,
+      </if>
+      <if test="jobDescription != null">
+        job_description,
+      </if>
+      <if test="userAmount != null">
+        user_amount,
+      </if>
+      <if test="sequence != null">
+        sequence,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="creator != null">
+        creator,
+      </if>
+      <if test="updater != null">
+        updater,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="isdelete != null">
+        isdelete,
+      </if>
+      <if test="other1 != null">
+        other1,
+      </if>
+      <if test="other2 != null">
+        other2,
+      </if>
+      <if test="other3 != null">
+        other3,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="departmentId != null">
+        #{departmentId,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentName != null">
+        #{departmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentLevel != null">
+        #{departmentLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentCode != null">
+        #{departmentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="jobDescription != null">
+        #{jobDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="userAmount != null">
+        #{userAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="sequence != null">
+        #{sequence,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isdelete != null">
+        #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="other1 != null">
+        #{other1,jdbcType=VARCHAR},
+      </if>
+      <if test="other2 != null">
+        #{other2,jdbcType=VARCHAR},
+      </if>
+      <if test="other3 != null">
+        #{other3,jdbcType=VARCHAR},
+      </if>
+    </trim>
+</insert>
+
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.tj720.model.common.system.department.SysDepartment">
+    update sys_department
+    <set>
+      <if test="parentId != null">
+        parent_id = #{parentId,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentName != null">
+        department_name = #{departmentName,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentLevel != null">
+        department_level = #{departmentLevel,jdbcType=VARCHAR},
+      </if>
+      <if test="departmentCode != null">
+        department_code = #{departmentCode,jdbcType=VARCHAR},
+      </if>
+      <if test="jobDescription != null">
+        job_description = #{jobDescription,jdbcType=VARCHAR},
+      </if>
+      <if test="userAmount != null">
+        user_amount = #{userAmount,jdbcType=VARCHAR},
+      </if>
+      <if test="sequence != null">
+        sequence = #{sequence,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        updater = #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isdelete != null">
+        isdelete = #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="other1 != null">
+        other1 = #{other1,jdbcType=VARCHAR},
+      </if>
+      <if test="other2 != null">
+        other2 = #{other2,jdbcType=VARCHAR},
+      </if>
+      <if test="other3 != null">
+        other3 = #{other3,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where department_id = #{departmentId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tj720.model.common.system.department.SysDepartment">
+    update sys_department
+    set parent_id = #{parentId,jdbcType=VARCHAR},
+        department_name = #{departmentName,jdbcType=VARCHAR},
+        department_level = #{departmentLevel,jdbcType=VARCHAR},
+        department_code = #{departmentCode,jdbcType=VARCHAR},
+        job_description = #{jobDescription,jdbcType=VARCHAR},
+        user_amount = #{userAmount,jdbcType=VARCHAR},
+        sequence = #{sequence,jdbcType=INTEGER},
+        status = #{status,jdbcType=VARCHAR},
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+        creator = #{creator,jdbcType=VARCHAR},
+        updater = #{updater,jdbcType=VARCHAR},
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+        isdelete = #{isdelete,jdbcType=INTEGER},
+        other1 = #{other1,jdbcType=VARCHAR},
+        other2 = #{other2,jdbcType=VARCHAR},
+        other3 = #{other3,jdbcType=VARCHAR}
+    where department_id = #{departmentId,jdbcType=VARCHAR}
+  </update>
+
+
+
+  <update id="updateDeptStatus">
+    update sys_department
+    <set>
+      <if test="status != null and status != ''">status = #{status}</if>
+    </set>
+    where 1=1
+    <if test="departmentId != null and departmentId != '' ">and department_id = #{departmentId}</if>
+  </update>
+
+
+  <select id="countByNameAndParentId" parameterType="map" resultType="int">
+    SELECT count(1)
+    FROM sys_department
+    WHERE department_name = #{departmentName}
+    <if test="parentId != null and parentId != '' ">
+      AND parent_id = #{parentId}
+    </if>
+    <if test="departmentId!= null">
+      AND department_id != #{departmentId}
+    </if>
+  </select>
+
+  <!--获取所有部门信息-->
+  <select id="getAllOrgInfo" resultMap="BaseResultMap">
+    select * from sys_department
+  </select>
+
+  <!--11-->
+  <!--查询顶级部门个数-->
+  <select id="getLevel1Org" resultType="java.lang.Integer">
+    select count(1) from sys_department
+    where parent_id = '-1'
+  </select>
+</mapper>

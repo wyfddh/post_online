@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tj720.dao.PostActionDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.tj720.model.common.video.PostActionDetail" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="info_id" property="infoId" jdbcType="VARCHAR" />
+    <result column="info_type" property="infoType" jdbcType="VARCHAR" />
+    <result column="process_id" property="processId" jdbcType="VARCHAR" />
+    <result column="comments" property="comments" jdbcType="VARCHAR" />
+    <result column="action" property="action" jdbcType="VARCHAR" />
+    <result column="operator" property="operator" jdbcType="VARCHAR" />
+    <result column="operate_org" property="operateOrg" jdbcType="VARCHAR" />
+    <result column="info_status" property="infoStatus" jdbcType="VARCHAR" />
+    <result column="remarks" property="remarks" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="updater" property="updater" jdbcType="VARCHAR" />
+    <result column="sequence" property="sequence" jdbcType="INTEGER" />
+    <result column="other1" property="other1" jdbcType="VARCHAR" />
+    <result column="other2" property="other2" jdbcType="VARCHAR" />
+    <result column="other3" property="other3" jdbcType="VARCHAR" />
+  </resultMap>
+  <!--<sql id="Example_Where_Clause" >-->
+    <!--<where >-->
+      <!--<foreach collection="oredCriteria" item="criteria" separator="or" >-->
+        <!--<if test="criteria.valid" >-->
+          <!--<trim prefix="(" suffix=")" prefixOverrides="and" >-->
+            <!--<foreach collection="criteria.criteria" item="criterion" >-->
+              <!--<choose >-->
+                <!--<when test="criterion.noValue" >-->
+                  <!--and ${criterion.condition}-->
+                <!--</when>-->
+                <!--<when test="criterion.singleValue" >-->
+                  <!--and ${criterion.condition} #{criterion.value}-->
+                <!--</when>-->
+                <!--<when test="criterion.betweenValue" >-->
+                  <!--and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}-->
+                <!--</when>-->
+                <!--<when test="criterion.listValue" >-->
+                  <!--and ${criterion.condition}-->
+                  <!--<foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >-->
+                    <!--#{listItem}-->
+                  <!--</foreach>-->
+                <!--</when>-->
+              <!--</choose>-->
+            <!--</foreach>-->
+          <!--</trim>-->
+        <!--</if>-->
+      <!--</foreach>-->
+    <!--</where>-->
+  <!--</sql>-->
+  <!--<sql id="Update_By_Example_Where_Clause" >-->
+    <!--<where >-->
+      <!--<foreach collection="example.oredCriteria" item="criteria" separator="or" >-->
+        <!--<if test="criteria.valid" >-->
+          <!--<trim prefix="(" suffix=")" prefixOverrides="and" >-->
+            <!--<foreach collection="criteria.criteria" item="criterion" >-->
+              <!--<choose >-->
+                <!--<when test="criterion.noValue" >-->
+                  <!--and ${criterion.condition}-->
+                <!--</when>-->
+                <!--<when test="criterion.singleValue" >-->
+                  <!--and ${criterion.condition} #{criterion.value}-->
+                <!--</when>-->
+                <!--<when test="criterion.betweenValue" >-->
+                  <!--and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}-->
+                <!--</when>-->
+                <!--<when test="criterion.listValue" >-->
+                  <!--and ${criterion.condition}-->
+                  <!--<foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >-->
+                    <!--#{listItem}-->
+                  <!--</foreach>-->
+                <!--</when>-->
+              <!--</choose>-->
+            <!--</foreach>-->
+          <!--</trim>-->
+        <!--</if>-->
+      <!--</foreach>-->
+    <!--</where>-->
+  <!--</sql>-->
+  <sql id="Base_Column_List" >
+    id, info_id, info_type, process_id, comments, action, operator, operate_org, info_status, 
+    remarks, create_time, update_time, creator, updater, sequence, other1, other2, other3
+  </sql>
+  <!--<select id="selectByExample" resultMap="BaseResultMap" parameterType="com.tj720.model.common.video.PostActionDetailExample" >-->
+    <!--select-->
+    <!--<if test="distinct" >-->
+      <!--distinct-->
+    <!--</if>-->
+    <!--<include refid="Base_Column_List" />-->
+    <!--from post_action_detail-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Example_Where_Clause" />-->
+    <!--</if>-->
+    <!--<if test="orderByClause != null" >-->
+      <!--order by ${orderByClause}-->
+    <!--</if>-->
+  <!--</select>-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from post_action_detail
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from post_action_detail
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <!--<delete id="deleteByExample" parameterType="com.tj720.model.common.video.PostActionDetailExample" >-->
+    <!--delete from post_action_detail-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</delete>-->
+  <insert id="insert" parameterType="com.tj720.model.common.video.PostActionDetail" >
+    insert into post_action_detail (id, info_id, info_type, 
+      process_id, comments, action, 
+      operator, operate_org, info_status, 
+      remarks, create_time, update_time, 
+      creator, updater, sequence, 
+      other1, other2, other3
+      )
+    values (#{id,jdbcType=VARCHAR}, #{infoId,jdbcType=VARCHAR}, #{infoType,jdbcType=VARCHAR}, 
+      #{processId,jdbcType=VARCHAR}, #{comments,jdbcType=VARCHAR}, #{action,jdbcType=VARCHAR}, 
+      #{operator,jdbcType=VARCHAR}, #{operateOrg,jdbcType=VARCHAR}, #{infoStatus,jdbcType=VARCHAR}, 
+      #{remarks,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{sequence,jdbcType=INTEGER}, 
+      #{other1,jdbcType=VARCHAR}, #{other2,jdbcType=VARCHAR}, #{other3,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tj720.model.common.video.PostActionDetail" >
+    insert into post_action_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="infoId != null" >
+        info_id,
+      </if>
+      <if test="infoType != null" >
+        info_type,
+      </if>
+      <if test="processId != null" >
+        process_id,
+      </if>
+      <if test="comments != null" >
+        comments,
+      </if>
+      <if test="action != null" >
+        action,
+      </if>
+      <if test="operator != null" >
+        operator,
+      </if>
+      <if test="operateOrg != null" >
+        operate_org,
+      </if>
+      <if test="infoStatus != null" >
+        info_status,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="updater != null" >
+        updater,
+      </if>
+      <if test="sequence != null" >
+        sequence,
+      </if>
+      <if test="other1 != null" >
+        other1,
+      </if>
+      <if test="other2 != null" >
+        other2,
+      </if>
+      <if test="other3 != null" >
+        other3,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="infoId != null" >
+        #{infoId,jdbcType=VARCHAR},
+      </if>
+      <if test="infoType != null" >
+        #{infoType,jdbcType=VARCHAR},
+      </if>
+      <if test="processId != null" >
+        #{processId,jdbcType=VARCHAR},
+      </if>
+      <if test="comments != null" >
+        #{comments,jdbcType=VARCHAR},
+      </if>
+      <if test="action != null" >
+        #{action,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="operateOrg != null" >
+        #{operateOrg,jdbcType=VARCHAR},
+      </if>
+      <if test="infoStatus != null" >
+        #{infoStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null" >
+        #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="sequence != null" >
+        #{sequence,jdbcType=INTEGER},
+      </if>
+      <if test="other1 != null" >
+        #{other1,jdbcType=VARCHAR},
+      </if>
+      <if test="other2 != null" >
+        #{other2,jdbcType=VARCHAR},
+      </if>
+      <if test="other3 != null" >
+        #{other3,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <!--<select id="countByExample" parameterType="com.tj720.model.common.video.PostActionDetailExample" resultType="java.lang.Integer" >-->
+    <!--select count(*) from post_action_detail-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</select>-->
+  <!--<update id="updateByExampleSelective" parameterType="map" >-->
+    <!--update post_action_detail-->
+    <!--<set >-->
+      <!--<if test="record.id != null" >-->
+        <!--id = #{record.id,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.infoId != null" >-->
+        <!--info_id = #{record.infoId,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.infoType != null" >-->
+        <!--info_type = #{record.infoType,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.processId != null" >-->
+        <!--process_id = #{record.processId,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.comments != null" >-->
+        <!--comments = #{record.comments,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.action != null" >-->
+        <!--action = #{record.action,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.operator != null" >-->
+        <!--operator = #{record.operator,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.operateOrg != null" >-->
+        <!--operate_org = #{record.operateOrg,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.infoStatus != null" >-->
+        <!--info_status = #{record.infoStatus,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.remarks != null" >-->
+        <!--remarks = #{record.remarks,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.createTime != null" >-->
+        <!--create_time = #{record.createTime,jdbcType=TIMESTAMP},-->
+      <!--</if>-->
+      <!--<if test="record.updateTime != null" >-->
+        <!--update_time = #{record.updateTime,jdbcType=TIMESTAMP},-->
+      <!--</if>-->
+      <!--<if test="record.creator != null" >-->
+        <!--creator = #{record.creator,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.updater != null" >-->
+        <!--updater = #{record.updater,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.sequence != null" >-->
+        <!--sequence = #{record.sequence,jdbcType=INTEGER},-->
+      <!--</if>-->
+      <!--<if test="record.other1 != null" >-->
+        <!--other1 = #{record.other1,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.other2 != null" >-->
+        <!--other2 = #{record.other2,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.other3 != null" >-->
+        <!--other3 = #{record.other3,jdbcType=VARCHAR},-->
+      <!--</if>-->
+    <!--</set>-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Update_By_Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</update>-->
+  <!--<update id="updateByExample" parameterType="map" >-->
+    <!--update post_action_detail-->
+    <!--set id = #{record.id,jdbcType=VARCHAR},-->
+      <!--info_id = #{record.infoId,jdbcType=VARCHAR},-->
+      <!--info_type = #{record.infoType,jdbcType=VARCHAR},-->
+      <!--process_id = #{record.processId,jdbcType=VARCHAR},-->
+      <!--comments = #{record.comments,jdbcType=VARCHAR},-->
+      <!--action = #{record.action,jdbcType=VARCHAR},-->
+      <!--operator = #{record.operator,jdbcType=VARCHAR},-->
+      <!--operate_org = #{record.operateOrg,jdbcType=VARCHAR},-->
+      <!--info_status = #{record.infoStatus,jdbcType=VARCHAR},-->
+      <!--remarks = #{record.remarks,jdbcType=VARCHAR},-->
+      <!--create_time = #{record.createTime,jdbcType=TIMESTAMP},-->
+      <!--update_time = #{record.updateTime,jdbcType=TIMESTAMP},-->
+      <!--creator = #{record.creator,jdbcType=VARCHAR},-->
+      <!--updater = #{record.updater,jdbcType=VARCHAR},-->
+      <!--sequence = #{record.sequence,jdbcType=INTEGER},-->
+      <!--other1 = #{record.other1,jdbcType=VARCHAR},-->
+      <!--other2 = #{record.other2,jdbcType=VARCHAR},-->
+      <!--other3 = #{record.other3,jdbcType=VARCHAR}-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Update_By_Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</update>-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.tj720.model.common.video.PostActionDetail" >
+    update post_action_detail
+    <set >
+      <if test="infoId != null" >
+        info_id = #{infoId,jdbcType=VARCHAR},
+      </if>
+      <if test="infoType != null" >
+        info_type = #{infoType,jdbcType=VARCHAR},
+      </if>
+      <if test="processId != null" >
+        process_id = #{processId,jdbcType=VARCHAR},
+      </if>
+      <if test="comments != null" >
+        comments = #{comments,jdbcType=VARCHAR},
+      </if>
+      <if test="action != null" >
+        action = #{action,jdbcType=VARCHAR},
+      </if>
+      <if test="operator != null" >
+        operator = #{operator,jdbcType=VARCHAR},
+      </if>
+      <if test="operateOrg != null" >
+        operate_org = #{operateOrg,jdbcType=VARCHAR},
+      </if>
+      <if test="infoStatus != null" >
+        info_status = #{infoStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null" >
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null" >
+        updater = #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="sequence != null" >
+        sequence = #{sequence,jdbcType=INTEGER},
+      </if>
+      <if test="other1 != null" >
+        other1 = #{other1,jdbcType=VARCHAR},
+      </if>
+      <if test="other2 != null" >
+        other2 = #{other2,jdbcType=VARCHAR},
+      </if>
+      <if test="other3 != null" >
+        other3 = #{other3,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tj720.model.common.video.PostActionDetail" >
+    update post_action_detail
+    set info_id = #{infoId,jdbcType=VARCHAR},
+      info_type = #{infoType,jdbcType=VARCHAR},
+      process_id = #{processId,jdbcType=VARCHAR},
+      comments = #{comments,jdbcType=VARCHAR},
+      action = #{action,jdbcType=VARCHAR},
+      operator = #{operator,jdbcType=VARCHAR},
+      operate_org = #{operateOrg,jdbcType=VARCHAR},
+      info_status = #{infoStatus,jdbcType=VARCHAR},
+      remarks = #{remarks,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      creator = #{creator,jdbcType=VARCHAR},
+      updater = #{updater,jdbcType=VARCHAR},
+      sequence = #{sequence,jdbcType=INTEGER},
+      other1 = #{other1,jdbcType=VARCHAR},
+      other2 = #{other2,jdbcType=VARCHAR},
+      other3 = #{other3,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>

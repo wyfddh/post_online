@@ -1,0 +1,120 @@
+
+<html>
+<head>
+    <script src="../../../statics/libs/jquery-1.10.2.min.js"></script>
+    <link rel="stylesheet" href="../../../statics/css/font-awesome.min.css">
+    <!--layui ztree样式-->
+    <link rel="stylesheet" href="../../../statics/plugins/layui/css/layui.css" media="all">
+    <script src="../../../statics/plugins/layer/layer.js"></script>
+    <script src="../../../statics/plugins/layui/layui.js"></script>
+    <!--样式-->
+    <link rel="stylesheet" href="../../../common/css/cyStyle.css">
+    <link rel="stylesheet" href="../../../common/css/cyType.css">
+    <link rel="stylesheet" href="../../../statics/css/public/volunteer/videoList.css">
+    <script src="../../../statics/plugins/editgrid/plugin/My97DatePicker/WdatePicker.js" type="text/javascript" charset="utf-8"></script>
+
+    <style type="text/css">
+         .layui-table-cell {
+            height: auto;
+        }
+         .layui-table-tool{
+             display: none;
+         }
+    </style>
+</head>
+<body>
+<div class="layui-card">
+    <form class="layui-form" id="themeshowForm" action="">
+        <div class="layui-card-header">
+            <div class="flexLeft">
+                <img src="../../../statics/images/videoList/Group 6.png" alt="">
+                <span class="carFont">筛选查询</span>
+            </div>
+            <div class="layui-btn-group flexRight">
+                <button class="layui-btn layui-btn-green" lay-submit="" lay-filter="moreSearch">
+                    <i class="fa fa-chevron-down">&nbsp;</i>展开筛选
+                </button>
+                <button class="layui-btn search-btn myBtn"  lay-submit="" lay-filter="formDemo">
+                    <!--<i class="fa fa-search">&nbsp;</i>-->查询
+                </button>
+                <button type="reset" class="layui-btn myBtn" lay-submit="" lay-filter="clear"><!--<i class="fa fa-refresh">&nbsp;</i>-->重置</button>
+            </div>
+        </div>
+        <div class="layui-card-body">
+            <div class="layui-row">
+                <div class="layui-form-item layui-col-md4 layui-col-sm4 ">
+                    <label class="layui-form-label">活动状态:</label>
+                    <div class="layui-input-block">
+                        <select id="activitiesStatus" name="activitiesStatus" lay-verify="">
+                            <option value="0">全部</option>
+                            <option value="1">进行中</option>
+                            <option value="2">已结束</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item layui-col-md4 layui-col-sm4">
+                    <label class="layui-form-label">活动名称: </label>
+                    <div class="layui-input-block">
+                        <input type="text" id="activitiesName" name="activitiesName" placeholder="活动名称" class="layui-input">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+<div class="layui-card page-theme">
+    <div class="layui-card-header">
+        <div class="flexLeft">
+            <img src="../../../statics/images/videoList/Shape2.png" alt="">
+            <span class="carFont">数据列表</span>
+        </div>
+        <div class=" flexRight">
+
+            <form action="" class="layui-form">
+                <button  id="btnAdd" class="layui-btn layui-btn-green upload" data-url="page/public/volunteer/detail_add.html" title="添加志愿者活动">
+                    添加活动
+                </button>
+               <!-- <div class="layui-input-inline" style="width:100px;">
+                    <select>
+                        <option value="">批量导入</option>
+                        <option value="0">北京</option>
+                        <option value="1">上海</option>
+                        <option value="2">广州</option>
+                        <option value="3">深圳</option>
+                        <option value="4">杭州</option>
+                    </select>
+                </div>-->
+                <div class="layui-input-inline" style="width:100px;">
+                    <select name="orderBy" id="orderBy" lay-verify="required" lay-filter="orderBy">
+                        <option value="">排列方式</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="layui-card-body">
+
+        <table class="layui-hide" id="test" lay-filter="test" lay-size="lg"></table>
+
+        <script type="text/html" id="toolbarDemo">
+            <!--<!--<div class="layui-btn-container">-->
+                <!--<button class="layui-btn layui-btn-sm" lay-event="getCheckData">批量编辑</button>-->
+            <!--</div>-->
+        </script>
+        <script type="text/html" id="barDemo">
+            <a class="layui-btn layui-btn-xs" lay-event="detail" data-url="page/public/volunteer/applyList.html?id={{d.id}}" title="查看申请">查看申请</a>
+            <a class="layui-btn layui-btn-xs cy-page" lay-event="edit" data-url="page/public/volunteer/edit.html?id={{d.id}}" title="编辑志愿者活动">编辑</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+        </script>
+
+    </div>
+</div>
+
+<script src="../../../statics/js/component.js"></script>
+<script src="../../../statics/js/common.js"></script>
+<script src="../../../statics/js/public/volunteer/volunteerList.js"></script>
+</body>
+</html>

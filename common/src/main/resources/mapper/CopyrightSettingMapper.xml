@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tj720.dao.CopyrightSettingMapper" >
+  <resultMap id="BaseResultMap" type="com.tj720.model.common.copyright.CopyrightSetting" >
+    <id column="xid" property="xid" jdbcType="VARCHAR" />
+    <result column="watermark_status" property="watermarkStatus" jdbcType="VARCHAR" />
+    <result column="watermark_path" property="watermarkPath" jdbcType="VARCHAR" />
+    <result column="copyright_status" property="copyrightStatus" jdbcType="VARCHAR" />
+    <result column="copyright_content" property="copyrightContent" jdbcType="VARCHAR" />
+  </resultMap>
+  <!--<sql id="Example_Where_Clause" >-->
+    <!--<where >-->
+      <!--<foreach collection="oredCriteria" item="criteria" separator="or" >-->
+        <!--<if test="criteria.valid" >-->
+          <!--<trim prefix="(" suffix=")" prefixOverrides="and" >-->
+            <!--<foreach collection="criteria.criteria" item="criterion" >-->
+              <!--<choose >-->
+                <!--<when test="criterion.noValue" >-->
+                  <!--and ${criterion.condition}-->
+                <!--</when>-->
+                <!--<when test="criterion.singleValue" >-->
+                  <!--and ${criterion.condition} #{criterion.value}-->
+                <!--</when>-->
+                <!--<when test="criterion.betweenValue" >-->
+                  <!--and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}-->
+                <!--</when>-->
+                <!--<when test="criterion.listValue" >-->
+                  <!--and ${criterion.condition}-->
+                  <!--<foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >-->
+                    <!--#{listItem}-->
+                  <!--</foreach>-->
+                <!--</when>-->
+              <!--</choose>-->
+            <!--</foreach>-->
+          <!--</trim>-->
+        <!--</if>-->
+      <!--</foreach>-->
+    <!--</where>-->
+  <!--</sql>-->
+  <!--<sql id="Update_By_Example_Where_Clause" >-->
+    <!--<where >-->
+      <!--<foreach collection="example.oredCriteria" item="criteria" separator="or" >-->
+        <!--<if test="criteria.valid" >-->
+          <!--<trim prefix="(" suffix=")" prefixOverrides="and" >-->
+            <!--<foreach collection="criteria.criteria" item="criterion" >-->
+              <!--<choose >-->
+                <!--<when test="criterion.noValue" >-->
+                  <!--and ${criterion.condition}-->
+                <!--</when>-->
+                <!--<when test="criterion.singleValue" >-->
+                  <!--and ${criterion.condition} #{criterion.value}-->
+                <!--</when>-->
+                <!--<when test="criterion.betweenValue" >-->
+                  <!--and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}-->
+                <!--</when>-->
+                <!--<when test="criterion.listValue" >-->
+                  <!--and ${criterion.condition}-->
+                  <!--<foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >-->
+                    <!--#{listItem}-->
+                  <!--</foreach>-->
+                <!--</when>-->
+              <!--</choose>-->
+            <!--</foreach>-->
+          <!--</trim>-->
+        <!--</if>-->
+      <!--</foreach>-->
+    <!--</where>-->
+  <!--</sql>-->
+  <sql id="Base_Column_List" >
+    xid, watermark_status, watermark_path, copyright_status, copyright_content
+  </sql>
+  <!--<select id="selectByExample" resultMap="BaseResultMap" parameterType="com.tj720.model.common.copyright.CopyrightSettingExample" >-->
+    <!--select-->
+    <!--<if test="distinct" >-->
+      <!--distinct-->
+    <!--</if>-->
+    <!--<include refid="Base_Column_List" />-->
+    <!--from copyright_setting-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Example_Where_Clause" />-->
+    <!--</if>-->
+    <!--<if test="orderByClause != null" >-->
+      <!--order by ${orderByClause}-->
+    <!--</if>-->
+  <!--</select>-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from copyright_setting
+    where xid = #{xid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from copyright_setting
+    where xid = #{xid,jdbcType=VARCHAR}
+  </delete>
+  <!--<delete id="deleteByExample" parameterType="com.tj720.model.common.copyright.CopyrightSettingExample" >-->
+    <!--delete from copyright_setting-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</delete>-->
+  <insert id="insert" parameterType="com.tj720.model.common.copyright.CopyrightSetting" >
+    insert into copyright_setting (xid, watermark_status, watermark_path, 
+      copyright_status, copyright_content)
+    values (#{xid,jdbcType=VARCHAR}, #{watermarkStatus,jdbcType=VARCHAR}, #{watermarkPath,jdbcType=VARCHAR}, 
+      #{copyrightStatus,jdbcType=VARCHAR}, #{copyrightContent,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tj720.model.common.copyright.CopyrightSetting" >
+    insert into copyright_setting
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="xid != null" >
+        xid,
+      </if>
+      <if test="watermarkStatus != null" >
+        watermark_status,
+      </if>
+      <if test="watermarkPath != null" >
+        watermark_path,
+      </if>
+      <if test="copyrightStatus != null" >
+        copyright_status,
+      </if>
+      <if test="copyrightContent != null" >
+        copyright_content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="xid != null" >
+        #{xid,jdbcType=VARCHAR},
+      </if>
+      <if test="watermarkStatus != null" >
+        #{watermarkStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="watermarkPath != null" >
+        #{watermarkPath,jdbcType=VARCHAR},
+      </if>
+      <if test="copyrightStatus != null" >
+        #{copyrightStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="copyrightContent != null" >
+        #{copyrightContent,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <!--<select id="countByExample" parameterType="com.tj720.model.common.copyright.CopyrightSettingExample" resultType="java.lang.Integer" >-->
+    <!--select count(*) from copyright_setting-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</select>-->
+  <!--<update id="updateByExampleSelective" parameterType="map" >-->
+    <!--update copyright_setting-->
+    <!--<set >-->
+      <!--<if test="record.xid != null" >-->
+        <!--xid = #{record.xid,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.watermarkStatus != null" >-->
+        <!--watermark_status = #{record.watermarkStatus,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.watermarkPath != null" >-->
+        <!--watermark_path = #{record.watermarkPath,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.copyrightStatus != null" >-->
+        <!--copyright_status = #{record.copyrightStatus,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.copyrightContent != null" >-->
+        <!--copyright_content = #{record.copyrightContent,jdbcType=VARCHAR},-->
+      <!--</if>-->
+    <!--</set>-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Update_By_Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</update>-->
+  <!--<update id="updateByExample" parameterType="map" >-->
+    <!--update copyright_setting-->
+    <!--set xid = #{record.xid,jdbcType=VARCHAR},-->
+      <!--watermark_status = #{record.watermarkStatus,jdbcType=VARCHAR},-->
+      <!--watermark_path = #{record.watermarkPath,jdbcType=VARCHAR},-->
+      <!--copyright_status = #{record.copyrightStatus,jdbcType=VARCHAR},-->
+      <!--copyright_content = #{record.copyrightContent,jdbcType=VARCHAR}-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Update_By_Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</update>-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.tj720.model.common.copyright.CopyrightSetting" >
+    update copyright_setting
+    <set >
+      <if test="watermarkStatus != null" >
+        watermark_status = #{watermarkStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="watermarkPath != null" >
+        watermark_path = #{watermarkPath,jdbcType=VARCHAR},
+      </if>
+      <if test="copyrightStatus != null" >
+        copyright_status = #{copyrightStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="copyrightContent != null" >
+        copyright_content = #{copyrightContent,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where xid = #{xid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tj720.model.common.copyright.CopyrightSetting" >
+    update copyright_setting
+    set watermark_status = #{watermarkStatus,jdbcType=VARCHAR},
+      watermark_path = #{watermarkPath,jdbcType=VARCHAR},
+      copyright_status = #{copyrightStatus,jdbcType=VARCHAR},
+      copyright_content = #{copyrightContent,jdbcType=VARCHAR}
+    where xid = #{xid,jdbcType=VARCHAR}
+  </update>
+  <select id="getCopyrightInfo" resultMap="BaseResultMap">
+      select
+      <include refid="Base_Column_List" />
+      from copyright_setting
+  </select>
+</mapper>

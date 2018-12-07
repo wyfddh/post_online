@@ -1,0 +1,206 @@
+
+<html>
+<head>
+    <script src="../../statics/libs/jquery-1.10.2.min.js"></script>
+    <link rel="stylesheet" href="../../statics/css/font-awesome.min.css">
+    <!--layui ztree样式-->
+    <link rel="stylesheet" href="../../statics/plugins/layui/css/layui.css" media="all">
+    <script src="../../statics/plugins/layer/layer.js"></script>
+    <script src="../../statics/plugins/layui/layui.js"></script>
+    <!--样式-->
+    <link rel="stylesheet" href="../../common/css/cyStyle.css">
+    <link rel="stylesheet" href="../../common/css/cyType.css">
+    <link rel="stylesheet" href="../../statics/css/literature/borrowingDetail.css">
+    <script src="../../statics/plugins/editgrid/plugin/My97DatePicker/WdatePicker.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="../../statics/plugins/echarts/echarts.js"></script>
+</head>
+<body>
+<div class="layui-card">
+    <form action=""  id="borrowingForm" class="layui-form">
+
+        <div class="layui-card-body"  style="padding-bottom: 40px" id="content">
+            <ul class="time" class="layui-timeline">
+                <li class="layui-timeline-item cur">
+                    <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                    <div class="layui-timeline-content layui-text">
+                        <p>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                        </p>
+                    </div>
+                </li>
+                <li class="layui-timeline-item cur">
+                    <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                    <div class="layui-timeline-content layui-text">
+                        <p>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                        </p>
+                    </div>
+                </li>
+                <li class="layui-timeline-item cur">
+                    <i class="layui-icon layui-timeline-axis">&#xe63f;</i>
+                    <div class="layui-timeline-content layui-text">
+                        <p>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                            <br>
+                        </p>
+                    </div>
+                </li>
+            </ul>
+            <div class="info">
+                <div class="info1">
+                    <div class="sh">提交申请</div>
+                    <div class="name1" id="apply"></div>
+                    <div class="time1" id="applyTime"></div>
+                </div>
+                <div class="info1">
+                    <div class="sh">借阅</div>
+                    <div class="name1" id="approval"></div>
+                    <div class="time1" id="approvalTime"></div>
+                </div>
+                <div class="info1">
+                    <div class="sh">归还</div>
+                    <div class="name1" id="return"></div>
+                    <div class="time1" id="returnTime"></div>
+                </div>
+            </div>
+            <div class="cardOne mt24">
+                <div class="title"><img src="" alt=""><span>基本信息</span></div>
+
+                <div class="OneBody mt24">
+                    <div class="oneHeard">
+                        <div class="oo"><i class="fa fa-warning"></i><span id="status">当前订单状态：已归还</span></div>
+                        <button id="borrow" class="layui-btn layui-btn-primary">借阅</button>
+                        <button id="back" class="layui-btn layui-btn-primary">归还</button>
+                        <button id="print" class="layui-btn layui-btn-primary">打印</button>
+                    </div>
+                    <div class="oneBody">
+                        <ul class="myTable">
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">文献名称</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="literatureName" disabled="disabled"   autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">分类索书号</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="callNo" disabled="disabled"  autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">借阅人</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="applicant" id="applicant" disabled="disabled" autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">信息来源</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <select name="informationSources" disabled="disabled" id="informationSources" lay-verify="required">
+                                        <option value="">请选择</option>
+                                        <option value="1">pc端</option>
+                                        <option value="2">纸质申请</option>
+                                    </select>
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">预计归还时间</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="planReturnDate" disabled="disabled" id="planReturnDate"  autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">申请原因</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="applyReasons" disabled="disabled"  autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">备注</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="applyRemark" disabled="disabled" autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">审批人</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="approveId" disabled="disabled" id="approveId"  autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">附件</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+
+                                    <input type="text" name="attachmentId" disabled="disabled"  autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+        </div>
+    </form>
+</div>
+
+<script src="../../statics/js/jQueryPrint/jQuery.print.js"></script>
+<script src="../../statics/js/common.js"></script>
+<script src="../../statics/js/component.js"></script>
+<script src="../../statics/js/literature/borrowingDetail.js"></script>
+</body>
+</html>

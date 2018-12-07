@@ -1,0 +1,517 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tj720.dao.PubUserMapper" >
+  <resultMap id="BaseResultMap" type="com.tj720.model.common.pubuser.PubUser" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="birthday" property="birthday" jdbcType="TIMESTAMP" />
+    <result column="province_id" property="provinceId" jdbcType="VARCHAR" />
+    <result column="city_id" property="cityId" jdbcType="VARCHAR" />
+    <result column="job" property="job" jdbcType="VARCHAR" />
+    <result column="single_name" property="singleName" jdbcType="VARCHAR" />
+    <result column="phone" property="phone" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="sure_password" property="surePassword" jdbcType="VARCHAR" />
+    <result column="qq_openid" property="qqOpenid" jdbcType="VARCHAR" />
+    <result column="weixin_unionid" property="weixinUnionid" jdbcType="VARCHAR" />
+    <result column="avatarUrl" property="avatarurl" jdbcType="VARCHAR" />
+    <result column="nick_name" property="nickName" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="updater" property="updater" jdbcType="VARCHAR" />
+    <result column="sequence" property="sequence" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="isdelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="other1" property="other1" jdbcType="VARCHAR" />
+    <result column="other2" property="other2" jdbcType="VARCHAR" />
+    <result column="other3" property="other3" jdbcType="VARCHAR" />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    id, user_id, user_name, sex, birthday, province_id, city_id, job, single_name, phone, 
+    password, sure_password, qq_openid, weixin_unionid, avatarUrl, nick_name, create_time, 
+    update_time, creator, updater, sequence, status, isdelete, other1, other2, other3
+  </sql>
+
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    a.*,b.name as  city
+    from post_pub_user  a  left  join  mip_area  b
+    on  a.city_id = b.id
+    where a.id = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from post_pub_user
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="insert" parameterType="com.tj720.model.common.pubuser.PubUser" >
+    insert into post_pub_user (id, user_id, user_name, 
+      sex, birthday, province_id, 
+      city_id, job, single_name, 
+      phone, password, sure_password, 
+      qq_openid, weixin_unionid, avatarUrl, 
+      nick_name, create_time, update_time, 
+      creator, updater, sequence, 
+      status, isdelete, other1, 
+      other2, other3)
+    values (#{id,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{userName,jdbcType=VARCHAR}, 
+      #{sex,jdbcType=VARCHAR}, #{birthday,jdbcType=TIMESTAMP}, #{provinceId,jdbcType=VARCHAR}, 
+      #{cityId,jdbcType=VARCHAR}, #{job,jdbcType=VARCHAR}, #{singleName,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{surePassword,jdbcType=VARCHAR}, 
+      #{qqOpenid,jdbcType=VARCHAR}, #{weixinUnionid,jdbcType=VARCHAR}, #{avatarurl,jdbcType=VARCHAR}, 
+      #{nickName,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{sequence,jdbcType=INTEGER}, 
+      #{status,jdbcType=INTEGER}, #{isdelete,jdbcType=INTEGER}, #{other1,jdbcType=VARCHAR}, 
+      #{other2,jdbcType=VARCHAR}, #{other3,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tj720.model.common.pubuser.PubUser" >
+    insert into post_pub_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="birthday != null" >
+        birthday,
+      </if>
+      <if test="provinceId != null" >
+        province_id,
+      </if>
+      <if test="cityId != null" >
+        city_id,
+      </if>
+      <if test="job != null" >
+        job,
+      </if>
+      <if test="singleName != null" >
+        single_name,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="surePassword != null" >
+        sure_password,
+      </if>
+      <if test="qqOpenid != null" >
+        qq_openid,
+      </if>
+      <if test="weixinUnionid != null" >
+        weixin_unionid,
+      </if>
+      <if test="avatarurl != null" >
+        avatarUrl,
+      </if>
+      <if test="nickName != null" >
+        nick_name,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="updater != null" >
+        updater,
+      </if>
+      <if test="sequence != null" >
+        sequence,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="isdelete != null" >
+        isdelete,
+      </if>
+      <if test="other1 != null" >
+        other1,
+      </if>
+      <if test="other2 != null" >
+        other2,
+      </if>
+      <if test="other3 != null" >
+        other3,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        #{birthday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="provinceId != null" >
+        #{provinceId,jdbcType=VARCHAR},
+      </if>
+      <if test="cityId != null" >
+        #{cityId,jdbcType=VARCHAR},
+      </if>
+      <if test="job != null" >
+        #{job,jdbcType=VARCHAR},
+      </if>
+      <if test="singleName != null" >
+        #{singleName,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="surePassword != null" >
+        #{surePassword,jdbcType=VARCHAR},
+      </if>
+      <if test="qqOpenid != null" >
+        #{qqOpenid,jdbcType=VARCHAR},
+      </if>
+      <if test="weixinUnionid != null" >
+        #{weixinUnionid,jdbcType=VARCHAR},
+      </if>
+      <if test="avatarurl != null" >
+        #{avatarurl,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null" >
+        #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="sequence != null" >
+        #{sequence,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="other1 != null" >
+        #{other1,jdbcType=VARCHAR},
+      </if>
+      <if test="other2 != null" >
+        #{other2,jdbcType=VARCHAR},
+      </if>
+      <if test="other3 != null" >
+        #{other3,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.tj720.model.common.pubuser.PubUser" >
+    update post_pub_user
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        birthday = #{birthday,jdbcType=TIMESTAMP},
+      </if>
+      <if test="provinceId != null" >
+        province_id = #{provinceId,jdbcType=VARCHAR},
+      </if>
+      <if test="cityId != null" >
+        city_id = #{cityId,jdbcType=VARCHAR},
+      </if>
+      <if test="job != null" >
+        job = #{job,jdbcType=VARCHAR},
+      </if>
+      <if test="singleName != null" >
+        single_name = #{singleName,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null" >
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="surePassword != null" >
+        sure_password = #{surePassword,jdbcType=VARCHAR},
+      </if>
+      <if test="qqOpenid != null" >
+        qq_openid = #{qqOpenid,jdbcType=VARCHAR},
+      </if>
+      <if test="weixinUnionid != null" >
+        weixin_unionid = #{weixinUnionid,jdbcType=VARCHAR},
+      </if>
+      <if test="avatarurl != null" >
+        avatarUrl = #{avatarurl,jdbcType=VARCHAR},
+      </if>
+      <if test="nickName != null" >
+        nick_name = #{nickName,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null" >
+        updater = #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="sequence != null" >
+        sequence = #{sequence,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="isdelete != null" >
+        isdelete = #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="other1 != null" >
+        other1 = #{other1,jdbcType=VARCHAR},
+      </if>
+      <if test="other2 != null" >
+        other2 = #{other2,jdbcType=VARCHAR},
+      </if>
+      <if test="other3 != null" >
+        other3 = #{other3,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tj720.model.common.pubuser.PubUser" >
+    update post_pub_user
+    set user_id = #{userId,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=VARCHAR},
+      birthday = #{birthday,jdbcType=TIMESTAMP},
+      province_id = #{provinceId,jdbcType=VARCHAR},
+      city_id = #{cityId,jdbcType=VARCHAR},
+      job = #{job,jdbcType=VARCHAR},
+      single_name = #{singleName,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      sure_password = #{surePassword,jdbcType=VARCHAR},
+      qq_openid = #{qqOpenid,jdbcType=VARCHAR},
+      weixin_unionid = #{weixinUnionid,jdbcType=VARCHAR},
+      avatarUrl = #{avatarurl,jdbcType=VARCHAR},
+      nick_name = #{nickName,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      creator = #{creator,jdbcType=VARCHAR},
+      updater = #{updater,jdbcType=VARCHAR},
+      sequence = #{sequence,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      isdelete = #{isdelete,jdbcType=INTEGER},
+      other1 = #{other1,jdbcType=VARCHAR},
+      other2 = #{other2,jdbcType=VARCHAR},
+      other3 = #{other3,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updatePubUserByIds" parameterType = "java.util.List">
+    update post_pub_user set isdelete = 1 where id in
+    <foreach collection="ids" open="(" item="id" separator="," close=")">
+      #{id}
+    </foreach>
+  </update>
+
+  <select id="selectCountByPubUser" parameterType="java.util.Map"
+          resultType="java.lang.Integer">
+    SELECT
+    count(1)
+    FROM post_pub_user where isdelete = 0
+    <if test="name != null and name != ''">
+      and (user_name like concat('%',#{name},'%')
+      and user_name like concat('%',#{name},'%')
+      )
+    </if>
+    <if test="phone != null and phone != ''">
+      and phone = #{phone}
+    </if>
+    <if test="startTime != null and startTime != ''" >
+      and start_time = #{startTime}
+    </if>
+    <if test="orderBy == 1" >
+      order by update_time desc
+    </if>
+    <if test="orderBy == 2" >
+      order by create_time desc
+    </if>
+
+  </select>
+
+  <select id="selectListByPubUser" parameterType="java.util.Map"
+          resultMap="BaseResultMap">
+    SELECT
+    a.*,b.name as city
+    FROM post_pub_user a
+    left  join  mip_area  b
+    on  a.city_id = b.id
+    where isdelete = 0
+    <if test="name != null and name != ''">
+      and (user_name like concat('%',#{name},'%')
+      and user_name like concat('%',#{name},'%')
+      )
+    </if>
+    <if test="phone != null and phone != ''">
+      and phone = #{phone}
+    </if>
+    <if test="createTime != null and createTime != ''" >
+      and date(create_time) = #{createTime}
+    </if>
+    <if test="orderBy == 1" >
+      order by update_time desc
+    </if>
+    <if test="orderBy == 2" >
+      order by create_time desc
+    </if>
+    limit #{start},#{end}
+  </select>
+
+
+  <select id="selectByParams" parameterType="java.util.Map" resultMap="BaseResultMap">
+    SELECT
+    *
+    FROM post_pub_user where isdelete = 0
+
+    <if test="name != null and key != ''">
+      and name = #{name}
+    </if>
+    <if test="type != null and type != ''">
+      and type = #{type}
+    </if>
+    <if test="sonType != null and sonType != ''">
+      and son_type = #{sonType}
+    </if>
+  </select>
+
+
+
+  <!--通过用户id关联查询收藏的藏品-->
+  <select id="getCollectsByUserId"  resultType="com.tj720.model.common.collect.Collect" parameterType="java.util.Map">
+    select
+    t.id,
+    t.pictureids,
+    t. name,
+    t.msg,
+    t.create_time as createdate,
+    t.isdelete,
+    '1' as hascollected from post_web_collect b,post_collection t
+    where t.id = b.cid
+    and b.user_id = #{userId}
+    and b.status = 1
+    and b.type = '2'
+    and t.isdelete = '0'
+    order by
+    t.update_time desc
+    limit #{start},#{end}
+
+  </select>
+
+
+
+  <select id="getCollectsCountByUserId"  resultType="java.lang.Integer"
+          parameterType="java.util.Map">
+    select
+    count(1) from post_web_collect b,post_collection t
+    where t.id = b.cid
+    and b.user_id = #{userId}
+    and b.status = 1
+    and b.type = '2'
+    and t.isdelete = '0'
+  </select>
+
+
+
+  <!--通过用户id关联查询收藏的主题-->
+  <select id="getThemeByUserId"  resultType="com.tj720.model.common.themeshow.PostThemeShow" parameterType="java.util.Map">
+    select a.id,a.datum_ids as datumIds,a.theme_name as themeName,'1' as hascollected from post_web_collect b,post_theme_show a
+    where a.id = b.cid
+    and b.user_id = #{userId}
+    and b.status = 1
+    and b.type = '1'
+    and  a.data_state = '1'
+    order by
+    a.update_date   desc
+    limit #{start},#{end}
+
+  </select>
+
+
+  <select id="getThemeCountByUserId"  resultType="java.lang.Integer"  parameterType="java.util.Map">
+    select count(1) from post_web_collect b,post_theme_show a
+    where a.id = b.cid
+    and b.user_id = #{userId}
+    and b.status = 1
+    and b.type = '1'
+    and  a.data_state = '1'
+   and b.user_id = #{userId}
+  </select>
+
+
+  <select id="getUserDtoByUid" resultType="com.tj720.model.common.pubuser.PubUserDto" parameterType="java.lang.String">
+     select
+	 a.id,
+	 a.user_id as datumids,
+	 a.nick_name as nickname,
+     a.avatarurl  as  avatarurl,
+     a.single_name  as  singlename,
+     a.sex,
+     count(c.id) as  themeAmount,
+     count(d.id)  as   collectAmount
+     from
+	 post_pub_user a
+     left join post_web_collect b on a.id = b.user_id
+     left  join  post_theme_show  c  on   b.cid = c.id
+     left  join  post_collection  d  on  b.cid=d.id
+     where
+     b.status = '1'
+     and a.id = #{userId}
+  </select>
+  <select id="getListByPhone" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List"/>
+    from post_pub_user
+    where phone = #{phone}
+    and isdelete = 0
+  </select>
+
+
+</mapper>

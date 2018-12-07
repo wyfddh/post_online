@@ -1,0 +1,262 @@
+
+<html>
+<head>
+    <script src="../../../statics/libs/jquery-1.10.2.min.js"></script>
+    <link rel="stylesheet" href="../../../statics/css/font-awesome.min.css">
+    <!--layui ztree样式-->
+    <link rel="stylesheet" href="../../../statics/plugins/layui/css/layui.css" media="all">
+    <script src="../../../statics/plugins/layer/layer.js"></script>
+    <script src="../../../statics/plugins/layui/layui.js"></script>
+    <!--样式-->
+    <link rel="stylesheet" href="../../../common/css/cyStyle.css">
+    <link rel="stylesheet" href="../../../common/css/cyType.css">
+    <link rel="stylesheet" href="../../../statics/css/videoDetail.css">
+    <script src="../../../statics/plugins/editgrid/plugin/My97DatePicker/WdatePicker.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="../../../statics/plugins/echarts/echarts.js"></script>
+</head>
+<body>
+<div class="layui-card">
+    <form action=""  class="layui-form">
+        <div class="layui-card-header">
+            <div class="flexLeft">
+                <span class="carFont">上传资料</span>
+            </div>
+            <div class=" flexRight ">
+                <button class="layui-btn layui-btn-green myBtn">
+                    导出数据
+                </button>
+                <button class="layui-btn searchBtn myBtn active" >
+                    最近7天
+                </button>
+                <button class="layui-btn searchBtn myBtn">
+                    最近30天
+                </button>
+                <div class="layui-inline" style="height: 32px">
+                    <input readonly="readonly" type="text" name="endDate" id="endDate" maxlength="20" value=""
+                           placeholder="请选择截止时间" class="layui-input Wdate"
+                           onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',readOnly:true,minDate:'#F{$dp.$D(\'startDate\')}',dchanging:cDayFunc})">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-card-body">
+
+            <div class="cardOne mt24">
+                <div class="title"><img src="" alt=""><span>基本信息</span></div>
+
+                <div class="OneBody mt24">
+                    <div class="oneHeard">
+                        <div class="oneLeft">
+                            <span>操作人：</span>
+                            <span>admin</span>
+                            <span>系统管理员</span>
+                        </div>
+                        <div class="oneRight">
+                            <span>日期：</span>
+                            <span>2018-8-21</span>
+                        </div>
+                    </div>
+                    <div class="oneBody">
+                        <ul class="myTable">
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*资料编号</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*资料名称</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">关键词</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="title" required  placeholder="请输入标题" autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*资料类型</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <select name="city" lay-verify="required">
+                                    </select>
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">存储格式</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">时长</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">资料大小</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*资料来源</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*形成时间</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">内容简介</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">备注</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cardOne mt24">
+                <div class="title"><img src="" alt=""><span>上传资料</span></div>
+
+                <div class="OneBody mt24">
+                    <div class="oneHeard">
+
+                    </div>
+                    <div class="oneBody mt24">
+                        <div class="layui-upload-drag" id="test10">
+                            <img src="../../../statics/images/videoList/Shapemax.png" alt="">
+                            <p>点击或拖动文件上传</p>
+                            <p class="tip">支持单个或批量上传。文件类型包括：图片、视频。音频。</p>
+                        </div>
+
+                        <button type="button" class="layui-btn" id="testListAction">开始上传</button>
+                        <div class="fileControl">
+                            <ul id="demoList">
+                                <!--<li>
+                                    <div class="upLeft">
+                                        <span class="fileName">文件名称1.rar</span>
+                                        <span class="fileState">正在上传</span>
+                                    </div>
+                                    <div class="upRight">
+                                        <div class="layui-progress layui-col-md8 layui-col-sm8" lay-showPercent="yes" lay-filter="progressBar">
+                                            <div class="layui-progress-bar layui-bg-red" lay-percent="0%"></div>
+                                        </div>
+                                        <span class="layui-col-md2 layui-col-sm2">70%</span>
+                                        <a href="javascript:void (0);" class="layui-col-md1 layui-col-sm1">暂停</a>
+                                        <a href="javascript:void (0);" class="layui-col-md1 layui-col-sm1">取消</a>
+                                    </div>
+                                </li>-->
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="cardOne mt24">
+                <div class="title"><img src="" alt=""><span>资料标注</span></div>
+
+                <div class="OneBody">
+                    <div class="oneHeard">
+
+                    </div>
+                    <div class="mt24">
+                        <div class="addLable layui-row">
+                            <div class="layui-inline layui-col-md1 layui-col-sm1">添加标注：</div>
+                            <ul class="lableList layui-inline layui-col-md8 layui-col-sm8">
+                                <li class="layui-row">
+                                    <div class="layui-form-item m0 layui-col-md5 layui-col-sm5">
+                                        <input type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                                    </div>
+                                    <div class="layui-form-item mFree layui-col-md5 layui-col-sm5">
+                                        <input type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                                    </div>
+                                </li>
+                            </ul>
+                            <a href="javascript:void (0);" class="layui-col-md2 layui-col-sm2 addBtn"></a>
+                        </div>
+                        <p class="myfont">已添加标注信息如下</p>
+                        <div class="layui-row" style="height: 250px">
+                            <div class="layui-col-md10 layui-col-sm10">
+                                <table class="layui-table" id="test" lay-filter="test"></table>
+                                <script type="text/html" id="barDemo">
+                                    <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
+                                    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="cardOne mt24 mb18">
+                <div class="title"><img src="" alt=""><span>编目信息</span></div>
+
+                <div class="OneBody mt24">
+                    <div class="oneHeard">
+
+                    </div>
+                    <div class="oneBody mt24">
+                        <ul class="myTable">
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">资料分类</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <select name="city" lay-verify="required">
+                                    </select>
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">关联主体</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">关联藏品</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="title" required  placeholder="请输入标题" autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*审批人</div>
+                                <div class="layui-form-item m0 layui-col-md3 layui-col-sm3">
+                                    <select name="city" lay-verify="required">
+
+                                    </select>
+                                </div>
+                            </li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="layui-form-item mt34">
+                <div class="layui-input-block bodyBtn">
+                    <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="../../../statics/js/videoDetail.js"></script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+
+<html>
+<head>
+    <script src="../../../statics/libs/jquery-1.10.2.min.js"></script>
+    <link rel="stylesheet" href="../../../statics/css/font-awesome.min.css">
+    <!--layui ztree样式-->
+    <link rel="stylesheet" href="../../../statics/plugins/layui/css/layui.css" media="all">
+    <script src="../../../statics/plugins/layer/layer.js"></script>
+    <script src="../../../statics/plugins/layui/layui.js"></script>
+    <!--样式-->
+    <link rel="stylesheet" href="../../../common/css/cyStyle.css">
+    <link rel="stylesheet" href="../../../common/css/cyType.css">
+    <link rel="stylesheet" href="../../../statics/css/public/message/videoDetail.css">
+    <script src="../../../statics/plugins/editgrid/plugin/My97DatePicker/WdatePicker.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="../../../statics/plugins/echarts/echarts.js"></script>
+</head>
+<body>
+<div class="layui-card">
+    <form action=""  class="layui-form" id = "researchForm">
+        <div class="layui-card-header">
+            <div class="flexLeft">
+                <span class="carFont">研究内容</span>
+            </div>
+            <!--<div class=" flexRight ">
+                <button class="layui-btn layui-btn-green myBtn">
+                    导出数据
+                </button>
+                <button class="layui-btn searchBtn myBtn active" >
+                    最近7天
+                </button>
+                <button class="layui-btn searchBtn myBtn">
+                    最近30天
+                </button>
+                <div class="layui-inline" style="height: 32px">
+                    <input readonly="readonly" type="text" name="endDate" id="endDate" maxlength="20" value=""
+                           placeholder="请选择截止时间" class="layui-input Wdate"
+                           onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',readOnly:true,minDate:'#F{$dp.$D(\'startDate\')}',dchanging:cDayFunc})">
+                </div>
+            </div>-->
+        </div>
+
+        <div class="layui-card-body">
+
+            <div class="cardOne mt24">
+
+                <div class="oneBody">
+                    <ul class="myTable">
+                        <li class="layui-row">
+                            <div class="layui-inline layui-col-md1 layui-col-sm1 tableTR">*研究主题</div>
+                            <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                <input type="text" name="title" required  lay-verify="required" placeholder="请输入研究主题" autocomplete="off" class="layui-input">
+                            </div>
+                        </li>
+
+                        <li class="layui-row">
+                            <div class="layui-form-item m0 layui-col-md12 layui-col-sm12" style="height: 300px"
+                                 lay-verify="edit-required">
+                                <textarea id="msg" name="msg"></textarea>
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="layui-form-item mt34">
+            <div class="layui-input-block bodyBtn">
+                <button class="layui-btn" lay-submit lay-filter="formDemo">保存</button>
+                <button type="reset" class="layui-btn layui-btn-primary">取消</button>
+            </div>
+        </div>
+</div>
+</form>
+</div>
+
+<script src="../../../statics/js/common.js"></script>
+<script src="../../../statics/js/formatDatasUtil.js"></script>
+<!--<script type="text/javascript" src="../../../statics/plugins/layui/layui.js"></script>-->
+<script type="text/javascript" src="../../../statics/upload/uploadSingleImg.js"></script>
+<script src="../../../statics/js/public/research/videoDetail_add.js"></script>
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tj720.dao.PostLiteratureProcessMapper">
+  <resultMap id="BaseResultMap" type="com.tj720.model.literature.PostLiteratureProcess">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="literature_id" jdbcType="VARCHAR" property="literatureId" />
+    <result column="applicant" jdbcType="VARCHAR" property="applicant" />
+    <result column="department" jdbcType="VARCHAR" property="department" />
+    <result column="apply_reasons" jdbcType="VARCHAR" property="applyReasons" />
+    <result column="apply_remark" jdbcType="VARCHAR" property="applyRemark" />
+    <result column="apply_date" jdbcType="VARCHAR" property="applyDate" />
+    <result column="plan_return_date" jdbcType="VARCHAR" property="planReturnDate" />
+    <result column="borrowing_date" jdbcType="TIMESTAMP" property="borrowingDate" />
+    <result column="real_return_date" jdbcType="TIMESTAMP" property="realReturnDate" />
+    <result column="approve_id" jdbcType="VARCHAR" property="approveId" />
+    <result column="attachment_id" jdbcType="VARCHAR" property="attachmentId" />
+    <result column="information_sources" jdbcType="VARCHAR" property="informationSources" />
+    <result column="apply_type" jdbcType="VARCHAR" property="applyType" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="updater" jdbcType="VARCHAR" property="updater" />
+    <result column="approve_status" jdbcType="VARCHAR" property="approveStatus" />
+    <result column="apply_status" jdbcType="VARCHAR" property="applyStatus" />
+  </resultMap>
+
+  <resultMap id="BaseResultMap1" type="java.util.HashMap">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="literature_id" jdbcType="VARCHAR" property="literatureId" />
+    <result column="applicant" jdbcType="VARCHAR" property="applicant" />
+    <result column="department" jdbcType="VARCHAR" property="department" />
+    <result column="apply_reasons" jdbcType="VARCHAR" property="applyReasons" />
+    <result column="apply_remark" jdbcType="VARCHAR" property="applyRemark" />
+    <result column="apply_date" jdbcType="VARCHAR" property="applyDate" />
+    <result column="plan_return_date" jdbcType="VARCHAR" property="planReturnDate" />
+    <result column="borrowing_date" jdbcType="TIMESTAMP" property="borrowingDate" />
+    <result column="real_return_date" jdbcType="TIMESTAMP" property="realReturnDate" />
+    <result column="approve_id" jdbcType="VARCHAR" property="approveId" />
+    <result column="attachment_id" jdbcType="VARCHAR" property="attachmentId" />
+    <result column="information_sources" jdbcType="VARCHAR" property="informationSources" />
+    <result column="apply_type" jdbcType="VARCHAR" property="applyType" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="updater" jdbcType="VARCHAR" property="updater" />
+    <result column="approve_status" jdbcType="VARCHAR" property="approveStatus" />
+    <result column="apply_status" jdbcType="VARCHAR" property="applyStatus" />
+
+    <result column="data_name" jdbcType="VARCHAR" property="dataName" />
+    <result column="call_no" jdbcType="VARCHAR" property="callNo" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, literature_id, applicant, department, apply_reasons, apply_remark, apply_date,
+    plan_return_date, borrowing_date, real_return_date, approve_id, attachment_id, information_sources,
+    apply_type, create_time, update_time, creator, updater, approve_status, apply_status
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from post_literature_process
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from post_literature_process
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tj720.model.literature.PostLiteratureProcess">
+    insert into post_literature_process (id, literature_id, applicant,
+    department, apply_reasons, apply_remark,
+    apply_date, plan_return_date, borrowing_date,
+    real_return_date, approve_id, attachment_id,
+    information_sources, apply_type, create_time,
+    update_time, creator, updater,
+    approve_status, apply_status)
+    values (#{id,jdbcType=VARCHAR}, #{literatureId,jdbcType=VARCHAR}, #{applicant,jdbcType=VARCHAR},
+    #{department,jdbcType=VARCHAR}, #{applyReasons,jdbcType=VARCHAR}, #{applyRemark,jdbcType=VARCHAR},
+    #{applyDate,jdbcType=VARCHAR}, #{planReturnDate,jdbcType=VARCHAR}, #{borrowingDate,jdbcType=TIMESTAMP},
+    #{realReturnDate,jdbcType=TIMESTAMP}, #{approveId,jdbcType=VARCHAR}, #{attachmentId,jdbcType=VARCHAR},
+    #{informationSources,jdbcType=VARCHAR}, #{applyType,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+    #{updateTime,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR},
+    #{approveStatus,jdbcType=VARCHAR}, #{applyStatus,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tj720.model.literature.PostLiteratureProcess">
+    insert into post_literature_process
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="literatureId != null">
+        literature_id,
+      </if>
+      <if test="applicant != null">
+        applicant,
+      </if>
+      <if test="department != null">
+        department,
+      </if>
+      <if test="applyReasons != null">
+        apply_reasons,
+      </if>
+      <if test="applyRemark != null">
+        apply_remark,
+      </if>
+      <if test="applyDate != null">
+        apply_date,
+      </if>
+      <if test="planReturnDate != null">
+        plan_return_date,
+      </if>
+      <if test="borrowingDate != null">
+        borrowing_date,
+      </if>
+      <if test="realReturnDate != null">
+        real_return_date,
+      </if>
+      <if test="approveId != null">
+        approve_id,
+      </if>
+      <if test="attachmentId != null">
+        attachment_id,
+      </if>
+      <if test="informationSources != null">
+        information_sources,
+      </if>
+      <if test="applyType != null">
+        apply_type,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="creator != null">
+        creator,
+      </if>
+      <if test="updater != null">
+        updater,
+      </if>
+      <if test="approveStatus != null">
+        approve_status,
+      </if>
+      <if test="applyStatus != null">
+        apply_status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="literatureId != null">
+        #{literatureId,jdbcType=VARCHAR},
+      </if>
+      <if test="applicant != null">
+        #{applicant,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null">
+        #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="applyReasons != null">
+        #{applyReasons,jdbcType=VARCHAR},
+      </if>
+      <if test="applyRemark != null">
+        #{applyRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="applyDate != null">
+        #{applyDate,jdbcType=VARCHAR},
+      </if>
+      <if test="planReturnDate != null">
+        #{planReturnDate,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowingDate != null">
+        #{borrowingDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="realReturnDate != null">
+        #{realReturnDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="approveId != null">
+        #{approveId,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentId != null">
+        #{attachmentId,jdbcType=VARCHAR},
+      </if>
+      <if test="informationSources != null">
+        #{informationSources,jdbcType=VARCHAR},
+      </if>
+      <if test="applyType != null">
+        #{applyType,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="approveStatus != null">
+        #{approveStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="applyStatus != null">
+        #{applyStatus,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tj720.model.literature.PostLiteratureProcess">
+    update post_literature_process
+    <set>
+      <if test="literatureId != null">
+        literature_id = #{literatureId,jdbcType=VARCHAR},
+      </if>
+      <if test="applicant != null">
+        applicant = #{applicant,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null">
+        department = #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="applyReasons != null">
+        apply_reasons = #{applyReasons,jdbcType=VARCHAR},
+      </if>
+      <if test="applyRemark != null">
+        apply_remark = #{applyRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="applyDate != null">
+        apply_date = #{applyDate,jdbcType=VARCHAR},
+      </if>
+      <if test="planReturnDate != null">
+        plan_return_date = #{planReturnDate,jdbcType=VARCHAR},
+      </if>
+      <if test="borrowingDate != null">
+        borrowing_date = #{borrowingDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="realReturnDate != null">
+        real_return_date = #{realReturnDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="approveId != null">
+        approve_id = #{approveId,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentId != null">
+        attachment_id = #{attachmentId,jdbcType=VARCHAR},
+      </if>
+      <if test="informationSources != null">
+        information_sources = #{informationSources,jdbcType=VARCHAR},
+      </if>
+      <if test="applyType != null">
+        apply_type = #{applyType,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        updater = #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="approveStatus != null">
+        approve_status = #{approveStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="applyStatus != null">
+        apply_status = #{applyStatus,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tj720.model.literature.PostLiteratureProcess">
+    update post_literature_process
+    set literature_id = #{literatureId,jdbcType=VARCHAR},
+    applicant = #{applicant,jdbcType=VARCHAR},
+    department = #{department,jdbcType=VARCHAR},
+    apply_reasons = #{applyReasons,jdbcType=VARCHAR},
+    apply_remark = #{applyRemark,jdbcType=VARCHAR},
+    apply_date = #{applyDate,jdbcType=VARCHAR},
+    plan_return_date = #{planReturnDate,jdbcType=VARCHAR},
+    borrowing_date = #{borrowingDate,jdbcType=TIMESTAMP},
+    real_return_date = #{realReturnDate,jdbcType=TIMESTAMP},
+    approve_id = #{approveId,jdbcType=VARCHAR},
+    attachment_id = #{attachmentId,jdbcType=VARCHAR},
+    information_sources = #{informationSources,jdbcType=VARCHAR},
+    apply_type = #{applyType,jdbcType=VARCHAR},
+    create_time = #{createTime,jdbcType=TIMESTAMP},
+    update_time = #{updateTime,jdbcType=TIMESTAMP},
+    creator = #{creator,jdbcType=VARCHAR},
+    updater = #{updater,jdbcType=VARCHAR},
+    approve_status = #{approveStatus,jdbcType=VARCHAR},
+    apply_status = #{applyStatus,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="countPostLiteratureProcessList" resultType="java.lang.Integer" parameterType="java.util.Map">
+    select count(1) from post_literature_process
+    where 1=1
+
+    <if test="department != null and department != ''">
+      and department = #{department}
+    </if>
+    <if test="approveStatus != null and approveStatus != ''">
+      and approve_status = #{approveStatus}
+    </if>
+    and (approve_id = #{userId}
+    or applicant = #{userId})
+    <if test="key != null and key != ''">
+      and literature_id in (select id from post_literature where data_name like concat('%',#{key},'%') )
+      OR applicant in (select id from sys_user where name like concat('%',#{key},'%'))
+    </if>
+  </select>
+  <sql id="Column_List">
+    a.id, a.literature_id,b.data_name as literatureName,b.data_type as literatureType, a.applicant,c.name as applicantName,
+    a.department,d.department_name as departmentName,a.apply_reasons, a.apply_remark, a.apply_date,b.call_no as callNo,
+    a.plan_return_date,a.borrowing_date, a.real_return_date, a.approve_id, a.attachment_id, a.information_sources,
+    a.apply_type, a.create_time, a.update_time, a.creator, a.updater, a.approve_status, a.apply_status,b.inventory_state as inventoryState
+  </sql>
+  <select id="getPostLiteratureProcessList" resultMap="BaseResultMap" parameterType="java.util.Map">
+    select
+    <include refid="Column_List"/>
+    from post_literature_process a
+    left join post_literature b on a.literature_id = b.id
+    left join sys_user c on a.applicant = c.id
+    left join sys_department d on a.department = department_id
+    where 1 = 1
+
+    <if test="department != null and department != ''">
+      and department = #{department}
+    </if>
+    <if test="approveStatus != null and approveStatus != ''">
+      and approve_status = #{approveStatus}
+    </if>
+    and (approve_id = #{userId}
+    or applicant = #{userId})
+    <if test="key != null and key != ''">
+      and literature_id in (select id from post_literature where data_name like concat('%',#{key},'%') )
+      OR applicant in (select id from sys_user where name like concat('%',#{key},'%'))
+    </if>
+    <if test="orderBy == 1" >
+      order by update_time desc
+    </if>
+    <if test="orderBy == 2" >
+      order by create_time
+    </if>
+    limit #{start},#{end}
+  </select>
+
+  <select id="countBorrowingList" parameterType="java.util.Map" resultType="java.lang.Integer">
+    select count(1)
+    from post_literature_process
+    where 1 = 1
+    <if test="key != null and key != ''">
+      and literature_id in (select id from post_literature where data_name like concat('%',#{key},'%') )
+      OR applicant in (select id from sys_user where name like concat('%',#{key},'%'))
+    </if>
+    <if test="department != null and department != ''">
+      and department = #{department}
+    </if>
+    <if test="borrowStatus != null and borrowStatus != ''">
+      and apply_status = #{borrowStatus}
+    </if>
+    <if test="borrowStatus == null or borrowStatus == ''">
+      and apply_status &gt; 0
+    </if>
+    and approve_status = "2"
+    and apply_type = '1'
+  </select>
+  <select id="getBorrowingList" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select
+    <include refid="Column_List"/>
+    from post_literature_process a
+    left join post_literature b on a.literature_id = b.id
+    left join sys_user c on a.applicant = c.id
+    left join sys_department d on a.department = department_id
+    where 1 = 1
+    <if test="key != null and key != ''">
+      and literature_id in (select id from post_literature where data_name like concat('%',#{key},'%') )
+      OR applicant in (select id from sys_user where name like concat('%',#{key},'%'))
+    </if>
+    <if test="department != null and department != ''">
+      and department = #{department}
+    </if>
+    <if test="borrowStatus != null and borrowStatus != ''">
+      and apply_status = #{borrowStatus}
+    </if>
+    <if test="borrowStatus == null or borrowStatus == ''">
+      and apply_status &gt; 0
+    </if>
+    and approve_status = "2"
+    and apply_type = '1'
+    <if test="orderBy == 1" >
+      order by update_time desc
+    </if>
+    <if test="orderBy == 2" >
+      order by create_time
+    </if>
+
+    limit #{start},#{end}
+
+  </select>
+
+  <select id="getProcessDetailOverdueList" resultMap="BaseResultMap">
+      select
+    <include refid="Base_Column_List" />
+       from post_literature_process
+      where TO_DAYS(NOW()) - TO_DAYS(plan_return_date) &gt; 0
+  </select>
+
+  <select id="getLiteratureProcessById" resultMap="BaseResultMap1">
+      SELECT
+          p.data_name as literatureName,
+          p.call_no,
+          b.name as applicantName,
+          a.*
+      FROM
+          post_literature_process a
+      LEFT JOIN post_literature p ON a.literature_id = p.id
+      left join sys_user b on a.applicant = b.id
+      WHERE
+          a.id = #{id}
+  </select>
+
+  <select id="getWfActionByNotice" resultMap="BaseResultMap">
+    select w.*,a.data_name as literatureName,a.call_no as callNo,
+    b.name as applicantName
+    from post_literature_process w
+    left join sys_notice s on w.id = s.other1
+    left join post_literature a on a.id = w.literature_id
+    left join sys_user b on b.id = w.applicant
+    where s.id = #{id}
+  </select>
+
+  <select id="getProcessListByIdList" resultMap="BaseResultMap" parameterType="java.util.List">
+    select
+    <include refid="Base_Column_List" />
+    from post_literature_process
+    where id in
+    <foreach collection="list" item="iter" separator="," open="(" close=")" >
+      #{iter}
+    </foreach>
+    and approve_status = '1'
+  </select>
+  <select id="getProcessByLiteratureId" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select
+    <include refid="Base_Column_List" />
+    from post_literature_process
+    where
+    literature_id = #{literatureId}
+    and approve_status = '1'
+  </select>
+  <update id="updateByMap" parameterType="java.util.Map">
+    UPDATE post_literature_process
+    set
+    approve_id = #{approveId},
+    update_time = #{updateTime},
+    updater = #{approveId},
+    approve_status = #{approveStatus}
+    WHERE
+    literature_id = #{literatureId}
+    and approve_status = '1'
+  </update>
+
+</mapper>

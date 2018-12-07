@@ -1,0 +1,161 @@
+
+<html>
+<head>
+    <script src="../../../statics/libs/jquery-1.10.2.min.js"></script>
+    <link rel="stylesheet" href="../../../statics/css/font-awesome.min.css">
+    <!--layui ztree样式-->
+    <link rel="stylesheet" href="../../../statics/plugins/layui/css/layui.css" media="all">
+    <script src="../../../statics/plugins/layer/layer.js"></script>
+    <script src="../../../statics/plugins/layui/layui.js"></script>
+    <!--样式-->
+    <link rel="stylesheet" href="../../../common/css/cyStyle.css">
+    <link rel="stylesheet" href="../../../common/css/cyType.css">
+    <link rel="stylesheet" href="../../../statics/css/public/theme/videoDetail.css">
+    <link rel="stylesheet" href="../../../common/css/videoDetail_add.css">
+    <link rel="stylesheet" href="../../../common/css/formSelects-v4.css">
+    <script src="../../../statics/plugins/editgrid/plugin/My97DatePicker/WdatePicker.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="../../../statics/plugins/echarts/echarts.js"></script>
+</head>
+<body>
+<div class="layui-card">
+    <form action="" id="pubUserForm" class="layui-form">
+        <div class="layui-card-header">
+            <div class="flexLeft">
+                <span class="carFont">用户详情</span>
+            </div>
+
+        </div>
+
+        <div class="layui-card-body">
+
+            <div class="cardOne mt24">
+                <div class="title"><img src="" alt=""><span>基本信息</span></div>
+
+                <div class="OneBody mt24">
+                    <div class="oneHeard">
+                        <div class="oneLeft">
+                            <span>操作人：</span>
+                            <span id="userName">admin</span>
+                            <span >|</span>
+                            <span id="orgName">系统管理员</span>
+                        </div>
+                        <div class="oneRight">
+                            <span>日期：</span>
+                            <span id="nowDate">2018-8-21</span>
+                        </div>
+                    </div>
+                    <div class="oneBody">
+                        <ul class="myTable">
+                           <!-- <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*用户ID</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" id="userId"  name="userId"
+                                           placeholder="请输入标题" autocomplete="off" class="layui-input">
+                                </div>
+                            </li>-->
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*用户名</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" id="userName"  name="userName" required  lay-verify="required"
+                                           placeholder="请输入标题" autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">性别</div>
+                                <div class="layui-form-item  layui-col-md6 layui-col-sm6 m0 pl30" id="sexRadio">
+                                   <!-- <input type="radio" name="sex" value="男" title="男" id="man"
+                                           lay-filter="sexcheched" >
+                                    <input type="radio" name="sex" value="女" title="女" id="woman" checked
+                                           lay-filter="sexcheched" >-->
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*生日</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input readonly="readonly" type="text" name="birthday" id="birthday" maxlength="20"
+                                           class="layui-input"   value="">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">城市</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <div class="layui-input-inline">
+                                        <select id="provinceId" name="provinceId" lay-filter="provinceId">
+                                            <option value="">请选择一个省份</option>
+                                        </select>
+                                    </div>
+                                    <div class="layui-input-inline">
+                                        <select id="cityId" name="cityId" lay-filter="cityId">
+                                            <option value="">请选择一个城市</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">职业</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" id="job" name="job" required  lay-verify="required"
+                                           placeholder="请输入标题"
+                                           autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">个性签名</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" id="singleName"  name="singleName" required
+                                           lay-verify="required"
+                                           placeholder="请输入标题" autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">手机号</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" id="phone" name="phone" required  lay-verify="required"
+                                           placeholder="请输入标题" autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">新密码</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" id="password" name="password" required  lay-verify="required"
+                                           placeholder="请输入标题" autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">确认新密码</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" id="surePassword" name="surePassword" required  lay-verify="required"
+                                           placeholder="请输入标题" autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="layui-hide">
+                <input type="text" name="id" id="id">
+            </div>
+
+
+
+            <div class="layui-form-item mt34">
+                <div class="layui-input-block bodyBtn">
+                    <button class="layui-btn" lay-submit lay-filter="formDemo">保存</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">取消</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript" src="../../../statics/plugins/layui/layui.js"></script>
+<script type="text/javascript" src="../../../statics/upload/uploadSingleImg.js"></script>
+<script src="../../../statics/js/md5.js"></script>
+<script src="../../../statics/js/component.js"></script>
+<script src="../../../statics/js/common.js"></script>
+<script src="../../../statics/js/public/user/add.js"></script>
+</body>
+</html>

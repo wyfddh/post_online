@@ -1,0 +1,93 @@
+
+<html>
+<head>
+    <script src="../../statics/libs/jquery-1.10.2.min.js"></script>
+    <link rel="stylesheet" href="../../statics/css/font-awesome.min.css">
+    <!--layui ztree样式-->
+    <link rel="stylesheet" href="../../statics/plugins/layui/css/layui.css" media="all">
+    <script src="../../statics/plugins/layer/layer.js"></script>
+    <script src="../../statics/plugins/layui/layui.js"></script>
+    <!--样式-->
+    <link rel="stylesheet" href="../../common/css/cyStyle.css">
+    <link rel="stylesheet" href="../../common/css/cyType.css">
+    <link rel="stylesheet" href="../../statics/css/literature/download.css">
+    <script src="../../statics/plugins/editgrid/plugin/My97DatePicker/WdatePicker.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="../../statics/plugins/echarts/echarts.js"></script>
+</head>
+<body>
+<div class="layui-card">
+    <form action=""  class="layui-form">
+
+        <div class="layui-card-body">
+
+            <div class="cardOne mt24">
+                <div class="title"><img src="" alt=""><span>基本信息</span></div>
+                <div class="OneBody mt24">
+                    <div class="oneBody">
+                        <ul class="myTable">
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*申请人</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="applicantName" id="applicantName" disabled  autocomplete="off" class="layui-input">
+                                    <input type="text" class="layui-hide" name="applicant" id="applicant">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*所属部门</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="departmentName" id="departmentName" disabled autocomplete="off" class="layui-input">
+                                    <input type="text" name="department" id="department" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*申请日期</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="applyDate" id="applyDate"  disabled class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*资料名称</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" id="literatureName" disabled  class="layui-input">
+                                    <input type="text" name="literatureId" id="literatureId"  class="layui-input layui-hide">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*申请原因</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="applyReasons" id="applyReasons" required  lay-verify="required" placeholder="请输入" autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">备注</div>
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="applyRemark" id="applyRemark"  placeholder="请输入" autocomplete="off" class="layui-input">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*审批人</div>
+                                <input type="text" class="layui-hide" name="approveName" id="approveName">
+                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <select name="approveId" id="approveId" lay-verify="required" lay-filter="approveId" >
+                                        <option value="">请选择</option>
+                                    </select>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="layui-form-item mt34">
+                            <div class="layui-input-block bodyBtn">
+                                <button class="layui-btn" lay-submit lay-filter="formDemo">申请下载</button>
+                                <button type="reset" class="layui-btn layui-btn-primary quxiao">取消</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script src="../../statics/js/common.js"></script>
+<script src="../../statics/js/literature/download.js"></script>
+</body>
+</html>

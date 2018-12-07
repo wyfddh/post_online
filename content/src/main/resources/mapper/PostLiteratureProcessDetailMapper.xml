@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tj720.dao.PostLiteratureProcessDetailMapper">
+  <resultMap id="BaseResultMap" type="com.tj720.model.literature.PostLiteratureProcessDetail">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="process_id" jdbcType="VARCHAR" property="processId" />
+    <result column="process_status" jdbcType="VARCHAR" property="processStatus" />
+    <result column="process_operation" jdbcType="VARCHAR" property="processOperation" />
+    <result column="process_user_id" jdbcType="VARCHAR" property="processUserId" />
+    <result column="process_user_name" jdbcType="VARCHAR" property="processUserName" />
+    <result column="process_org_name" jdbcType="VARCHAR" property="processOrgName" />
+    <result column="process_remark" jdbcType="VARCHAR" property="processRemark" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, process_id, process_status, process_operation, process_user_id, process_user_name, 
+    process_org_name, process_remark, create_time
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from post_literature_process_detail
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from post_literature_process_detail
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tj720.model.literature.PostLiteratureProcessDetail">
+    insert into post_literature_process_detail (id, process_id, process_status, 
+      process_operation, process_user_id, process_user_name, 
+      process_org_name, process_remark, create_time
+      )
+    values (#{id,jdbcType=VARCHAR}, #{processId,jdbcType=VARCHAR}, #{processStatus,jdbcType=VARCHAR}, 
+      #{processOperation,jdbcType=VARCHAR}, #{processUserId,jdbcType=VARCHAR}, #{processUserName,jdbcType=VARCHAR}, 
+      #{processOrgName,jdbcType=VARCHAR}, #{processRemark,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.tj720.model.literature.PostLiteratureProcessDetail">
+    insert into post_literature_process_detail
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="processId != null">
+        process_id,
+      </if>
+      <if test="processStatus != null">
+        process_status,
+      </if>
+      <if test="processOperation != null">
+        process_operation,
+      </if>
+      <if test="processUserId != null">
+        process_user_id,
+      </if>
+      <if test="processUserName != null">
+        process_user_name,
+      </if>
+      <if test="processOrgName != null">
+        process_org_name,
+      </if>
+      <if test="processRemark != null">
+        process_remark,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="processId != null">
+        #{processId,jdbcType=VARCHAR},
+      </if>
+      <if test="processStatus != null">
+        #{processStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="processOperation != null">
+        #{processOperation,jdbcType=VARCHAR},
+      </if>
+      <if test="processUserId != null">
+        #{processUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="processUserName != null">
+        #{processUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="processOrgName != null">
+        #{processOrgName,jdbcType=VARCHAR},
+      </if>
+      <if test="processRemark != null">
+        #{processRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tj720.model.literature.PostLiteratureProcessDetail">
+    update post_literature_process_detail
+    <set>
+      <if test="processId != null">
+        process_id = #{processId,jdbcType=VARCHAR},
+      </if>
+      <if test="processStatus != null">
+        process_status = #{processStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="processOperation != null">
+        process_operation = #{processOperation,jdbcType=VARCHAR},
+      </if>
+      <if test="processUserId != null">
+        process_user_id = #{processUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="processUserName != null">
+        process_user_name = #{processUserName,jdbcType=VARCHAR},
+      </if>
+      <if test="processOrgName != null">
+        process_org_name = #{processOrgName,jdbcType=VARCHAR},
+      </if>
+      <if test="processRemark != null">
+        process_remark = #{processRemark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tj720.model.literature.PostLiteratureProcessDetail">
+    update post_literature_process_detail
+    set process_id = #{processId,jdbcType=VARCHAR},
+      process_status = #{processStatus,jdbcType=VARCHAR},
+      process_operation = #{processOperation,jdbcType=VARCHAR},
+      process_user_id = #{processUserId,jdbcType=VARCHAR},
+      process_user_name = #{processUserName,jdbcType=VARCHAR},
+      process_org_name = #{processOrgName,jdbcType=VARCHAR},
+      process_remark = #{processRemark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <select id="countProcessDetailList" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select count(1) from post_literature_process_detail
+    where process_id = #{id}
+    and process_operation &gt; 0
+  </select>
+  <select id="getProcessDetailList" parameterType="java.util.Map" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List"/>
+    from post_literature_process_detail
+    where process_id = #{id}
+    and process_operation &gt; 0
+    order by create_time
+    limit #{start},#{end}
+  </select>
+  <select id="getDaptByUserId" parameterType="java.lang.String" resultType="com.tj720.model.common.system.department.SysDepartment">
+    select a.department_id as departmentId,a.department_name as departmentName
+    from sys_department a
+    left join sys_user_dept b on a.department_id = b.dept_id
+    where b.user_id = #{id}
+    and b.status = 1
+  </select>
+
+  <select id="getProcessDetail" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from post_literature_process_detail
+    where process_id = #{id}
+    and process_user_id = #{preApproveId}
+    and process_status = "1"
+  </select>
+  <update id="batchUpdateProcessStatus" >
+    UPDATE post_literature_process_detail
+    set process_status = #{status}
+    where process_id = #{id}
+
+  </update>
+
+  <select id="getProcessDetailByProcess" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from post_literature_process_detail
+    where process_id = #{processId}
+  </select>
+
+</mapper>

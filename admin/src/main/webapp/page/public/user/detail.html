@@ -1,0 +1,115 @@
+
+<html>
+<head>
+    <script src="../../../statics/libs/jquery-1.10.2.min.js"></script>
+    <link rel="stylesheet" href="../../../statics/css/font-awesome.min.css">
+    <!--layui ztree样式-->
+    <link rel="stylesheet" href="../../../statics/plugins/layui/css/layui.css" media="all">
+    <script src="../../../statics/plugins/layer/layer.js"></script>
+    <script src="../../../statics/plugins/layui/layui.js"></script>
+    <!--样式-->
+    <link rel="stylesheet" href="../../../common/css/cyStyle.css">
+    <link rel="stylesheet" href="../../../common/css/cyType.css">
+    <link rel="stylesheet" href="../../../statics/css/public/user/detail_one.css">
+    <script src="../../../statics/plugins/editgrid/plugin/My97DatePicker/WdatePicker.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="../../../statics/plugins/echarts/echarts.js"></script>
+
+    <style type="text/css">
+         .sname{
+             padding-top: 50px;
+             margin-left: -422px;
+             width:804px;
+         }
+        .nameshow{
+            text-align:center;
+            width:804px;
+            margin-left: 20px;
+        }
+        .four .tableTR{
+            height: 120px;
+            line-height: 120px;
+        }
+         .four #singleName{
+             height: 120px;
+             line-height: 24px;
+             text-align: left;
+             overflow-Y: auto;
+             overflow-X: hidden;
+         }
+    </style>
+
+</head>
+<body>
+<div class="layui-card">
+    <form action="" id="pubUserForm" class="layui-form">
+        <div class="layui-card-body">
+            <div class="cardOne mt24">
+                <div class="OneBody mt24 mb24">
+                    <div class="oneBody">
+                        <div class="one myTabl" id="picUpload" style="height: 150px">
+                            <!--<img src="" alt="">-->
+                            <!--<p class="myfont" id="nickName1"></p>-->
+                        </div>
+                        <ul class="two myTabl">
+                           <li class="layui-row">
+                               <div class="layui-inline layui-col-md6 layui-col-sm6 tableTR">用户名</div>
+                               <div class="layui-inline layui-col-md6 layui-col-sm6 pl10" id="userName"  name="userName" type="div">
+                               </div>
+                           </li>
+                           <!-- <li class="layui-row">
+                                <div class="layui-inline layui-col-md6 layui-col-sm6 tableTR">昵称</div>
+                                <div class="layui-inline layui-col-md6 layui-col-sm6 pl10" id="nickName"
+                                     name="nickName" type="div"></div>
+                            </li>-->
+                            <li class="layui-row">
+                            <div class="layui-inline layui-col-md6 layui-col-sm6 tableTR">手机</div>
+                            <div class="layui-inline layui-col-md6 layui-col-sm6 pl10" id="phone" name="phone" type="div"></div>
+                        </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md6 layui-col-sm6 tableTR bt">生日</div>
+                                <div class="layui-inline layui-col-md6 layui-col-sm6 pl10" name="birthday"
+                                     id="birthday" type="div"></div>
+                            </li>
+
+                        </ul>
+                        <div class="three myTabl">
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md6 layui-col-sm6 tableTR">性别</div>
+                                <div class="layui-inline layui-col-md6 layui-col-sm6 pl10"  name="sex" id="sex" type="div">
+                                </div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md6 layui-col-sm6 tableTR">城市</div>
+                                <div class="layui-inline layui-col-md6 layui-col-sm6 pl10"  id="cityId" name="cityId"
+                                     type="div" ></div>
+                            </li>
+                            <li class="layui-row">
+                                <div class="layui-inline layui-col-md6 layui-col-sm6 tableTR">职业</div>
+                                <div class="layui-inline layui-col-md6 layui-col-sm6 pl10" id="job" name="job" type="div">
+                            </div>
+                            </li>
+                           <li class="layui-row">
+
+                            </li>
+
+                        </div>
+                        <div class="myTabl" style="width: 1px;height: 151px;border:none">
+                        </div>
+                        <div class="four myTabl" style="width: 800px;height: 120px">
+                            <div class="layui-inline layui-col-md3 layui-col-sm3 tableTR bt">个性签名</div>
+                            <div class="layui-inline layui-col-md9 layui-col-sm9 pl10" id="singleName"
+                                 name="singleName" type="div"  ></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="../../../statics/js/component.js"></script>
+<script src="../../../statics/js/common.js"></script>
+<script src="../../../statics/js/public/user/videoDetail.js"></script>
+</body>
+</html>

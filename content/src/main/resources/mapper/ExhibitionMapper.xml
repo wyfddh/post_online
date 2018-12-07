@@ -1,0 +1,630 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tj720.dao.ExhibitionMapper">
+  <resultMap id="BaseResultMap" type="com.tj720.model.common.exhibition.Exhibition">
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="exhib_name" property="exhibName" jdbcType="VARCHAR" />
+    <result column="plan_time" property="planTime" jdbcType="TIMESTAMP" />
+    <result column="start_time" property="startTime" jdbcType="TIMESTAMP" />
+    <result column="end_time" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="inport_word" property="inportWord" jdbcType="VARCHAR" />
+    <result column="room_num" property="roomNum" jdbcType="INTEGER" />
+    <result column="audience" property="audience" jdbcType="VARCHAR" />
+    <result column="exhib_message" property="exhibMessage" jdbcType="VARCHAR" />
+    <result column="exhib_aim" property="exhibAim" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="room_id" property="roomId" jdbcType="VARCHAR" />
+    <result column="collect_id" property="collectId" jdbcType="VARCHAR" />
+    <result column="video_id" property="videoId" jdbcType="VARCHAR" />
+    <result column="datum_ids" property="datumIds" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="creator" property="creator" jdbcType="VARCHAR" />
+    <result column="updater" property="updater" jdbcType="VARCHAR" />
+    <result column="sequence" property="sequence" jdbcType="INTEGER" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="isdelete" property="isdelete" jdbcType="INTEGER" />
+    <result column="other1" property="other1" jdbcType="VARCHAR" />
+    <result column="other2" property="other2" jdbcType="VARCHAR" />
+    <result column="other3" property="other3" jdbcType="VARCHAR" />
+  </resultMap>
+  <!--<sql id="Example_Where_Clause" >-->
+    <!--<where >-->
+      <!--<foreach collection="oredCriteria" item="criteria" separator="or" >-->
+        <!--<if test="criteria.valid" >-->
+          <!--<trim prefix="(" suffix=")" prefixOverrides="and" >-->
+            <!--<foreach collection="criteria.criteria" item="criterion" >-->
+              <!--<choose >-->
+                <!--<when test="criterion.noValue" >-->
+                  <!--and ${criterion.condition}-->
+                <!--</when>-->
+                <!--<when test="criterion.singleValue" >-->
+                  <!--and ${criterion.condition} #{criterion.value}-->
+                <!--</when>-->
+                <!--<when test="criterion.betweenValue" >-->
+                  <!--and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}-->
+                <!--</when>-->
+                <!--<when test="criterion.listValue" >-->
+                  <!--and ${criterion.condition}-->
+                  <!--<foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >-->
+                    <!--#{listItem}-->
+                  <!--</foreach>-->
+                <!--</when>-->
+              <!--</choose>-->
+            <!--</foreach>-->
+          <!--</trim>-->
+        <!--</if>-->
+      <!--</foreach>-->
+    <!--</where>-->
+  <!--</sql>-->
+  <!--<sql id="Update_By_Example_Where_Clause" >-->
+    <!--<where >-->
+      <!--<foreach collection="example.oredCriteria" item="criteria" separator="or" >-->
+        <!--<if test="criteria.valid" >-->
+          <!--<trim prefix="(" suffix=")" prefixOverrides="and" >-->
+            <!--<foreach collection="criteria.criteria" item="criterion" >-->
+              <!--<choose >-->
+                <!--<when test="criterion.noValue" >-->
+                  <!--and ${criterion.condition}-->
+                <!--</when>-->
+                <!--<when test="criterion.singleValue" >-->
+                  <!--and ${criterion.condition} #{criterion.value}-->
+                <!--</when>-->
+                <!--<when test="criterion.betweenValue" >-->
+                  <!--and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}-->
+                <!--</when>-->
+                <!--<when test="criterion.listValue" >-->
+                  <!--and ${criterion.condition}-->
+                  <!--<foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >-->
+                    <!--#{listItem}-->
+                  <!--</foreach>-->
+                <!--</when>-->
+              <!--</choose>-->
+            <!--</foreach>-->
+          <!--</trim>-->
+        <!--</if>-->
+      <!--</foreach>-->
+    <!--</where>-->
+  <!--</sql>-->
+  <sql id="Base_Column_List" >
+    id, exhib_name, plan_time, start_time, end_time, inport_word, room_num, audience,
+    exhib_message, exhib_aim, remark, room_id, collect_id, video_id, datum_ids, create_time,
+    update_time, creator, updater, sequence, status, isdelete, other1, other2, other3
+  </sql>
+
+  <!--<select id="selectByExample" resultMap="BaseResultMap" parameterType="com.tj720.model.common.exhibition.ExhibitionExample" >-->
+    <!--select-->
+    <!--<if test="distinct" >-->
+      <!--distinct-->
+    <!--</if>-->
+    <!--<include refid="Base_Column_List" />-->
+    <!--from post_exhib-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Example_Where_Clause" />-->
+    <!--</if>-->
+    <!--<if test="orderByClause != null" >-->
+      <!--order by ${orderByClause}-->
+    <!--</if>-->
+  <!--</select>-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select
+    <include refid="Base_Column_List" />
+    from post_exhib
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from post_exhib
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <!--<delete id="deleteByExample" parameterType="com.tj720.model.common.exhibition.ExhibitionExample" >-->
+    <!--delete from post_exhib-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</delete>-->
+  <insert id="insert" parameterType="com.tj720.model.common.exhibition.Exhibition" >
+    insert into post_exhib (id, exhib_name, plan_time,
+    start_time, end_time, inport_word,
+    room_num, collect_num, video_num, audience, exhib_message,
+    exhib_aim, remark, room_id,
+    collect_id, video_id, datum_ids,
+    create_time, update_time, creator,
+    updater, sequence, status,
+    isdelete, other1, other2,
+    other3)
+    values (#{id,jdbcType=VARCHAR}, #{exhibName,jdbcType=VARCHAR}, #{planTime,jdbcType=TIMESTAMP},
+    #{startTime,jdbcType=TIMESTAMP}, #{endTime,jdbcType=TIMESTAMP}, #{inportWord,jdbcType=VARCHAR},
+    #{roomNum,jdbcType=INTEGER}, #{collectNum,jdbcType=INTEGER}, #{videoNum,jdbcType=INTEGER}, #{audience,jdbcType=VARCHAR}, #{exhibMessage,jdbcType=VARCHAR},
+    #{exhibAim,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{roomId,jdbcType=VARCHAR},
+    #{collectId,jdbcType=VARCHAR}, #{videoId,jdbcType=VARCHAR}, #{datumIds,jdbcType=VARCHAR},
+    #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR},
+    #{updater,jdbcType=VARCHAR}, #{sequence,jdbcType=INTEGER}, #{status,jdbcType=INTEGER},
+    #{isdelete,jdbcType=INTEGER}, #{other1,jdbcType=VARCHAR}, #{other2,jdbcType=VARCHAR},
+    #{other3,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tj720.model.common.exhibition.Exhibition" >
+    insert into post_exhib
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="exhibName != null" >
+        exhib_name,
+      </if>
+      <if test="planTime != null" >
+        plan_time,
+      </if>
+      <if test="startTime != null" >
+        start_time,
+      </if>
+      <if test="endTime != null" >
+        end_time,
+      </if>
+      <if test="inportWord != null" >
+        inport_word,
+      </if>
+      <if test="roomNum != null" >
+        room_num,
+      </if>
+      <if test="collectNum != null">
+        collect_num,
+      </if>
+      <if test="videoNum != null">
+        video_num,
+      </if>
+      <if test="audience != null" >
+        audience,
+      </if>
+      <if test="exhibMessage != null" >
+        exhib_message,
+      </if>
+      <if test="exhibAim != null" >
+        exhib_aim,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="roomId != null" >
+        room_id,
+      </if>
+      <if test="collectId != null" >
+        collect_id,
+      </if>
+      <if test="videoId != null" >
+        video_id,
+      </if>
+      <if test="datumIds != null" >
+        datum_ids,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="creator != null" >
+        creator,
+      </if>
+      <if test="updater != null" >
+        updater,
+      </if>
+      <if test="sequence != null" >
+        sequence,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="isdelete != null" >
+        isdelete,
+      </if>
+      <if test="other1 != null" >
+        other1,
+      </if>
+      <if test="other2 != null" >
+        other2,
+      </if>
+      <if test="other3 != null" >
+        other3,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="exhibName != null" >
+        #{exhibName,jdbcType=VARCHAR},
+      </if>
+      <if test="planTime != null" >
+        #{planTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="startTime != null" >
+        #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="inportWord != null" >
+        #{inportWord,jdbcType=VARCHAR},
+      </if>
+      <if test="roomNum != null" >
+        #{roomNum,jdbcType=INTEGER},
+      </if>
+      <if test="collectNum != null">
+        #{collectNum, jdbcType=INTEGER},
+      </if>
+      <if test="videoNum != null">
+        #{videoNum, jdbcType=INTEGER},
+      </if>
+      <if test="audience != null" >
+        #{audience,jdbcType=VARCHAR},
+      </if>
+      <if test="exhibMessage != null" >
+        #{exhibMessage,jdbcType=VARCHAR},
+      </if>
+      <if test="exhibAim != null" >
+        #{exhibAim,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="roomId != null" >
+        #{roomId,jdbcType=VARCHAR},
+      </if>
+      <if test="collectId != null" >
+        #{collectId,jdbcType=VARCHAR},
+      </if>
+      <if test="videoId != null" >
+        #{videoId,jdbcType=VARCHAR},
+      </if>
+      <if test="datumIds != null" >
+        #{datumIds,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null" >
+        #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="sequence != null" >
+        #{sequence,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="isdelete != null" >
+        #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="other1 != null" >
+        #{other1,jdbcType=VARCHAR},
+      </if>
+      <if test="other2 != null" >
+        #{other2,jdbcType=VARCHAR},
+      </if>
+      <if test="other3 != null" >
+        #{other3,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <!--<select id="countByExample" parameterType="com.tj720.model.common.exhibition.ExhibitionExample" resultType="java.lang.Integer" >-->
+    <!--select count(*) from post_exhib-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</select>-->
+  <!--<update id="updateByExampleSelective" parameterType="map" >-->
+    <!--update post_exhib-->
+    <!--<set >-->
+      <!--<if test="record.id != null" >-->
+        <!--id = #{record.id,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.exhibName != null" >-->
+        <!--exhib_name = #{record.exhibName,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.planTime != null" >-->
+        <!--plan_time = #{record.planTime,jdbcType=TIMESTAMP},-->
+      <!--</if>-->
+      <!--<if test="record.startTime != null" >-->
+        <!--start_time = #{record.startTime,jdbcType=TIMESTAMP},-->
+      <!--</if>-->
+      <!--<if test="record.endTime != null" >-->
+        <!--end_time = #{record.endTime,jdbcType=TIMESTAMP},-->
+      <!--</if>-->
+      <!--<if test="record.inportWord != null" >-->
+        <!--inport_word = #{record.inportWord,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.roomNum != null" >-->
+        <!--room_num = #{record.roomNum,jdbcType=INTEGER},-->
+      <!--</if>-->
+      <!--<if test="record.collectNum != null">-->
+        <!--collect_num = #{record.collectNum,jdbcType=INTEGER},-->
+      <!--</if>-->
+      <!--<if test="record.videoNum != null">-->
+        <!--video_num = #{record.videoNum,jdbcType=INTEGER},-->
+      <!--</if>-->
+      <!--<if test="record.audience != null" >-->
+        <!--audience = #{record.audience,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.exhibMessage != null" >-->
+        <!--exhib_message = #{record.exhibMessage,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.exhibAim != null" >-->
+        <!--exhib_aim = #{record.exhibAim,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.remark != null" >-->
+        <!--remark = #{record.remark,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.roomId != null" >-->
+        <!--room_id = #{record.roomId,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.collectId != null" >-->
+        <!--collect_id = #{record.collectId,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.videoId != null" >-->
+        <!--video_id = #{record.videoId,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.datumIds != null" >-->
+        <!--datum_ids = #{record.datumIds,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.createTime != null" >-->
+        <!--create_time = #{record.createTime,jdbcType=TIMESTAMP},-->
+      <!--</if>-->
+      <!--<if test="record.updateTime != null" >-->
+        <!--update_time = #{record.updateTime,jdbcType=TIMESTAMP},-->
+      <!--</if>-->
+      <!--<if test="record.creator != null" >-->
+        <!--creator = #{record.creator,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.updater != null" >-->
+        <!--updater = #{record.updater,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.sequence != null" >-->
+        <!--sequence = #{record.sequence,jdbcType=INTEGER},-->
+      <!--</if>-->
+      <!--<if test="record.status != null" >-->
+        <!--status = #{record.status,jdbcType=INTEGER},-->
+      <!--</if>-->
+      <!--<if test="record.isdelete != null" >-->
+        <!--isdelete = #{record.isdelete,jdbcType=INTEGER},-->
+      <!--</if>-->
+      <!--<if test="record.other1 != null" >-->
+        <!--other1 = #{record.other1,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.other2 != null" >-->
+        <!--other2 = #{record.other2,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.other3 != null" >-->
+        <!--other3 = #{record.other3,jdbcType=VARCHAR},-->
+      <!--</if>-->
+    <!--</set>-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Update_By_Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</update>-->
+  <!--<update id="updateByExample" parameterType="map" >-->
+    <!--update post_exhib-->
+    <!--set id = #{record.id,jdbcType=VARCHAR},-->
+    <!--exhib_name = #{record.exhibName,jdbcType=VARCHAR},-->
+    <!--plan_time = #{record.planTime,jdbcType=TIMESTAMP},-->
+    <!--start_time = #{record.startTime,jdbcType=TIMESTAMP},-->
+    <!--end_time = #{record.endTime,jdbcType=TIMESTAMP},-->
+    <!--inport_word = #{record.inportWord,jdbcType=VARCHAR},-->
+    <!--room_num = #{record.roomNum,jdbcType=INTEGER},-->
+    <!--collect_num = #{record.collectNum, jdbcType=INTEGER},-->
+    <!--video_num = #{record.videoNum, jdbcType=INTEGER},-->
+    <!--audience = #{record.audience,jdbcType=VARCHAR},-->
+    <!--exhib_message = #{record.exhibMessage,jdbcType=VARCHAR},-->
+    <!--exhib_aim = #{record.exhibAim,jdbcType=VARCHAR},-->
+    <!--remark = #{record.remark,jdbcType=VARCHAR},-->
+    <!--room_id = #{record.roomId,jdbcType=VARCHAR},-->
+    <!--collect_id = #{record.collectId,jdbcType=VARCHAR},-->
+    <!--video_id = #{record.videoId,jdbcType=VARCHAR},-->
+    <!--datum_ids = #{record.datumIds,jdbcType=VARCHAR},-->
+    <!--create_time = #{record.createTime,jdbcType=TIMESTAMP},-->
+    <!--update_time = #{record.updateTime,jdbcType=TIMESTAMP},-->
+    <!--creator = #{record.creator,jdbcType=VARCHAR},-->
+    <!--updater = #{record.updater,jdbcType=VARCHAR},-->
+    <!--sequence = #{record.sequence,jdbcType=INTEGER},-->
+    <!--status = #{record.status,jdbcType=INTEGER},-->
+    <!--isdelete = #{record.isdelete,jdbcType=INTEGER},-->
+    <!--other1 = #{record.other1,jdbcType=VARCHAR},-->
+    <!--other2 = #{record.other2,jdbcType=VARCHAR},-->
+    <!--other3 = #{record.other3,jdbcType=VARCHAR}-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Update_By_Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</update>-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.tj720.model.common.exhibition.Exhibition" >
+    update post_exhib
+    <set >
+      <if test="exhibName != null" >
+        exhib_name = #{exhibName,jdbcType=VARCHAR},
+      </if>
+      <if test="planTime != null" >
+        plan_time = #{planTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="startTime != null" >
+        start_time = #{startTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endTime != null" >
+        end_time = #{endTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="inportWord != null" >
+        inport_word = #{inportWord,jdbcType=VARCHAR},
+      </if>
+      <if test="roomNum != null" >
+        room_num = #{roomNum,jdbcType=INTEGER},
+      </if>
+      <if test="collectNum != null">
+        collect_num = #{collectNum, jdbcType=INTEGER},
+      </if>
+      <if test="videoNum != null">
+        video_num = #{videoNum, jdbcType=INTEGER},
+      </if>
+      <if test="audience != null" >
+        audience = #{audience,jdbcType=VARCHAR},
+      </if>
+      <if test="exhibMessage != null" >
+        exhib_message = #{exhibMessage,jdbcType=VARCHAR},
+      </if>
+      <if test="exhibAim != null" >
+        exhib_aim = #{exhibAim,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="roomId != null" >
+        room_id = #{roomId,jdbcType=VARCHAR},
+      </if>
+      <if test="collectId != null" >
+        collect_id = #{collectId,jdbcType=VARCHAR},
+      </if>
+      <if test="videoId != null" >
+        video_id = #{videoId,jdbcType=VARCHAR},
+      </if>
+      <if test="datumIds != null" >
+        datum_ids = #{datumIds,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null" >
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null" >
+        updater = #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="sequence != null" >
+        sequence = #{sequence,jdbcType=INTEGER},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="isdelete != null" >
+        isdelete = #{isdelete,jdbcType=INTEGER},
+      </if>
+      <if test="other1 != null" >
+        other1 = #{other1,jdbcType=VARCHAR},
+      </if>
+      <if test="other2 != null" >
+        other2 = #{other2,jdbcType=VARCHAR},
+      </if>
+      <if test="other3 != null" >
+        other3 = #{other3,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tj720.model.common.exhibition.Exhibition" >
+    update post_exhib
+    set exhib_name = #{exhibName,jdbcType=VARCHAR},
+    plan_time = #{planTime,jdbcType=TIMESTAMP},
+    start_time = #{startTime,jdbcType=TIMESTAMP},
+    end_time = #{endTime,jdbcType=TIMESTAMP},
+    inport_word = #{inportWord,jdbcType=VARCHAR},
+    room_num = #{roomNum,jdbcType=INTEGER},
+    collect_num = #{collectNum,jdbcType=INTEGER},
+    video_num = #{videoNum,jdbcType=INTEGER},
+    audience = #{audience,jdbcType=VARCHAR},
+    exhib_message = #{exhibMessage,jdbcType=VARCHAR},
+    exhib_aim = #{exhibAim,jdbcType=VARCHAR},
+    remark = #{remark,jdbcType=VARCHAR},
+    room_id = #{roomId,jdbcType=VARCHAR},
+    collect_id = #{collectId,jdbcType=VARCHAR},
+    video_id = #{videoId,jdbcType=VARCHAR},
+    datum_ids = #{datumIds,jdbcType=VARCHAR},
+    create_time = #{createTime,jdbcType=TIMESTAMP},
+    update_time = #{updateTime,jdbcType=TIMESTAMP},
+    creator = #{creator,jdbcType=VARCHAR},
+    updater = #{updater,jdbcType=VARCHAR},
+    sequence = #{sequence,jdbcType=INTEGER},
+    status = #{status,jdbcType=INTEGER},
+    isdelete = #{isdelete,jdbcType=INTEGER},
+    other1 = #{other1,jdbcType=VARCHAR},
+    other2 = #{other2,jdbcType=VARCHAR},
+    other3 = #{other3,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+
+  <select id="selectListByExhibVo" parameterType="java.util.Map"
+          resultType="com.tj720.model.common.exhibition.ExhibitionVo">
+
+    SELECT se.id, se.exhib_name as 'exhibName', se.inport_word as 'inportWord', se.room_num as roomNum,
+    se.plan_time as 'planTime', se.start_time as 'startTime', se.end_time as 'endTime', se.remark,
+
+    (select count(1) from post_collection p  where p.id = se.collect_id ) as 'colleNum',
+
+    (select count(1) from post_video t where t.id = se.video_id ) as 'videoNum'
+
+    FROM post_exhib se where se.isdelete = 0
+
+    <if test="name != null and key != ''">
+      --             前台传入一个姓名名称，模糊查询名称或关键词
+      and (se.exhib_name like concat('%',#{name},'%')
+      or se.inport_word like concat('%',#{name},'%'))
+    </if>
+    <if test="planTime != null and planTime != ''">
+      and DATE_FORMAT(se.plan_time, '%Y-%m-%d') = #{planTime}
+    </if>
+    <!--<if test="startDate != null and startDate != ''" >-->
+    <!--and se.plan_time <![CDATA[ >= ]]> #{startDate}-->
+    <!--</if>-->
+    <!--<if test="endDate != null and endDate != ''" >-->
+    <!--and se.plan_time <![CDATA[ <= ]]> #{endDate}-->
+    <!--</if>-->
+    <if test="orderBy == 1" >
+      order by update_time desc
+    </if>
+    <if test="orderBy == 2" >
+      order by create_time desc
+    </if>
+    limit #{start},#{end}
+  </select>
+
+
+  <select id="selectCountByExhibVo" parameterType="java.util.Map"
+          resultType="java.lang.Integer">
+
+    SELECT count(1)
+
+    FROM post_exhib se where se.isdelete = 0
+
+    <if test="name != null and key != ''">
+      --             前台传入一个姓名名称，模糊查询名称或关键词
+      and (se.exhib_name like concat('%',#{name},'%')
+      or se.inport_word like concat('%',#{name},'%'))
+    </if>
+    <if test="planTime != null and planTime != ''">
+      and se.plan_time = #{planTime}
+    </if>
+  </select>
+
+  <update id="updateExhibByIds" parameterType = "java.util.List">
+    update post_exhib set isdelete = 1 where id in
+    <foreach collection="ids" open="(" item="id" separator="," close=")">
+      #{id}
+    </foreach>
+  </update>
+  <select id="selectByMap" parameterType="java.util.Map" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from post_exhib
+    where 1=1
+    <if test="isdelete != null and isdelete != ''">
+      and isdelete = #{isdelete,jdbcType=INTEGER}
+    </if>
+    <if test="id != null and id != ''">
+      and id = #{id}
+    </if>
+  </select>
+
+</mapper>

@@ -1,0 +1,105 @@
+
+<html>
+<head>
+    <script src="../../statics/libs/jquery-1.10.2.min.js"></script>
+    <link rel="stylesheet" href="../../statics/css/font-awesome.min.css">
+    <!--layui ztree样式-->
+    <link rel="stylesheet" href="../../statics/plugins/layui/css/layui.css" media="all">
+    <script src="../../statics/plugins/layer/layer.js"></script>
+    <script src="../../statics/plugins/layui/layui.js"></script>
+    <!--样式-->
+    <link rel="stylesheet" href="../../common/css/cyStyle.css">
+    <link rel="stylesheet" href="../../common/css/cyType.css">
+    <link rel="stylesheet" href="../../statics/css/literature/borrowingList.css">
+    <script src="../../statics/plugins/editgrid/plugin/My97DatePicker/WdatePicker.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+<div class="layui-card">
+    <form class="layui-form" action="">
+        <div class="layui-card-header">
+            <div class="flexLeft">
+                <img src="../../statics/images/videoList/Group 6.png" alt="">
+                <span class="carFont">筛选查询</span>
+            </div>
+            <div class="layui-btn-group flexRight">
+                <button class="layui-btn layui-btn-green" lay-submit="" lay-filter="moreSearch">
+                    <i class="fa fa-chevron-up">&nbsp;</i>收起筛选
+                </button>
+                <button class="layui-btn search-btn myBtn"  lay-submit="" lay-filter="formDemo">
+                    <!--<i class="fa fa-search">&nbsp;</i>-->查询
+                </button>
+                <button type="reset" class="layui-btn myBtn"lay-filter="clear"><!--<i class="fa fa-refresh">&nbsp;</i>-->重置</button>
+            </div>
+        </div>
+        <div class="layui-card-body">
+            <div class="layui-row aa">
+                <div class="layui-form-item layui-col-md4 layui-col-sm4 ">
+                    <label class="layui-form-label">输入搜索:</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="key" id="key" placeholder="资料名称/借阅人" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-col-md4 layui-col-sm4">
+                    <label class="layui-form-label">所属部门:</label>
+                    <div class="layui-input-block">
+                        <select name="department" id="department">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item layui-col-md4 layui-col-sm4">
+                    <label class="layui-form-label">借阅状态:</label>
+                    <div class="layui-input-block">
+                        <select name="borrowStatus" id="borrowStatus">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<div class="layui-card">
+    <div class="layui-card-header">
+        <div class="flexLeft">
+            <img src="../../statics/images/videoList/Shape2.png" alt="">
+            <span class="carFont">数据列表</span>
+        </div>
+        <div class="flexRight">
+            <form action="" class="layui-form">
+                <button class="layui-btn myBtn" type="button" id="addNew" title="新增借阅"  data-url="page/literature/paperBorrowing.html">
+                    新增借阅
+                </button>
+
+                <div class="layui-input-inline" style="width:100px;">
+                    <select id="orderBy" name="orderBy" lay-filter='orderBy'>
+                        <option value="">排序方式</option>
+
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="layui-card-body">
+
+        <table class="layui-hide" id="borroringList" lay-filter="borroringList"></table>
+
+
+        <script type="text/html" id="barDemo">
+            <a class="layui-btn layui-btn-xs" lay-event="detail" data-url="page/literature/borrowingDetail.html" title="查看">查看</a>
+            {{#  if(d.applyStatus == 1){ }}
+            <a class="layui-btn layui-btn-xs cy-page" lay-event="loan" title="借出">借出</a>
+            {{#  } }}
+            {{#  if(d.applyStatus == 2 || d.applyStatus == 4){ }}
+            <a class="layui-btn layui-btn-xs cy-page" lay-event="revert" title="归还">归还</a>
+            {{#  } }}
+        </script>
+
+    </div>
+</div>
+<script src="../../statics/js/common.js"></script>
+<script src="../../statics/js/literature/borrowingList.js"></script>
+</body>
+</html>

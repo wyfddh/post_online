@@ -1,0 +1,1256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tj720.dao.PostLiteratureMapper">
+  <resultMap id="BaseResultMap" type="com.tj720.model.literature.PostLiterature">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="data_name" jdbcType="VARCHAR" property="dataName" />
+    <result column="data_type" jdbcType="VARCHAR" property="dataType" />
+    <result column="ISBN_num" jdbcType="VARCHAR" property="isbnNum" />
+    <result column="call_no" jdbcType="VARCHAR" property="callNo" />
+    <result column="number" jdbcType="INTEGER" property="number" />
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="press" jdbcType="VARCHAR" property="press" />
+    <result column="publishing_time" jdbcType="VARCHAR" property="publishingTime" />
+    <result column="warehouses" jdbcType="VARCHAR" property="warehouses" />
+    <result column="warehousing_time" jdbcType="VARCHAR" property="warehousingTime" />
+    <result column="inventory_state" jdbcType="VARCHAR" property="inventoryState" />
+    <result column="author" jdbcType="VARCHAR" property="author" />
+    <result column="paginal_number" jdbcType="INTEGER" property="paginalNumber" />
+    <result column="format" jdbcType="VARCHAR" property="format" />
+    <result column="edition" jdbcType="VARCHAR" property="edition" />
+    <result column="congbianming" jdbcType="VARCHAR" property="congbianming" />
+    <result column="congbianzhe" jdbcType="VARCHAR" property="congbianzhe" />
+    <result column="attachment_id" jdbcType="VARCHAR" property="attachmentId" />
+    <result column="search_value" jdbcType="VARCHAR" property="searchValue"/>
+    <result column="literature_type_one" jdbcType="VARCHAR" property="literatureTypeOne" />
+    <result column="literature_type_two" jdbcType="VARCHAR" property="literatureTypeTwo" />
+    <result column="literature_related" jdbcType="VARCHAR" property="literatureRelated" />
+    <result column="permissions_settings" jdbcType="VARCHAR" property="permissionsSettings" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="updater" jdbcType="VARCHAR" property="updater" />
+    <result column="sequence" jdbcType="INTEGER" property="sequence" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.tj720.model.literature.PostLiteratureWithBLOBs">
+    <result column="retrieval_words" jdbcType="LONGVARCHAR" property="retrievalWords" />
+    <result column="summary" jdbcType="LONGVARCHAR" property="summary" />
+    <result column="remark" jdbcType="LONGVARCHAR" property="remark" />
+  </resultMap>
+
+  <resultMap id="BaseResultMap2" type="com.tj720.model.common.Attachment" >
+    <id column="att_id" property="attId" jdbcType="VARCHAR" />
+    <result column="att_name" property="attName" jdbcType="VARCHAR" />
+    <result column="att_size" property="attSize" jdbcType="BIGINT" />
+    <result column="att_path" property="attPath" jdbcType="VARCHAR" />
+    <result column="att_isJunk" property="attIsjunk" jdbcType="CHAR" />
+    <result column="att_date" property="attDate" jdbcType="TIMESTAMP" />
+    <result column="att_type" property="attType" jdbcType="VARCHAR" />
+    <result column="attr_user" property="attrUser" jdbcType="VARCHAR" />
+    <result column="att_fk_id" property="attFkId" jdbcType="VARCHAR" />
+    <result column="att_file_type" property="attFileType" jdbcType="INTEGER" />
+    <result column="att_source" property="attSource" jdbcType="VARCHAR" />
+    <result column="is_main" property="isMain" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, data_name, data_type, ISBN_num, call_no, search_value, number, price, press, publishing_time, warehouses,
+    warehousing_time, inventory_state, author, paginal_number, format, edition, congbianming,
+    congbianzhe, attachment_id, literature_type_one, literature_type_two, literature_related,
+    permissions_settings, create_time, update_time, creator, updater, sequence, status
+  </sql>
+  <sql id="Blob_Column_List">
+    retrieval_words, summary, remark
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="ResultMapWithBLOBs">
+    select
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from post_literature
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from post_literature
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.tj720.model.literature.PostLiteratureWithBLOBs">
+    insert into post_literature (id, data_name, data_type,
+    ISBN_num, number, price,
+    press, publishing_time, warehouses,
+    warehousing_time, inventory_state, author,
+    paginal_number, format, edition,
+    congbianming, congbianzhe, attachment_id,
+    literature_type_one, literature_type_two, literature_related,
+    permissions_settings, create_time, update_time,
+    creator, updater, sequence,
+    status, retrieval_words, summary,
+    remark)
+    values (#{id,jdbcType=VARCHAR}, #{dataName,jdbcType=VARCHAR}, #{dataType,jdbcType=VARCHAR},
+    #{isbnNum,jdbcType=VARCHAR}, #{number,jdbcType=INTEGER}, #{price,jdbcType=DECIMAL},
+    #{press,jdbcType=VARCHAR}, #{publishingTime,jdbcType=VARCHAR}, #{warehouses,jdbcType=VARCHAR},
+    #{warehousingTime,jdbcType=VARCHAR}, #{inventoryState,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR},
+    #{paginalNumber,jdbcType=INTEGER}, #{format,jdbcType=VARCHAR}, #{edition,jdbcType=VARCHAR},
+    #{congbianming,jdbcType=VARCHAR}, #{congbianzhe,jdbcType=VARCHAR}, #{attachmentId,jdbcType=VARCHAR},
+    #{literatureTypeOne,jdbcType=VARCHAR}, #{literatureTypeTwo,jdbcType=VARCHAR}, #
+    {literatureRelated,jdbcType=VARCHAR},
+    #{permissionsSettings,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
+    #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{sequence,jdbcType=INTEGER},
+    #{status,jdbcType=VARCHAR}, #{retrievalWords,jdbcType=LONGVARCHAR}, #{summary,jdbcType=LONGVARCHAR},
+    #{remark,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tj720.model.literature.PostLiteratureWithBLOBs">
+    insert into post_literature
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="dataName != null">
+        data_name,
+      </if>
+      <if test="dataType != null">
+        data_type,
+      </if>
+      <if test="isbnNum != null">
+        ISBN_num,
+      </if>
+      <if test="callNo != null">
+        call_no,
+      </if>
+      <if test="number != null">
+        number,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="press != null">
+        press,
+      </if>
+      <if test="publishingTime != null">
+        publishing_time,
+      </if>
+      <if test="warehouses != null">
+        warehouses,
+      </if>
+      <if test="warehousingTime != null">
+        warehousing_time,
+      </if>
+      <if test="inventoryState != null">
+        inventory_state,
+      </if>
+      <if test="author != null">
+        author,
+      </if>
+      <if test="paginalNumber != null">
+        paginal_number,
+      </if>
+      <if test="format != null">
+        format,
+      </if>
+      <if test="edition != null">
+        edition,
+      </if>
+      <if test="congbianming != null">
+        congbianming,
+      </if>
+      <if test="congbianzhe != null">
+        congbianzhe,
+      </if>
+      <if test="attachmentId != null">
+        attachment_id,
+      </if>
+      <if test="literatureTypeOne != null">
+        literature_type_one,
+      </if>
+      <if test="literatureTypeTwo != null">
+        literature_type_two,
+      </if>
+      <if test="literatureRelated != null">
+        literature_related,
+      </if>
+      <if test="permissionsSettings != null">
+        permissions_settings,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="creator != null">
+        creator,
+      </if>
+      <if test="updater != null">
+        updater,
+      </if>
+      <if test="sequence != null">
+        sequence,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="retrievalWords != null">
+        retrieval_words,
+      </if>
+      <if test="summary != null">
+        summary,
+      </if>
+      <if test="searchValue != null">
+        search_value,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="dataName != null">
+        #{dataName,jdbcType=VARCHAR},
+      </if>
+      <if test="dataType != null">
+        #{dataType,jdbcType=VARCHAR},
+      </if>
+      <if test="isbnNum != null">
+        #{isbnNum,jdbcType=VARCHAR},
+      </if>
+      <if test="callNo != null">
+        #{callNo, jdbcType=VARCHAR},
+      </if>
+      <if test="number != null">
+        #{number,jdbcType=INTEGER},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="press != null">
+        #{press,jdbcType=VARCHAR},
+      </if>
+      <if test="publishingTime != null">
+        #{publishingTime,jdbcType=VARCHAR},
+      </if>
+      <if test="warehouses != null">
+        #{warehouses,jdbcType=VARCHAR},
+      </if>
+      <if test="warehousingTime != null">
+        #{warehousingTime,jdbcType=VARCHAR},
+      </if>
+      <if test="inventoryState != null">
+        #{inventoryState,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null">
+        #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="paginalNumber != null">
+        #{paginalNumber,jdbcType=INTEGER},
+      </if>
+      <if test="format != null">
+        #{format,jdbcType=VARCHAR},
+      </if>
+      <if test="edition != null">
+        #{edition,jdbcType=VARCHAR},
+      </if>
+      <if test="congbianming != null">
+        #{congbianming,jdbcType=VARCHAR},
+      </if>
+      <if test="congbianzhe != null">
+        #{congbianzhe,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentId != null">
+        #{attachmentId,jdbcType=VARCHAR},
+      </if>
+      <if test="literatureTypeOne != null">
+        #{literatureTypeOne,jdbcType=VARCHAR},
+      </if>
+      <if test="literatureTypeTwo != null">
+        #{literatureTypeTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="literatureRelated != null">
+        #{literatureRelated,jdbcType=VARCHAR},
+      </if>
+      <if test="permissionsSettings != null">
+        #{permissionsSettings,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="sequence != null">
+        #{sequence,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="retrievalWords != null">
+        #{retrievalWords,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="summary != null">
+        #{summary,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="searchValue != null">
+        #{searchValue, jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.tj720.model.literature.PostLiteratureWithBLOBs">
+    update post_literature
+    <set>
+      <if test="dataName != null">
+        data_name = #{dataName,jdbcType=VARCHAR},
+      </if>
+      <if test="dataType != null">
+        data_type = #{dataType,jdbcType=VARCHAR},
+      </if>
+      <if test="isbnNum != null">
+        ISBN_num = #{isbnNum,jdbcType=VARCHAR},
+      </if>
+      <if test="callNo != null">
+        call_no = #{callNo, jdbcType=VARCHAR},
+      </if>
+      <if test="number != null">
+        number = #{number,jdbcType=INTEGER},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=DECIMAL},
+      </if>
+      <if test="press != null">
+        press = #{press,jdbcType=VARCHAR},
+      </if>
+      <if test="publishingTime != null">
+        publishing_time = #{publishingTime,jdbcType=VARCHAR},
+      </if>
+      <if test="warehouses != null">
+        warehouses = #{warehouses,jdbcType=VARCHAR},
+      </if>
+      <if test="warehousingTime != null">
+        warehousing_time = #{warehousingTime,jdbcType=VARCHAR},
+      </if>
+      <if test="inventoryState != null">
+        inventory_state = #{inventoryState,jdbcType=VARCHAR},
+      </if>
+      <if test="author != null">
+        author = #{author,jdbcType=VARCHAR},
+      </if>
+      <if test="paginalNumber != null">
+        paginal_number = #{paginalNumber,jdbcType=INTEGER},
+      </if>
+      <if test="format != null">
+        format = #{format,jdbcType=VARCHAR},
+      </if>
+      <if test="edition != null">
+        edition = #{edition,jdbcType=VARCHAR},
+      </if>
+      <if test="congbianming != null">
+        congbianming = #{congbianming,jdbcType=VARCHAR},
+      </if>
+      <if test="congbianzhe != null">
+        congbianzhe = #{congbianzhe,jdbcType=VARCHAR},
+      </if>
+      <if test="attachmentId != null">
+        attachment_id = #{attachmentId,jdbcType=VARCHAR},
+      </if>
+      <if test="literatureTypeOne != null">
+        literature_type_one = #{literatureTypeOne,jdbcType=VARCHAR},
+      </if>
+      <if test="literatureTypeTwo != null">
+        literature_type_two = #{literatureTypeTwo,jdbcType=VARCHAR},
+      </if>
+      <if test="literatureRelated != null">
+        literature_related = #{literatureRelated,jdbcType=VARCHAR},
+      </if>
+      <if test="permissionsSettings != null">
+        permissions_settings = #{permissionsSettings,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        updater = #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="sequence != null">
+        sequence = #{sequence,jdbcType=INTEGER},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="retrievalWords != null">
+        retrieval_words = #{retrievalWords,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="summary != null">
+        summary = #{summary,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="searchValue != null">
+        search_value = #{searchValue, jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+        remark = #{remark,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.tj720.model.literature.PostLiteratureWithBLOBs">
+    update post_literature
+    set data_name = #{dataName,jdbcType=VARCHAR},
+    data_type = #{dataType,jdbcType=VARCHAR},
+    ISBN_num = #{isbnNum,jdbcType=VARCHAR},
+    number = #{number,jdbcType=INTEGER},
+    price = #{price,jdbcType=DECIMAL},
+    press = #{press,jdbcType=VARCHAR},
+    publishing_time = #{publishingTime,jdbcType=VARCHAR},
+    warehouses = #{warehouses,jdbcType=VARCHAR},
+    warehousing_time = #{warehousingTime,jdbcType=VARCHAR},
+    inventory_state = #{inventoryState,jdbcType=VARCHAR},
+    author = #{author,jdbcType=VARCHAR},
+    paginal_number = #{paginalNumber,jdbcType=INTEGER},
+    format = #{format,jdbcType=VARCHAR},
+    edition = #{edition,jdbcType=VARCHAR},
+    congbianming = #{congbianming,jdbcType=VARCHAR},
+    congbianzhe = #{congbianzhe,jdbcType=VARCHAR},
+    attachment_id = #{attachmentId,jdbcType=VARCHAR},
+    literature_type_one = #{literatureTypeOne,jdbcType=VARCHAR},
+    literature_type_two = #{literatureTypeTwo,jdbcType=VARCHAR},
+    literature_related = #{literatureRelated,jdbcType=VARCHAR},
+    permissions_settings = #{permissionsSettings,jdbcType=VARCHAR},
+    create_time = #{createTime,jdbcType=TIMESTAMP},
+    update_time = #{updateTime,jdbcType=TIMESTAMP},
+    creator = #{creator,jdbcType=VARCHAR},
+    updater = #{updater,jdbcType=VARCHAR},
+    sequence = #{sequence,jdbcType=INTEGER},
+    status = #{status,jdbcType=VARCHAR},
+    retrieval_words = #{retrievalWords,jdbcType=LONGVARCHAR},
+    summary = #{summary,jdbcType=LONGVARCHAR},
+    remark = #{remark,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tj720.model.literature.PostLiterature">
+    update post_literature
+    set data_name = #{dataName,jdbcType=VARCHAR},
+    data_type = #{dataType,jdbcType=VARCHAR},
+    ISBN_num = #{isbnNum,jdbcType=VARCHAR},
+    number = #{number,jdbcType=INTEGER},
+    price = #{price,jdbcType=DECIMAL},
+    press = #{press,jdbcType=VARCHAR},
+    publishing_time = #{publishingTime,jdbcType=VARCHAR},
+    warehouses = #{warehouses,jdbcType=VARCHAR},
+    warehousing_time = #{warehousingTime,jdbcType=VARCHAR},
+    inventory_state = #{inventoryState,jdbcType=VARCHAR},
+    author = #{author,jdbcType=VARCHAR},
+    paginal_number = #{paginalNumber,jdbcType=INTEGER},
+    format = #{format,jdbcType=VARCHAR},
+    edition = #{edition,jdbcType=VARCHAR},
+    congbianming = #{congbianming,jdbcType=VARCHAR},
+    congbianzhe = #{congbianzhe,jdbcType=VARCHAR},
+    attachment_id = #{attachmentId,jdbcType=VARCHAR},
+    literature_type_one = #{literatureTypeOne,jdbcType=VARCHAR},
+    literature_type_two = #{literatureTypeTwo,jdbcType=VARCHAR},
+    literature_related = #{literatureRelated,jdbcType=VARCHAR},
+    permissions_settings = #{permissionsSettings,jdbcType=VARCHAR},
+    create_time = #{createTime,jdbcType=TIMESTAMP},
+    update_time = #{updateTime,jdbcType=TIMESTAMP},
+    creator = #{creator,jdbcType=VARCHAR},
+    updater = #{updater,jdbcType=VARCHAR},
+    sequence = #{sequence,jdbcType=INTEGER},
+    status = #{status,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <select id="countPostLiteratureList" resultType="java.lang.Integer" parameterType="java.util.Map">
+    select count(1) from post_literature
+    where 1 = 1
+    <if test="key != null and key != ''">
+      and data_name like concat('%',#{key},'%')
+      or press like concat('%',#{key},'%')
+    </if>
+    <if test="dataType != null and dataType != ''">
+      and data_type = #{dataType}
+    </if>
+    <if test="status != null and status != ''">
+      and status = #{status}
+    </if>
+    <if test="inventoryState != null and inventoryState != ''">
+      and inventory_state = #{inventoryState}
+    </if>
+    and status &gt; 0
+    <if test="orderBy == 1" >
+      order by update_time desc
+    </if>
+    <if test="orderBy == 2" >
+      order by create_time desc
+    </if>
+  </select>
+  <sql id="Column_List">
+    a.id, a.data_name, a.data_type, a.ISBN_num, a.number, a.price, a.press, a.publishing_time, a.warehouses,
+    a.warehousing_time, a.inventory_state, a.author, a.paginal_number, a.format, a.edition, a.congbianming,
+    a.congbianzhe, a.attachment_id, a.literature_type_one, a.literature_type_two, a.literature_related,
+    a.permissions_settings, a.create_time, a.update_time, a.creator, a.updater, a.sequence, a.status,
+    a.retrieval_words, a.summary, a.remark,b.user_name as warehousesName,c.att_name as attachmentName, a.call_no
+  </sql>
+  <select id="getPostLiteratureList" resultMap="ResultMapWithBLOBs" parameterType="java.util.Map">
+    SELECT
+    <include refid="Column_List"/>
+    from post_literature a
+    left join sys_user b on a.warehouses = b.id
+    left join post_attachment c on a.attachment_id = c.att_id
+    where 1 = 1
+    <if test="key != null and key != ''">
+      and a.data_name like concat('%',#{key},'%')
+      or a.press like concat('%',#{key},'%')
+    </if>
+    <if test="dataType != null and dataType != ''">
+      and a.data_type = #{dataType}
+    </if>
+    <if test="status != null and status != ''">
+      and a.status = #{status}
+    </if>
+    <if test="inventoryState != null and inventoryState != ''">
+      and inventory_state = #{inventoryState}
+    </if>
+    and a.status &gt; 0
+    <if test="orderBy == 1" >
+      order by a.update_time desc
+    </if>
+    <if test="orderBy == 2" >
+      order by a.create_time desc
+    </if>
+    limit #{start},#{end}
+  </select>
+  <select id="getListByIds" resultMap="ResultMapWithBLOBs" parameterType="java.util.List">
+    SELECT
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from post_literature
+    where
+    id in
+    <foreach collection="list" item="item" open="(" close=")" separator=",">
+      #{item}
+    </foreach>
+  </select>
+  <update id="batchRecall" parameterType="java.util.List">
+    UPDATE post_literature
+    set status = '3',
+    permissions_settings = '1'
+    where id in
+    <foreach collection="list" item="item" separator="," open="(" close=")">
+      #{item}
+    </foreach>
+  </update>
+  <update id="batchSetting">
+    UPDATE post_literature
+    set permissions_settings = #{setting}
+    where id in
+    <foreach collection="list" item="item" separator="," open="(" close=")">
+      #{item}
+    </foreach>
+  </update>
+  <insert id="batchInsert" parameterType="java.util.List">
+    insert into post_literature (id, data_name, data_type, ISBN_num,call_no, number, price, press, publishing_time,
+    warehouses,
+    warehousing_time, inventory_state, author, paginal_number, format, edition, congbianming,
+    congbianzhe, attachment_id, literature_type_one, literature_type_two, literature_related,
+    permissions_settings, create_time, update_time, creator, updater, sequence, status,retrieval_words, summary,
+    remark,search_value)
+    VALUES
+    <foreach collection="list" item="item" separator=","  >
+      (
+      #{item.id,jdbcType=VARCHAR}, #{item.dataName,jdbcType=VARCHAR}, #{item.dataType,jdbcType=VARCHAR},
+      #{item.isbnNum,jdbcType=VARCHAR},#{item.callNo,jdbcType=VARCHAR}, #{item.number,jdbcType=INTEGER}, #
+      {item.price,jdbcType=DECIMAL},
+      #{item.press,jdbcType=VARCHAR}, #{item.publishingTime,jdbcType=VARCHAR}, #{item.warehouses,jdbcType=VARCHAR},
+      #{item.warehousingTime,jdbcType=VARCHAR}, #{item.inventoryState,jdbcType=VARCHAR}, #
+      {item.author,jdbcType=VARCHAR},
+      #{item.paginalNumber,jdbcType=INTEGER}, #{item.format,jdbcType=VARCHAR}, #{item.edition,jdbcType=VARCHAR},
+      #{item.congbianming,jdbcType=VARCHAR}, #{item.congbianzhe,jdbcType=VARCHAR}, #
+      {item.attachmentId,jdbcType=VARCHAR},
+      #{item.literatureTypeOne,jdbcType=VARCHAR}, #{item.literatureTypeTwo,jdbcType=VARCHAR}, #
+      {item.literatureRelated,jdbcType=VARCHAR},
+      #{item.permissionsSettings,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #
+      {item.updateTime,jdbcType=TIMESTAMP},
+      #{item.creator,jdbcType=VARCHAR}, #{item.updater,jdbcType=VARCHAR}, #{item.sequence,jdbcType=INTEGER},
+      #{item.status,jdbcType=VARCHAR}, #{item.retrievalWords,jdbcType=LONGVARCHAR}, #
+      {item.summary,jdbcType=LONGVARCHAR},
+      #{item.remark,jdbcType=LONGVARCHAR},#{item.searchValue,jdbcType=VARCHAR}
+      )
+    </foreach>
+  </insert>
+
+  <select id="selectByFirstName" parameterType="java.lang.String" resultType="java.lang.Integer" >
+    select count(1)
+    from post_literature
+    where status &lt;&gt; 0 and data_name like concat(#{bookNameStart}, '%')
+  </select>
+
+  <select id="getPostLiteratureByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select *
+    from post_literature
+    where status &lt;&gt; 0 and data_name = #{dataName} and data_type &lt;&gt; 2
+  </select>
+
+  <select id="getPostLiteratureListByName" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select *
+    from post_literature
+    where status &lt;&gt; 0 and search_value = #{searchValue} and data_type &lt;&gt; 2
+  </select>
+
+  <select id="getBaseTypeCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+    select count(1)
+    from post_literature
+    where status &lt;&gt; 0 and call_no like concat(#{baseType}, '/','%')
+  </select>
+
+  <select id="getLiteratureName" resultMap="BaseResultMap">
+    select id,data_name,data_type from post_literature
+    where status = "2"
+    and (data_type = '1'
+    or data_type = '3')
+    order by update_time desc
+
+  </select>
+
+  <select id="getVideoCjTable" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    SELECT
+    '采集' AS type,
+    (
+    SELECT
+    count(1)
+    FROM
+    post_literature
+    WHERE
+    data_type = '1'
+    AND STATUS > 0
+    <if test="startTime != null and startTime !=''">
+      and left(update_time,10) BETWEEN #{startTime} and #{endTime}
+    </if>
+    ) AS 'ZHIZHI',
+    (
+    SELECT
+    count(1)
+    FROM
+    post_literature
+    WHERE
+    data_type = '2'
+    AND STATUS > 0
+    <if test="startTime != null and startTime !=''">
+      and left(update_time,10) BETWEEN #{startTime} and #{endTime}
+    </if>
+    ) AS 'DIANZI',
+    (
+    SELECT
+    count(1)
+    FROM
+    post_literature
+    WHERE
+    data_type = '3'
+    AND STATUS > 0
+    <if test="startTime != null and startTime !=''">
+      and left(update_time,10) BETWEEN #{startTime} and #{endTime}
+    </if>
+    ) AS 'DANGAN'
+
+    UNION
+    SELECT
+    '发布' AS type,
+    (
+    SELECT
+    count(1)
+    FROM
+    post_literature
+    WHERE
+    data_type = '1'
+    AND STATUS = '2'
+    <if test="startTime != null and startTime !=''">
+      and left(update_time,10) BETWEEN #{startTime} and #{endTime}
+    </if>
+    ) AS 'ZHIZHI',
+    (
+    SELECT
+    count(1)
+    FROM
+    post_literature
+    WHERE
+    data_type = '2'
+    AND STATUS = '2'
+    <if test="startTime != null and startTime !=''">
+      and left(update_time,10) BETWEEN #{startTime} and #{endTime}
+    </if>
+    ) AS 'DIANZI',
+    (
+    SELECT
+    count(1)
+    FROM
+    post_literature
+    WHERE
+    data_type = '3'
+    AND STATUS = '2'
+    <if test="startTime != null and startTime !=''">
+      and left(update_time,10) BETWEEN #{startTime} and #{endTime}
+    </if>
+    ) AS 'DANGAN'
+  </select>
+
+  <select id="getVideoCjPie" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    SELECT
+    CASE
+    WHEN t.dict_code = '1' THEN
+    '纸质版本'
+    WHEN t.dict_code = '2' THEN
+    '电子版本'
+    WHEN t.dict_code = '3' THEN
+    '档案版本'
+    ELSE
+    p.data_type
+    END AS 'name',
+    count(p.data_type) AS 'value'
+    FROM
+    post_literature p
+    RIGHT JOIN sys_dict t ON (
+    p.data_type = t.dict_code
+    and p.`status`>0
+    <if test="startTime != null and startTime !=''">
+      and left(p.update_time,10) BETWEEN #{startTime} and #{endTime}
+    </if>
+    )
+    WHERE
+    t.dict_type = 'literature_type'
+    GROUP BY
+    t.dict_code
+  </select>
+
+
+  <select id="getVideoCjLine" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    select c.date as updateTime,
+    count(case when p.data_type = '1'
+    then 1
+    else null
+    end)
+    as '纸质版本',
+    count(case when p.data_type = '2'
+    then 1
+    else null
+    end)
+    as '电子版本',
+    count(case when p.data_type = '3'
+    then 1
+    else null
+    end)
+    as '档案版本'
+    from
+    post_literature p
+    RIGHT JOIN calendar c
+    on(
+    c.date = left(p.update_time,10)
+    and left(p.update_time,10) between #{startTime} and #{endTime}
+      and p.status > 0
+    )
+     where
+ 		c.date between #{startTime} and #{endTime}
+    group by c.date
+  </select>
+
+
+  <select id="getVideoCjBarPlus" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+
+    SELECT
+    '马列毛邓' AS orgName,
+    count(
+    CASE
+    WHEN p.`status` > 0 THEN
+    1
+    ELSE
+    NULL
+    END
+    ) AS '采集',
+    count(
+    CASE
+    WHEN p.`status` = 2 THEN
+    1
+    ELSE
+    NULL
+    END
+    ) AS '发布'
+    FROM
+    post_literature p
+    WHERE
+    p.literature_type_one LIKE 'A%'
+    <if test="startTime != null and startTime !=''">
+      and left(p.update_time,10) BETWEEN #{startTime} and #{endTime}
+    </if>
+    UNION
+    SELECT
+    '哲学宗教' AS orgName,
+    count(
+    CASE
+    WHEN p.`status` > 0 THEN
+    1
+    ELSE
+    NULL
+    END
+    ) AS '采集',
+    count(
+    CASE
+    WHEN p.`status` = 2 THEN
+    1
+    ELSE
+    NULL
+    END
+    ) AS '发布'
+    FROM
+    post_literature p
+    WHERE
+    p.literature_type_one LIKE 'B%'
+    <if test="startTime != null and startTime !=''">
+      and left(p.update_time,10) BETWEEN #{startTime} and #{endTime}
+    </if>
+    UNION
+    SELECT
+    '社会科学' AS orgName,
+    count(
+    CASE
+    WHEN p.`status` > 0 THEN
+    1
+    ELSE
+    NULL
+    END
+    ) AS '采集',
+    count(
+    CASE
+    WHEN p.`status` = 2 THEN
+    1
+    ELSE
+    NULL
+    END
+    ) AS '发布'
+    FROM
+    post_literature p
+    WHERE 1=1
+    and (p.literature_type_one LIKE 'C%'
+    OR p.literature_type_one LIKE 'D%'
+    OR p.literature_type_one LIKE 'E%'
+    OR p.literature_type_one LIKE 'F%'
+    OR p.literature_type_one LIKE 'G%'
+    OR p.literature_type_one LIKE 'H%'
+    OR p.literature_type_one LIKE 'I%'
+    OR p.literature_type_one LIKE 'J%'
+    OR p.literature_type_one LIKE 'K%')
+    <if test="startTime != null and startTime !=''">
+      and left(p.update_time,10) BETWEEN #{startTime} and #{endTime}
+    </if>
+    UNION
+    SELECT
+    '自然科学' AS orgName,
+    count(
+    CASE
+    WHEN p.`status` > 0 THEN
+    1
+    ELSE
+    NULL
+    END
+    ) AS '采集',
+    count(
+    CASE
+    WHEN p.`status` = 2 THEN
+    1
+    ELSE
+    NULL
+    END
+    ) AS '发布'
+    FROM
+    post_literature p
+    WHERE
+    1=1 and
+    (p.literature_type_one LIKE 'N%'
+    OR p.literature_type_one LIKE 'O%'
+    OR p.literature_type_one LIKE 'P%'
+    OR p.literature_type_one LIKE 'Q%'
+    OR p.literature_type_one LIKE 'R%'
+    OR p.literature_type_one LIKE 'S%'
+    OR p.literature_type_one LIKE 'T%'
+    OR p.literature_type_one LIKE 'U%'
+    OR p.literature_type_one LIKE 'V%'
+    OR p.literature_type_one LIKE 'X%')
+    <if test="startTime != null and startTime !=''">
+      and left(p.update_time,10) BETWEEN #{startTime} and #{endTime}
+    </if>
+    UNION
+    SELECT
+    '综合性图书' AS orgName,
+    count(
+    CASE
+    WHEN p.`status` > 0 THEN
+    1
+    ELSE
+    NULL
+    END
+    ) AS '采集',
+    count(
+    CASE
+    WHEN p.`status` = 2 THEN
+    1
+    ELSE
+    NULL
+    END
+    ) AS '发布'
+    FROM
+    post_literature p
+    WHERE
+    p.literature_type_one LIKE 'Z%'
+    <if test="startTime != null and startTime !=''">
+      and left(p.update_time,10) BETWEEN #{startTime} and #{endTime}
+    </if>
+  </select>
+
+  <select id="getVideoCxTable" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    SELECT
+    '申请' AS type,
+    count(
+    CASE
+    WHEN p.data_type = '1' THEN
+    1
+    ELSE
+    NULL
+    END
+    ) AS 'ZHIZHI',
+    count(
+    CASE
+    WHEN p.data_type = '3' THEN
+    1
+    ELSE
+    NULL
+    END
+    ) AS 'DANGAN'
+    FROM
+    post_literature p,
+    post_literature_process t
+    WHERE
+    t.apply_status > 0
+    and t.apply_type = '1'
+    AND p.id = t.literature_id
+    <if test="startTime != null and startTime !=''">
+      and left(t.update_time,10) BETWEEN #{startTime} and #{endTime}
+    </if>
+    UNION
+    SELECT
+    '借阅' AS type,
+    count(
+    CASE
+    WHEN p.data_type = '1' THEN
+    1
+    ELSE
+    NULL
+    END
+    ) AS 'ZHIZHI',
+    count(
+    CASE
+    WHEN p.data_type = '3' THEN
+    1
+    ELSE
+    NULL
+    END
+    ) AS 'DANGAN'
+    FROM
+    post_literature p,
+    post_literature_process t
+    WHERE
+    t.apply_status = 2
+    and t.apply_type = '1'
+    AND p.id = t.literature_id
+    <if test="startTime != null and startTime !=''">
+      and left(t.update_time,10) BETWEEN #{startTime} and #{endTime}
+    </if>
+    UNION
+    SELECT
+    '超期' AS type,
+    count(
+    CASE
+    WHEN p.data_type = '1' THEN
+    1
+    ELSE
+    NULL
+    END
+    ) AS 'ZHIZHI',
+    count(
+    CASE
+    WHEN p.data_type = '3' THEN
+    1
+    ELSE
+    NULL
+    END
+    ) AS 'DANGAN'
+    FROM
+    post_literature p,
+    post_literature_process t
+    WHERE
+    t.apply_status = 2
+    and t.apply_type = '1'
+    and TO_DAYS(NOW()) - TO_DAYS(t.plan_return_date) &gt; 0
+    AND p.id = t.literature_id
+    <if test="startTime != null and startTime !=''">
+      and left(t.update_time,10) BETWEEN #{startTime} and #{endTime}
+    </if>
+    UNION
+    SELECT
+    '归还' AS type,
+    count(
+    CASE
+    WHEN p.data_type = '1' THEN
+    1
+    ELSE
+    NULL
+    END
+    ) AS 'ZHIZHI',
+    count(
+    CASE
+    WHEN p.data_type = '3' THEN
+    1
+    ELSE
+    NULL
+    END
+    ) AS 'DANGAN'
+    FROM
+    post_literature p,
+    post_literature_process t
+    WHERE
+    t.apply_status = 3
+    and t.apply_type = '1'
+    AND p.id = t.literature_id
+    <if test="startTime != null and startTime !=''">
+      and left(t.update_time,10) BETWEEN #{startTime} and #{endTime}
+    </if>
+  </select>
+
+  <select id="getVideoCxPie" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    select 'PC端' as 'name',count(1) AS 'value' from
+    post_literature p,post_literature_process t
+    where p.id = t.literature_id
+    and t.information_sources = 1
+    and t.apply_status > 0
+    and t.apply_type = '1'
+    <if test="startTime != null and startTime !=''">
+      and left(t.update_time,10) BETWEEN #{startTime} and #{endTime}
+    </if>
+    union
+    select '纸质申请' as 'name',count(1) AS 'value' from
+    post_literature p,post_literature_process t
+    where p.id = t.literature_id
+    and t.information_sources = 2
+    and t.apply_status > 0
+    and t.apply_type = '1'
+    <if test="startTime != null and startTime !=''">
+      and left(t.update_time,10) BETWEEN #{startTime} and #{endTime}
+    </if>
+  </select>
+
+  <select id="getVideoCxLine" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    select  c.date as updateTime,
+    count(case when p.apply_status > 0
+    then 1
+    else null
+    end)
+    as '申请',
+    count(case when p.apply_status = '2'
+    then 1
+    else null
+    end)
+    as '借阅',
+    count(case when p.apply_status = '3'
+    then 1
+    else null
+    end)
+    as '归还'
+    from
+    post_literature_process p
+    RIGHT JOIN calendar c
+    on(
+    c.date = left(p.update_time,10)
+     and left(p.update_time,10) between #{startTime} and #{endTime}
+      and p.apply_type = '1'
+    )
+     where c.date between #{startTime} and #{endTime}
+    group by c.date
+  </select>
+
+  <select id="getVideoCjCount" resultType="java.util.HashMap">
+    select
+    count(
+    case when data_type = '1'
+    then 1
+    else null
+    end) as Tcount,
+    count(
+    case when data_type = '2'
+    then 1
+    else null
+    end) as Scount,
+    count(
+    case when data_type = '3'
+    then 1
+    else null
+    end) as Ycount
+    from post_literature
+    where `status` = '2'
+  </select>
+
+  <select id="getVideoOpenCount" resultType="java.lang.Integer">
+    select count(1) as openVideoCount from post_literature
+    where `status` = '2'
+  </select>
+
+  <select id="getVideoCxApply" resultType="java.lang.Integer">
+    select count(1) as applyCount from post_literature_process
+    where approve_status = '1'
+  </select>
+  <select id="getVideoCxApproval" resultType="java.lang.Integer">
+    select count(1) as approvalCount from post_literature_process
+    where apply_status = '2'
+  </select>
+
+  <!--查询待办-->
+  <select id="getUndoTask" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    SELECT
+    CASE
+    WHEN a.apply_type = '1' THEN
+    '文献借阅'
+    WHEN a.apply_type = '2' THEN
+    '文献下载'
+    ELSE
+    a.apply_type
+    END AS actionType,
+    p.data_name AS actionName,
+    w.create_time AS actionTime,
+    a.id AS processInstId,
+    p.id AS partyId
+    FROM
+    post_literature_process_detail w
+    LEFT JOIN post_literature_process a ON w.process_id = a.id
+    LEFT JOIN post_literature p ON p.id = a.literature_id
+    WHERE
+    w. process_status = 1
+     and w.process_user_id = #{currentUserId}
+    order by w.create_time desc
+    limit 0,6
+  </select>
+  <!--查询已办-->
+  <select id="getDoneTask" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+
+    SELECT
+    CASE
+    WHEN a.apply_type = '1' THEN
+    '文献借阅'
+    WHEN a.apply_type = '2' THEN
+    '文献下载'
+    ELSE
+    a.apply_type
+    END AS actionType,
+    p.data_name AS actionName,
+    a.create_time AS actionTime,
+    a.id AS processInstId,
+    p.id AS partyId
+    FROM
+    post_literature_process a,
+    post_literature p
+    WHERE
+    a.literature_id = p.id
+    AND EXISTS (
+    SELECT
+    f.id
+    FROM
+    post_literature_process_detail f
+    WHERE
+    f.process_id = a.id
+     AND f.process_user_id = #{currentUserId}
+    and f.process_status = 2
+    )
+    order by a.create_time desc
+    limit 0,6
+  </select>
+  <!--查询已办-->
+  <select id="getFinishTask" parameterType="java.util.HashMap" resultType="java.util.HashMap">
+    SELECT
+    CASE
+    WHEN a.apply_type = '1' THEN
+    '文献借阅'
+    WHEN a.apply_type = '2' THEN
+    '文献下载'
+    ELSE
+    a.apply_type
+    END AS actionType,
+    p.data_name AS actionName,
+    a.create_time AS actionTime,
+    a.id AS processInstId,
+    p.id AS partyId
+    FROM
+    post_literature_process a,
+    post_literature p
+    WHERE
+    a.literature_id = p.id
+    AND EXISTS (
+    SELECT
+    f.id
+    FROM
+    post_literature_process_detail f
+    WHERE
+    f.process_id = a.id
+     AND f.process_user_id = #{currentUserId}
+    and f.process_status = 3
+    )
+    order by a.create_time desc
+    limit 0,6
+  </select>
+
+  <select id="getLiteratureById" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from
+    post_literature where id = #{id}
+    and status > 0
+  </select>
+
+  <select id="getLiteratureByBaseType" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from
+    post_literature where call_no like concat(#{baseType}, '%') and data_type &lt;&gt; 2
+    order by create_time desc limit 1
+  </select>
+  <select id="getLiteratureByIdList" resultMap="BaseResultMap" parameterType="java.util.List">
+    select
+    <include refid="Base_Column_List" />
+    from post_literature
+    where
+    id in
+    <if test="keys != null and keys.size > 0">
+      <foreach collection="keys" open="(" close=")" separator="," item="item">
+        #{item}
+      </foreach>
+    </if>
+    and status > 0
+
+  </select>
+
+  <select id="getPostLiteratureAttachment" parameterType="java.lang.String" resultMap="BaseResultMap2">
+    select a.* from post_literature p
+    inner join post_attachment a
+    on (p.attachment_id = a.att_fk_id)
+    where p.id = #{postLiteratureId}
+
+  </select>
+
+</mapper>

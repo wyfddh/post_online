@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tj720.dao.PostPublicCuratorCollectMapper">
+
+    <!--<insert id="savePublicCuratorCollect" parameterType="java.util.List">-->
+        <!--insert into post_public_curator_collect(id, curator_id, collect_id, create_by, create_date, update_by, update_date)-->
+        <!--values-->
+        <!--<foreach collection="list" separator="," item="item">-->
+            <!--(#{id}, #{curatorId}, #{collectId}, #{createBy}, now(), #{updateBy}, now())-->
+        <!--</foreach>-->
+    <!--</insert>-->
+
+    <select id="getCuratorCollectListByCuratorId" parameterType="java.lang.String" resultType="com.tj720.model.common.collect.CollectDto">
+        select
+          b.id                      id,
+          b.name                    name,
+          b.type_id                 typeId,
+          b.son_type_id             sonTypeId,
+          b.msg                     msg,
+          b.pictureids              pictureids
+        from post_collection_type a
+        inner join post_collection b on (a.collect_id = b.id and b.isdelete = 0)
+        where a.theme_show_id = #{id} and a.status = 1 and a.isdelete = 0
+    </select>
+</mapper>

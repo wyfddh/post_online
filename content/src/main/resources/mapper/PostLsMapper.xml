@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tj720.dao.PostLsMapper" >
+  <resultMap id="BaseResultMap" type="com.tj720.model.common.video.PostLs" >
+    <id column="xid" property="xid" jdbcType="VARCHAR" />
+    <result column="ls_code" property="lsCode" jdbcType="INTEGER" />
+    <result column="ls_key" property="lsKey" jdbcType="VARCHAR" />
+    <result column="ls_type" property="lsType" jdbcType="VARCHAR" />
+    <result column="ext1" property="ext1" jdbcType="VARCHAR" />
+    <result column="ext2" property="ext2" jdbcType="VARCHAR" />
+    <result column="ext3" property="ext3" jdbcType="VARCHAR" />
+  </resultMap>
+  <!--<sql id="Example_Where_Clause" >-->
+    <!--<where >-->
+      <!--<foreach collection="oredCriteria" item="criteria" separator="or" >-->
+        <!--<if test="criteria.valid" >-->
+          <!--<trim prefix="(" suffix=")" prefixOverrides="and" >-->
+            <!--<foreach collection="criteria.criteria" item="criterion" >-->
+              <!--<choose >-->
+                <!--<when test="criterion.noValue" >-->
+                  <!--and ${criterion.condition}-->
+                <!--</when>-->
+                <!--<when test="criterion.singleValue" >-->
+                  <!--and ${criterion.condition} #{criterion.value}-->
+                <!--</when>-->
+                <!--<when test="criterion.betweenValue" >-->
+                  <!--and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}-->
+                <!--</when>-->
+                <!--<when test="criterion.listValue" >-->
+                  <!--and ${criterion.condition}-->
+                  <!--<foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >-->
+                    <!--#{listItem}-->
+                  <!--</foreach>-->
+                <!--</when>-->
+              <!--</choose>-->
+            <!--</foreach>-->
+          <!--</trim>-->
+        <!--</if>-->
+      <!--</foreach>-->
+    <!--</where>-->
+  <!--</sql>-->
+  <!--<sql id="Update_By_Example_Where_Clause" >-->
+    <!--<where >-->
+      <!--<foreach collection="example.oredCriteria" item="criteria" separator="or" >-->
+        <!--<if test="criteria.valid" >-->
+          <!--<trim prefix="(" suffix=")" prefixOverrides="and" >-->
+            <!--<foreach collection="criteria.criteria" item="criterion" >-->
+              <!--<choose >-->
+                <!--<when test="criterion.noValue" >-->
+                  <!--and ${criterion.condition}-->
+                <!--</when>-->
+                <!--<when test="criterion.singleValue" >-->
+                  <!--and ${criterion.condition} #{criterion.value}-->
+                <!--</when>-->
+                <!--<when test="criterion.betweenValue" >-->
+                  <!--and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}-->
+                <!--</when>-->
+                <!--<when test="criterion.listValue" >-->
+                  <!--and ${criterion.condition}-->
+                  <!--<foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >-->
+                    <!--#{listItem}-->
+                  <!--</foreach>-->
+                <!--</when>-->
+              <!--</choose>-->
+            <!--</foreach>-->
+          <!--</trim>-->
+        <!--</if>-->
+      <!--</foreach>-->
+    <!--</where>-->
+  <!--</sql>-->
+  <sql id="Base_Column_List" >
+    xid, ls_code, ls_key, ls_type, ext1, ext2, ext3
+  </sql>
+  <!--<select id="selectByExample" resultMap="BaseResultMap" parameterType="com.tj720.model.common.video.PostLsExample" >-->
+    <!--select-->
+    <!--<if test="distinct" >-->
+      <!--distinct-->
+    <!--</if>-->
+    <!--<include refid="Base_Column_List" />-->
+    <!--from post_ls-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Example_Where_Clause" />-->
+    <!--</if>-->
+    <!--<if test="orderByClause != null" >-->
+      <!--order by ${orderByClause}-->
+    <!--</if>-->
+  <!--</select>-->
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from post_ls
+    where xid = #{xid,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from post_ls
+    where xid = #{xid,jdbcType=VARCHAR}
+  </delete>
+  <!--<delete id="deleteByExample" parameterType="com.tj720.model.common.video.PostLsExample" >-->
+    <!--delete from post_ls-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</delete>-->
+  <insert id="insert" parameterType="com.tj720.model.common.video.PostLs" >
+    insert into post_ls (xid, ls_code, ls_key, 
+      ls_type, ext1, ext2, 
+      ext3)
+    values (#{xid,jdbcType=VARCHAR}, #{lsCode,jdbcType=INTEGER}, #{lsKey,jdbcType=VARCHAR}, 
+      #{lsType,jdbcType=VARCHAR}, #{ext1,jdbcType=VARCHAR}, #{ext2,jdbcType=VARCHAR}, 
+      #{ext3,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tj720.model.common.video.PostLs" >
+    insert into post_ls
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="xid != null" >
+        xid,
+      </if>
+      <if test="lsCode != null" >
+        ls_code,
+      </if>
+      <if test="lsKey != null" >
+        ls_key,
+      </if>
+      <if test="lsType != null" >
+        ls_type,
+      </if>
+      <if test="ext1 != null" >
+        ext1,
+      </if>
+      <if test="ext2 != null" >
+        ext2,
+      </if>
+      <if test="ext3 != null" >
+        ext3,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="xid != null" >
+        #{xid,jdbcType=VARCHAR},
+      </if>
+      <if test="lsCode != null" >
+        #{lsCode,jdbcType=INTEGER},
+      </if>
+      <if test="lsKey != null" >
+        #{lsKey,jdbcType=VARCHAR},
+      </if>
+      <if test="lsType != null" >
+        #{lsType,jdbcType=VARCHAR},
+      </if>
+      <if test="ext1 != null" >
+        #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="ext3 != null" >
+        #{ext3,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <!--<select id="countByExample" parameterType="com.tj720.model.common.video.PostLsExample" resultType="java.lang.Integer" >-->
+    <!--select count(*) from post_ls-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</select>-->
+  <!--<update id="updateByExampleSelective" parameterType="map" >-->
+    <!--update post_ls-->
+    <!--<set >-->
+      <!--<if test="record.xid != null" >-->
+        <!--xid = #{record.xid,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.lsCode != null" >-->
+        <!--ls_code = #{record.lsCode,jdbcType=INTEGER},-->
+      <!--</if>-->
+      <!--<if test="record.lsKey != null" >-->
+        <!--ls_key = #{record.lsKey,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.lsType != null" >-->
+        <!--ls_type = #{record.lsType,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.ext1 != null" >-->
+        <!--ext1 = #{record.ext1,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.ext2 != null" >-->
+        <!--ext2 = #{record.ext2,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.ext3 != null" >-->
+        <!--ext3 = #{record.ext3,jdbcType=VARCHAR},-->
+      <!--</if>-->
+    <!--</set>-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Update_By_Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</update>-->
+  <!--<update id="updateByExample" parameterType="map" >-->
+    <!--update post_ls-->
+    <!--set xid = #{record.xid,jdbcType=VARCHAR},-->
+      <!--ls_code = #{record.lsCode,jdbcType=INTEGER},-->
+      <!--ls_key = #{record.lsKey,jdbcType=VARCHAR},-->
+      <!--ls_type = #{record.lsType,jdbcType=VARCHAR},-->
+      <!--ext1 = #{record.ext1,jdbcType=VARCHAR},-->
+      <!--ext2 = #{record.ext2,jdbcType=VARCHAR},-->
+      <!--ext3 = #{record.ext3,jdbcType=VARCHAR}-->
+    <!--<if test="_parameter != null" >-->
+      <!--<include refid="Update_By_Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</update>-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.tj720.model.common.video.PostLs" >
+    update post_ls
+    <set >
+      <if test="lsCode != null" >
+        ls_code = #{lsCode,jdbcType=INTEGER},
+      </if>
+      <if test="lsKey != null" >
+        ls_key = #{lsKey,jdbcType=VARCHAR},
+      </if>
+      <if test="lsType != null" >
+        ls_type = #{lsType,jdbcType=VARCHAR},
+      </if>
+      <if test="ext1 != null" >
+        ext1 = #{ext1,jdbcType=VARCHAR},
+      </if>
+      <if test="ext2 != null" >
+        ext2 = #{ext2,jdbcType=VARCHAR},
+      </if>
+      <if test="ext3 != null" >
+        ext3 = #{ext3,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where xid = #{xid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tj720.model.common.video.PostLs" >
+    update post_ls
+    set ls_code = #{lsCode,jdbcType=INTEGER},
+      ls_key = #{lsKey,jdbcType=VARCHAR},
+      ls_type = #{lsType,jdbcType=VARCHAR},
+      ext1 = #{ext1,jdbcType=VARCHAR},
+      ext2 = #{ext2,jdbcType=VARCHAR},
+      ext3 = #{ext3,jdbcType=VARCHAR}
+    where xid = #{xid,jdbcType=VARCHAR}
+  </update>
+
+  <select id="getMaxLsCode" resultType="java.lang.Integer">
+    SELECT
+    case when
+    max(ls_code) is NULL
+    then '0'
+    ELSE
+    MAX(ls_code) end
+    as lsCode
+    from post_ls
+    where 1=1
+    <if test="lsKey != null and lsKey != ''">
+      and ls_key = #{lsKey}
+    </if>
+    <if test="lsType != null and lsType != ''">
+      and ls_type = #{lsType}
+    </if>
+  </select>
+</mapper>

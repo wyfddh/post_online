@@ -1,0 +1,954 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tj720.dao.CollectMapper">
+  <resultMap id="BaseResultMap" type="com.tj720.model.common.collect.Collect">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="colle_id" jdbcType="VARCHAR" property="colleId" />
+    <result column="msg" jdbcType="VARCHAR" property="msg" />
+    <result column="pictureids" jdbcType="VARCHAR" property="pictureids" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="type_id" jdbcType="VARCHAR" property="typeId" />
+    <result column="son_type_id" jdbcType="VARCHAR" property="sonTypeId" />
+    <result column="commend" jdbcType="VARCHAR" property="commend" />
+    <result column="isdelete" jdbcType="VARCHAR" property="isdelete" />
+    <result column="sort" jdbcType="VARCHAR" property="sort" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="updater" jdbcType="VARCHAR" property="updater" />
+    <result column="other1" jdbcType="VARCHAR" property="other1" />
+    <result column="other2" jdbcType="VARCHAR" property="other2" />
+    <result column="other3" jdbcType="VARCHAR" property="other3" />
+  </resultMap>
+
+  <resultMap id="BaseResultMap1" type="com.tj720.model.common.collect.CollectDto">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="colle_id" jdbcType="VARCHAR" property="colleId" />
+    <result column="msg" jdbcType="VARCHAR" property="msg" />
+    <result column="pictureids" jdbcType="VARCHAR" property="pictureids" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="type_id" jdbcType="VARCHAR" property="typeId" />
+    <result column="son_type_id" jdbcType="VARCHAR" property="sonTypeId" />
+    <result column="commend" jdbcType="VARCHAR" property="commend" />
+    <result column="isdelete" jdbcType="VARCHAR" property="isdelete" />
+    <result column="sort" jdbcType="VARCHAR" property="sort" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="creator" jdbcType="VARCHAR" property="creator" />
+    <result column="updater" jdbcType="VARCHAR" property="updater" />
+    <result column="other1" jdbcType="VARCHAR" property="other1" />
+    <result column="other2" jdbcType="VARCHAR" property="other2" />
+    <result column="other3" jdbcType="VARCHAR" property="other3" />
+    <result column="hasCollected" jdbcType="VARCHAR" property="hasCollected" />
+  </resultMap>
+  <!--<sql id="Example_Where_Clause">-->
+    <!--<where>-->
+      <!--<foreach collection="oredCriteria" item="criteria" separator="or">-->
+        <!--<if test="criteria.valid">-->
+          <!--<trim prefix="(" prefixOverrides="and" suffix=")">-->
+            <!--<foreach collection="criteria.criteria" item="criterion">-->
+              <!--<choose>-->
+                <!--<when test="criterion.noValue">-->
+                  <!--and ${criterion.condition}-->
+                <!--</when>-->
+                <!--<when test="criterion.singleValue">-->
+                  <!--and ${criterion.condition} #{criterion.value}-->
+                <!--</when>-->
+                <!--<when test="criterion.betweenValue">-->
+                  <!--and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}-->
+                <!--</when>-->
+                <!--<when test="criterion.listValue">-->
+                  <!--and ${criterion.condition}-->
+                  <!--<foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">-->
+                    <!--#{listItem}-->
+                  <!--</foreach>-->
+                <!--</when>-->
+              <!--</choose>-->
+            <!--</foreach>-->
+          <!--</trim>-->
+        <!--</if>-->
+      <!--</foreach>-->
+    <!--</where>-->
+  <!--</sql>-->
+  <!--<sql id="Update_By_Example_Where_Clause">-->
+    <!--<where>-->
+      <!--<foreach collection="example.oredCriteria" item="criteria" separator="or">-->
+        <!--<if test="criteria.valid">-->
+          <!--<trim prefix="(" prefixOverrides="and" suffix=")">-->
+            <!--<foreach collection="criteria.criteria" item="criterion">-->
+              <!--<choose>-->
+                <!--<when test="criterion.noValue">-->
+                  <!--and ${criterion.condition}-->
+                <!--</when>-->
+                <!--<when test="criterion.singleValue">-->
+                  <!--and ${criterion.condition} #{criterion.value}-->
+                <!--</when>-->
+                <!--<when test="criterion.betweenValue">-->
+                  <!--and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}-->
+                <!--</when>-->
+                <!--<when test="criterion.listValue">-->
+                  <!--and ${criterion.condition}-->
+                  <!--<foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">-->
+                    <!--#{listItem}-->
+                  <!--</foreach>-->
+                <!--</when>-->
+              <!--</choose>-->
+            <!--</foreach>-->
+          <!--</trim>-->
+        <!--</if>-->
+      <!--</foreach>-->
+    <!--</where>-->
+  <!--</sql>-->
+  <sql id="Base_Column_List">
+    id, colle_id, msg, pictureids, name, type_id, son_type_id, commend,
+    isdelete, sort, create_time, update_time, creator, updater, other1, other2, other3
+  </sql>
+
+  <sql id="Base_Column_List1">
+    a.id, a.colle_id, a.msg, a.pictureids, a.name, a.type_id, a.son_type_id, a.commend,
+    a.isdelete, a.sort, a.create_time, a.update_time, a.creator, a.updater, a.other1, a.other2, a.other3
+  </sql>
+  <!--<select id="selectByExample" parameterType="com.tj720.model.common.collect.CollectExample" resultMap="BaseResultMap">-->
+    <!--select-->
+    <!--<if test="distinct">-->
+      <!--distinct-->
+    <!--</if>-->
+    <!--<include refid="Base_Column_List" />-->
+    <!--from post_collection-->
+    <!--<if test="_parameter != null">-->
+      <!--<include refid="Example_Where_Clause" />-->
+    <!--</if>-->
+    <!--<if test="orderByClause != null">-->
+      <!--order by ${orderByClause}-->
+    <!--</if>-->
+  <!--</select>-->
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from post_collection
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from post_collection
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <!--<delete id="deleteByExample" parameterType="com.tj720.model.common.collect.CollectExample">-->
+    <!--delete from post_collection-->
+    <!--<if test="_parameter != null">-->
+      <!--<include refid="Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</delete>-->
+  <insert id="insert" parameterType="com.tj720.model.common.collect.Collect">
+    insert into post_collection (id, colle_id, msg, 
+      pictureids, name,
+      type_id, son_type_id,
+      commend, isdelete, sort, 
+      create_time, update_time, creator, 
+      updater, other1, other2, 
+      other3)
+    values (#{id,jdbcType=VARCHAR}, #{colleId,jdbcType=VARCHAR}, #{msg,jdbcType=VARCHAR}, 
+      #{pictureids,jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR},
+      #{typeId,jdbcType=VARCHAR}, #{sonTypeId,jdbcType=VARCHAR},
+      #{commend,jdbcType=VARCHAR}, #{isdelete,jdbcType=VARCHAR}, #{sort,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR}, 
+      #{updater,jdbcType=VARCHAR}, #{other1,jdbcType=VARCHAR}, #{other2,jdbcType=VARCHAR}, 
+      #{other3,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.tj720.model.common.collect.Collect">
+    insert into post_collection
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="colleId != null">
+        colle_id,
+      </if>
+      <if test="msg != null">
+        msg,
+      </if>
+      <if test="pictureids != null">
+        pictureids,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="typeId != null">
+        type_id,
+      </if>
+      <if test="sonTypeId != null">
+        son_type_id,
+      </if>
+      <if test="commend != null">
+        commend,
+      </if>
+      <if test="isdelete != null">
+        isdelete,
+      </if>
+      <if test="sort != null">
+        sort,
+      </if>
+      <if test="createTime != null">
+        create_time,
+      </if>
+      <if test="updateTime != null">
+        update_time,
+      </if>
+      <if test="creator != null">
+        creator,
+      </if>
+      <if test="updater != null">
+        updater,
+      </if>
+      <if test="other1 != null">
+        other1,
+      </if>
+      <if test="other2 != null">
+        other2,
+      </if>
+      <if test="other3 != null">
+        other3,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="colleId != null">
+        #{colleId,jdbcType=VARCHAR},
+      </if>
+      <if test="msg != null">
+        #{msg,jdbcType=VARCHAR},
+      </if>
+      <if test="pictureids != null">
+        #{pictureids,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null">
+        #{typeId,jdbcType=VARCHAR},
+      </if>
+      <if test="sonTypeId != null">
+        #{sonTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="commend != null">
+        #{commend,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null">
+        #{isdelete,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null">
+        #{sort,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null">
+        #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="other1 != null">
+        #{other1,jdbcType=VARCHAR},
+      </if>
+      <if test="other2 != null">
+        #{other2,jdbcType=VARCHAR},
+      </if>
+      <if test="other3 != null">
+        #{other3,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <!--<select id="countByExample" parameterType="com.tj720.model.common.collect.CollectExample" resultType="java.lang.Integer">-->
+    <!--select count(*) from post_collection-->
+    <!--<if test="_parameter != null">-->
+      <!--<include refid="Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</select>-->
+  <!--<update id="updateByExampleSelective" parameterType="map">-->
+    <!--update post_collection-->
+    <!--<set>-->
+      <!--<if test="record.id != null">-->
+        <!--id = #{record.id,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.colleId != null">-->
+        <!--colle_id = #{record.colleId,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.msg != null">-->
+        <!--msg = #{record.msg,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.pictureids != null">-->
+        <!--pictureids = #{record.pictureids,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.name != null">-->
+        <!--name = #{record.name,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.typeId != null">-->
+        <!--type_id = #{record.typeId,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.sonTypeId != null">-->
+        <!--son_type_id = #{record.sonTypeId,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.commend != null">-->
+        <!--commend = #{record.commend,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.isdelete != null">-->
+        <!--isdelete = #{record.isdelete,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.sort != null">-->
+        <!--sort = #{record.sort,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.createTime != null">-->
+        <!--create_time = #{record.createTime,jdbcType=TIMESTAMP},-->
+      <!--</if>-->
+      <!--<if test="record.updateTime != null">-->
+        <!--update_time = #{record.updateTime,jdbcType=TIMESTAMP},-->
+      <!--</if>-->
+      <!--<if test="record.creator != null">-->
+        <!--creator = #{record.creator,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.updater != null">-->
+        <!--updater = #{record.updater,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.other1 != null">-->
+        <!--other1 = #{record.other1,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.other2 != null">-->
+        <!--other2 = #{record.other2,jdbcType=VARCHAR},-->
+      <!--</if>-->
+      <!--<if test="record.other3 != null">-->
+        <!--other3 = #{record.other3,jdbcType=VARCHAR},-->
+      <!--</if>-->
+    <!--</set>-->
+    <!--<if test="_parameter != null">-->
+      <!--<include refid="Update_By_Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</update>-->
+  <!--<update id="updateByExample" parameterType="map">-->
+    <!--update post_collection-->
+    <!--set id = #{record.id,jdbcType=VARCHAR},-->
+      <!--colle_id = #{record.colleId,jdbcType=VARCHAR},-->
+      <!--msg = #{record.msg,jdbcType=VARCHAR},-->
+      <!--pictureids = #{record.pictureids,jdbcType=VARCHAR},-->
+      <!--name = #{record.name,jdbcType=VARCHAR},-->
+      <!--type_id = #{record.typeId,jdbcType=VARCHAR},-->
+      <!--son_type_id = #{record.sonTypeId,jdbcType=VARCHAR},-->
+      <!--commend = #{record.commend,jdbcType=VARCHAR},-->
+      <!--isdelete = #{record.isdelete,jdbcType=VARCHAR},-->
+      <!--sort = #{record.sort,jdbcType=VARCHAR},-->
+      <!--create_time = #{record.createTime,jdbcType=TIMESTAMP},-->
+      <!--update_time = #{record.updateTime,jdbcType=TIMESTAMP},-->
+      <!--creator = #{record.creator,jdbcType=VARCHAR},-->
+      <!--updater = #{record.updater,jdbcType=VARCHAR},-->
+      <!--other1 = #{record.other1,jdbcType=VARCHAR},-->
+      <!--other2 = #{record.other2,jdbcType=VARCHAR},-->
+      <!--other3 = #{record.other3,jdbcType=VARCHAR}-->
+    <!--<if test="_parameter != null">-->
+      <!--<include refid="Update_By_Example_Where_Clause" />-->
+    <!--</if>-->
+  <!--</update>-->
+  <update id="updateByPrimaryKeySelective" parameterType="com.tj720.model.common.collect.Collect">
+    update post_collection
+    <set>
+      <if test="colleId != null">
+        colle_id = #{colleId,jdbcType=VARCHAR},
+      </if>
+      <if test="msg != null">
+        msg = #{msg,jdbcType=VARCHAR},
+      </if>
+      <if test="pictureids != null">
+        pictureids = #{pictureids,jdbcType=VARCHAR},
+      </if>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="typeId != null">
+        type_id = #{typeId,jdbcType=VARCHAR},
+      </if>
+      <if test="sonTypeId != null">
+        son_type_id = #{sonTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="commend != null">
+        commend = #{commend,jdbcType=VARCHAR},
+      </if>
+      <if test="isdelete != null">
+        isdelete = #{isdelete,jdbcType=VARCHAR},
+      </if>
+      <if test="sort != null">
+        sort = #{sort,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        updater = #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="other1 != null">
+        other1 = #{other1,jdbcType=VARCHAR},
+      </if>
+      <if test="other2 != null">
+        other2 = #{other2,jdbcType=VARCHAR},
+      </if>
+      <if test="other3 != null">
+        other3 = #{other3,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.tj720.model.common.collect.Collect">
+    update post_collection
+    set colle_id = #{colleId,jdbcType=VARCHAR},
+      msg = #{msg,jdbcType=VARCHAR},
+      pictureids = #{pictureids,jdbcType=VARCHAR},
+      name = #{name,jdbcType=VARCHAR},
+      type_id = #{typeId,jdbcType=VARCHAR},
+      son_type_id = #{sonTypeId,jdbcType=VARCHAR},
+      commend = #{commend,jdbcType=VARCHAR},
+      isdelete = #{isdelete,jdbcType=VARCHAR},
+      sort = #{sort,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      creator = #{creator,jdbcType=VARCHAR},
+      updater = #{updater,jdbcType=VARCHAR},
+      other1 = #{other1,jdbcType=VARCHAR},
+      other2 = #{other2,jdbcType=VARCHAR},
+      other3 = #{other3,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateCollectByIds" parameterType = "java.util.List">
+    update post_collection set isdelete = 1 where id in
+    <foreach collection="ids" open="(" item="id" separator="," close=")">
+      #{id}
+    </foreach>
+  </update>
+
+  <select id="selectCountByCollect" parameterType="java.util.Map"
+          resultType="java.lang.Integer">
+    SELECT
+    count(1)
+    FROM post_collection where isdelete = '0'
+    <if test="name != null and name != ''">
+      and name like concat('%',#{name},'%')
+    </if>
+    <if test="typeId != null and typeId != ''">
+      and type_id = #{typeId}
+    </if>
+    <if test="sonTypeId != null and sonTypeId != ''">
+      and son_type_id = #{sonTypeId}
+    </if>
+    <if test="orderBy == 1" >
+      order by update_time desc
+    </if>
+    <if test="orderBy == 2" >
+      order by create_time desc
+    </if>
+  </select>
+
+  <select id="selectListByCollect" parameterType="java.util.Map"
+          resultMap="BaseResultMap">
+    SELECT
+    *
+    FROM  post_collection where isdelete = '0'
+
+    <if test="name != null and name != ''">
+      and name like concat('%',#{name},'%')
+    </if>
+    <if test="typeId != null and typeId != ''">
+      and type_id = #{typeId}
+    </if>
+    <if test="sonTypeId != null and sonTypeId != ''">
+      and son_type_id = #{sonTypeId}
+    </if>
+    <if test="orderBy == 1" >
+      order by update_time desc
+    </if>
+    <if test="orderBy == 2" >
+      order by create_time desc
+    </if>
+    limit #{start},#{end}
+  </select>
+
+  <!--藏品典藏精选推荐数-->
+  <select id="CountDcjx" resultType="java.lang.Integer" parameterType="java.lang.String">
+    select count(1)
+    from   post_collection
+    where
+    commend = '1'
+    and isdelete = '0'
+  </select>
+
+
+
+  <select id="selectByParams" parameterType="java.util.Map" resultMap="BaseResultMap">
+    SELECT
+    *
+    FROM post_collection where isdelete = '0'
+
+    <if test="name != null and key != ''">
+      and name = #{name}
+    </if>
+    <if test="typeId != null and typeId != ''">
+      and type_id = #{typeId}
+    </if>
+    <if test="sonTypeId != null and sonTypeId != ''">
+      and son_type_id = #{sonTypeId}
+    </if>
+  </select>
+
+  <select id="getAttachmentById" parameterType="java.util.Map" resultType = "com.tj720.model.common.Attachment">
+    select p.att_id as attId, p.att_name as attName,p.att_path as attPath,p.att_file_type as attFileType from
+    post_attachment p
+    where 1=1
+    <if test="attFkId != null">
+      and p.att_fk_id = #{attFkId}
+    </if>
+    <if test="attId != null">
+      and p.att_id = #{attId}
+    </if>
+    <!--<if test=" startRow == -1">-->
+      <!--limit #{pageSize}-->
+    <!--</if>-->
+    <!--<if test=" startRow != -1">-->
+      <!--limit #{startRow},#{pageSize}-->
+    <!--</if>-->
+  </select>
+
+
+
+
+
+  <!--Web层-->
+
+  <!--典藏精选-->
+  <select id="selectListIndexByWebCollect" parameterType="java.util.Map"
+          resultMap="BaseResultMap">
+    SELECT  distinct
+    a.id,
+    a.pictureids,
+    a. NAME,
+    a.msg,
+    CASE
+    WHEN EXISTS (
+    SELECT
+    b.id
+    FROM
+    post_web_collect b
+    WHERE
+    a.id = b.cid
+    AND b.type = '2'
+    AND b.user_id = 1
+    AND b. STATUS = 1
+    ) THEN
+    '1'
+    ELSE
+    '0'
+    END AS hascollected
+    FROM
+    post_collection a,
+    sys_dict s
+    WHERE
+    a.isdelete = '0'
+    and  a.commend = '1'
+    <if test="typeId != null and typeId!=''" >
+      AND a.type_id = s.id
+      AND (
+      (
+      s.dict_type = 'post_collect'
+      AND s.dict_code = #{typeId}
+      )
+      OR (
+      s.dict_type = 'post_collect_two'
+      AND #{typeId} IN (
+      SELECT
+      t.dict_code
+      FROM
+      sys_dict t
+      WHERE
+      t.id = s.pid
+      )
+      )
+      )
+    </if>
+    <if test="sonTypeId != null and sonTypeId!=''" >
+      AND a.son_type_id = s.id
+      AND (
+      s.dict_type = 'post_collect_two'
+      AND s.id = #{sonTypeId}
+      )
+    </if>
+    ORDER BY
+    a.update_time DESC
+
+  </select>
+
+
+
+
+  <select id="selectCountByWebCollect" parameterType="java.util.Map"
+          resultType="java.lang.Integer">
+    SELECT
+    count(1)
+    FROM
+    post_collection a,
+    sys_dict s
+    WHERE
+    a.isdelete = '0'
+    <if test="typeId != null and typeId!=''" >
+    AND a.type_id = s.id
+    AND (
+
+      (
+      s.dict_type = 'post_collect'
+      AND s.dict_code = #{typeId}
+      )
+      OR (
+      s.dict_type = 'post_collect_two'
+      AND #{typeId} IN (
+      SELECT
+      t.dict_code
+      FROM
+      sys_dict t
+      WHERE
+      t.id = s.pid
+      )
+      )
+    )
+    </if>
+    <if test="sonTypeId != null and sonTypeId!=''" >
+      AND a.son_type_id = s.id
+      AND (
+      s.dict_type = 'post_collect_two'
+      AND s.id = #{sonTypeId}
+      )
+    </if>
+
+  </select>
+
+
+  <select id="selectListByWebCollect" parameterType="java.util.Map"
+          resultMap="BaseResultMap">
+    SELECT
+    a.id,
+    a.pictureids,
+    a. NAME,
+    a.msg,
+    CASE
+    WHEN EXISTS (
+    SELECT
+    b.id
+    FROM
+    post_web_collect b
+    WHERE
+    a.id = b.cid
+    AND b.type = '2'
+    AND b.user_id = #{userId}
+    AND b. STATUS = 1
+    ) THEN
+    '1'
+    ELSE
+    '0'
+    END AS hascollected
+    FROM
+    post_collection a,
+    sys_dict s
+    WHERE
+    a.isdelete = '0'
+    <if test="typeId != null and typeId!=''" >
+      AND a.type_id = s.id
+      AND (
+      (
+      s.dict_type = 'post_collect'
+      AND s.dict_code = #{typeId}
+      )
+      OR (
+      s.dict_type = 'post_collect_two'
+      AND #{typeId} IN (
+      SELECT
+      t.dict_code
+      FROM
+      sys_dict t
+      WHERE
+      t.id = s.pid
+      )
+      )
+      )
+    </if>
+    <if test="sonTypeId != null and sonTypeId!=''" >
+      AND a.son_type_id = s.id
+      AND (
+      s.dict_type = 'post_collect_two'
+      AND s.id = #{sonTypeId}
+      )
+    </if>
+    ORDER BY
+    a.update_time DESC
+    limit #{start},#{end}
+  </select>
+
+
+
+<select id="getCollectByIdAndUser" resultMap="BaseResultMap1">
+      select  <include refid="Base_Column_List1" />
+      ,CASE
+      WHEN EXISTS (
+      SELECT
+      b.id
+      FROM
+      post_web_collect b
+      WHERE
+      a.id = b.cid
+      AND b.type = '2'
+      AND b.user_id = #{userId}
+      and b.status = 1
+      ) THEN
+      '1'
+      ELSE
+      '0'
+      END AS hascollected
+      FROM
+      post_collection a
+      where a.id = #{id}
+</select>
+
+  <select id="selectListByWebCollectAndUser" parameterType="java.util.Map" resultMap="BaseResultMap">
+      SELECT
+          a.id,
+          a.pictureids,
+          a. NAME,
+          a.msg,
+          CASE
+      WHEN EXISTS (
+          SELECT
+              b.id
+          FROM
+              post_web_collect b
+          WHERE
+              a.id = b.cid
+          AND b.type = '2'
+          AND b.user_id = #{userId}
+          and b.status = 1
+      ) THEN
+          '1'
+      ELSE
+          '0'
+      END AS hascollected
+      FROM
+          post_collection a,
+          sys_dict s
+      WHERE
+          a.isdelete = '0'
+      AND a.type_id = s.id
+      AND (
+          (
+              s.dict_type = 'post_collect'
+              AND s.dict_code = #{typeId}
+          )
+          OR (
+              s.dict_type = 'post_collect_two'
+              AND #{typeId} IN (
+                  SELECT
+                      t.dict_code
+                  FROM
+                      sys_dict t
+                  WHERE
+                      t.id = s.pid
+              )
+          )
+      )
+      ORDER BY
+          a.update_time DESC
+      limit #{start},#{end}
+  </select>
+
+  <select id="countListByWebCollectAndUser" parameterType="java.util.Map" resultType="java.lang.Integer">
+    SELECT
+    count(1)
+    FROM
+    post_collection a,
+    sys_dict s
+    WHERE
+    a.isdelete = '0'
+    AND a.type_id = s.id
+    AND (
+    (
+    s.dict_type = 'post_collect'
+    AND s.dict_code = #{typeId}
+    )
+    OR (
+    s.dict_type = 'post_collect_two'
+    AND #{typeId} IN (
+    SELECT
+    t.dict_code
+    FROM
+    sys_dict t
+    WHERE
+    t.id = s.pid
+    )
+    )
+    )
+  </select>
+
+
+  <select id="selectWebByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select
+    a.id,a.pictureids,a.name,a.msg,
+    case
+    when exists (
+    select
+    b.id
+    from
+    post_web_collect b  where
+    a.id = b.cid  and b.type = '2' ) then
+    '1'
+    else
+    '0'
+    end as hascollected
+    from post_collection a where isdelete = '0'
+    and  a.id = #{id}
+  </select>
+
+
+  <select id="selectListByIds" parameterType="java.lang.String" resultType="com.tj720.model.common.collect.CollectDto">
+      select
+        id,
+        colle_id          colleId,
+        msg,
+        pictureids,
+        name,
+        type_id           typeId,
+        son_type_id       sonTypeId,
+        commend,
+        isdelete,
+        sort,
+        create_time       createTime,
+        update_time       updateTime,
+        creator,
+        updater,
+        other1,
+        other2,
+        other3
+      from post_collection
+      where id in 
+      <foreach collection="array" open="(" separator="," close=")" item="item">
+          #{item}
+      </foreach>
+      and isdelete = 0
+  </select>
+
+  <select id="selectListByTypeAndSonType" parameterType="com.tj720.model.common.collect.Collect" resultType="com.tj720.model.common.collect.CollectDto">
+      select
+        id,
+        colle_id          colleId,
+        msg,
+        pictureids,
+        name,
+        type_id           typeId,
+        son_type_id       sonTypeId,
+        commend,
+        isdelete,
+        sort,
+        create_time       createTime,
+        update_time       updateTime,
+        creator,
+        updater,
+        other1,
+        other2,
+        other3
+      from post_collection
+      where type_id = #{typeId}
+      <if test="null != sonTypeId and sonTypeId != ''">
+          and son_type_id = #{sonTypeId}
+      </if>
+      and isdelete = 0
+  </select>
+  <select id="getCollectdcByUid"  resultType="com.tj720.model.common.collect.CollectDto"  parameterType="java.util.Map">
+    select
+    t.id,
+    t.pictureids,
+    t.name,
+    t.msg,
+    t.create_time as createDate,
+    count(
+    case when w.id != null and w.id != ''
+    then 1
+    else null end
+    )
+    as hasCollected
+    from
+    post_collection t
+    left join post_web_collect w on
+    (t.id= w.cid
+    and w.type = '2'
+    <choose>
+      <when test="userId != null and userId != ''">
+        and w.user_id = #{userId}
+      </when>
+      <otherwise>
+        and w.user_id = ''
+      </otherwise>
+    </choose>
+     )
+    where  t.isdelete= 0
+    and t.commend = '1'
+    order by
+    t.update_time desc
+    limit #{start},#{end}
+
+  </select>
+
+
+  <select id="countCollectdcByUid" resultType="java.lang.Integer"
+          parameterType="java.util.Map">
+    select
+    count(1)
+    from
+    post_collection t
+    left join post_web_collect w on
+    (t.id = w.cid
+    and w.type = '2'
+    <choose>
+      <when test="userId != null and userId != ''">
+        and w.user_id = #{userId}
+      </when>
+      <otherwise>
+        and w.user_id = ''
+      </otherwise>
+    </choose>
+    )
+    where  t.isdelete= 0
+    and t.commend = '1'
+    order by
+    t.update_time desc
+
+  </select>
+
+
+  <!--首页精选推荐-->
+  <select id="selectIndexCollectList" parameterType="java.util.Map"   resultType="com.tj720.model.common.collect.CollectDto">
+    SELECT
+    *
+    FROM post_collection where isdelete = '0' and commend = '1'
+    order by update_time  desc
+  </select>
+
+  <select id="countByName" parameterType="java.lang.String" >
+    select count(1) from
+    post_collection
+    WHERE name = #{collectName}
+
+  </select>
+
+
+
+</mapper>

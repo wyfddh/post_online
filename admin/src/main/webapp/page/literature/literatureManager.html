@@ -1,0 +1,130 @@
+<html>
+<head>
+    <script src="../../statics/libs/jquery-1.10.2.min.js"></script>
+    <link rel="stylesheet" href="../../statics/css/font-awesome.min.css">
+    <!--layui ztree样式-->
+    <link rel="stylesheet" href="../../statics/plugins/layui/css/layui.css" media="all">
+    <script src="../../statics/plugins/layer/layer.js"></script>
+    <script src="../../statics/plugins/layui/layui.js"></script>
+    <!--样式-->
+    <link rel="stylesheet" href="../../common/css/cyStyle.css">
+    <link rel="stylesheet" href="../../common/css/cyType.css">
+    <link rel="stylesheet" href="../../statics/css/literature/literatureManager.css">
+    <script src="../../statics/plugins/editgrid/plugin/My97DatePicker/WdatePicker.js" type="text/javascript" charset="utf-8"></script>
+</head>
+<body>
+<div class="layui-card">
+    <form class="layui-form" action="">
+        <div class="layui-card-header">
+            <div class="flexLeft">
+                <img src="../../statics/images/videoList/Group 6.png" alt="">
+                <span class="carFont">筛选查询</span>
+            </div>
+            <div class="layui-btn-group flexRight">
+                <button class="layui-btn layui-btn-green" lay-submit="" lay-filter="moreSearch">
+                    <i class="fa fa-chevron-up">&nbsp;</i>收起筛选
+                </button>
+                <button class="layui-btn search-btn myBtn"  lay-submit="" lay-filter="formDemo">
+                    <!--<i class="fa fa-search">&nbsp;</i>-->查询
+                </button>
+                <button type="reset" class="layui-btn myBtn" lay-submit="" lay-filter="clear"><!--<i class="fa fa-refresh">&nbsp;</i>-->重置</button>
+            </div>
+        </div>
+        <div class="layui-card-body">
+            <div class="layui-row aa">
+                <div class="layui-form-item layui-col-md4 layui-col-sm4 ">
+                    <label class="layui-form-label">输入搜索:</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="key" id="key" placeholder="资料名称/出版社" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item layui-col-md4 layui-col-sm4">
+                    <label class="layui-form-label">文献类型:</label>
+                    <div class="layui-input-block">
+                        <select name="dataType" id="dataType">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item layui-col-md4 layui-col-sm4">
+                    <label class="layui-form-label">提交状态:</label>
+                    <div class="layui-input-block">
+                        <select name="status" id="status">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<div class="layui-card">
+    <div class="layui-card-header">
+        <div class="flexLeft">
+            <img src="../../statics/images/videoList/Shape2.png" alt="">
+            <span class="carFont">数据列表</span>
+        </div>
+        <div class="flexRight">
+            <form action="" class="layui-form" enctype="multipart/form-data" id="uploadForm">
+                <div class="layui-hide">
+                  <input type="file" multiple name="file" id="uploadFile" onChange="uploadValue(this.value)">
+                </div>
+                <button class="layui-btn layui-btn-green upload" id="addNew"  title="新增文献" data-url="page/literature/literatureAdd.html?pageType=1">
+                    新增文献
+                </button>
+                <div class="layui-input-inline" style="width:100px;">
+                    <select lay-filter="batchImport">
+                        <option value="" id="defaultSelect">批量导入</option>
+                        <option value="1">下载文献导入模板</option>
+                        <option value="2">下载文献分类</option>
+                        <option value="3">导入</option>
+                    </select>
+                </div>
+                <div class="layui-input-inline" style="width:100px;">
+                    <select id="orderBy" name="orderBy" lay-filter='orderBy'>
+                        <option value="">排序方式</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="layui-card-body">
+
+        <table class="layui-hide" id="literature" lay-filter="literature"></table>
+        <script type="text/html" id="switchTpl">
+            <!-- 这里的 checked 的状态只是演示 -->
+            <input type="checkbox" name="sex" value="{{d.id}}" lay-skin="switch" lay-text="女|男" lay-filter="sexDemo">
+        </script>
+        <script type="text/html" id="literaturetoolbar">
+            <div class="layui-btn-container">
+                <button class="layui-btn layui-btn-sm" lay-event="batchRecall">批量撤回</button>
+                <button class="layui-btn layui-btn-sm" lay-event="batchSetting">批量设置</button>
+                <button class="layui-btn layui-btn-sm daochu" lay-event="batchExport">批量导出
+                    <ul class="daochuList">
+                        <li class="daochuItem">导出选中数据</li>
+                        <li class="daochuItem">导出当前查询结果</li>
+                    </ul>
+                </button>
+
+            </div>
+        </script>
+        <script type="text/html" id="barDemo">
+          {{#  if(d.status == 2){ }}
+            <a class="layui-btn layui-btn-xs" lay-event="recall" title="撤回">撤回</a>
+            <a class="layui-btn layui-btn-xs" lay-event="set" title="设置">设置</a>
+            <a class="layui-btn layui-btn-xs" lay-event="show" data-url="page/literature/literatureAdd.html?pageType=3&id={{d.id}}" title="查看">查看</a>
+          {{#  } else { }}
+            <a class="layui-btn layui-btn-xs cy-page" lay-event="edit" data-url="page/literature/literatureAdd.html?pageType=2&id={{d.id}}" title="文献资料-编辑">编辑</a>
+            <a class="layui-btn layui-btn-xs" lay-event="pub" title="发布">发布</a>
+            <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del" title="删除">删除</a>
+          {{#  } }}
+        </script>
+
+    </div>
+</div>
+<script src="../../statics/js/common.js"></script>
+<script src="../../statics/js/literature/literatureManager.js"></script>
+</body>
+</html>

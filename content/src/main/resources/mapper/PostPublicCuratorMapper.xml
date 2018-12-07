@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tj720.dao.PostPublicCuratorMapper">
+
+  <resultMap id="BaseResultMap" type="com.tj720.model.common.themeshow.PostThemeShow" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR"/>
+    <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+    <result column="datum_ids" property="datumIds" jdbcType="VARCHAR" />
+    <result column="theme_name" property="themeName" jdbcType="VARCHAR" />
+    <result column="theme_describe" property="themeDescribe" jdbcType="VARCHAR" />
+    <result column="theme_source" property="themeSource" jdbcType="VARCHAR" />
+    <result column="collection_amount" property="collectionAmount" jdbcType="VARCHAR" />
+    <result column="page_recommend" property="pageRecommend" jdbcType="VARCHAR" />
+    <result column="selected_topics" property="selectedTopics" jdbcType="VARCHAR" />
+    <result column="process_state" property="processState" jdbcType="VARCHAR"/>
+    <result column="process_result" property="processResult" jdbcType="VARCHAR"/>
+    <result column="data_state" property="dataState" jdbcType="VARCHAR" />
+    <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    <result column="create_date" property="createDate" jdbcType="TIMESTAMP" />
+    <result column="update_by" property="updateBy" jdbcType="VARCHAR" />
+    <result column="update_date" property="updateDate" jdbcType="TIMESTAMP" />
+  </resultMap>
+
+  <!--<sql id="Example_Where_Clause">-->
+    <!--<where>-->
+      <!--<foreach collection="oredCriteria" item="criteria" separator="or">-->
+        <!--<if test="criteria.valid">-->
+          <!--<trim prefix="(" prefixOverrides="and" suffix=")">-->
+            <!--<foreach collection="criteria.criteria" item="criterion">-->
+              <!--<choose>-->
+                <!--<when test="criterion.noValue">-->
+                  <!--and ${criterion.condition}-->
+                <!--</when>-->
+                <!--<when test="criterion.singleValue">-->
+                  <!--and ${criterion.condition} #{criterion.value}-->
+                <!--</when>-->
+                <!--<when test="criterion.betweenValue">-->
+                  <!--and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}-->
+                <!--</when>-->
+                <!--<when test="criterion.listValue">-->
+                  <!--and ${criterion.condition}-->
+                  <!--<foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">-->
+                    <!--#{listItem}-->
+                  <!--</foreach>-->
+                <!--</when>-->
+              <!--</choose>-->
+            <!--</foreach>-->
+          <!--</trim>-->
+        <!--</if>-->
+      <!--</foreach>-->
+    <!--</where>-->
+  <!--</sql>-->
+
+  <!--<sql id="Update_By_Example_Where_Clause">-->
+    <!--<where>-->
+      <!--<foreach collection="example.oredCriteria" item="criteria" separator="or">-->
+        <!--<if test="criteria.valid">-->
+          <!--<trim prefix="(" prefixOverrides="and" suffix=")">-->
+            <!--<foreach collection="criteria.criteria" item="criterion">-->
+              <!--<choose>-->
+                <!--<when test="criterion.noValue">-->
+                  <!--and ${criterion.condition}-->
+                <!--</when>-->
+                <!--<when test="criterion.singleValue">-->
+                  <!--and ${criterion.condition} #{criterion.value}-->
+                <!--</when>-->
+                <!--<when test="criterion.betweenValue">-->
+                  <!--and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}-->
+                <!--</when>-->
+                <!--<when test="criterion.listValue">-->
+                  <!--and ${criterion.condition}-->
+                  <!--<foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">-->
+                    <!--#{listItem}-->
+                  <!--</foreach>-->
+                <!--</when>-->
+              <!--</choose>-->
+            <!--</foreach>-->
+          <!--</trim>-->
+        <!--</if>-->
+      <!--</foreach>-->
+    <!--</where>-->
+  <!--</sql>-->
+
+  <sql id="Base_Column_List" >
+    id, user_id, user_name, datum_ids, theme_name, theme_describe, theme_source, collection_amount, page_recommend,
+    selected_topics, process_state, process_result, data_state, create_by, create_date, update_by, update_date
+  </sql>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from post_theme_show
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+
+  <select id="getCuratorList" resultMap="BaseResultMap"  parameterType="java.util.Map">
+    select
+    a.id,
+    a.datum_ids,a.collection_amount,
+    a.process_state,a.process_result,
+    a.user_id,a.theme_name,
+    b.phone  as user_name
+    from  post_theme_show a
+    left  join  post_pub_user  b
+    on  a.user_id = b.id
+    where 1=1  and  a.data_state = 1 and a.theme_source = '2'
+    <if test="themeName != null and themeName != ''">
+      and a.theme_name like concat('%',#{themeName},'%')
+    </if>
+    <if test="processState != null and processState !=''">
+    and  a.process_state = #{processState}
+  </if>
+    <if test="processResult != null and processResult !=''">
+      and  a.process_result = #{processResult}
+    </if>
+    order by update_date  desc
+    limit #{currentPage},#{size}
+  </select>
+
+
+  <select id="count" resultType="int">
+    select   count(*)
+    from post_theme_show a
+    left  join  post_pub_user  b
+    on  a.user_id = b.id
+    where 1=1  and  data_state = 1 and theme_source = '2'
+    <if test="themeName != null and themeName != ''">
+      and a.theme_name like concat('%',#{themeName},'%')
+    </if>
+    <if test="processState != null and processState !=''">
+      and  process_state = #{processState}
+    </if>
+    <if test="processResult != null and processResult !=''">
+      and  process_result = #{processResult}
+    </if>
+    order by update_date  desc
+  </select>
+
+
+
+
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from post_theme_show
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+
+
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.tj720.model.common.publiccurator.PostPublicCurator">
+    update post_public_curator
+    <set>
+      <if test="datumIds != null">
+        datum_ids = #{datumIds,jdbcType=VARCHAR},
+      </if>
+      <if test="collectId != null">
+        collect_id = #{collectId,jdbcType=VARCHAR},
+      </if>
+      <if test="themeName != null">
+        theme_name = #{themeName,jdbcType=VARCHAR},
+      </if>
+      <if test="themeContent != null">
+        theme_content = #{themeContent,jdbcType=VARCHAR},
+      </if>
+      <if test="amount != null">
+        amount = #{amount,jdbcType=VARCHAR},
+      </if>
+      <if test="processState != null">
+        process_state = #{processState,jdbcType=VARCHAR},
+      </if>
+      <if test="processResult != null">
+        process_result = #{processResult,jdbcType=VARCHAR},
+      </if>
+      <if test="dataState != null">
+        data_state = #{dataState,jdbcType=VARCHAR},
+    </if>
+    <if test="remark != null">
+        remark = #{remark,jdbcType=VARCHAR},
+    </if>
+      <if test="createTime != null">
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creator != null">
+        creator = #{creator,jdbcType=VARCHAR},
+      </if>
+      <if test="updater != null">
+        updater = #{updater,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null">
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="other2 != null">
+        other2 = #{other2,jdbcType=VARCHAR},
+      </if>
+      <if test="other3 != null">
+        other3 = #{other3,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.tj720.model.common.publiccurator.PostPublicCurator">
+    update post_public_curator
+    set datum_ids = #{datumIds,jdbcType=VARCHAR},
+      collect_id = #{collectId,jdbcType=VARCHAR},
+      theme_name = #{themeName,jdbcType=VARCHAR},
+      theme_content = #{themeContent,jdbcType=VARCHAR},
+      amount = #{amount,jdbcType=VARCHAR},
+      process_state = #{processState,jdbcType=VARCHAR},
+      process_result = #{processResult,jdbcType=VARCHAR},
+      data_state = #{dataState,jdbcType=VARCHAR},
+      remark = #{remark ,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      creator = #{creator,jdbcType=VARCHAR},
+      updater = #{updater,jdbcType=VARCHAR},
+      user_name = #{userName,jdbcType=VARCHAR},
+      other2 = #{other2,jdbcType=VARCHAR},
+      other3 = #{other3,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+
+  <update id="updateCuratorByIds" parameterType = "java.util.List">
+      update  post_public_curator set data_state = 0 where id in
+      <foreach collection="ids" open="(" item="id" separator="," close=")">
+        #{id}
+      </foreach>
+  </update>
+
+  <select id="getPublicCuratorCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+    select count(1)
+    from post_theme_show where user_id = #{userId}
+    <if test="null != status and status != 0">
+      and process_result = #{status}
+    </if>
+    and data_state = 1 and theme_source = '2'
+  </select>
+
+  <select id="getPublicCuratorList" parameterType="java.util.Map" resultType="com.tj720.model.common.publiccurator.PostPublicCuratorVo">
+    select
+      id,
+      theme_name        themeName,
+      theme_describe     themeContent,
+      datum_ids         datumIds,
+      process_state     processState,
+      process_result    processResult,
+      create_date       createTime
+    from post_theme_show where user_id = #{userId}
+    <if test="null != status and status != 0">
+      and process_result = #{status}
+    </if>
+    and data_state = 1
+    and theme_source = '2'
+    order by create_date desc
+    <if test="start != null and size != null">
+      limit #{start},#{size}
+    </if>
+  </select>
+
+  <select id="getPublicCuratorById" parameterType="java.lang.String" resultType="com.tj720.model.common.publiccurator.PostPublicCuratorVo">
+    select
+      id,
+      user_id           userId,
+      datum_ids         datumIds,
+      theme_name        themeName,
+      theme_describe     themeContent,
+      collection_amount            amount,
+      process_state     processState,
+      process_result    processResult
+    from post_theme_show
+    where id = #{id} and data_state = 1
+  </select>
+</mapper>

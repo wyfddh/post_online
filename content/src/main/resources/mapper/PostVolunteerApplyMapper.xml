@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tj720.dao.PostVolunteerApplyMapper">
+
+    <insert id="addApplyVolunteer" parameterType="com.tj720.model.common.volunteerapply.PostVolunteerApply">
+        insert into post_volunteer_apply(id, activities_id, apply_name, apply_phone, apply_age, apply_job
+        , apply_reason, create_by, create_date, update_by, update_date,user_id)
+        values (#{id}, #{activitiesId}, #{applyName}, #{applyPhone}, #{applyAge}, #{applyJob}, #{applyReason}, #{createBy}, now(), #{updateBy}, now()
+        ,#{userId})
+    </insert>
+
+
+    <!--申请人数-->
+    <select id="getVolunteerApplyCount" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(1)
+        from post_volunteer_apply
+        where activities_id = #{id} and isdelete = 0
+    </select>
+
+    <select id="getVolunteerApplyList" parameterType="java.util.Map" resultType="com.tj720.model.common.volunteerapply.PostVolunteerApply">
+        select
+          apply_name          applyName,
+          apply_phone         applyPhone,
+          apply_age           applyAge,
+          apply_job           applyJob,
+          apply_reason        applyReason
+        from post_volunteer_apply
+        where activities_id = #{id} and isdelete = 0
+        order by create_date desc
+        limit #{start},#{size}
+    </select>
+
+
+
+
+</mapper>

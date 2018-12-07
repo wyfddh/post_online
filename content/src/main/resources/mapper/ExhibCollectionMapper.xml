@@ -1,0 +1,449 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.tj720.dao.ExhibCollectionMapper" >
+    <resultMap id="BaseResultMap" type="com.tj720.model.common.exhibition.ExhibCollection" >
+        <id column="id" property="id" jdbcType="VARCHAR" />
+        <result column="colle_id" property="colleId" jdbcType="VARCHAR" />
+        <result column="exhib_id" property="exhibId" jdbcType="VARCHAR" />
+        <result column="collect_type" property="collectType" jdbcType="VARCHAR" />
+        <result column="collect_name" property="collectName" jdbcType="VARCHAR" />
+        <result column="collect_info" property="collectInfo" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="creator" property="creator" jdbcType="VARCHAR" />
+        <result column="updater" property="updater" jdbcType="VARCHAR" />
+        <result column="sequence" property="sequence" jdbcType="INTEGER" />
+        <result column="status" property="status" jdbcType="INTEGER" />
+        <result column="isdelete" property="isdelete" jdbcType="INTEGER" />
+        <result column="other1" property="other1" jdbcType="VARCHAR" />
+        <result column="other2" property="other2" jdbcType="VARCHAR" />
+        <result column="other3" property="other3" jdbcType="VARCHAR" />
+    </resultMap>
+    <!--<sql id="Example_Where_Clause" >-->
+        <!--<where >-->
+            <!--<foreach collection="oredCriteria" item="criteria" separator="or" >-->
+                <!--<if test="criteria.valid" >-->
+                    <!--<trim prefix="(" suffix=")" prefixOverrides="and" >-->
+                        <!--<foreach collection="criteria.criteria" item="criterion" >-->
+                            <!--<choose >-->
+                                <!--<when test="criterion.noValue" >-->
+                                    <!--and ${criterion.condition}-->
+                                <!--</when>-->
+                                <!--<when test="criterion.singleValue" >-->
+                                    <!--and ${criterion.condition} #{criterion.value}-->
+                                <!--</when>-->
+                                <!--<when test="criterion.betweenValue" >-->
+                                    <!--and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}-->
+                                <!--</when>-->
+                                <!--<when test="criterion.listValue" >-->
+                                    <!--and ${criterion.condition}-->
+                                    <!--<foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >-->
+                                        <!--#{listItem}-->
+                                    <!--</foreach>-->
+                                <!--</when>-->
+                            <!--</choose>-->
+                        <!--</foreach>-->
+                    <!--</trim>-->
+                <!--</if>-->
+            <!--</foreach>-->
+        <!--</where>-->
+    <!--</sql>-->
+    <!--<sql id="Update_By_Example_Where_Clause" >-->
+        <!--<where >-->
+            <!--<foreach collection="example.oredCriteria" item="criteria" separator="or" >-->
+                <!--<if test="criteria.valid" >-->
+                    <!--<trim prefix="(" suffix=")" prefixOverrides="and" >-->
+                        <!--<foreach collection="criteria.criteria" item="criterion" >-->
+                            <!--<choose >-->
+                                <!--<when test="criterion.noValue" >-->
+                                    <!--and ${criterion.condition}-->
+                                <!--</when>-->
+                                <!--<when test="criterion.singleValue" >-->
+                                    <!--and ${criterion.condition} #{criterion.value}-->
+                                <!--</when>-->
+                                <!--<when test="criterion.betweenValue" >-->
+                                    <!--and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}-->
+                                <!--</when>-->
+                                <!--<when test="criterion.listValue" >-->
+                                    <!--and ${criterion.condition}-->
+                                    <!--<foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >-->
+                                        <!--#{listItem}-->
+                                    <!--</foreach>-->
+                                <!--</when>-->
+                            <!--</choose>-->
+                        <!--</foreach>-->
+                    <!--</trim>-->
+                <!--</if>-->
+            <!--</foreach>-->
+        <!--</where>-->
+    <!--</sql>-->
+    <sql id="Base_Column_List" >
+        id, colle_id, exhib_id, collect_type, collect_name, collect_info, create_time, update_time,
+        creator, updater, sequence, status, isdelete, other1, other2, other3
+    </sql>
+    <!--<select id="selectByExample" resultMap="BaseResultMap" parameterType="com.tj720.model.common.exhibition.ExhibCollectionExample" >-->
+        <!--select-->
+        <!--<if test="distinct" >-->
+            <!--distinct-->
+        <!--</if>-->
+        <!--<include refid="Base_Column_List" />-->
+        <!--from post_exhib_collection-->
+        <!--<if test="_parameter != null" >-->
+            <!--<include refid="Example_Where_Clause" />-->
+        <!--</if>-->
+        <!--<if test="orderByClause != null" >-->
+            <!--order by ${orderByClause}-->
+        <!--</if>-->
+    <!--</select>-->
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+        select
+        <include refid="Base_Column_List" />
+        from post_exhib_collection
+        where id = #{id,jdbcType=VARCHAR}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+        delete from post_exhib_collection
+        where id = #{id,jdbcType=VARCHAR}
+    </delete>
+    <!--<delete id="deleteByExample" parameterType="com.tj720.model.common.exhibition.ExhibCollectionExample" >-->
+        <!--delete from post_exhib_collection-->
+        <!--<if test="_parameter != null" >-->
+            <!--<include refid="Example_Where_Clause" />-->
+        <!--</if>-->
+    <!--</delete>-->
+    <insert id="insert" parameterType="com.tj720.model.common.exhibition.ExhibCollection" >
+        insert into post_exhib_collection (id, colle_id, exhib_id,
+        collect_type, collect_name, collect_info,
+        create_time, update_time, creator,
+        updater, sequence, status,
+        isdelete, other1, other2,
+        other3)
+        values (#{id,jdbcType=VARCHAR}, #{colleId,jdbcType=VARCHAR}, #{exhibId,jdbcType=VARCHAR},
+        #{collectType,jdbcType=VARCHAR}, #{collectName,jdbcType=VARCHAR}, #{collectInfo,jdbcType=VARCHAR},
+        #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{creator,jdbcType=VARCHAR},
+        #{updater,jdbcType=VARCHAR}, #{sequence,jdbcType=INTEGER}, #{status,jdbcType=INTEGER},
+        #{isdelete,jdbcType=INTEGER}, #{other1,jdbcType=VARCHAR}, #{other2,jdbcType=VARCHAR},
+        #{other3,jdbcType=VARCHAR})
+    </insert>
+    <insert id="insertSelective" parameterType="com.tj720.model.common.exhibition.ExhibCollection" >
+        insert into post_exhib_collection
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                id,
+            </if>
+            <if test="colleId != null" >
+                colle_id,
+            </if>
+            <if test="exhibId != null" >
+                exhib_id,
+            </if>
+            <if test="collectType != null" >
+                collect_type,
+            </if>
+            <if test="collectName != null" >
+                collect_name,
+            </if>
+            <if test="collectInfo != null" >
+                collect_info,
+            </if>
+            <if test="createTime != null" >
+                create_time,
+            </if>
+            <if test="updateTime != null" >
+                update_time,
+            </if>
+            <if test="creator != null" >
+                creator,
+            </if>
+            <if test="updater != null" >
+                updater,
+            </if>
+            <if test="sequence != null" >
+                sequence,
+            </if>
+            <if test="status != null" >
+                status,
+            </if>
+            <if test="isdelete != null" >
+                isdelete,
+            </if>
+            <if test="other1 != null" >
+                other1,
+            </if>
+            <if test="other2 != null" >
+                other2,
+            </if>
+            <if test="other3 != null" >
+                other3,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="id != null" >
+                #{id,jdbcType=VARCHAR},
+            </if>
+            <if test="colleId != null" >
+                #{colleId,jdbcType=VARCHAR},
+            </if>
+            <if test="exhibId != null" >
+                #{exhibId,jdbcType=VARCHAR},
+            </if>
+            <if test="collectType != null" >
+                #{collectType,jdbcType=VARCHAR},
+            </if>
+            <if test="collectName != null" >
+                #{collectName,jdbcType=VARCHAR},
+            </if>
+            <if test="collectInfo != null" >
+                #{collectInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null" >
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creator != null" >
+                #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="updater != null" >
+                #{updater,jdbcType=VARCHAR},
+            </if>
+            <if test="sequence != null" >
+                #{sequence,jdbcType=INTEGER},
+            </if>
+            <if test="status != null" >
+                #{status,jdbcType=INTEGER},
+            </if>
+            <if test="isdelete != null" >
+                #{isdelete,jdbcType=INTEGER},
+            </if>
+            <if test="other1 != null" >
+                #{other1,jdbcType=VARCHAR},
+            </if>
+            <if test="other2 != null" >
+                #{other2,jdbcType=VARCHAR},
+            </if>
+            <if test="other3 != null" >
+                #{other3,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <!--批量插入藏品-->
+    <insert id="insertByForeachCollection" parameterType="java.util.List">
+        INSERT INTO post_exhib_collection(id, cul_id, exhib_id, total_registration_no,
+        cul_name, cul_remark, cul_category, cul_category_name, gs_length, gs_width, gs_height, cul_year,
+        classification_type, classification_type_name, classification_no,source, source_name,
+        cul_level,cul_level_name, cul_size, gs_texture, gs_texture_name, entry_warehouse_date, quality,
+        quality_unit, quality_unit_name, status, pic_url, creator,
+        create_time, updater, update_time, remark)
+        VALUES
+        <foreach collection="list" item="collection" separator=",">
+            (#{collection.id}, #{collection.culId}, #{collection.exhibId}, #{collection.totalregistrationno},
+            #{collection.culName},#{collection.culremark}, #{collection.culCategory}, #{collection.culCategoryName}, #{collection.gsLength},
+            #{collection.gsWidth}, #{collection.gsHeight}, #{collection.culYear},
+            #{collection.classificationtype}, #{collection.classificationtypeName}, #{collection.classificationno},#{collection.source}, #{collection.sourceName},
+            #{collection.culLevel}, #{collection.culLevelName}, #{collection.culSize},
+            #{collection.gsTexture}, #{collection.gsTextureName}, #{collection.entrywarehousedate}, #{collection.quality}, #{collection.qualityunit},
+            #{collection.qualityunitName}, #{collection.status}, #{collection.picUrl}, #{collection.creator}, now(), #{collection.updater}, now(), #{collection.remark}
+            )
+        </foreach>
+    </insert>
+
+    <!--<select id="countByExample" parameterType="com.tj720.model.common.exhibition.ExhibCollectionExample" resultType="java.lang.Integer" >-->
+        <!--select count(*) from post_exhib_collection-->
+        <!--<if test="_parameter != null" >-->
+            <!--<include refid="Example_Where_Clause" />-->
+        <!--</if>-->
+    <!--</select>-->
+    <!--<update id="updateByExampleSelective" parameterType="map" >-->
+        <!--update post_exhib_collection-->
+        <!--<set >-->
+            <!--<if test="record.id != null" >-->
+                <!--id = #{record.id,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="record.colleId != null" >-->
+                <!--colle_id = #{record.colleId,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="record.exhibId != null" >-->
+                <!--exhib_id = #{record.exhibId,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="record.collectType != null" >-->
+                <!--collect_type = #{record.collectType,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="record.collectName != null" >-->
+                <!--collect_name = #{record.collectName,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="record.collectInfo != null" >-->
+                <!--collect_info = #{record.collectInfo,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="record.createTime != null" >-->
+                <!--create_time = #{record.createTime,jdbcType=TIMESTAMP},-->
+            <!--</if>-->
+            <!--<if test="record.updateTime != null" >-->
+                <!--update_time = #{record.updateTime,jdbcType=TIMESTAMP},-->
+            <!--</if>-->
+            <!--<if test="record.creator != null" >-->
+                <!--creator = #{record.creator,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="record.updater != null" >-->
+                <!--updater = #{record.updater,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="record.sequence != null" >-->
+                <!--sequence = #{record.sequence,jdbcType=INTEGER},-->
+            <!--</if>-->
+            <!--<if test="record.status != null" >-->
+                <!--status = #{record.status,jdbcType=INTEGER},-->
+            <!--</if>-->
+            <!--<if test="record.isdelete != null" >-->
+                <!--isdelete = #{record.isdelete,jdbcType=INTEGER},-->
+            <!--</if>-->
+            <!--<if test="record.other1 != null" >-->
+                <!--other1 = #{record.other1,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="record.other2 != null" >-->
+                <!--other2 = #{record.other2,jdbcType=VARCHAR},-->
+            <!--</if>-->
+            <!--<if test="record.other3 != null" >-->
+                <!--other3 = #{record.other3,jdbcType=VARCHAR},-->
+            <!--</if>-->
+        <!--</set>-->
+        <!--<if test="_parameter != null" >-->
+            <!--<include refid="Update_By_Example_Where_Clause" />-->
+        <!--</if>-->
+    <!--</update>-->
+    <!--<update id="updateByExample" parameterType="map" >-->
+        <!--update post_exhib_collection-->
+        <!--set id = #{record.id,jdbcType=VARCHAR},-->
+        <!--colle_id = #{record.colleId,jdbcType=VARCHAR},-->
+        <!--exhib_id = #{record.exhibId,jdbcType=VARCHAR},-->
+        <!--collect_type = #{record.collectType,jdbcType=VARCHAR},-->
+        <!--collect_name = #{record.collectName,jdbcType=VARCHAR},-->
+        <!--collect_info = #{record.collectInfo,jdbcType=VARCHAR},-->
+        <!--create_time = #{record.createTime,jdbcType=TIMESTAMP},-->
+        <!--update_time = #{record.updateTime,jdbcType=TIMESTAMP},-->
+        <!--creator = #{record.creator,jdbcType=VARCHAR},-->
+        <!--updater = #{record.updater,jdbcType=VARCHAR},-->
+        <!--sequence = #{record.sequence,jdbcType=INTEGER},-->
+        <!--status = #{record.status,jdbcType=INTEGER},-->
+        <!--isdelete = #{record.isdelete,jdbcType=INTEGER},-->
+        <!--other1 = #{record.other1,jdbcType=VARCHAR},-->
+        <!--other2 = #{record.other2,jdbcType=VARCHAR},-->
+        <!--other3 = #{record.other3,jdbcType=VARCHAR}-->
+        <!--<if test="_parameter != null" >-->
+            <!--<include refid="Update_By_Example_Where_Clause" />-->
+        <!--</if>-->
+    <!--</update>-->
+    <update id="updateByPrimaryKeySelective" parameterType="com.tj720.model.common.exhibition.ExhibCollection" >
+        update post_exhib_collection
+        <set >
+            <if test="colleId != null" >
+                colle_id = #{colleId,jdbcType=VARCHAR},
+            </if>
+            <if test="exhibId != null" >
+                exhib_id = #{exhibId,jdbcType=VARCHAR},
+            </if>
+            <if test="collectType != null" >
+                collect_type = #{collectType,jdbcType=VARCHAR},
+            </if>
+            <if test="collectName != null" >
+                collect_name = #{collectName,jdbcType=VARCHAR},
+            </if>
+            <if test="collectInfo != null" >
+                collect_info = #{collectInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="createTime != null" >
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateTime != null" >
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="creator != null" >
+                creator = #{creator,jdbcType=VARCHAR},
+            </if>
+            <if test="updater != null" >
+                updater = #{updater,jdbcType=VARCHAR},
+            </if>
+            <if test="sequence != null" >
+                sequence = #{sequence,jdbcType=INTEGER},
+            </if>
+            <if test="status != null" >
+                status = #{status,jdbcType=INTEGER},
+            </if>
+            <if test="isdelete != null" >
+                isdelete = #{isdelete,jdbcType=INTEGER},
+            </if>
+            <if test="other1 != null" >
+                other1 = #{other1,jdbcType=VARCHAR},
+            </if>
+            <if test="other2 != null" >
+                other2 = #{other2,jdbcType=VARCHAR},
+            </if>
+            <if test="other3 != null" >
+                other3 = #{other3,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where id = #{id,jdbcType=VARCHAR}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.tj720.model.common.exhibition.ExhibCollection" >
+    update post_exhib_collection
+    set colle_id = #{colleId,jdbcType=VARCHAR},
+      exhib_id = #{exhibId,jdbcType=VARCHAR},
+      collect_type = #{collectType,jdbcType=VARCHAR},
+      collect_name = #{collectName,jdbcType=VARCHAR},
+      collect_info = #{collectInfo,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      creator = #{creator,jdbcType=VARCHAR},
+      updater = #{updater,jdbcType=VARCHAR},
+      sequence = #{sequence,jdbcType=INTEGER},
+      status = #{status,jdbcType=INTEGER},
+      isdelete = #{isdelete,jdbcType=INTEGER},
+      other1 = #{other1,jdbcType=VARCHAR},
+      other2 = #{other2,jdbcType=VARCHAR},
+      other3 = #{other3,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+    <select id="selectForExhib" parameterType="java.lang.String" resultType="com.tj720.model.common.interfacecollect.InterfaceCollect">
+        select
+          id                        id,
+          cul_id                    culId,
+          exhib_id                  exhibId,
+          total_registration_no     totalregistrationno,
+          cul_name                  culName,
+          cul_remark                culremark,
+          cul_category              culCategory,
+          cul_category_name         culCategoryName,
+          gs_length                 gsLength,
+          gs_width                  gsWidth,
+          gs_height                 gsHeight,
+          cul_year                  culYear,
+          classification_type       classificationtype,
+          classification_type_name  classificationtypeName,
+          classification_no         totalregistrationno,
+          source                    source,
+          source_name               sourceName,
+          cul_level                 culLevel,
+          cul_level_name            culLevelName,
+          cul_size                  culSize,
+          gs_texture                gsTexture,
+          gs_texture_name           gsTextureName,
+          entry_warehouse_date      entrywarehousedate,
+          quality                   quality,
+          quality_unit              qualityunit,
+          quality_unit_name         qualityunitName,
+          status                    status,
+          pic_url                   picUrl,
+          creator                   creator,
+          create_time               createTime,
+          updater                   updater,
+          update_time               updateTime,
+          remark                    remark
+        from post_exhib_collection
+        where exhib_id = #{exhibId} and status = 1
+    </select>
+
+    <delete id="deleteByExhibId" parameterType="java.lang.String">
+        delete from post_exhib_collection where exhib_id = #{exhibId}
+    </delete>
+</mapper>
