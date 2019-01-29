@@ -104,7 +104,7 @@ public class CollectServiceImpl implements CollectService {
             collectDto.setMsg(collect.getMsg());
             String pictureids = collect.getPictureids();
             collectDto.setPictureids(pictureids);
-            List<Attachment> attList = getListUseAttachments(pictureids);
+            List<Attachment> attList = attachmentService.getFileTransPathList(pictureids);
             collectDto.setAttachmentList(attList);
             collectDto.setName(collect.getName());
             collectDto.setCommend(collect.getCommend());
@@ -238,7 +238,7 @@ public class CollectServiceImpl implements CollectService {
                     String typeId = collect.getTypeId();
                     String sonTypeName = null;
                     String pictureids = collect.getPictureids();
-                    List<Attachment> attList = getListUseAttachments(pictureids);
+                    List<Attachment> attList = attachmentService.getFileTransPathList(pictureids);
                     collectDto.setAttachmentList(attList);
                     String typeName = sysDictSevice.getDictById(typeId).getDictName();
                     collectDto.setTypeId(typeId);
@@ -314,7 +314,7 @@ public class CollectServiceImpl implements CollectService {
         try {
             Integer size = ids.size();
             Integer i = collectMapper.updateCollectByIds(ids);
-            if (size == i) {
+            if (size.equals(i)) {
                 return new JsonResult(1, null);
             } else {
                 return new JsonResult(0, "40000014");
@@ -468,9 +468,9 @@ public class CollectServiceImpl implements CollectService {
                 List<Attachment> picList1 = new ArrayList<Attachment>();
                 for(CollectDto collect : collectList){
                     if(StringUtils.isNotBlank(collect.getPictureids())){
-                        picList1 = attachmentService.getListByIds(collect.getPictureids());
+                        picList1 = attachmentService.getFileTransPathList(collect.getPictureids());
                         if(picList1.size()>0 && StringUtils.isNotBlank(picList1.get(0).getAttPath())){
-                            collect.setPicUrl(config.getRootUrl()+picList1.get(0).getAttPath());
+                            collect.setPicUrl(picList1.get(0).getAttPath());
                             break;
                         }
                     }

@@ -54,7 +54,6 @@ var main={
                 url:property.getProjectPath()+"PostVideo/queryPostVideoDtoById.do",
                 success:function(result) {
                     if (result.success == 1) {
-                        console.log(result.data);
                         setFormData(result.data);
 
                         //设置按钮的显示与隐藏
@@ -93,7 +92,7 @@ var main={
                         }
                         main.initTable();
                         main.tabBind();
-                    } else {
+                    } else if (result.success == 0){
                         errorMsg(result.error.message);
                     }
                 },
@@ -114,7 +113,6 @@ var main={
             //监听提交
             //监听提交
             $("#save").click(function(data){
-                debugger;
                 var postVideoId = $("#id").val();
                 var apply = $("#apply").val();
                 var applyOrg = $("#applyOrg").val();
@@ -139,7 +137,7 @@ var main={
                         if (result.success == 1) {
                             successMsg("申请成功");
                             parent.$t.goback("page/video/videoQueryList.html");
-                        } else {
+                        } else if (result.success == 0){
                             errorMsg(result.error.message);
                         }
                     },
@@ -175,7 +173,7 @@ var main={
                         if (result.success == 1) {
                             successMsg("申请成功");
                             parent.$t.goback("page/video/videoQueryList.html");
-                        } else {
+                        } else if (result.success == 0){
                             errorMsg(result.error.message);
                         }
                     },
@@ -329,6 +327,8 @@ function setSelect() {
     $("#apply").val(userInfo.userId);
     $("#applyOrg").val(userInfo.orgId);
     $("#applyTime").val(formatSimpleDate(new Date()))
+
+    $
 }
 
 function loadData(id) {
@@ -344,10 +344,9 @@ function loadData(id) {
             url:property.getProjectPath()+"PostVideo/queryPostVideoDtoById.do",
             success:function(result) {
                 if (result.success == 1) {
-                    console.log(result.data);
                     setFormData(result.data);
                     form.render('select');
-                } else {
+                } else if (result.success == 0){
                     errorMsg(result.error.message);
                 }
             },
@@ -371,6 +370,7 @@ function setFormData(data) {
     $("#videoMark").attr("disabled","disabled");
     tableId = data.attachment;
     checkStatus(data.status);
+    $("#relativeCollection").val(getCollectionInfo(data.relativeCollection));
 }
 //检测状态
 function checkStatus(status) {
@@ -388,9 +388,8 @@ function loadAttachments(fkId) {
         url:property.getProjectPath()+"attach/getAttachmentsByFkId.do",
         success:function(result) {
             if (result.success == 1) {
-                console.log(result.data);
                 datas = result.data;
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.data);
             }
         },
@@ -411,9 +410,8 @@ function queryPostVideoComments(postVideoId) {
         url:property.getProjectPath()+"PostVideoComments/queryPostVideoComments.do",
         success:function(result) {
             if (result.success == 1) {
-                console.log(result.data);
                 datas = result.data;
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.data);
             }
         },

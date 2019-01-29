@@ -15,6 +15,7 @@ import java.util.Map;
 @Repository
 public interface PostPublicCuratorMapper{
 
+    Integer checkBizUserId(String id);
 
     /**
      * 查询公众策展记录数   用户名  处理状态  处理结果
@@ -27,7 +28,7 @@ public interface PostPublicCuratorMapper{
      * 查询公众策展集合
      */
     List<PostThemeShow> getCuratorList(@Param("themeName") String themeName, @Param("processState") String processState, @Param("processResult") String processResult,
-                                       @Param("currentPage") Integer currentPage, @Param("size") Integer size);
+                                       @Param("currentPage") Integer currentPage, @Param("size") Integer size,@Param("userId") String userId);
 
     /**
      * 根据id查询公众策展

@@ -38,7 +38,6 @@ var main = {
 
             //监听提交
             form.on('submit(formSubmit)', function(data) {
-                console.log(data);
                 var url = "sysDict/addSysDict.do";
                 var json = $("#roleForm").serialize();
                 if (pageType == "edit"){
@@ -59,7 +58,7 @@ var main = {
                                 successMsg("添加业务字典成功");
                             }
                             parent.$t.goback("page/systemSetting/dict/list.html");
-                        } else {
+                        } else if (result.success == 0){
                             errorMsg(result.data);
                         }
                     },
@@ -102,7 +101,6 @@ main.init();
 function loadData(id) {
     this.type = "edit";
     layui.use('form', function(){
-        debugger;
         var form = layui.form;
         var index = parent.layer.getFrameIndex(window.name);
         var json = {"dictId":id};
@@ -114,10 +112,9 @@ function loadData(id) {
             url:property.getProjectPath()+"sysDict/getDictById.do",
             success:function(result) {
                 if (result.success == 1) {
-                    console.log(result.data);
                     setFormData(result.data);
                     // form.render('select');
-                } else {
+                } else if (result.success == 0){
                     errorMsg(result.data);
                 }
             },
@@ -148,11 +145,10 @@ function setFormData(data) {
         url:property.getProjectPath()+"sysDict/getDictById.do",
         success:function(result) {
 
-            debugger;
             if (result.success == 1) {
                 var data = result.data;
                 $("#pid").val(data.dictName).attr("data-id",data.id);
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.error.message);
             }
         },

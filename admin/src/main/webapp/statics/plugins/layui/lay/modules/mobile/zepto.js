@@ -1368,7 +1368,7 @@ layui.define(function(exports){
     // Whether the request is to another domain
     crossDomain: false,
     // Default timeout
-    timeout: 0,
+    timeout: 10,
     // Whether data should be serialized to string
     processData: true,
     // Whether the browser should be allowed to cache GET responses
@@ -1416,7 +1416,7 @@ layui.define(function(exports){
       settings.crossDomain = (originAnchor.protocol + '//' + originAnchor.host) !== (urlAnchor.protocol + '//' + urlAnchor.host)
     }
 
-    if (!settings.url) settings.url = window.location.toString()
+    // if (!settings.url) settings.url = window.location.toString()
     if ((hashIndex = settings.url.indexOf('#')) > -1) settings.url = settings.url.slice(0, hashIndex)
     serializeData(settings)
 
@@ -1475,8 +1475,8 @@ layui.define(function(exports){
               // http://perfectionkills.com/global-eval-what-are-the-options/
               // sanitize response accordingly if data filter callback provided
               result = ajaxDataFilter(result, dataType, settings)
-              if (dataType == 'script')    (1,eval)(result)
-              else if (dataType == 'xml')  result = xhr.responseXML
+              // if (dataType == 'script')    (1,eval)(result)
+               if (dataType == 'xml')  result = xhr.responseXML
               else if (dataType == 'json') result = blankRE.test(result) ? null : $.parseJSON(result)
             } catch (e) { error = e }
 

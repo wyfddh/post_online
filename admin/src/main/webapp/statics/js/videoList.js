@@ -12,6 +12,7 @@ var main={
         getDictData();
         setSelect();
         property.setUserInfo();
+        property.setButtonAuth();
         if (checkMyOrg()){
             userType = '1';
         }
@@ -96,10 +97,11 @@ function loadTable() {
         var keywords = $("#keywords").val();
         var videoMark = $("#videoMark").val();
         var status = $("#status").val();
+        var currentId = localStorage.functinId;
         table.render({
             elem: '#test'
             ,url:property.getProjectPath()+"PostVideo/queryPostVideoList.do?keywords="+keywords+"&videoMark="+videoMark+"&status="+status
-            +"&userId="+userInfo.userId+"&uploadOrg="+userInfo.orgId+'&userType='+userType
+            +"&userId="+userInfo.userId+"&uploadOrg="+userInfo.orgId+'&userType='+userType+'&module='+currentId
             // ,toolbar: '#toolbarDemo'
             ,title: '影视资料数据表'
             ,cols: [[
@@ -124,7 +126,7 @@ function loadTable() {
                         return videoMark;
                     }
                 }}
-                ,{field:'relativeObject', title:'关联主题'}
+                ,{field:'relativeObject', title:'关联主体'}
                 ,{field:'relativeCollection', title:'关联藏品', templet: function (res) {
                         var cul = eval(res.relativeCollection);
                         var name = [];
@@ -210,7 +212,7 @@ function loadTable() {
                                 success:function(result) {
                                     if (result.success == "1") {
                                         successMsg("批量权限设置成功！");
-                                    } else {
+                                    } else if (result.success == 0){
                                         var resultMsg = result.error.message;
                                         errorMsg(resultMsg);
                                     }
@@ -228,9 +230,8 @@ function loadTable() {
         //监听行工具事件
         table.on('tool(test)', function(obj){
             var data = obj.data;
-            //console.log(obj)
             if(obj.event === 'del'){
-                var index = layer.confirm('真的删除行么', function(index){
+                var index = layer.confirm('确定删除?', function(index){
                     // obj.del();
                    deletePostVideo(data.id);
                     layer.close(index);
@@ -267,7 +268,7 @@ function loadTable() {
                         if (result.success == 1) {
                             successMsg("提交成功");
                             loadTable();
-                        } else {
+                        } else if (result.success == 0){
                             errorMsg(result.error.message);
                         }
                     },
@@ -288,7 +289,7 @@ function loadTable() {
                         if (result.success == 1) {
                             successMsg("发布成功");
                             loadTable();
-                        } else {
+                        } else if (result.success == 0){
                             errorMsg(result.error.message);
                         }
                     },
@@ -309,7 +310,7 @@ function loadTable() {
                         if (result.success == 1) {
                             successMsg("撤回成功");
                             loadTable();
-                        } else {
+                        } else if (result.success == 0){
                             errorMsg(result.error.message);
                         }
                     },
@@ -349,7 +350,7 @@ function getDictData() {
             if (result.code == 0) {
                 videoMarkList = result.data;
             } else {
-                errorMsg(result.message);
+                errorMsg();
             }
         },
         error:function(result) {
@@ -368,7 +369,7 @@ function deletePostVideo(id) {
         success:function(result) {
             if (result.success == 1) {
                 successMsg("删除成功");
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.error.message);
             }
         },
@@ -384,6 +385,7 @@ function setAuthSetting(id){
             area: ['450px', '218px'],
             skin: 'demo-class',
             success: function(layero, index){
+                console.log($('.demo-class').length);
                 form1.render();
             },
             content:"<form class='layui-form' id='batchSetForm'>"
@@ -408,7 +410,7 @@ function setAuthSetting(id){
                     if (result.success == "1") {
                         successMsg("权限设置成功！");
                         loadTable();
-                    } else {
+                    } else if (result.success == 0){
                         var resultMsg = result.error.message;
                         errorMsg(resultMsg);
                     }

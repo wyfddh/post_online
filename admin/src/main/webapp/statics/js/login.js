@@ -8,11 +8,14 @@ layui.config({
     var form = layui.form,
         layer = parent.layer === undefined ? layui.layer : parent.layer,
         $ = layui.jquery;
-    //隐藏验证码
-    $("#formCode").hide();
+
+    form.verify({
+        pwd:[/^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$).{6,20}$/,'6-20位字符；数字、字母、特殊字符（除空格），起码其中两种组合']
+    });
+
     //登录按钮事件
     form.on("submit(login)", function (data) {
-        var password = hex_md5(data.field.password);
+        var password = hex_md5(property.md5Str+data.field.password);
         // parent.location.href = 'http://localhost:63342/chinayouzheng/index.html';
         var datas = "userId=" + data.field.username + "&password=" + password+ "&verification=" + data.field.captcha;
         $.ajax({
@@ -23,20 +26,24 @@ layui.config({
             success: function (result) {
                 if (result.success == 1) {//登录成功
                     localStorage.userInfo = JSON.stringify(result.data);
+                    localStorage.functinId = '3407276609592431735736823983';
                     parent.location.href = property.getProjectPath()+'index.html';
                 } else {
-                    $("#formCode").show();
+                    $("#formCode").removeClass('layui-hide');
                     layer.msg(result.error.message, {icon: 5});
                     refreshCode();
                 }
+            }
+          ,error:function (result) {
+                layer.msg("系统异常", {icon: 5});
+                refreshCode();
             }
         });
         return false;
     })
 });
 function refreshCode(){
-    // var url = "192.168.5.32:8080/admin/";
     var captcha = document.getElementById("captcha");
-    captcha.src = property.getProjectPath()+"Tools/getImgCode.do";
+    captcha.src = property.getProjectPath()+"Tools/getAdminImgCode.do";
 
 }

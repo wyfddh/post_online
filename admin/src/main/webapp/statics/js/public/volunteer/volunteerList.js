@@ -64,7 +64,7 @@ var main={
                             loadTable();
                             form.render();
                             return false;
-                        } else {
+                        } else if (result.success == 0){
                             if(recommendStatus == "1"){
                                 $(data.elem).attr("checked",false);
                             }else{
@@ -243,7 +243,7 @@ function loadTable(){
                             if (result.success == 1) {
                                 successMsg("删除志愿者活动成功");
                                 loadTable();
-                            } else {
+                            } else if (result.success == 0){
                                 //top.layer.msg(result.error.message);
                                 errorMsg("删除志愿者活动失败");
                             }

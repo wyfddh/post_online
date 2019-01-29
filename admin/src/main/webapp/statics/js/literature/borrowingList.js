@@ -8,12 +8,13 @@ var main = {
     },
     initTable: function () {
         var _this = this;
+        var  module = localStorage.functinId;
         layui.use(['form', 'table'], function () {
             var table = layui.table,
                 form = layui.form;
             var tableIns = table.render({
                 elem: '#borroringList'
-                , url: projectName + '/postLiteratureProcess/borrowingList.do'
+                , url: projectName + '/postLiteratureProcess/borrowingList.do?module='+module
                 , request: {
                     pageName: 'currentPage',
                     limitName: 'size'
@@ -105,6 +106,7 @@ var main = {
 
                 if (obj.event === 'detail') {
                     localStorage.id = data.id;
+                    localStorage.inventoryState = data.inventoryState;
                     parent.$t.goToPage(this,"page/literature/borrowingList.html");
                 } else if (obj.event === 'loan') {
                     if (data.inventoryState > 0) {
@@ -123,7 +125,7 @@ var main = {
                           success: function (result) {
                             if (result.success == "1") {
                               successMsg("借出成功！");
-                            } else {
+                            } else if (result.success == 0){
                               var resultMsg = result.error.message;
                               errorMsg(resultMsg);
                             }
@@ -153,7 +155,7 @@ var main = {
                             success: function (result) {
                                 if (result.success == "1") {
                                     successMsg("归还成功！");
-                                } else {
+                                } else if (result.success == 0){
                                     var resultMsg = result.error.message;
                                     errorMsg(resultMsg);
                                 }

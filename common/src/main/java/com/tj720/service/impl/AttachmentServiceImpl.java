@@ -1,15 +1,14 @@
 package com.tj720.service.impl;
 
 import com.tj720.config.FileUploadConfig;
+import com.tj720.controller.attachment.FileBase64;
 import com.tj720.controller.framework.JsonResult;
 import com.tj720.controller.framework.MyException;
 import com.tj720.controller.springbeans.Config;
 import com.tj720.dao.AttachmentMapper;
 import com.tj720.model.common.Attachment;
-import com.tj720.model.common.AttachmentExample;
 import com.tj720.service.AttachmentService;
 import com.tj720.utils.DateFormartUtil;
-import com.tj720.utils.FtpUtil;
 import com.tj720.utils.ImageHepler;
 import com.tj720.utils.Tools;
 import com.tj720.utils.common.FileType;
@@ -21,14 +20,13 @@ import org.jsoup.helper.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
 import javax.servlet.http.HttpServletRequest;
 import java.awt.*;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.*;
 
 
 /**
@@ -38,13 +36,13 @@ import java.util.List;
 */
 @Service
 public class AttachmentServiceImpl implements AttachmentService{
-	private String userId = "sysadmin";
 	@Autowired
 	private AttachmentMapper attachmentMapmper;
 	@Autowired
 	private Config config;
 	private FileUploadConfig fileUploadConfig;
-	
+	@Autowired
+	HttpServletRequest request;
 
 
 	/**
@@ -103,7 +101,7 @@ public class AttachmentServiceImpl implements AttachmentService{
 					resultFile.setAttIsjunk("0");		//0：正常
 					resultFile.setAttDate(new Date());
 					resultFile.setAttType(tableName);		//业务表名称
-					resultFile.setAttrUser(userId);
+					resultFile.setAttrUser(Tools.getUserId());
 					if (StringUtils.isNotBlank(tableid)) {
 						resultFile.setAttFkId(tableid);		//业务表主键
 					}
@@ -160,7 +158,7 @@ public class AttachmentServiceImpl implements AttachmentService{
 
 		String destDir = config.getRootPath();		//获取配置的上传路径
 
-		if(StringUtil.isBlank(userId)) {
+		if(StringUtil.isBlank(Tools.getUserId())) {
 			//判断是否登录
 			errorCode = "1001";
 			msg = "还未登录";
@@ -204,7 +202,7 @@ public class AttachmentServiceImpl implements AttachmentService{
 							resultFile.setAttIsjunk("0");		//0：正常
 							resultFile.setAttDate(new Date());
 							resultFile.setAttType(tableName);		//业务表名称
-							resultFile.setAttrUser(userId);
+							resultFile.setAttrUser(Tools.getUserId());
 							resultFile.setAttFkId(tableid);		//业务表主键
 							resultFile.setAttFileType(typeCode);
 							resultFile.setAttSource(source);
@@ -246,7 +244,7 @@ public class AttachmentServiceImpl implements AttachmentService{
 		String msg = "";		//提示信息
 		List<Attachment> resultFiles = null;		//成功的文件对象集合
 
-		String destDir = config.getRootPath();		//获取配置的上传路径
+		String destDir = CheckConfig.getRootPath();		//获取配置的上传路径
 
 			for (CommonsMultipartFile file : files) {
 				Attachment resultFile = null;
@@ -262,10 +260,10 @@ public class AttachmentServiceImpl implements AttachmentService{
 					//文件类型判断
 					errorCode = "1002";
 					msg = "文件类型为非法类型";
-				}else if(file.getSize() > 1024 * 1024 * config.getFileSize()) {
+				}else if(file.getSize() > 1024 * 1024 * CheckConfig.getFileSize()) {
 					//文件大小判断
 					errorCode = "1003";
-					msg = "文件大小超出限制，限制为"+config.getFileSize()+"M";
+					msg = "文件大小超出限制，限制为"+CheckConfig.getFileSize()+"M";
 				}else {
 					saveUrl += typeUrl + "/" + DateFormartUtil.getDateByFormat(DateFormartUtil.YYYY_MM_DD) + "/";
 					String uuidStr = UUID.randomUUID().toString().replace("-", "");
@@ -273,7 +271,7 @@ public class AttachmentServiceImpl implements AttachmentService{
 					// 保存
 					try {
 						//现在版本：上传到ftp
-						ftpUtil = new FtpUtil(config.getFtpUrl(), Integer.valueOf(config.getFtpPort()), config.getFtpUserName(), config.getFtpPassWord());
+						ftpUtil = new FtpUtil(CheckConfig.getFtpUrl(), Integer.valueOf(CheckConfig.getFtpPort()), CheckConfig.getFtpUserName(), CheckConfig.getFtpPassWord());
 						boolean uploadFtpFile = ftpUtil.uploadFtpFile(destDir + saveUrl, targetFileName, file.getInputStream());
 						if(uploadFtpFile){
 							resultPath = saveUrl + targetFileName;
@@ -296,7 +294,7 @@ public class AttachmentServiceImpl implements AttachmentService{
 							if(insert > 0) {
 								errorCode = "1";
 								msg = "文件上传成功";
-								result.put("src", config.getRootUrl() + resultPath);
+								result.put("src", CheckConfig.getRootUrl() + resultPath);
 								//resultFiles.addAll(Tools.mapTransitionList(result));
 							}else {
 								errorCode = "1004";
@@ -404,7 +402,7 @@ public class AttachmentServiceImpl implements AttachmentService{
 					resultFile.setAttIsjunk("0");		//0：正常
 					resultFile.setAttDate(new Date());
 					resultFile.setAttType(projectName);		//业务表名称
-					resultFile.setAttrUser(userId);
+					resultFile.setAttrUser(Tools.getUserId());
 					resultFile.setAttFileType(typeCode);
 					resultFile.setIsMain("0");
 					int insert = attachmentMapmper.insert(resultFile);
@@ -413,7 +411,12 @@ public class AttachmentServiceImpl implements AttachmentService{
 						msg = "文件上传成功";
 						Map<String,Object> map = new HashMap<String, Object>();
 						map.put("id", resultFile.getAttId());
-						map.put("src", config.getRootUrl() + resultPath);
+//						map.put("src", config.getRootUrl() + resultPath);
+//						map.put("src", config.getRootUrl() + resultPath);
+						String fileTransPath = request.getContextPath()+"/attach/getFileTransPath.do?id="+resultFile.getAttId();
+						map.put("src", fileTransPath);
+//						map.put("errorPath",getFileTransPathByPath(config.getRootUrl() + resultPath));
+						map.put("errorPath",fileTransPath);
 						result.setData(map);
 					}else {
 						errorCode = 1004;
@@ -518,15 +521,22 @@ public class AttachmentServiceImpl implements AttachmentService{
 			// 保存
 			try {
 				//上传到临时文件夹中
-				String tempPath =System.getProperty("java.io.tmpdir")+File.separator;
-				if (!new File(tempPath + destDir + saveUrl).exists()) {
-					new File(tempPath + destDir + saveUrl).mkdirs();
+
+				String tempPath =com.tj720.utils.FileUtil.checkFilePath(System.getProperty("java.io.tmpdir")+File.separator);
+
+
+				if (!new File(com.tj720.utils.FileUtil.checkFilePath(tempPath + destDir + saveUrl)).exists()) {
+
+					new File(com.tj720.utils.FileUtil.checkFilePath(tempPath + destDir + saveUrl)).mkdirs();
 				}
 //				File targetFile = new File(destDir + saveUrl, targetFileName);
+
 				File srcFile = commonMultipartToFile(file);
+
 				resultPath = saveUrl + targetFileName;
 				//File targetFile = new File(tempPath + destDir + saveUrl, targetFileName);
-				File targetFile = new File(tempPath +  saveUrl, targetFileName);
+				File targetFile = new File(com.tj720.utils.FileUtil.checkFilePath(tempPath +  saveUrl), targetFileName);
+
 				if(!targetFile.exists()){
 					//targetFile.mkdirs();
 					// 先得到文件的上级目录，并创建上级目录，在创建文件
@@ -552,7 +562,7 @@ public class AttachmentServiceImpl implements AttachmentService{
 						resultFile.setAttIsjunk("0");		//0：正常
 						resultFile.setAttDate(new Date());
 						resultFile.setAttType(projectName);		//业务表名称
-						resultFile.setAttrUser(userId);
+						resultFile.setAttrUser(Tools.getUserId());
 						resultFile.setAttFileType(typeCode);
 						resultFile.setIsMain("0");
 						int insert = attachmentMapmper.insert(resultFile);
@@ -567,7 +577,10 @@ public class AttachmentServiceImpl implements AttachmentService{
 							map.put("size", file.getSize());
 							map.put("typeCode", typeCode);
 							map.put("isnew", "1");
-							map.put("absolutePath", config.getRootUrl() + resultPath);
+//							map.put("absolutePath", config.getRootUrl() + resultPath);
+							String fileTransPath = request.getContextPath()+"/attach/getFileTransPath.do?id="+resultFile.getAttId();
+							map.put("absolutePath",fileTransPath);
+//							map.put("absolutePath",request.getContextPath()+"/attach/getFileTransPath.do?id="+resultFile.getAttId());
 							map.put("width", width);
 							map.put("height", height);
 							result.setData(map);
@@ -643,7 +656,7 @@ public class AttachmentServiceImpl implements AttachmentService{
 			resultFile.setAttIsjunk("0");		//0：正常
 			resultFile.setAttDate(new Date());
 			resultFile.setAttType(projectName);		//业务表名称
-			resultFile.setAttrUser(userId);
+			resultFile.setAttrUser(Tools.getUserId());
 			resultFile.setAttFileType(1);
 			resultFile.setIsMain("0");
 			int insert = attachmentMapmper.insert(resultFile);
@@ -655,7 +668,9 @@ public class AttachmentServiceImpl implements AttachmentService{
 				map.put("isjunk", 0);
 				map.put("size", file.getSize());
 				map.put("isnew", "1");
-				map.put("absolutePath", config.getRootUrl() + resultPath);
+//				map.put("absolutePath", config.getRootUrl() + resultPath);
+				String fileTransPath = request.getContextPath()+"/attach/getFileTransPath.do?id="+resultFile.getAttId();
+				map.put("absolutePath",fileTransPath);
 				jsonResult.setSuccess(1);
 				jsonResult.setData(map);
 			}else {
@@ -721,8 +736,8 @@ public class AttachmentServiceImpl implements AttachmentService{
 
 	@Override
 	public List<Attachment> getListByIds(String picids) {
-		String userId = Tools.getUserId();
-		if (StringUtils.isNotBlank(userId)) {
+		//String userId = Tools.getUserId();
+		if (StringUtils.isNotBlank(picids)) {
 			String[] ids = picids.split(",");
 			List<String> list = Arrays.asList(ids);
 			return attachmentMapmper.getListByIds(list);
@@ -746,9 +761,19 @@ public class AttachmentServiceImpl implements AttachmentService{
 
 	@Override
 	public List<Attachment> getAttachmentsByFkId(String fkId) {
+		ExecutorService ex = Executors.newFixedThreadPool(20);
 		List<Attachment> attachments = attachmentMapmper.getAttachmentsByFkId(fkId);
 		for (Attachment attachment : attachments) {
-			attachment.setAttPath(addRootUrl(attachment.getAttPath()));
+			attachment.setAttPath(request.getContextPath()+"/attach/getFileTransPath.do?id="+config.getImageUrl()+attachment.getAttPath());
+//			Future future1 = ex.submit(new ThreadWithCallback(config.getImageUrl()+attachment.getAttPath()));
+//			try {
+//				attachment.setAttPath(future1.get().toString());
+//			} catch (InterruptedException e) {
+//
+//			} catch (ExecutionException e) {
+//
+//			}
+//			attachment.setAttPath(addRootUrl(attachment.getAttPath()));
 		}
 		return attachments;
 	}
@@ -799,4 +824,128 @@ public class AttachmentServiceImpl implements AttachmentService{
 		return config.getRootUrl()+url;
 	}
 
-  }
+
+	/**
+	 * 获取单个附件（映射后）
+	 *
+	 * @param attId
+	 * @return
+	 */
+	@Override
+	public Attachment getFileTransPath(String attId) {
+		ExecutorService ex = Executors.newFixedThreadPool(20);
+		FileUploadConfig fileUploadConfig = new FileUploadConfig(config);
+		String[] attIds = (attId + ",").split(",");
+		String id = attIds[0];
+		Attachment attachment = attachmentMapmper.selectByPrimaryKey(id);
+		if (null != attachment){
+			attachment.setAttPath(request.getContextPath()+"/attach/getFileTransPath.do?id="+config.getImageUrl()+attachment.getAttPath());
+//			Future future1 = ex.submit(new ThreadWithCallback(config.getImageUrl()+attachment.getAttPath()));
+//			try {
+//				attachment.setAttPath(future1.get().toString());
+//			} catch (InterruptedException e) {
+//
+//			} catch (ExecutionException e) {
+//
+//			}
+		}
+		return attachment;
+	}
+	@Override
+	public String getFileTransPathByPath(String path) {
+		path = request.getContextPath()+"/attach/getFileTransPath.do?id="+path;
+//		ExecutorService ex = Executors.newFixedThreadPool(20);
+//		Future future1 = ex.submit(new ThreadWithCallback(path));
+//		try {
+//			path = future1.get().toString();
+//		} catch (InterruptedException e) {
+//
+//		} catch (ExecutionException e) {
+//
+//		}
+		return path;
+	}
+
+	/**
+	 * 获取主图（映射后）
+	 *
+	 * @param attId
+	 * @return
+	 */
+	@Override
+	public List<Attachment> getMainFileTransPath(String attId) {
+		ExecutorService ex = Executors.newFixedThreadPool(20);
+		FileUploadConfig fileUploadConfig = new FileUploadConfig(config);
+		String[] attIds = (attId + ",").split(",");
+		List<Attachment> result = new ArrayList<Attachment>();
+		for (int i = 0; i < attIds.length; i++) {
+			String id = attIds[i];
+			Attachment attachment = attachmentMapmper.selectByPrimaryKey(id);
+			if (null != attachment){
+				if ("1".equals(attachment.getIsMain()) || i == 0){
+					attachment.setAttPath(request.getContextPath()+"/attach/getFileTransPath.do?id="+config.getImageUrl()+attachment.getAttPath());
+//					Future future1 = ex.submit(new ThreadWithCallback(config.getImageUrl()+attachment.getAttPath()));
+//					try {
+//						attachment.setAttPath(future1.get().toString());
+//					} catch (InterruptedException e) {
+//
+//					} catch (ExecutionException e) {
+//
+//					}
+					result.add(attachment);
+					break;
+				}
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * 获取附件列表
+	 *
+	 * @param attId 附件id
+	 * @return
+	 */
+	@Override
+	public List<Attachment> getFileTransPathList(String attId) {
+
+		ExecutorService ex = Executors.newFixedThreadPool(20);
+		FileUploadConfig fileUploadConfig = new FileUploadConfig(config);
+		String[] attIds = (attId + ",").split(",");
+		List<Attachment> result = new ArrayList<Attachment>();
+		for (int i = 0; i < attIds.length; i++) {
+			String id = attIds[i];
+
+			Attachment attachment = attachmentMapmper.selectByPrimaryKey(id);
+			if (null != attachment){
+				attachment.setAttPath(request.getContextPath()+"/attach/getFileTransPath.do?id="+config.getImageUrl()+attachment.getAttPath());
+//				Future future1 = ex.submit(new ThreadWithCallback(config.getImageUrl()+attachment.getAttPath()));
+//				try {
+//					attachment.setAttPath(future1.get().toString());
+//				} catch (InterruptedException e) {
+//
+//				} catch (ExecutionException e) {
+//
+//				}
+				result.add(attachment);
+			}
+		}
+		return result;
+	}
+
+	class ThreadWithCallback implements Callable {
+		private List<Attachment> attList = new ArrayList<>();
+		private String path = null;
+
+		public ThreadWithCallback(String path) {
+			this.path = path;
+		}
+
+		//相当于Thread的run方法
+		@Override
+		public String call() throws Exception {
+			String result = FileBase64.GetImageStrFromUrl(path);
+			return result;
+		}
+	}
+}

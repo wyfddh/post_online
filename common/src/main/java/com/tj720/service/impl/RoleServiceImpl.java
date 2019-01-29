@@ -6,6 +6,7 @@ import com.tj720.dao.SysRoleMapper;
 import com.tj720.model.common.system.role.*;
 import com.tj720.service.RoleService;
 import com.tj720.utils.Page;
+import com.tj720.utils.Tools;
 import com.tj720.utils.common.IdUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +24,6 @@ import java.util.List;
 @Service
 public class RoleServiceImpl implements RoleService{
 
-    private static String userId = "sysadmin";
     @Autowired
     SysRoleMapper sysRoleMapper;
     @Autowired
@@ -37,11 +37,11 @@ public class RoleServiceImpl implements RoleService{
         }catch (Exception e){
             e.printStackTrace();
         }
-        sysRole.setUpdater(userId);
+        sysRole.setUpdater(Tools.getUserId());
         sysRole.setUpdateTime(date);
         if (type == "0"){
             sysRole.setCreateTime(date);
-            sysRole.setCreator(userId);
+            sysRole.setCreator(Tools.getUserId());
         }
         return sysRole;
     }

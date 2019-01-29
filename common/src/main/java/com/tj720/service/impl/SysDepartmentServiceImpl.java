@@ -168,7 +168,7 @@ public class SysDepartmentServiceImpl implements SysDepartmentService{
                 //}
                 //修改上级部门
                 if (!record.getParentId().equals(department.getParentId())){
-                    if(null == record.getParentId()||record.getParentId()==""||record.getParentId().equals("-1")){
+                    if(null == record.getParentId()||record.getParentId()==""|| "-1".equals(record.getParentId())){
                         //一级部门只允许存在一个
                         int count = sysDepartmentMapper.getLevel1Org();
                         if(count >0){
@@ -199,7 +199,7 @@ public class SysDepartmentServiceImpl implements SysDepartmentService{
                     return  new JsonResult(1,"同一层级下存在相同名称的部门");
                 }
                 record.setDepartmentId(IdUtils.getIncreaseIdByNanoTime());
-                if(null == record.getParentId()||record.getParentId()==""||record.getParentId().equals("-1")){
+                if(null == record.getParentId()||record.getParentId()==""|| "-1".equals(record.getParentId())){
                     //一级部门只允许存在一个
                     int count = sysDepartmentMapper.getLevel1Org();
                     if(count >0){
@@ -273,7 +273,7 @@ public class SysDepartmentServiceImpl implements SysDepartmentService{
                 return new JsonResult(0,"参数错误");
             }
             int i = sysDepartmentMapper.updateDeptStatus(status,departmentId);
-            return new JsonResult(i,"修改状态成功");
+            return new JsonResult(1,"修改状态成功");
         }catch (Exception e){
             e.printStackTrace();
             return new JsonResult(0,"系统异常");

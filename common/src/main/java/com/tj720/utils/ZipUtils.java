@@ -34,8 +34,9 @@ public class ZipUtils {
         } catch (Exception e) {
             throw e;
         } finally {
-            if(out!=null)
+            if(out!=null) {
                 out.close();//记得关闭资源
+            }
         }
     }
     

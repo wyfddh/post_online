@@ -11,7 +11,8 @@ var main={
     init:function(){
         property.setUserInfo();
         pageType = localStorage.curatorType;
-
+        property.setUserInfoPlus('userName','orgName','nowDate');
+        property.setUserInfoPlus('userName1','orgName1','nowDate1');
         if(pageType == 'edit') {
             $('#submit').text('保存');
             this.id = localStorage.id;
@@ -58,14 +59,14 @@ var main={
                 var collectLists = collectList.map((obj) => {return {collectId: obj.id}});
                 var objectListStr = JSON.stringify(collectLists);
                 var datumIds = $('#picids').val();
-                if (null == datumIds || datumIds == '') {
-                    layer.msg('请上传主题展图片！', {icon: 5, anim: 6});
-                    return false;
-                }
-                if (null == objectListStr || objectListStr == '' || objectListStr == '[]') {
-                    layer.msg('请添加关联藏品！', {icon: 5, anim: 6});
-                    return false;
-                }
+                // if (null == datumIds || datumIds == '') {
+                //     layer.msg('请上传主题展图片！', {icon: 5, anim: 6});
+                //     return false;
+                // }
+                // if (null == objectListStr || objectListStr == '' || objectListStr == '[]') {
+                //     layer.msg('请添加关联藏品！', {icon: 5, anim: 6});
+                //     return false;
+                // }
                 if (null == processResult || processResult == '') {
                     layer.msg('请选择操作！', {icon: 5, anim: 6});
                     return false;
@@ -91,15 +92,11 @@ var main={
                     url:property.getProjectPath()+url,
                     success:function(result) {
                         if (result.success == 1) {
-                            if(pageType == "edit"){
-                                successMsg("修改公众策展成功");
-                            }else{
-                                successMsg("添加公众策展成功");
-                            }
+                            successMsg("审核成功");
                             parent.$t.goback("page/public/cezhan/list.html");
-                        } else {
+                        } else if (result.success == 0){
                             //top.layer.msg(result.error.message);
-                            errorMsg("操作公众策展数据异常");
+                            errorMsg("审核失败");
                         }
                     },
                     error:function(result) {
@@ -126,7 +123,9 @@ var main={
 
             //一级菜单下拉框监听
             form.on('select(collect)', function(data){
-                getDictListByPid(data.value)
+                if(null != data.value){
+                    getDictListByPid(data.value);
+                }
             })
 
             //二级菜单下拉框监听
@@ -218,7 +217,7 @@ var main={
                                 arr:[]
                             });
                             form.render("select");
-                        } else {
+                        } else if (result.success == 0){
                             //top.layer.msg(result.error.message);
                             console.dir(result)
                             errorMsg("系统异常");
@@ -308,7 +307,7 @@ function loadData(id){
             success:function(result) {
                 if (result.success == 1) {
                     setFormData(result.data);
-                } else {
+                } else if (result.success == 0){
                     //top.layer.msg(result.error.message);
                     errorMsg("操作数据异常");
                 }
@@ -335,7 +334,6 @@ function setFormData(data) {
     //$("#storyContent").text(data.storyContent);
 
 
-    debugger
     var picList = data.picList;
     if(picList){
         $("#picids").val(data.datumIds);

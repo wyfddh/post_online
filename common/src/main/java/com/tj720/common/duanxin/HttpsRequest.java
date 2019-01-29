@@ -31,6 +31,8 @@ import org.springframework.http.HttpRequest;
 */
 
 public class HttpsRequest {
+
+	private char[] cha = null;
 	
 	/**
 	 * HTTP的Post请求方式(推荐)
@@ -48,6 +50,9 @@ public class HttpsRequest {
 		try {
 			url = new URL(strUrl);
 			httpsURLConnection = (HttpsURLConnection) url.openConnection();
+			if (httpsURLConnection == null) {
+				return null;
+			}
 			httpsURLConnection.setConnectTimeout(10000);
 			httpsURLConnection.setReadTimeout(10000);
 
@@ -127,7 +132,9 @@ public class HttpsRequest {
 		try {
 			url = new URL(strUrl + "?" + param);
 			httpsURLConnection = (HttpsURLConnection) url.openConnection();
-			
+			if (httpsURLConnection == null) {
+				return null;
+			}
 			//使用PEM证书格式(推荐)
 			String trustCertPath = "F:/duanxin/JAVA/cacert.pem";		//证书文件路径，发布项目时打包到resource路径
 			httpsURLConnection.setSSLSocketFactory(this.initSSLSocketFactoryByPEM(trustCertPath)); // 设置套接工厂
@@ -157,7 +164,7 @@ public class HttpsRequest {
 			reader.close();
 			returnStr = buffer.toString();
 		} catch (Exception e) {
-			e.printStackTrace();
+//			e.printStackTrace();
 			
 			return null;
 		} finally {
@@ -207,8 +214,9 @@ public class HttpsRequest {
 	
 	//使用PEM根证书文件然后用别名的方式设置到KeyStore中去，推荐该方法(PEM根证书能从公开地址下载到)
 	public SSLSocketFactory initSSLSocketFactoryByPEM(String trustCertPath) throws Exception {
-		KeyStore keyStore = KeyStore.getInstance("jks"); 
-		keyStore.load(null, null);		//设置一个空密匙库
+		KeyStore keyStore = KeyStore.getInstance("jks");
+
+		keyStore.load(null, cha);		//设置一个空密匙库
 		
 		FileInputStream trustCertStream = null;
 		try{
@@ -251,7 +259,7 @@ public class HttpsRequest {
 		String param = "reg=" + regCode + "&pwd=" + regPasswod;
 		
 		String returnStr = null;
-		if(type.equals("GET")){
+		if("GET".equals(type)){
 			returnStr = this.requestGet(url, param);
 		}else{
 //			returnStr = this.requestPost(url, param);
@@ -278,30 +286,25 @@ public class HttpsRequest {
 		String signature = "【探景】";      //签名
 		//Random random = new Random();
 		SecureRandom random = null;
+		String ran = "0";
 		try {
 			random = SecureRandom.getInstance("SHA1PRNG");
-		} catch (NoSuchAlgorithmException e) {
+			ran = Integer.toString((100000 + random.nextInt(900000)));
+			//		String content = "华兴软通$-_.+!*',^(αβ &@#%)验证码:" +  (1000 + random.nextInt(9000)) + signature;		//短信内容,请严格按照客服定义的模板生成短信内容,否则发送将失败(含有中文，特殊符号等非ASCII码的内容，用户必须保证其为UTF-8编码格式)
+			String content = "您验证码是：" + ran + "有效期30分钟，请在有效期内使用。" + signature;		//短信内容,请严格按照客服定义的模板生成短信内容,否则发送将失败(含有中文，特殊符号等非ASCII码的内容，用户必须保证其为UTF-8编码格式)
+			content = URLEncoder.encode(content,"UTF-8");		//content中含有空格，换行，中文等非ascii字符时，需要进行url编码，否则无法正确传输到服务器
+
+			String param = "reg=" + regCode + "&pwd=" + regPasswod + "&sourceadd=" + sourceAdd + "&phone=" + phone + "&content=" + content;
+
+			String returnStr = null;
+			if("GET".equals(type)){
+				returnStr = this.requestGet(url, param);
+			}else{
+				returnStr = this.requestPost(url, param, request);
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		String ran = Integer.toString((1000 + random.nextInt(9000)));
-//		String content = "华兴软通$-_.+!*',^(αβ &@#%)验证码:" +  (1000 + random.nextInt(9000)) + signature;		//短信内容,请严格按照客服定义的模板生成短信内容,否则发送将失败(含有中文，特殊符号等非ASCII码的内容，用户必须保证其为UTF-8编码格式)		
-		String content = "您验证码是：" + ran + "有效期30分钟，请在有效期内使用。" + signature;		//短信内容,请严格按照客服定义的模板生成短信内容,否则发送将失败(含有中文，特殊符号等非ASCII码的内容，用户必须保证其为UTF-8编码格式)		
-		try {
-			content = URLEncoder.encode(content,"UTF-8");		//content中含有空格，换行，中文等非ascii字符时，需要进行url编码，否则无法正确传输到服务器
-		} catch (Exception e) {
-			// TODO: handle exception
-			System.out.println(e.getMessage());
-			return "0";//验证异常
-		}
-		String param = "reg=" + regCode + "&pwd=" + regPasswod + "&sourceadd=" + sourceAdd + "&phone=" + phone + "&content=" + content;
-		
-		String returnStr = null;
-		if(type.equals("GET")){
-			returnStr = this.requestGet(url, param);
-		}else{
-			returnStr = this.requestPost(url, param, request);
-		}
-		System.out.println(returnStr);
 		return ran;
 	}
 }

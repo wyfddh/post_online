@@ -76,16 +76,18 @@ public class ParseNumUtil {
      * @return
      */
     public static int romanToInt(String s) {
-        if (s.length() < 1) return 0;
+        if (s.length() < 1) {
+            return 0;
+        }
         int result = 0;
         int current = 0;
         int pre = singleRomanToInt(s.charAt(0));
         int temp = pre;
         for (int i = 1; i < s.length(); i++) {
             current = singleRomanToInt(s.charAt(i));
-            if (current == pre)
+            if (current == pre) {
                 temp += current;
-            else if (current > pre){
+            } else if (current > pre){
                 temp = current - temp;
             }
             else if (current < pre){

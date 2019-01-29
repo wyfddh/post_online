@@ -9,10 +9,7 @@ import com.tj720.model.common.collecthome.PostCollectHome;
 import com.tj720.model.common.informationmanage.PostInformationManage;
 import com.tj720.model.common.stampstory.PostStampStory;
 import com.tj720.model.common.themeshow.PostThemeShow;
-import com.tj720.service.AttachmentService;
-import com.tj720.service.PictureService;
-import com.tj720.service.PostCollectHomeService;
-import com.tj720.service.PostStampStoryService;
+import com.tj720.service.*;
 import com.tj720.utils.DateFormartUtil;
 import com.tj720.utils.Page;
 import com.tj720.utils.Tools;
@@ -38,7 +35,8 @@ public class PostCollectHomeServiceImpl implements PostCollectHomeService {
     @Autowired
     private PostCollectHomeMapper  postCollectHomeMapper;
 
-
+    @Autowired
+    ImageUtiilService imageUtiilService;
     @Override
     public JsonResult getHomeList(String collectHomeTheme, String createTime,String orderBy, Page page) throws Exception {
         try {
@@ -62,6 +60,7 @@ public class PostCollectHomeServiceImpl implements PostCollectHomeService {
                 return new JsonResult(0,"参数错误");
             }
             PostCollectHome postCollectHome = postCollectHomeMapper.selectByPrimaryKey(id);
+            postCollectHome.setInformationContent(imageUtiilService.getContent(postCollectHome.getInformationContent(),"1"));
             return new JsonResult(1,postCollectHome);
         }catch (Exception e){
             e.printStackTrace();
@@ -80,6 +79,7 @@ public class PostCollectHomeServiceImpl implements PostCollectHomeService {
             record.setUpdateTime(new Date());
             record.setCreator(Tools.getUserId());
             record.setDataState("1");
+            record.setInformationContent(imageUtiilService.backContent(record.getInformationContent()));
             int count =   postCollectHomeMapper.insert(record);
             if (count >0){
                 return new JsonResult(1,null);
@@ -102,6 +102,7 @@ public class PostCollectHomeServiceImpl implements PostCollectHomeService {
             if(StringUtils.isNotBlank(record.getId())){
                 record.setUpdater(Tools.getUserId());
                 record.setUpdateTime(new Date());
+                record.setInformationContent(imageUtiilService.backContent(record.getInformationContent()));
                 int count =  postCollectHomeMapper.updateByPrimaryKeySelective(record);
                 if (count >0){
                     return new JsonResult(1,null);

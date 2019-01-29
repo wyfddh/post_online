@@ -287,7 +287,7 @@ function getReport1(data) {
                 pieData = data.pie;
                 lineData = data.line;
                 loadChart1();
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.error.message);
             }
         },
@@ -313,7 +313,7 @@ function getReport2(data) {
                 barData = data.bar;
                 top10Data = data.top10;
                 loadChart2();
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.error.message);
             }
         },

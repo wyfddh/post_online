@@ -5,6 +5,7 @@ import com.tj720.dao.PostVideoCommentsMapper;
 import com.tj720.model.common.video.PostVideo;
 import com.tj720.model.common.video.PostVideoComments;
 import com.tj720.service.PostVideoCommentsService;
+import com.tj720.utils.Tools;
 import com.tj720.utils.common.IdUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,6 @@ import java.util.List;
 public class PostVideoCommentsServiceImpl implements PostVideoCommentsService {
     @Autowired
     PostVideoCommentsMapper postVideoCommentsMapper;
-    private static String userId = "sysadmin";
 
     private PostVideoComments setActionInfo(PostVideoComments postVideoComments, String type){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -33,11 +33,11 @@ public class PostVideoCommentsServiceImpl implements PostVideoCommentsService {
         }catch (Exception e){
             e.printStackTrace();
         }
-        postVideoComments.setUpdater(userId);
+        postVideoComments.setUpdater(Tools.getUserId());
         postVideoComments.setUpdateTime(date);
         if (type == "0"){
             postVideoComments.setCreateTime(date);
-            postVideoComments.setCreator(userId);
+            postVideoComments.setCreator(Tools.getUserId());
         }
         return postVideoComments;
     }
@@ -53,7 +53,7 @@ public class PostVideoCommentsServiceImpl implements PostVideoCommentsService {
             return new JsonResult(1,postVideoCommentsList);
         }catch (Exception e){
             e.printStackTrace();
-            return new JsonResult(1,null,"200507");
+            return new JsonResult(0,null,"200507");
         }
     }
 
@@ -78,11 +78,11 @@ public class PostVideoCommentsServiceImpl implements PostVideoCommentsService {
             if (count>0){
                 return new JsonResult(1,null);
             }else {
-                return new JsonResult(1,null,"200504");
+                return new JsonResult(0,null,"200504");
             }
         }catch (Exception e){
             e.printStackTrace();
-            return new JsonResult(1,null,"200504");
+            return new JsonResult(0,null,"200504");
         }
     }
 
@@ -122,11 +122,11 @@ public class PostVideoCommentsServiceImpl implements PostVideoCommentsService {
             if (integer > 0){
                 return new JsonResult(1,null);
             }else {
-                return new JsonResult(1,null,"200506");
+                return new JsonResult(0,null,"200506");
             }
         }catch (Exception e){
             e.printStackTrace();
-            return new JsonResult(1,null,"200506");
+            return new JsonResult(0,null,"200506");
         }
     }
 }

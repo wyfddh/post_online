@@ -83,7 +83,7 @@ var main = {
               setTimeout(function () {
                 $('.myRefresh', window.parent.document).click();
               },800)
-            } else {
+            } else if (res.success == 0){
               var msg = res.msg;
               errorMsg(msg);
             }

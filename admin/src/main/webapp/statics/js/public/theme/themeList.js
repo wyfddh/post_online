@@ -7,7 +7,8 @@ var main={
     },
     initTable:function(){
         setSelect();
-        getThemeShowOptions();
+        getSelectData();
+        //getThemeShowOptions();
         //setSelect();
 
         var _this=this;
@@ -67,7 +68,7 @@ var main={
                             loadTable();
                             form.render();
                             return false;
-                        } else {
+                        } else if (result.success == 0){
                             if(recommendStatus == "1"){
                                 $(data.elem).attr("checked",false);
                             }else{
@@ -162,12 +163,17 @@ function getThemeShowOptions2(){
 
 
 
-
+//获取页面下拉数据(来源)
+function getSelectData(){
+        typeList = property.getDictData('theme_source');
+        var sourceTypeSelect = component.getSelectSimplePlus(typeList, null, 'storyType', 'dictCode', 'dictName');
+        $("#themeSource").append(sourceTypeSelect);
+}
 
 
 function setSelect(){
-    var typeSelect = component.getSelect(sourceList,null,"themeSource");
-    $("#themeSource").html(typeSelect);
+    //var typeSelect = component.getSelect(sourceList,null,"themeSource");
+    //$("#themeSource").html(typeSelect);
 
     layui.use('form', function() {
         var form = layui.form;
@@ -265,7 +271,7 @@ function loadTable(){
                             if (result.success == 1) {
                                 successMsg("删除主题展成功");
                                 loadTable();
-                            } else {
+                            } else if (result.success == 0){
                                 //top.layer.msg(result.error.message);
                                 errorMsg("删除主题展失败");
                             }

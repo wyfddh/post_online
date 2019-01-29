@@ -356,7 +356,9 @@
           resultType="java.lang.Integer">
     SELECT
     count(1)
-    FROM post_pub_user where isdelete = 0
+    FROM post_pub_user a
+    left  join  mip_area  b
+    on  a.city_id = b.id where isdelete = 0
     <if test="name != null and name != ''">
       and (user_name like concat('%',#{name},'%')
       and user_name like concat('%',#{name},'%')
@@ -367,12 +369,6 @@
     </if>
     <if test="startTime != null and startTime != ''" >
       and start_time = #{startTime}
-    </if>
-    <if test="orderBy == 1" >
-      order by update_time desc
-    </if>
-    <if test="orderBy == 2" >
-      order by create_time desc
     </if>
 
   </select>
@@ -487,23 +483,51 @@
 
 
   <select id="getUserDtoByUid" resultType="com.tj720.model.common.pubuser.PubUserDto" parameterType="java.lang.String">
-     select
-	 a.id,
-	 a.user_id as datumids,
-	 a.nick_name as nickname,
-     a.avatarurl  as  avatarurl,
-     a.single_name  as  singlename,
-     a.sex,
-     count(c.id) as  themeAmount,
-     count(d.id)  as   collectAmount
-     from
-	 post_pub_user a
-     left join post_web_collect b on a.id = b.user_id
-     left  join  post_theme_show  c  on   b.cid = c.id
-     left  join  post_collection  d  on  b.cid=d.id
-     where
-     b.status = '1'
-     and a.id = #{userId}
+     SELECT
+	a.id,
+	a.user_id AS datumids,
+	a.nick_name AS nickname,
+	a.avatarurl AS avatarurl,
+	a.single_name AS singlename,
+	a.sex,
+	count(
+		CASE
+		WHEN EXISTS (
+			SELECT
+				c.id
+			FROM
+				post_theme_show c
+			WHERE
+				c.id = b.cid
+			AND b.type = '1'
+		) THEN
+			1
+		ELSE
+			NULL
+		END
+	) AS themeAmount,
+	count(
+		CASE
+		WHEN EXISTS (
+			SELECT
+				d.id
+			FROM
+				post_collection d
+			WHERE
+				d.id = b.cid
+			AND b.type = '2'
+		) THEN
+			1
+		ELSE
+			NULL
+		END
+	) AS collectAmount
+    FROM
+        post_pub_user a
+    LEFT JOIN post_web_collect b ON a.id = b.user_id
+    WHERE
+        b. STATUS = '1'
+    AND a.id = #{userId}
   </select>
   <select id="getListByPhone" parameterType="java.lang.String" resultMap="BaseResultMap">
     select

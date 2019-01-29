@@ -70,10 +70,10 @@ public class SysUserlogController{
     @ControllerAop(action="查询日志列表")
     @RequestMapping("/getSyslogList")
     @ResponseBody
-    public JSONObject getDepartList(String username,String logintime,@RequestParam(defaultValue = "1") Integer
+    public JSONObject getDepartList(String username,String logintime,String endTime,@RequestParam(defaultValue = "1") Integer
             currentPage, @RequestParam(defaultValue =
             "10") Integer size) throws Exception{
-        return  sysUserlogService.userlogList(username,logintime,currentPage,size);
+        return  sysUserlogService.userlogList(username,logintime,endTime,currentPage,size);
     }
 
 

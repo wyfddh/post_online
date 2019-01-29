@@ -37,7 +37,7 @@ function loadData(id) {
                 if (result.success == 1) {
                     console.dir(result)
                     setFormData(result.data);
-                } else {
+                } else if (result.success == 0){
                     //top.layer.msg(result.error.message);
                     errorMsg("系统异常");
                 }

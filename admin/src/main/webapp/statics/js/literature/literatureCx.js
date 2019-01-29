@@ -182,7 +182,7 @@ function getReport1(data) {
                 pieData = data.pie;
                 lineData = data.line;
                 loadChart1();
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.error.message);
             }
         },

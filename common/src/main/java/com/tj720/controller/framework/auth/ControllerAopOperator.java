@@ -84,8 +84,8 @@ public class ControllerAopOperator extends BaseController{
             // *========数据库日志=========*//
             SysUserlog sysUserlog = new SysUserlog();
             // 请求的IP
-            //sysUserlog.setUserName(Tools.getUserName());
-            sysUserlog.setUserName("sysadmin");
+            sysUserlog.setUserName(Tools.getUserName());
+//            sysUserlog.setUserName("sysadmin");
             sysUserlog.setLoginTime(new Date());
             String clientIp = getIpAddr(request);
             sysUserlog.setLoginIp(clientIp);

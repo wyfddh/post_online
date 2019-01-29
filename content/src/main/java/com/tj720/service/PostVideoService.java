@@ -29,7 +29,7 @@ public interface PostVideoService {
      * @param userType 用户是否为影视部用户
      * @return
      */
-    public JsonResult getPostVideoList(String keywords,String videoMark,String status,Page page,String uploadOrg,String approval,String userType);
+    public JsonResult getPostVideoList(String keywords,String videoMark,String status,Page page,String uploadOrg,String approval,String userType,String module);
 
     /**
      * 添加影视资料
@@ -44,6 +44,13 @@ public interface PostVideoService {
      * @return
      */
     public JsonResult updateVideo(PostVideo postVideo);
+
+    /**
+     * 修改影视资料
+     * @param postVideo 影视资料对象
+     * @return
+     */
+    public JsonResult updateVideoPlus(PostVideo postVideo);
 
     /**
      * 删除影视资料
@@ -141,7 +148,7 @@ public interface PostVideoService {
      * @return
      */
     public JsonResult getPostVideoQueryList(String keywords,String videoMark,String status,
-                                            String currentUserId,String uploadOrg,Page page,String userType);
+                                            String currentUserId,String uploadOrg,Page page,String userType,String module);
 
     /**
      * 保存影视资料查询申请
@@ -231,7 +238,7 @@ public interface PostVideoService {
      * @return
      */
     public JsonResult getQueryVideoList(String keywords,String applyOrg,String applyStatus,String currentUserId,
-                      Page pageInfo);
+                      Page pageInfo,String module);
 
     /**
      * 查询审批管理
@@ -345,13 +352,13 @@ public interface PostVideoService {
      * 查询影视采集统计
      * @return
      */
-    public JsonResult getVideoCjCount();
+    public JsonResult getVideoCjCount(String module);
 
     /**
      * 查询影视查询统计
      * @return
      */
-    public JsonResult getVideoCxCount();
+    public JsonResult getVideoCxCount(String module);
 
     /**
      * 查询快捷入口设置

@@ -1,0 +1,1 @@
+mvn -P beta_236 clean package -Dmaven.test.skip=true

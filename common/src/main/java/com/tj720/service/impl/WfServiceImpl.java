@@ -8,6 +8,7 @@ import com.tj720.model.common.wf.WfAction;
 import com.tj720.model.common.wf.WfDetail;
 import com.tj720.model.common.wf.WfDetailExample;
 import com.tj720.service.WfService;
+import com.tj720.utils.Tools;
 import com.tj720.utils.common.IdUtils;
 import java.util.HashMap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,6 @@ public class WfServiceImpl implements WfService{
     @Autowired
     WfDetailMapper wfDetailMapper;
 
-    private static String userId = "sysadmin";
     private WfAction setAction(WfAction wfAction, String type){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
@@ -39,11 +39,11 @@ public class WfServiceImpl implements WfService{
         }catch (Exception e){
             e.printStackTrace();
         }
-        wfAction.setUpdater(userId);
+        wfAction.setUpdater(Tools.getUserId());
         wfAction.setUpdateTime(date);
         if (type == "0"){
             wfAction.setCreatTime(date);
-            wfAction.setCreator(userId);
+            wfAction.setCreator(Tools.getUserId());
         }
         return wfAction;
     }
@@ -56,11 +56,11 @@ public class WfServiceImpl implements WfService{
         }catch (Exception e){
             e.printStackTrace();
         }
-        wfDetail.setUpdater(userId);
+        wfDetail.setUpdater(Tools.getUserId());
         wfDetail.setUpdateTime(date);
         if (type == "0"){
             wfDetail.setCreatTime(date);
-            wfDetail.setCreator(userId);
+            wfDetail.setCreator(Tools.getUserId());
         }
         return wfDetail;
     }
@@ -212,6 +212,26 @@ public class WfServiceImpl implements WfService{
         }
     }
 
+    @Override
+    public JsonResult updateWfActionPlus(WfAction wfAction) {
+        if (StringUtils.isEmpty(wfAction)){
+            return new JsonResult("200510");
+        }
+        WfAction wfAction1 = getWfActionById(wfAction.getXid());
+        if (StringUtils.isEmpty(wfAction1)){
+            return new JsonResult("200511");
+        }
+        try {
+//            wfAction = setAction(wfAction,"1");
+            int count = wfActionMapper.updateByPrimaryKeySelective(wfAction);
+            wfAction = getWfActionById(wfAction.getXid());
+            return new JsonResult(1,wfAction);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new JsonResult("200505");
+        }
+    }
+
     /**
      * 修改流程记录状态
      *
@@ -254,6 +274,32 @@ public class WfServiceImpl implements WfService{
     /**
      * 添加流程操作详情
      *
+     * @param wfDetail
+     * @return
+     */
+    @Override
+    public JsonResult addWfDetailPlus(WfDetail wfDetail) {
+        if (StringUtils.isEmpty(wfDetail)){
+            return new JsonResult("200510");
+        }
+        try {
+            wfDetail.setXid(IdUtils.getIncreaseIdByNanoTime());
+//            wfDetail = setAction1(wfDetail,"0");
+            wfDetail.setUpdateTime(new Date());
+            wfDetail.setUpdater("sysadmin");
+            wfDetail.setCreator("sysadmin");
+            wfDetail.setCreatTime(new Date());
+            int count = wfDetailMapper.insertSelective(wfDetail);
+            wfDetail = getWfDetailById(wfDetail.getXid());
+            return new JsonResult(1,wfDetail);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new JsonResult("200504");
+        }
+    }
+    /**
+     * 添加流程操作详情
+     *
      * @param processId    流程实例ID
      * @param actionType   操作类型（1:通过；2：通过并提交；3：驳回）
      * @param actionStatus 操作状态(1:待办；2：已办；3：已办结)
@@ -282,6 +328,37 @@ public class WfServiceImpl implements WfService{
     }
 
     /**
+     * 添加流程操作详情
+     *
+     * @param processId    流程实例ID
+     * @param actionType   操作类型（1:通过；2：通过并提交；3：驳回）
+     * @param actionStatus 操作状态(1:待办；2：已办；3：已办结)
+     * @param actionResult 操作结果（1：待办；2：已办；3：已办结）
+     * @param actionName   操作名称
+     * @param actionTime   操作时间
+     * @param apply        审批人
+     * @param ext1         提交人
+     * @return
+     */
+    @Override
+    public JsonResult addWfDetailPlus(String processId, String actionType, String actionStatus, String actionResult
+            , String actionName, Date actionTime, String apply, String ext1,String applyOrg) {
+        WfDetail wfDetail = new WfDetail();
+        wfDetail.setActionName(actionName);
+        wfDetail.setActionResult(actionResult);
+        wfDetail.setActionTime(actionTime);
+        wfDetail.setActionType(actionType);
+        wfDetail.setApply(apply);
+        wfDetail.setExt1(ext1);
+        wfDetail.setStatus(actionStatus);
+        wfDetail.setProcessId(processId);
+        wfDetail.setApplyOrg(applyOrg);
+        wfDetail.setCreatTime(new Date());
+        JsonResult jsonResult = addWfDetailPlus(wfDetail);
+        return jsonResult;
+    }
+
+    /**
      * 修改流程操作详情
      *
      * @param wfDetail
@@ -306,6 +383,26 @@ public class WfServiceImpl implements WfService{
             return new JsonResult("200504");
         }
     }
+
+    /**
+     * 根据关联表删除所有流程信息
+     *
+     * @param processId 流程id
+     * @return
+     */
+    @Override
+    public JsonResult deleteWfDetailByProcessId(String processId) {
+        try{
+           int count = wfDetailMapper.deleteWfDetailByProcessId(processId);
+           return new JsonResult(1,count);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new JsonResult("200504");
+        }
+
+    }
+
+
 
     /**
      * 根据流程实例ID修改流程详情

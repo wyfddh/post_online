@@ -47,6 +47,8 @@ var main = {
                 //执行一个laydate实例
                 laydate.render({
                     elem: '#loginTime' //指定元素
+                    ,type: 'datetime'
+                    ,range: true
                 });
             });
 
@@ -117,9 +119,14 @@ function loadTable(){
         var table = layui.table;
         var userName = $("#userName").val();
         var loginTime = $("#loginTime").val();
+        var endTime = null;
+        if (null != loginTime && loginTime != ''){
+            endTime = loginTime.split(" - ")[1];
+            loginTime = loginTime.split(" - ")[0];
+        }
         var tableObj = table.render({
             elem: '#test'
-            ,url:property.getProjectPath()+"syslog/getSyslogList.do?username="+userName+"&logintime="+loginTime
+            ,url:property.getProjectPath()+"syslog/getSyslogList.do?username="+userName+"&logintime="+loginTime+"&endTime="+endTime
             ,request:{
                 pageName: 'currentPage',
                 limitName: 'size'
@@ -166,7 +173,7 @@ function loadTable(){
                                 if (result.success == 1) {
                                     successMsg("删除日志成功");
                                     loadTable();
-                                } else {
+                                } else if (result.success == 0){
                                     errorMsg(result.error.message);
                                 }
                             },

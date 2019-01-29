@@ -6,6 +6,7 @@ import com.tj720.model.common.bookingmanage.PostBookingManage;
 import com.tj720.service.PostBookingService;
 import com.tj720.utils.DateFormartUtil;
 import com.tj720.utils.Page;
+import com.tj720.utils.Tools;
 import com.tj720.utils.common.IdUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +24,7 @@ import java.util.List;
  **/
 @Service
 public class PostBookingServiceImpl implements PostBookingService{
-    private String userId = "sysadmin";
-    
+
     @Autowired
     private PostBookingManageMapper postBookingManageMapper;
 
@@ -36,7 +36,7 @@ public class PostBookingServiceImpl implements PostBookingService{
                     userId,orderBy,page.getCurrentPage(), page.getSize());
             page.setAllRow(count);
             List<PostBookingManage> bookingList = postBookingManageMapper.getBookingList(bookingType, contacts, orderTime,
-                    null,orderBy, page.getStart(), page.getSize());
+                    userId,orderBy, page.getStart(), page.getSize());
             for (PostBookingManage postBookingManage  : bookingList){
                 //时间处理
                 Date createTime1 = postBookingManage.getCreateTime();
@@ -123,8 +123,8 @@ public class PostBookingServiceImpl implements PostBookingService{
             record.setContacts("guest");
             record.setCreateTime(new Date());
             record.setUpdateTime(new Date());
-            record.setCreator(userId);
-            record.setUserId(userId);
+            record.setCreator(Tools.getUserId());
+            record.setUserId(Tools.getUserId());
             record.setDataState("1");
             int count =  postBookingManageMapper.insertSelective(record);
             if (count >0){
@@ -149,9 +149,9 @@ public class PostBookingServiceImpl implements PostBookingService{
                 return new JsonResult(0,"参数有误");
             }
             if(StringUtils.isNotBlank(record.getId())){
-                record.setUpdater("sysadmin");
+                record.setUpdater(Tools.getUserId());
                 record.setUpdateTime(new Date());
-                record.setUserId(userId);
+                record.setUserId(Tools.getUserId());
                 int count =   postBookingManageMapper.updateByPrimaryKey(record);
                 if (count >0){
                     return new JsonResult(1,null);

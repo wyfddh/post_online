@@ -71,7 +71,7 @@ public class SysUserlogServiceImpl implements SysUserlogService {
     }
 
     @Override
-    public JSONObject userlogList(String userName, String loginTime, Integer currentPage, Integer size) throws
+    public JSONObject userlogList(String userName, String loginTime,String endTime, Integer currentPage, Integer size) throws
             Exception{
         JSONObject jsonObject = new JSONObject();
         try {
@@ -80,14 +80,9 @@ public class SysUserlogServiceImpl implements SysUserlogService {
             page.setCurrentPage(currentPage);
 
             Map<String,Object> map = new HashMap<String,Object>();
-            if (StringUtils.isNotBlank(userName)) {
-                map.put("username",userName);
-            }
-            if (StringUtils.isNotBlank(loginTime)){
-                map.put("logintime",loginTime);
-            }
-
-
+            map.put("username",userName);
+            map.put("logintime",loginTime);
+            map.put("endTime",endTime);
             //符合条件总数
             int count= sysUserlogMapper.count(map);
             page.setAllRow(count);

@@ -141,6 +141,15 @@ var main = {
           upload = layui.upload, element = layui.element;
 
 
+        form.verify({
+            number2Mix : function(value) {
+                var reg = /^\d+(\.\d{0,2})?$/;
+                if (!reg.test(value)) {
+                    return '请输入最多包含两位小数的数字';
+                }
+            }
+        });
+
 
         $.get(projectName + 'interfaceCollect/getCollctTypeList.do', function (res) {
             if (res.success == 1) {
@@ -301,7 +310,7 @@ var main = {
               setTimeout(function () {
                 $('.myRefresh', window.parent.document).click();
               },800)
-            } else {
+            } else if (res.success == 0){
               errorMsg();
               $('.msg').css("top","300px");
             }
@@ -540,7 +549,7 @@ var main = {
                 "</div>" +
                 "<div class=\"upRight\">" +
                 "<div class='layui-progress layui-col-md8 layui-col-sm8' lay-showPercent='yes' lay-filter='progressBar"+index+"'>" +
-                "<div class=\"layui-progress-bar layui-progress-big layui-bg-red\" lay-percent=\"30%\">" +
+                "<div class=\"layui-progress-bar layui-progress-big layui-bg-blue\" lay-percent=\"30%\">" +
                 '<span class="layui-progress-text">'+'0%'+'</span>'+'</div>' +
                 "</div>" +
                 "<a href=\"javascript:void (0);\" style='margin-left:15px;' class=\"layui-col-md1 layui-col-sm1 layui-hide demo-reload\">重传</a>" +
@@ -572,8 +581,8 @@ var main = {
                 tr.siblings(".upRight").find(".demo-cancel").attr("data-id",res.data.id);
                 tr.siblings(".upRight").find(".demo-delete").removeClass("demo-cancel");
 
-                tr.siblings(".upRight").find(".layui-bg-red").addClass("layui-bg-green");
-                tr.siblings(".upRight").find(".layui-bg-green").removeClass("layui-bg-red");
+                tr.siblings(".upRight").find(".layui-bg-blue").addClass("layui-bg-green");
+                tr.siblings(".upRight").find(".layui-bg-green").removeClass("layui-bg-blue");
                 return delete this.files[index]; //删除文件队列已经上传成功的文件
               }else {
                 var tr = demoListView.find('#upload-'+ index)
@@ -591,6 +600,8 @@ var main = {
               //     ,tds = tr.children();
               // tds.eq(1).html('<span style="color: #FF5722;">上传失败</span>');
               tr.siblings(".upRight").find('.demo-reload').removeClass('layui-hide'); //显示重传
+              tr.siblings(".upRight").find(".layui-bg-blue").addClass("layui-bg-red");
+              tr.siblings(".upRight").find(".layui-bg-red").removeClass("layui-bg-blue");
             }
           });
           //删除附件
@@ -683,7 +694,7 @@ function deleteAttachment(attId) {
             if (result.success == 1) {
                 successMsg("删除成功");
                 attachmentsList = loadAttachments(tableId);
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.data);
             }
         },
@@ -728,7 +739,7 @@ function loadAttachments(fkId) {
         success:function(result) {
             if (result.success == 1) {
                 datas = result.data;
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.data);
             }
         },

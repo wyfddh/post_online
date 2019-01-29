@@ -4,6 +4,7 @@ package com.tj720.service.impl;/**
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.tj720.controller.attachment.FileBase64;
 import com.tj720.controller.framework.JsonResult;
 import com.tj720.controller.springbeans.Config;
 import com.tj720.dao.*;
@@ -40,9 +41,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @ClassName: CollectServiceImpl
@@ -54,6 +59,11 @@ import java.util.*;
 @Service
 public class WebInterfaceServiceImpl implements WebInterfaceService {
 
+    @Autowired
+    HttpServletRequest request;
+
+    @Autowired
+    ImageUtiilService imageUtilService;
 
     @Autowired
     private  CollectMapper collectMapper;
@@ -134,12 +144,12 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
             collectDto.setMsg(collect.getMsg());
             String pictureids = collect.getPictureids();
             collectDto.setPictureids(pictureids);
-            List<Attachment> attList = getListUseAttachments(pictureids);
+            List<Attachment> attList = attachmentService.getFileTransPathList(pictureids);
             collectDto.setAttachmentList(attList);
             collectDto.setName(collect.getName());
             collectDto.setCommend(collect.getCommend());
             String typeId = collect.getTypeId();
-            if(StringUtils.isNotBlank(typeId)){
+            if (StringUtils.isNotBlank(typeId)) {
                 String typeName = sysDictSevice.getDictById(typeId).getDictName();
                 collectDto.setTypeId(typeId);
                 collectDto.setType(typeName);
@@ -162,19 +172,45 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
 
 
     private List<Attachment> getListUseAttachments(String pictureids) {
+        ExecutorService ex = Executors.newFixedThreadPool(20);
         Map map = new HashMap();
         String[] picIds = (pictureids + ",").split(",");
         List<Attachment> attList = new ArrayList<>();
         for (int ii = 0, jj = picIds.length; ii < jj; ii++) {
-            Attachment attachments = new Attachment();
             map.put("attId", picIds[ii]);
+            Future future1 = ex.submit(new ThreadWithCallback(map));
+            try {
+                attList.add((Attachment) future1.get());
+            } catch (InterruptedException e) {
+
+            } catch (ExecutionException e) {
+
+            }
+        }
+
+        ex.shutdown();
+        return attList;
+    }
+
+    class ThreadWithCallback implements Callable {
+
+        private List<Attachment> attList = new ArrayList<>();
+        private Map map = new HashMap();
+
+        public ThreadWithCallback(Map map) {
+            this.map = map;
+        }
+
+        //相当于Thread的run方法
+        @Override
+        public Object call() throws Exception {
             List<Attachment> listAttachment = collectMapper.getAttachmentById(map);
             Attachment attachment = listAttachment.get(0);
-            attachments.setAttPath(config.getRootUrl()+ attachment.getAttPath());
-            attachments.setAttId(attachment.getAttId());
-            attList.add(attachments);
+            String url = config.getImageUrl() + attachment.getAttPath();
+            String s = FileBase64.GetImageStrFromUrl(url);
+            attachment.setAttPath(s);
+            return attachment;
         }
-        return attList;
     }
 
 
@@ -201,7 +237,7 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
             educationDto.setOther1(education.getOther1());
             educationDto.setOther2(education.getOther2());
             educationDto.setOther3(education.getOther3());
-            List<Attachment> attList = getListUseAttachments(picId);
+            List<Attachment> attList = attachmentService.getFileTransPathList(picId);
             educationDto.setAttachmentList(attList);
             educationDtos.add(educationDto);
         }
@@ -333,6 +369,11 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
                 return new JsonResult(0, "20000003");
             } else {
                 collect = collectMapper.selectWebByPrimaryKey(id);
+
+                if (null == collect){
+                    return new JsonResult(1,null);
+                }
+                collect.setMsg(imageUtilService.getContent(collect.getMsg(),"1"));
                 if (StringUtils.isNotBlank(collect.getId())){
                     Map map = new HashMap();
                     CollectDto collectDto = new CollectDto();
@@ -342,15 +383,8 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
                     String pictureids = collect.getPictureids();
 
                     if(StringUtils.isNotBlank(pictureids)){
-                        List<Attachment> attList = getListUseAttachments(pictureids);
-                        if(attList.size()>0 && attList!=null){
-                            for(Attachment  attachment: attList){
-                                //if(! attachment.getAttPath().contains(config.getRootUrl())){
-                                    collectDto.setPicUrl(config.getRootUrl()+attachment.getAttPath());
-                                //}
-                            }
-                            collectDto.setAttachmentList(attList);
-                        }
+                        List<Attachment> attList = attachmentService.getFileTransPathList(pictureids);
+                        collectDto.setAttachmentList(attList);
                     }
 
                     if(collectDto.getCreateTime()!=null){
@@ -399,6 +433,7 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
             } else {
                 CollectDto collect = collectMapper.getCollectByIdAndUser(id,userId);
                 if (collect.getId() != null) {
+                    collect.setMsg(imageUtilService.getContent(collect.getMsg(),"1"));
                     Map map = new HashMap();
                     CollectDto collectDto = new CollectDto();
                     collectDto.setCollect(collect);
@@ -406,7 +441,7 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
                     String typeId = collect.getTypeId();
                     String sonTypeName = null;
                     String pictureids = collect.getPictureids();
-                    List<Attachment> attList = getListUseAttachments(pictureids);
+                    List<Attachment> attList = attachmentService.getFileTransPathList(pictureids);
                     collectDto.setAttachmentList(attList);
                     if(collectDto.getCreateTime()!=null){
                         String appTimeStr = DateFormartUtil.stampToDateSimple(collect.getCreateTime());
@@ -468,62 +503,143 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
     }
 
     @Override
-    public JsonResult   themeshowWebList(String themeName, String themeSource,@RequestParam
-       ("userId") String userId, String id, @RequestParam(defaultValue = "1") Integer currentPage, @RequestParam(defaultValue = "1") Integer size)
+    public JsonResult  themeshowWebList(String themeName, String themeSource,@RequestParam
+            ("userId") String userId, String id, @RequestParam(defaultValue = "1") Integer currentPage, @RequestParam(defaultValue = "1") Integer size)
             throws Exception {
-            Map map = new HashMap();
-            try {
-                Page page = new Page();
-                if (StringUtils.isNotBlank(themeName)) {
-                    map.put("themeName", themeName);
+        Map map = new HashMap();
+        try {
+            Page page = new Page();
+            if (StringUtils.isNotBlank(themeName)) {
+                map.put("themeName", themeName);
+            }
+            if (StringUtils.isNotBlank(themeSource)) {
+                map.put("themeSource", themeSource);
+            }
+//                if (StringUtils.isNotBlank(userId)) {
+//                    map.put("userId", userId);
+//                }
+
+                    map.put("id", id);
+            map.put("userId", userId);
+            page.setSize(size);
+            page.setCurrentPage(currentPage);
+            map.put("currentPage", page.getStart());    //
+            map.put("size", page.getSize());
+            int count = postThemeShowMapper.countWeb(map);
+            page.setAllRow(count);
+
+            List<PostThemeShow> postThemeShows = postThemeShowMapper.themeshowWebList(map);
+
+            //查询分页数据
+
+            if(postThemeShows != null){
+                for (PostThemeShow  postThemeShow  : postThemeShows){
+                    //app端时间处理年月日
+                    String appTimeStr = DateFormartUtil.stampToDateSimple(postThemeShow.getCreateDate());
+                    postThemeShow.setAppCreateTimeStr(appTimeStr);
+                    //获取图片url
+                    postThemeShow.setMainPicUrl("");
+                    List<Attachment> picList = new ArrayList<Attachment>();
+                    if(StringUtils.isNotBlank(postThemeShow.getDatumIds())){
+                        String attId = postThemeShow.getDatumIds();
+                        String[] attIds = attId.split(",");
+                        String url =  request.getContextPath()+"/attach/getFileTransPath.do?id="+attIds[0];
+                        postThemeShow.setMainPicUrl(url);
+//                        if(null != picList && picList.size()>0){
+//                            for (Attachment attachment : picList) {
+//                                if ("1".equals(attachment.getIsMain())){
+//                                    postThemeShow.setMainPicUrl(attachment.getAttPath());
+//                                    break;
+//                                }
+//                            }
+//                            postThemeShow.setPicList(picList);
+//                        }else{
+//                            postThemeShow.setPicList(null);
+//                        }
+                    }
                 }
-                if (StringUtils.isNotBlank(themeSource)) {
-                    map.put("themeSource", themeSource);
-                }
+            }
+            return new JsonResult(1,postThemeShows);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new JsonResult(0,null,"111116");
+        }
+    }
+    @Override
+    public JsonResult getThemShow(String id){
+        try {
+            PostThemeShow postThemeShow = postThemeShowMapper.selectByPrimaryKey(id);
+            String attId = postThemeShow.getDatumIds();
+            String[] attIds = attId.split(",");
+            String url =  request.getContextPath()+"/attach/getFileTransPath.do?id="+attIds[0];
+            postThemeShow.setMainPicUrl(url);
+            return new JsonResult(1,postThemeShow);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new JsonResult(0,null,"111116");
+        }
+    }
+
+
+
+
+    @Override
+    public JsonResult  themeshowWebRelationList(String themeName, String themeSource,@RequestParam
+            ("userId") String userId, String id, @RequestParam(defaultValue = "1") Integer currentPage, @RequestParam(defaultValue = "1") Integer size)
+            throws Exception {
+        Map map = new HashMap();
+        try {
+            Page page = new Page();
+            if (StringUtils.isNotBlank(themeName)) {
+                map.put("themeName", themeName);
+            }
+            if (StringUtils.isNotBlank(themeSource)) {
+                map.put("themeSource", themeSource);
+            }
 //                if (StringUtils.isNotBlank(userId)) {
 //                    map.put("userId", userId);
 //                }
 //                if (StringUtils.isNotBlank(id)) {
 //                    map.put("userId", id);
 //                }
-                map.put("userId", userId);
-                page.setSize(size);
-                page.setCurrentPage(currentPage);
-                map.put("currentPage", page.getStart());    //
-                map.put("size", page.getSize());
-                int count = postThemeShowMapper.countWeb(map);
-                page.setAllRow(count);
+            map.put("userId", userId);
+            map.put("id", id);
+            page.setSize(size);
+            page.setCurrentPage(currentPage);
+            map.put("currentPage", page.getStart());    //
+            map.put("size", page.getSize());
+            int count = postThemeShowMapper.countWebRelation(map);
+            page.setAllRow(count);
 
-                List<PostThemeShow> postThemeShows = postThemeShowMapper.themeshowWebList(map);
+            List<PostThemeShow> postThemeShows = postThemeShowMapper.themeshowWebListRelation(map);
 
-                //查询分页数据
+            //查询分页数据
 
-                if(postThemeShows != null){
-                    for (PostThemeShow  postThemeShow  : postThemeShows){
-                        //app端时间处理年月日
-                        String appTimeStr = DateFormartUtil.stampToDateSimple(postThemeShow.getCreateDate());
-                        postThemeShow.setAppCreateTimeStr(appTimeStr);
-                        //获取图片url
-                        postThemeShow.setMainPicUrl("");
-                        List<Attachment> picList = new ArrayList<Attachment>();
-                        if(StringUtils.isNotBlank(postThemeShow.getDatumIds())){
-                            picList = attachmentService.getListByIds(postThemeShow.getDatumIds());
-                            if(picList.size()>0){
-                                for (Attachment attachment : picList) {
-                                    if(! attachment.getAttPath().contains(config.getRootUrl())){
-                                        attachment.setAttPath(config.getRootUrl()+attachment.getAttPath());
-                                    }
+            if(postThemeShows != null){
+                for (PostThemeShow  postThemeShow  : postThemeShows){
+                    //app端时间处理年月日
+                    String appTimeStr = DateFormartUtil.stampToDateSimple(postThemeShow.getCreateDate());
+                    postThemeShow.setAppCreateTimeStr(appTimeStr);
+                    //获取图片url
+                    postThemeShow.setMainPicUrl("");
+                    List<Attachment> picList = new ArrayList<Attachment>();
+                    if(StringUtils.isNotBlank(postThemeShow.getDatumIds())){
+                        picList = attachmentService.getFileTransPathList(postThemeShow.getDatumIds());
+                        if(null != picList && picList.size()>0){
+                            for (Attachment attachment : picList) {
 
-                                    if (attachment.getIsMain().equals("1")){
-                                        postThemeShow.setMainPicUrl(attachment.getAttPath());
-                                        break;
-                                    }
+                                if ("1".equals(attachment.getIsMain())){
+                                    postThemeShow.setMainPicUrl(attachment.getAttPath());
+                                    break;
                                 }
-                                postThemeShow.setPicList(picList);
                             }
+                            postThemeShow.setPicList(picList);
+                        }else{
+                            postThemeShow.setPicList(null);
                         }
                     }
                 }
+            }
 
 
             return new JsonResult(1,postThemeShows);
@@ -532,6 +648,11 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
             return new JsonResult(0,null,"111116");
         }
     }
+
+
+
+
+
 
     @Override
     public JsonResult themeshowWebNoPages(String themeName, String themeSource)
@@ -555,13 +676,9 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
                     //获取图片url
                     postThemeShow.setMainPicUrl("");
                     List<Attachment> picList = new ArrayList<Attachment>();
-                    picList = attachmentService.getListByIds(postThemeShow.getDatumIds());
+                    picList = attachmentService.getFileTransPathList(postThemeShow.getDatumIds());
                     for (Attachment attachment : picList) {
-                        if(! attachment.getAttPath().contains(config.getRootUrl())){
-                            attachment.setAttPath(config.getRootUrl()+attachment.getAttPath());
-                        }
-
-                        if (attachment.getIsMain().equals("1")){
+                        if ("1".equals(attachment.getIsMain())){
                             postThemeShow.setMainPicUrl(attachment.getAttPath());
                             break;
                         }
@@ -594,22 +711,21 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
             //查询分页数据
             if(postThemeShows != null){
                 for (PostThemeShow  postThemeShow  : postThemeShows){
-
+                    String attId = postThemeShow.getDatumIds();
+                    String[] attIds = attId.split(",");
+                    String url = request.getContextPath()+"/attach/getFileTransPath.do?id="+attIds[0];
+                    postThemeShow.setMainPicUrl(url);
                     //获取图片url
-                    postThemeShow.setMainPicUrl("");
-                    List<Attachment> picList = new ArrayList<Attachment>();
-                    picList = attachmentService.getListByIds(postThemeShow.getDatumIds());
-                    for (Attachment attachment : picList) {
-                        if(! attachment.getAttPath().contains(config.getRootUrl())){
-                            attachment.setAttPath(config.getRootUrl()+attachment.getAttPath());
-                        }
-
-                        if (attachment.getIsMain().equals("1")){
-                            postThemeShow.setMainPicUrl(attachment.getAttPath());
-                            break;
-                        }
-                    }
-                    postThemeShow.setPicList(picList);
+//                    postThemeShow.setMainPicUrl("");
+//                    List<Attachment> picList = new ArrayList<Attachment>();
+//                    picList = attachmentService.getFileTransPathList(postThemeShow.getDatumIds());
+//                    for (Attachment attachment : picList) {
+//                        if ("1".equals(attachment.getIsMain())){
+//                            postThemeShow.setMainPicUrl(attachment.getAttPath());
+//                            break;
+//                        }
+//                    }
+//                    postThemeShow.setPicList(picList);
                 }
             }
 
@@ -630,21 +746,22 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
             //查询分页数据
             if(postThemeShows != null){
                 for (CollectDto  postThemeShow  : postThemeShows){
+                    String attId = postThemeShow.getPictureids();
+                    String[] attIds = attId.split(",");
+                    String url =  request.getContextPath()+"/attach/getFileTransPath.do?id="+attIds[0];
+                    postThemeShow.setMainPicUrl(url);
                     //获取图片url
-                    postThemeShow.setMainPicUrl("");
-                    List<Attachment> picList = new ArrayList<Attachment>();
-                    picList = attachmentService.getListByIds(postThemeShow.getPictureids());
-                    for (Attachment attachment : picList) {
-                        String url = attachment.getAttPath();
-                        if(! attachment.getAttPath().contains(config.getRootUrl())){
-                            url = config.getRootUrl()+attachment.getAttPath();
-                        }
-                        if (attachment.getIsMain().equals("1")||picList.size()==1){
-                            postThemeShow.setMainPicUrl(url);
-                            break;
-                        }
-                    }
-                    postThemeShow.setPicList(picList);
+//                    postThemeShow.setMainPicUrl("");
+//                    List<Attachment> picList = new ArrayList<Attachment>();
+//                    picList = attachmentService.getFileTransPathList(postThemeShow.getPictureids());
+//                    for (Attachment attachment : picList) {
+//                        String url = attachment.getAttPath();
+//                        if ("1".equals(attachment.getIsMain()) ||picList.size()==1){
+//                            postThemeShow.setMainPicUrl(url);
+//                            break;
+//                        }
+//                    }
+//                    postThemeShow.setPicList(picList);
                 }
             }
             return new JsonResult(1,postThemeShows);
@@ -662,18 +779,14 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
                 return new JsonResult(0,"参数错误");
             }
             PostThemeShow postThemeShow = postThemeShowMapper.selectWebByPrimaryKey(id);
+
             //根据主题展id 查询相关的藏品list
             List<Attachment> picList1 = new ArrayList<Attachment>();
             List<Collect> collectList = new ArrayList<Collect>();
             collectList = postThemeShowMapper.getCollectsById(id);
             if(collectList.size()>0 && collectList!=null){
                 for(Collect  collect: collectList){
-                    picList1 = attachmentService.getListByIds(collect.getPictureids());
-                    for (Attachment attachment : picList1) {
-                        if(! attachment.getAttPath().contains(config.getRootUrl())){
-                            attachment.setAttPath(config.getRootUrl()+attachment.getAttPath());
-                        }
-                    }
+                    picList1 = attachmentService.getFileTransPathList(collect.getPictureids());
                     collect.setPicList(picList1);
                 }
                 postThemeShow.setCollectionList(collectList);
@@ -683,12 +796,9 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
                 if(!StringUtils.isBlank(postThemeShow.getDatumIds())){
                     //获取图片url
                     List<Attachment> picList = new ArrayList<Attachment>();
-                    picList = attachmentService.getListByIds(postThemeShow.getDatumIds());
+                    picList = attachmentService.getFileTransPathList(postThemeShow.getDatumIds());
                     for (Attachment attachment : picList) {
-                        if(! attachment.getAttPath().contains(config.getRootUrl())){
-                            attachment.setAttPath(config.getRootUrl()+attachment.getAttPath());
-                        }
-                        if (attachment.getIsMain().equals("1")){
+                        if ("1".equals(attachment.getIsMain())){
                             postThemeShow.setMainPicUrl(attachment.getAttPath());
                             break;
                         }
@@ -737,13 +847,9 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
                     postThemeShow.setMainPicUrl("");
                     List<Attachment> picList = new ArrayList<Attachment>();
                     if(StringUtils.isNotBlank(postThemeShow.getDatumIds())){
-                        picList = attachmentService.getListByIds(postThemeShow.getDatumIds());
+                        picList = attachmentService.getFileTransPathList(postThemeShow.getDatumIds());
                         for (Attachment attachment : picList) {
-                            if(! attachment.getAttPath().contains(config.getRootUrl())){
-                                attachment.setAttPath(config.getRootUrl()+attachment.getAttPath());
-                            }
-
-                            if (attachment.getIsMain().equals("1")){
+                            if ("1".equals(attachment.getIsMain())){
                                 postThemeShow.setMainPicUrl(attachment.getAttPath());
                                 break;
                             }
@@ -797,13 +903,9 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
                     postThemeShow.setMainPicUrl("");
                     List<Attachment> picList = new ArrayList<Attachment>();
                     if(StringUtils.isNotBlank(postThemeShow.getDatumIds())){
-                        picList = attachmentService.getListByIds(postThemeShow.getDatumIds());
+                        picList = attachmentService.getFileTransPathList(postThemeShow.getDatumIds());
                         for (Attachment attachment : picList) {
-                            if(! attachment.getAttPath().contains(config.getRootUrl())){
-                                attachment.setAttPath(config.getRootUrl()+attachment.getAttPath());
-                            }
-
-                            if (attachment.getIsMain().equals("1")){
+                            if ("1".equals(attachment.getIsMain())){
                                 postThemeShow.setMainPicUrl(attachment.getAttPath());
                                 break;
                             }
@@ -847,13 +949,9 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
                 //获取图片url
                 postThemeShow.setMainPicUrl("");
                 List<Attachment> picList = new ArrayList<Attachment>();
-                picList = attachmentService.getListByIds(postThemeShow.getDatumIds());
+                picList = attachmentService.getFileTransPathList(postThemeShow.getDatumIds());
                 for (Attachment attachment : picList) {
-                    if(! attachment.getAttPath().contains(config.getRootUrl())){
-                        attachment.setAttPath(config.getRootUrl()+attachment.getAttPath());
-                    }
-                    attachment.setAttPath(config.getRootUrl()+attachment.getAttPath());
-                    if (attachment.getIsMain().equals("1")){
+                    if ("1".equals(attachment.getIsMain())){
                         postThemeShow.setMainPicUrl(attachment.getAttPath());
                         break;
                     }
@@ -893,20 +991,12 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
             //查询分页数据
             if(postThemeShows != null && postThemeShows.size()>0){
                 for (PostThemeShow postThemeShow : postThemeShows) {
-                    postThemeShow.setMainPicUrl("");
-                    List<Attachment> picList = new ArrayList<Attachment>();
-                    picList = attachmentService.getListByIds(postThemeShow.getDatumIds());
-                    for (Attachment attachment : picList) {
-                        String url = attachment.getAttPath();
-                        if(! attachment.getAttPath().contains(config.getRootUrl())){
-                            url = config.getRootUrl()+attachment.getAttPath();
-                        }
-                        if (attachment.getIsMain().equals("1") || picList.size() ==1){
-                            postThemeShow.setMainPicUrl(url);
-                            break;
-                        }
-                    }
-                    postThemeShow.setPicList(picList);
+//                    List<Attachment> picList = new ArrayList<Attachment>();
+                    String attId = postThemeShow.getDatumIds();
+                   String[] attIds = attId.split(",");
+                    String url =  request.getContextPath()+"/attach/getFileTransPath.do?id="+attIds[0];
+                    postThemeShow.setMainPicUrl(url);
+//                    postThemeShow.setPicList(picList);
                 }
                 return new JsonResult(1,postThemeShows);
             }else {
@@ -928,36 +1018,41 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
                     orderBy,page.getStart(), page.getSize());
             //查询分页数据
             List<Attachment> picList = new ArrayList<Attachment>();
-            for (PostInformationManage postInformationManage : informationList){
-                //时间处理
-                Date createTime1 = postInformationManage.getCreateTime();
-                String timeStr = DateFormartUtil.stampToDateDevelop(createTime1);
-                String appTimeStr = DateFormartUtil.stampToDateSimple(postInformationManage.getCreateTime());
-                postInformationManage.setCreateTimeStr(timeStr);
-                postInformationManage.setAppCreateTimeStr(appTimeStr);//app端展示时间  年月日
-                String[] times= timeStr.split("-");
-                postInformationManage.setCreateTimeYear(times[0]);
-                postInformationManage.setCreateTimeMonthDay(times[1]+"-"+times[2].substring(0,2));
-                String txtcontent = postInformationManage.getInformationContent();
-                if (!MyString.isEmpty(txtcontent)) {
-                    //剔出<html>的标签
-                    txtcontent = txtcontent.replaceAll("</?[^>]+>", "");
-                    //去除字符串中的空格,回车,换行符,制表符
-                    txtcontent = txtcontent.replaceAll("&nbsp;", "");
+            if (null != informationList && informationList.size()>0) {
+                for (PostInformationManage postInformationManage : informationList) {
+                    //时间处理
+                    Date createTime1 = postInformationManage.getCreateTime();
+                    String timeStr = DateFormartUtil.stampToDateDevelop(createTime1);
+                    String appTimeStr = DateFormartUtil.stampToDateSimple(postInformationManage.getCreateTime());
+                    postInformationManage.setCreateTimeStr(timeStr);
+                    postInformationManage.setAppCreateTimeStr(appTimeStr);//app端展示时间  年月日
+                    String[] times = timeStr.split("-");
+                    postInformationManage.setCreateTimeYear(times[0]);
+                    postInformationManage.setCreateTimeMonthDay(times[1] + "-" + times[2].substring(0, 2));
+                    String txtcontent = postInformationManage.getInformationContent();
+                    if (!MyString.isEmpty(txtcontent)) {
+                        //剔出<html>的标签
+                        txtcontent = txtcontent.replaceAll("</?[^>]+>", "");
+                        //去除字符串中的空格,回车,换行符,制表符
+                        txtcontent = txtcontent.replaceAll("&nbsp;", "");
+                        txtcontent = txtcontent.trim();
+                    }
+                    txtcontent = imageUtilService.getContent(txtcontent,"1");
+                    postInformationManage.setInformationContent(txtcontent);
+                    //获取图片url
+                    picList = attachmentService.getFileTransPathList(postInformationManage.getDatumIds());
+                    if (null != picList && picList.size() > 0) {
+                        for (Attachment attachment : picList) {
+                            if ("1".equals(attachment.getIsMain())) {
+                                postInformationManage.setMainPicUrl(attachment.getAttPath());
+                                break;
+                            }
+                        }
+                        postInformationManage.setPicList(picList);
+                    } else {
+                        postInformationManage.setPicList(null);
+                    }
                 }
-                postInformationManage.setInformationContent(txtcontent);
-                //获取图片url
-                picList = attachmentService.getListByIds(postInformationManage.getDatumIds());
-                 for (Attachment attachment : picList) {
-                     if(! attachment.getAttPath().contains(config.getRootUrl())){
-                         attachment.setAttPath(config.getRootUrl()+attachment.getAttPath());
-                     }
-                    if (attachment.getIsMain().equals("1")){
-                         postInformationManage.setMainPicUrl(attachment.getAttPath());
-                         break;
-                     }
-                }
-                postInformationManage.setPicList(picList);
             }
             return new JsonResult(1,informationList);
         }catch (Exception e){
@@ -974,6 +1069,7 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
                 return new JsonResult(0,"000020");
             }
             PostInformationManage postInformationManage = postInformationManageMapper.selectWebInfoByPrimaryKey(id);
+            postInformationManage.setInformationContent(imageUtilService.getContent(postInformationManage.getInformationContent(),"1"));
             if(postInformationManage.getCreateTime()!=null){
                 Date createTime1 = postInformationManage.getCreateTime();
                 String timeStr = DateFormartUtil.stampToDateDevelop(createTime1);
@@ -1000,13 +1096,9 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
                 //获取图片url
                 postInformationManage.setMainPicUrl("");
                 List<Attachment> picList = new ArrayList<Attachment>();
-                picList = attachmentService.getListByIds(postInformationManage.getDatumIds());
+                picList = attachmentService.getFileTransPathList(postInformationManage.getDatumIds());
                 for (Attachment attachment : picList) {
-                    if(! attachment.getAttPath().contains(config.getRootUrl())){
-                        attachment.setAttPath(config.getRootUrl()+attachment.getAttPath());
-                    }
-
-                    if (attachment.getIsMain().equals("1")){
+                    if ("1".equals(attachment.getIsMain())){
                         postInformationManage.setMainPicUrl(attachment.getAttPath());
                         break;
                     }
@@ -1061,7 +1153,10 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
                         txtcontent = txtcontent.replaceAll("</?[^>]+>", "");
                         //去除字符串中的空格,回车,换行符,制表符
                         txtcontent = txtcontent.replaceAll("&nbsp;", "");
+
+                        txtcontent = txtcontent.trim();
                     }
+                    txtcontent = imageUtilService.getContent(txtcontent,"1");
                     postStampStory.setStoryContent(txtcontent);
                 }
 
@@ -1070,12 +1165,9 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
                 //获取图片url
                 postStampStory.setMainPicUrl("");
                 List<Attachment> picList = new ArrayList<Attachment>();
-                picList = attachmentService.getListByIds(postStampStory.getDatumIds());
+                picList = attachmentService.getFileTransPathList(postStampStory.getDatumIds());
                 for (Attachment attachment : picList) {
-                    if(! attachment.getAttPath().contains(config.getRootUrl())){
-                        attachment.setAttPath(config.getRootUrl()+attachment.getAttPath());
-                    }
-                    if (attachment.getIsMain().equals("1")){
+                    if ("1".equals(attachment.getIsMain())){
                         postStampStory.setMainPicUrl(attachment.getAttPath());
                         break;
                     }
@@ -1098,6 +1190,7 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
             }
             PostStampStory postStampStory = postStampStoryMapper.selectWebStoyrByPrimaryKey(id);
             //时间处理
+            postStampStory.setStoryContent(imageUtilService.getContent(postStampStory.getStoryContent(),"1"));
             Date createTime1 = postStampStory.getCreateTime();
             String timeStr = DateFormartUtil.stampToDateSimple(createTime1);
             postStampStory.setCreateTimeStr(timeStr);
@@ -1139,13 +1232,9 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
                 //获取图片url
                 postStampStory.setMainPicUrl("");
                 List<Attachment> picList = new ArrayList<Attachment>();
-                picList = attachmentService.getListByIds(postStampStory.getDatumIds());
+                picList = attachmentService.getFileTransPathList(postStampStory.getDatumIds());
                 for (Attachment attachment : picList) {
-                    postStampStory.setMainPicUrl(config.getRootUrl()+attachment.getAttPath());
-                    if(! attachment.getAttPath().contains(config.getRootUrl())){
-                        attachment.setAttPath(config.getRootUrl()+attachment.getAttPath());
-                    }
-
+                    postStampStory.setMainPicUrl(attachment.getAttPath());
                 }
                 postStampStory.setPicList(picList);
             }
@@ -1164,16 +1253,17 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
             if (StringUtils.isEmpty(id)) {
                 return new JsonResult(0, "20000003");
             }
-               if(StringUtils.isNotBlank(id)){
-                   research = researchMapper.selectWebReserarchByKey(id);
-                   if(research !=null){
-                       //时间处理
-                       Date createTime1 = research.getCreateTime();
-                       String timeStr = DateFormartUtil.stampToDateSimple(createTime1);
-                       research.setCreateTimeStr(timeStr);
-                       String[] times= timeStr.split("-");
-                       research.setCreateTimeYear(times[0]);
-                       research.setCreateTimeMonthDay(times[1]+"-"+times[2]);
+            if(StringUtils.isNotBlank(id)){
+                research = researchMapper.selectWebReserarchByKey(id);
+                research.setMsg(imageUtilService.getContent(research.getMsg(),"1"));
+                if(research !=null){
+                    //时间处理
+                    Date createTime1 = research.getCreateTime();
+                    String timeStr = DateFormartUtil.stampToDateSimple(createTime1);
+                    research.setCreateTimeStr(timeStr);
+                    String[] times= timeStr.split("-");
+                    research.setCreateTimeYear(times[0]);
+                    research.setCreateTimeMonthDay(times[1]+"-"+times[2]);
 
                        /*String txtcontent =  research.getMsg();
                        if (!MyString.isEmpty(txtcontent)) {
@@ -1183,8 +1273,8 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
                            txtcontent = txtcontent.replaceAll("&nbsp;", "");
                        }
                        research.setMsg(txtcontent);*/
-                   }
-               }
+                }
+            }
 
             return new JsonResult(1, research);
 
@@ -1231,7 +1321,10 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
                     txtcontent = txtcontent.replaceAll("</?[^>]+>", "");
                     //去除字符串中的空格,回车,换行符,制表符
                     txtcontent = txtcontent.replaceAll("&nbsp;", "");
+
+                    txtcontent = txtcontent.trim();
                 }
+                txtcontent = imageUtilService.getContent(txtcontent,"1");
                 research.setMsg(txtcontent);
 
 
@@ -1298,17 +1391,13 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
                 educationDto.setOther1(education.getOther1());
                 educationDto.setOther2(education.getOther2());
                 educationDto.setOther3(education.getOther3());
+                educationDto.setMsg(imageUtilService.getContent(educationDto.getMsg(),"1"));
 
-                List<Attachment> attList = getListUseAttachments(picId);
+                List<Attachment> attList = attachmentService.getFileTransPathList(picId);
                 if (attList.size() > 0) {
                     for (Attachment attachment : attList){
                         if (!attachment.getAttPath().contains(config.getRootUrl())) {
-                            educationDto.setPicId((config.getRootUrl() + attachment.getAttPath()));
-                        }
-
-
-                        if (!attachment.getAttPath().contains(config.getRootUrl())) {
-                            attachment.setAttPath(config.getRootUrl() + attachment.getAttPath());
+                            educationDto.setPicId((attachment.getAttPath()));
                         }
                     }
                     education.setPicList(attList);
@@ -1362,13 +1451,11 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
                 education.setMainPicUrl("");
                 List<Attachment> picList = new ArrayList<Attachment>();
                 if (StringUtils.isNotBlank(education.getPicId())) {
-                    picList = attachmentService.getListByIds(education.getPicId());
+                    picList = attachmentService.getFileTransPathList(education.getPicId());
                     if (picList.size() > 0) {
                         for (Attachment attachment : picList) {
-                            education.setMainPicUrl(config.getRootUrl() + attachment.getAttPath());
-                            if (!attachment.getAttPath().contains(config.getRootUrl())) {
-                                attachment.setAttPath(config.getRootUrl() + attachment.getAttPath());
-                            }
+                            education.setMainPicUrl(attachment.getAttPath());
+
                         }
                         education.setPicList(picList);
                     }
@@ -1388,7 +1475,16 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
                         txtcontent = txtcontent.replaceAll("</?[^>]+>", "");
                         //去除字符串中的空格,回车,换行符,制表符
                         txtcontent = txtcontent.replaceAll("&nbsp;", "");
+                        txtcontent = txtcontent.replaceAll("&ensp;", "");
+                        txtcontent = txtcontent.replaceAll("&emsp;", "");
+                        txtcontent = txtcontent.trim();
+                        txtcontent = txtcontent.replaceAll("\\s","");
+                        txtcontent = txtcontent.replaceAll("\\s*|\t|\r|\n","");
+                        Pattern p = Pattern.compile("\\*s|\t|\r|\n");
+                        Matcher m = p.matcher(txtcontent);
+                        txtcontent= m.replaceAll("");
                     }
+                    txtcontent = imageUtilService.getContent(txtcontent,"1");
                     education.setMsg(txtcontent);
 
 
@@ -1432,7 +1528,9 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
                     txtcontent = txtcontent.replaceAll("</?[^>]+>", "");
                     //去除字符串中的空格,回车,换行符,制表符
                     txtcontent = txtcontent.replaceAll("&nbsp;", "");
+                    txtcontent = txtcontent.trim();
                 }
+                txtcontent = imageUtilService.getContent(txtcontent,"1");
                 postCollectHome.setInformationContent(txtcontent);
             }
             return new JsonResult(1,homeList);
@@ -1449,7 +1547,7 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
                 return new JsonResult(0,"参数错误");
             }
             PostCollectHome postCollectHome = postCollectHomeMapper.selectByWebHome(id);
-
+            postCollectHome.setInformationContent(imageUtilService.getContent(postCollectHome.getInformationContent(),"1"));
             Date createTime1 = postCollectHome.getCreateTime();
             String timeStr = DateFormartUtil.stampToDateDevelop(createTime1);
             postCollectHome.setCreateTimeStr(timeStr);
@@ -1479,6 +1577,7 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
             //当前页信息
             if(currentPage-1>=0){
                 Research researchInfo =  researchMapper.getDetailResearchById(currentPage-1);
+                researchInfo.setMsg(imageUtilService.getContent(researchInfo.getMsg(),"1"));
                 resultMap.put("researchInfo",researchInfo);
             }else{
                 return new JsonResult(0,"参数异常");
@@ -1487,12 +1586,18 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
             //上一页
             if(currentPage-2>=0){
                 Research researchInfoLast =  researchMapper.getDetailResearchById(currentPage-2);
+                if(null != researchInfoLast) {
+                    researchInfoLast.setMsg(imageUtilService.getContent(researchInfoLast.getMsg(), "1"));
+                }
                 resultMap.put("researchInfoLast",researchInfoLast);
             }
 
             //下一页
             if(currentPage>=0){
                 Research researchInfoNext =  researchMapper.getDetailResearchById(currentPage);
+                if(null != researchInfoNext){
+                    researchInfoNext.setMsg(imageUtilService.getContent(researchInfoNext.getMsg(),"1"));
+                }
                 resultMap.put("researchInfoNext",researchInfoNext);
             }
             return new JsonResult(1,resultMap);
@@ -1511,11 +1616,17 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
                 if("1".equals(informationType)){
                     PostInformationManage informationManage = postInformationManageMapper.getDetailInfoById(currentPage -
                             1,null);
+                    if(null != informationManage){
+                        informationManage.setInformationContent(imageUtilService.getContent(informationManage.getInformationContent(),"1"));
+                    }
                     resultMap.put("informationManage",informationManage);
                 }else{
                     PostInformationManage informationManage = postInformationManageMapper.getDetailInfoById(currentPage -
                             1,informationType);
-                    resultMap.put("informationManage",informationManage);
+                    if(null != informationManage) {
+                        informationManage.setInformationContent(imageUtilService.getContent(informationManage.getInformationContent(), "1"));
+                    }
+                    resultMap.put("informationManage", informationManage);
                 }
 
             }else{
@@ -1527,10 +1638,17 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
                 if("1".equals(informationType)){
                     PostInformationManage infoManageLast = postInformationManageMapper.getDetailInfoById(currentPage
                             - 2,null);
-                    resultMap.put("infoManageLast",infoManageLast);
+                    if(null != infoManageLast) {
+                        infoManageLast.setInformationContent(imageUtilService.getContent(infoManageLast.getInformationContent(), "1"));
+                    }
+                    resultMap.put("infoManageLast", infoManageLast);
                 }else{
-                    PostInformationManage infoManageLast = postInformationManageMapper.getDetailInfoById(currentPage - 2,informationType);
-                    resultMap.put("infoManageLast",infoManageLast);
+
+                        PostInformationManage infoManageLast = postInformationManageMapper.getDetailInfoById(currentPage - 2, informationType);
+                    if(null != infoManageLast) {
+                        infoManageLast.setInformationContent(imageUtilService.getContent(infoManageLast.getInformationContent(), "1"));
+                    }
+                    resultMap.put("infoManageLast", infoManageLast);
                 }
 
             }
@@ -1540,9 +1658,15 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
                 if("1".equals(informationType)){
                     PostInformationManage infoManageNext = postInformationManageMapper.getDetailInfoById(currentPage,
                             null);
+                    if(null != infoManageNext) {
+                        infoManageNext.setInformationContent(imageUtilService.getContent(infoManageNext.getInformationContent(), "1"));
+                    }
                     resultMap.put("infoManageNext",infoManageNext);
                 }else{
                     PostInformationManage infoManageNext = postInformationManageMapper.getDetailInfoById(currentPage,informationType);
+                    if(null != infoManageNext) {
+                        infoManageNext.setInformationContent(imageUtilService.getContent(infoManageNext.getInformationContent(), "1"));
+                    }
                     resultMap.put("infoManageNext",infoManageNext);
                 }
             }
@@ -1580,7 +1704,7 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
                     }else if("0".equals(postStampStory.getStoryType())){
                         postStampStory.setStoryTypeStr("全部");
                     }
-
+                    postStampStory.setStoryContent(imageUtilService.getContent(postStampStory.getStoryContent(),"1"));
                     resultMap.put("postStampStory",postStampStory);
                 }
 
@@ -1595,7 +1719,9 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
                     resultMap.put("postStampStory",postStampStory);
                 }*/
                 PostStampStory postStampStoryLast = postStampStoryMapper.getDetailStoryById(currentPage - 2,storyType);
+
                 if( postStampStoryLast!=null){
+                    postStampStoryLast.setStoryContent(imageUtilService.getContent(postStampStoryLast.getStoryContent(),"1"));
                     if("1".equals(postStampStoryLast.getStoryType())){
                         postStampStoryLast.setStoryTypeStr("名著");
                     }else if("2".equals(postStampStoryLast.getStoryType())){
@@ -1624,6 +1750,7 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
                 }*/
                 PostStampStory postStampStoryNext = postStampStoryMapper.getDetailStoryById(currentPage,storyType);
                 if(postStampStoryNext!=null){
+                    postStampStoryNext.setStoryContent(imageUtilService.getContent(postStampStoryNext.getStoryContent(),"1"));
                     if("1".equals(postStampStoryNext.getStoryType())){
                         postStampStoryNext.setStoryTypeStr("名著");
                     }else if("2".equals(postStampStoryNext.getStoryType())){
@@ -1657,30 +1784,19 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
             //当前页信息
             if(currentPage-1>=0){
                 Education educationInfo = educationMapper.getDetailEducationById(currentPage - 1);
-                //时间处理
-                if(educationInfo!=null){
-                    Date createTime1 = educationInfo.getCreateTime();
-                    if(createTime1!=null){
-                        String timeStr = DateFormartUtil.stampToDateDevelop(createTime1);
-                        educationInfo.setCreateTimeStr(timeStr);
-                        String[] times = timeStr.split("-");
-                        educationInfo.setCreateTimeYear(times[0] + "-" + times[1] + "-" + times[2].substring(0, 2));
-                        educationInfo.setCreateTimeMonthDay(times[2].substring(2));
+
+                    //时间处理
+                    if(educationInfo!=null){
+                        Date createTime1 = educationInfo.getCreateTime();
+                        if(createTime1!=null){
+                            String timeStr = DateFormartUtil.stampToDateDevelop(createTime1);
+                            educationInfo.setCreateTimeStr(timeStr);
+                            String[] times = timeStr.split("-");
+                            educationInfo.setCreateTimeYear(times[0] + "-" + times[1] + "-" + times[2].substring(0, 2));
+                            educationInfo.setCreateTimeMonthDay(times[2].substring(2));
+                        }
+                        educationInfo.setMsg(imageUtilService.getContent(educationInfo.getMsg(),"1"));
                     }
-                }
-
-
-
-                //富文本处理
-             /*   String txtcontent =  educationInfo.getMsg();
-                if (!MyString.isEmpty(txtcontent)) {
-                    //剔出<html>的标签
-                    txtcontent = txtcontent.replaceAll("</?[^>]+>", "");
-                    //去除字符串中的空格,回车,换行符,制表符
-                    txtcontent = txtcontent.replaceAll("&nbsp;", "");
-                }
-                educationInfo.setMsg(txtcontent);*/
-
                 resultMap.put("educationInfo",educationInfo);
             }else{
                 return new JsonResult(0,"参数异常");
@@ -1689,6 +1805,7 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
             //上一页
             if(currentPage-2>=0){
                 Education educationLast = educationMapper.getDetailEducationById(currentPage - 2);
+
                 //时间处理
                 if(educationLast!=null){
                     Date createTime1 = educationLast.getCreateTime();
@@ -1699,6 +1816,7 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
                         educationLast.setCreateTimeYear(times[0] + "-" + times[1] + "-" + times[2].substring(0, 2));
                         educationLast.setCreateTimeMonthDay(times[2].substring(2));
                     }
+                    educationLast.setMsg(imageUtilService.getContent(educationLast.getMsg(),"1"));
                 }
 
 
@@ -1712,6 +1830,7 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
                     txtcontent = txtcontent.replaceAll("&nbsp;", "");
                 }
                 educationLast.setMsg(txtcontent);*/
+
                 resultMap.put("educationLast",educationLast);
             }
 
@@ -1729,17 +1848,10 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
                         educationNext.setCreateTimeYear(times[0] + "-" + times[1] + "-" + times[2].substring(0, 2));
                         educationNext.setCreateTimeMonthDay(times[2].substring(2));
                     }
+                    educationNext.setMsg(imageUtilService.getContent(educationNext.getMsg(),"1"));
                 }
 
-                //富文本处理
-              /*  String txtcontent =  educationNext.getMsg();
-                if (!MyString.isEmpty(txtcontent)) {
-                    //剔出<html>的标签
-                    txtcontent = txtcontent.replaceAll("</?[^>]+>", "");
-                    //去除字符串中的空格,回车,换行符,制表符
-                    txtcontent = txtcontent.replaceAll("&nbsp;", "");
-                }
-                educationNext.setMsg(txtcontent);*/
+
                 resultMap.put("educationNext",educationNext);
             }
             return new JsonResult(1,resultMap);
@@ -1756,6 +1868,7 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
             //当前页信息
             if(currentPage-1>=0){
                 PostCollectHome homeInfo = postCollectHomeMapper.getDetailHomeById(currentPage - 1);
+                homeInfo.setInformationContent(imageUtilService.getContent(homeInfo.getInformationContent(),"1"));
                 resultMap.put("homeInfo",homeInfo);
             }else{
                 return new JsonResult(0,"参数异常");
@@ -1764,12 +1877,14 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
             //上一页
             if(currentPage-2>=0){
                 PostCollectHome  postHomeLast = postCollectHomeMapper.getDetailHomeById(currentPage - 2);
+                postHomeLast.setInformationContent(imageUtilService.getContent(postHomeLast.getInformationContent(),"1"));
                 resultMap.put("postHomeLast",postHomeLast);
             }
 
             //下一页
             if(currentPage>=0){
                 PostCollectHome postHomeNext = postCollectHomeMapper.getDetailHomeById(currentPage);
+                postHomeNext.setInformationContent(imageUtilService.getContent(postHomeNext.getInformationContent(),"1"));
                 resultMap.put("postHomeNext",postHomeNext);
             }
             return new JsonResult(1,resultMap);
@@ -1786,11 +1901,12 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
         page.setAllRow(count);
         dto.setStart(page.getStart());
         dto.setSize(page.getSize());
+        dto.setOrderBy("1");//按更新时间排序
         List<PostVolunteerActivitiesVo> voList = postVolunteerActivitiesMapper.getActivitiesList(dto);
         List<PostVolunteerActivitiesVo> result = new ArrayList<PostVolunteerActivitiesVo>();
         for (PostVolunteerActivitiesVo vo : voList) {
             String coverId = vo.getCoverId();
-            Attachment attachment = attachmentService.getAttachmentsById(coverId);
+            Attachment attachment = attachmentService.getFileTransPath(coverId);
             if (null != attachment) {
                 vo.setCoverUrl(attachment.getAttPath());
             }
@@ -1830,7 +1946,7 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
         List<PostVolunteerActivitiesVo> result = new ArrayList<PostVolunteerActivitiesVo>();
         for (PostVolunteerActivitiesVo vo : voList) {
             String coverId = vo.getCoverId();
-            Attachment attachment = attachmentService.getAttachmentsById(coverId);
+            Attachment attachment = attachmentService.getFileTransPath(coverId);
             if (null != attachment) {
                 vo.setCoverUrl(attachment.getAttPath());
             }
@@ -1871,7 +1987,7 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
         List<PostVolunteerActivitiesVo> result = new ArrayList<PostVolunteerActivitiesVo>();
         for (PostVolunteerActivitiesVo vo : voList) {
             String coverId = vo.getCoverId();
-            Attachment attachment = attachmentService.getAttachmentsById(coverId);
+            Attachment attachment = attachmentService.getFileTransPath(coverId);
             if (null != attachment) {
                 vo.setCoverUrl(attachment.getAttPath());
 //                vo.setCoverUrl(null);
@@ -1908,13 +2024,9 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
             List<Attachment> picList1 = new ArrayList<Attachment>();
             for(CollectDto collect : collectList){
                 if(StringUtils.isNotBlank(collect.getPictureids())){
-                    picList1 = attachmentService.getListByIds(collect.getPictureids());
+                    picList1 = attachmentService.getFileTransPathList(collect.getPictureids());
                     if(picList1.size()>0 && StringUtils.isNotBlank(picList1.get(0).getAttPath())){
-                        for (Attachment attachment : picList1) {
-                            if(! attachment.getAttPath().contains(config.getRootUrl())){
-                                attachment.setAttPath(config.getRootUrl()+attachment.getAttPath());
-                            }
-                        }
+
                         collect.setAttachmentList(picList1);
                     }
                 }
@@ -2077,7 +2189,7 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
     @Override
     public JsonResult getPublicCuratorList(String userId, Integer status, Page page) {
         if (StringUtils.isBlank(userId)) {
-                return new JsonResult(0, null, "000021");
+            return new JsonResult(0, null, "000021");
         }
         Map<String, Object> param = new HashMap<String, Object>(2);
         param.put("userId", userId);
@@ -2090,7 +2202,7 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         for (PostPublicCuratorVo vo : voList) {
             vo.setCreateTimeStr(sdf.format(vo.getCreateTime()));
-            Attachment attachment = attachmentService.getAttachmentsById(vo.getDatumIds());
+            Attachment attachment = attachmentService.getFileTransPath(vo.getDatumIds());
             if (null != attachment) {
                 vo.setDatumUrl(attachment.getAttPath());
             }
@@ -2102,7 +2214,7 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
     public JsonResult getPublicCuratorById(String id) {
         PostPublicCuratorVo vo = postPublicCuratorMapper.getPublicCuratorById(id);
         if (null != vo) {
-            Attachment attachment = attachmentService.getAttachmentsById(vo.getDatumIds());
+            Attachment attachment = attachmentService.getFileTransPath(vo.getDatumIds());
             if (null != attachment) {
                 vo.setDatumUrl(attachment.getAttPath());
             }
@@ -2115,7 +2227,7 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
                 if (!org.apache.commons.lang.StringUtils.isBlank(sonTypeId)) {
                     sonType = "-" + sysDictMapper.getDictById(sonTypeId).getDictName();
                 }
-                attachment = attachmentService.getAttachmentsById(dto.getPictureids());
+                attachment = attachmentService.getFileTransPath(dto.getPictureids());
                 if (null != attachment) {
                     dto.setPictureUrl(attachment.getAttPath());
                 }
@@ -2154,7 +2266,7 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
             String type = "";
             String sonType = "";
             CollectDto dto = collectList.get(i);
-            Attachment attachment = attachmentService.getAttachmentsById(dto.getPictureids());
+            Attachment attachment = attachmentService.getFileTransPath(dto.getPictureids());
             if (null != attachment) {
                 dto.setPictureUrl(attachment.getAttPath());
             }
@@ -2215,12 +2327,7 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
             collectList = postThemeShowMapper.getCollectsById(id);
             if(collectList.size()>0 && collectList!=null){
                 for(Collect  collect: collectList){
-                    picList1 = attachmentService.getListByIds(collect.getPictureids());
-                    for (Attachment attachment : picList1) {
-                        if(! attachment.getAttPath().contains(config.getRootUrl())){
-                            attachment.setAttPath(config.getRootUrl()+attachment.getAttPath());
-                        }
-                    }
+                    picList1 = attachmentService.getFileTransPathList(collect.getPictureids());
                     collect.setPicList(picList1);
                 }
                 postThemeShow.setCollectionList(collectList);
@@ -2230,12 +2337,9 @@ public class WebInterfaceServiceImpl implements WebInterfaceService {
                 if(!StringUtils.isBlank(postThemeShow.getDatumIds())){
                     //获取图片url
                     List<Attachment> picList = new ArrayList<Attachment>();
-                    picList = attachmentService.getListByIds(postThemeShow.getDatumIds());
+                    picList = attachmentService.getFileTransPathList(postThemeShow.getDatumIds());
                     for (Attachment attachment : picList) {
-                        if(! attachment.getAttPath().contains(config.getRootUrl())){
-                            attachment.setAttPath(config.getRootUrl()+attachment.getAttPath());
-                        }
-                        if (attachment.getIsMain().equals("1")){
+                        if ("1".equals(attachment.getIsMain())){
                             postThemeShow.setMainPicUrl(attachment.getAttPath());
                             break;
                         }

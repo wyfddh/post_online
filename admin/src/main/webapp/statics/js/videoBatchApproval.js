@@ -102,7 +102,6 @@ var main={
 
             table.on('tool(test)', function(obj){
                 var data = obj.data;
-                //console.log(obj)
                 if(obj.event === 'detail'){
                     localStorage.videoId = data.id;
                     localStorage.pageType = "detail";
@@ -164,7 +163,6 @@ var main={
         });
 
         $("#save").on('click', function(data){
-            debugger;
             var authSetting = $('input[name="authSetting"]:checked').val();
             var remark = $("#remark").val();
             var approval = $("#approval").val();
@@ -191,7 +189,7 @@ var main={
                     if (result.success == 1) {
                         successMsg("操作成功");
                         parent.$t.goback("page/video/uploadApprovalList.html");
-                    } else {
+                    } else if (result.success == 0){
                         errorMsg(result.error.message);
                     }
                 },
@@ -290,7 +288,7 @@ function getDictData() {
             if (result.code == 0) {
                 videoMarkList = result.data;
             } else {
-                errorMsg(result.message);
+                errorMsg();
             }
         },
         error:function(result) {
@@ -331,10 +329,9 @@ function loadData(id) {
             url:property.getProjectPath()+"PostVideo/queryPostVideoDtoById.do",
             success:function(result) {
                 if (result.success == 1) {
-                    console.log(result.data);
                     setFormData(result.data);
                     form.render('select');
-                } else {
+                } else if (result.success == 0){
                     errorMsg(result.error.message);
                 }
             },
@@ -375,9 +372,8 @@ function loadAttachments(fkId) {
         url:property.getProjectPath()+"attach/getAttachmentsByFkId.do",
         success:function(result) {
             if (result.success == 1) {
-                console.log(result.data);
                 datas = result.data;
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.data);
             }
         },
@@ -398,9 +394,8 @@ function queryPostVideoComments(postVideoId) {
         url:property.getProjectPath()+"PostVideoComments/queryPostVideoComments.do",
         success:function(result) {
             if (result.success == 1) {
-                console.log(result.data);
                 datas = result.data;
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.data);
             }
         },
@@ -480,7 +475,6 @@ function loadTable() {
         //监听行工具事件
         table.on('tool(comments)', function(obj){
             var data = obj.data;
-            //console.log(obj)
             if(obj.event === 'del'){
                 var index = top.layer.confirm('真的删除行么', function(index){
                     commentsList.splice(commentsList.indexOf(data),1);
@@ -518,7 +512,7 @@ function deleteAttachment(attId) {
                 var attachmentsListSelect  = component.getSelectSimplePlus(attachmentsList,null,"attachmentList","attId","attName");
                 $("#attachmentsList").append(attachmentsListSelect);
                 form1.render('select');
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.data);
             }
         },
@@ -557,7 +551,7 @@ function setAuthSetting(id){
             success:function(result) {
                 if (result.success == "1") {
                     successMsg("权限设置成功！");
-                } else {
+                } else if (result.success == 0){
                     var resultMsg = result.error.message;
                     errorMsg(resultMsg);
                 }

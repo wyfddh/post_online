@@ -4,7 +4,9 @@ package com.tj720.utils.common;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -26,8 +28,8 @@ import org.springframework.web.multipart.MultipartFile;
  */
 public class POIUtil {
 	private static Logger logger  = Logger.getLogger(POIUtil.class);
-	private final static String xls = "xls";
-	private final static String xlsx = "xlsx";
+	private final static String XLS = "xls";
+	private final static String XLSX = "xlsx";
 
 	/**
 	 * 读入excel文件，解析后返回
@@ -86,7 +88,7 @@ public class POIUtil {
 		//获得文件名
 		String fileName = file.getOriginalFilename();
 		//判断文件是否是excel文件
-		if(!fileName.endsWith(xls) && !fileName.endsWith(xlsx)){
+		if(!fileName.endsWith(XLS) && !fileName.endsWith(XLSX)){
 			logger.error(fileName + "不是excel文件");
 			throw new IOException(fileName + "不是excel文件");
 		}
@@ -100,10 +102,10 @@ public class POIUtil {
 			//获取excel文件的io流
 			InputStream is = file.getInputStream();
 			//根据文件后缀名不同(xls和xlsx)获得不同的Workbook实现类对象
-			if(fileName.endsWith(xls)){
+			if(fileName.endsWith(XLS)){
 				//2003
 				workbook = new HSSFWorkbook(is);
-			}else if(fileName.endsWith(xlsx)){
+			}else if(fileName.endsWith(XLSX)){
 				//2007
 				workbook = new XSSFWorkbook(is);
 			}
@@ -134,6 +136,22 @@ public class POIUtil {
 			break;
 		case Cell.CELL_TYPE_FORMULA: //公式
 			cellValue = String.valueOf(cell.getCellFormula());
+		if (cellValue.equals("NOW()")){
+			try {
+				Date strCell11 = cell.getDateCellValue();
+				SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+				cellValue = simpleDateFormat.format(strCell11);
+			} catch (IllegalStateException e) {
+				cellValue = String.valueOf(cell.getNumericCellValue());
+			}
+		}else{
+			try {
+				cellValue = String.valueOf(cell.getNumericCellValue());
+			}catch (Exception e){
+				cellValue = cell.getStringCellValue();
+			}
+
+		}
 			break;
 		case Cell.CELL_TYPE_BLANK: //空值 
 			cellValue = "";

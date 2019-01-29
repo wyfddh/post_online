@@ -19,14 +19,14 @@ public interface PostLiteratureProcessService {
     JsonResult postLiteratureProcessSave(PostLiteratureProcess postLiteratureProcess);
 
     JSONObject postLiteratureProcessList(String key, String educationNextment, String approveStatus, String orderBy,
-            Integer currentPage, Integer size);
+            Integer currentPage, Integer size,String module);
 
     JsonResult getLiteratureName();
     @Transactional
     JsonResult approveSave(PostLiteratureProcess postLiteratureProcess);
 
     JSONObject borrowingList(String key, String educationNextment, String borrowStatus, String orderBy, Integer currentPage,
-            Integer size);
+            Integer size,String module);
 
     JsonResult modifyState(String id, String status);
 

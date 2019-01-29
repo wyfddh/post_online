@@ -34,9 +34,8 @@ function loadData(id) {
             url:property.getProjectPath()+"collecthome/getHomeById.do",
             success:function(result) {
                 if (result.success == 1) {
-                    debugger
                     setFormData(result.data);
-                } else {
+                } else if (result.success == 0){
                     //top.layer.msg(result.error.message);
                     errorMsg("系统异常");
                 }

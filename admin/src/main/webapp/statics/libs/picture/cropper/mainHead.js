@@ -56,8 +56,8 @@ $(function () {
         }
     }).cropper(options);
 
-    console.log(options);
-    console.log($image.data('cropper'));
+    // console.log(options);
+    // console.log($image.data('cropper'));
 
     // Buttons
     if (!$.isFunction(document.createElement('canvas').getContext)) {
@@ -126,7 +126,7 @@ $(function () {
                     try {
                         data.option = JSON.parse($target.val());
                     } catch (e) {
-                        console.log(e.message);
+                        // console.log(e.message);
                     }
                 }
             }
@@ -174,7 +174,7 @@ $(function () {
                 try {
                     $target.val(JSON.stringify(result));
                 } catch (e) {
-                    console.log(e.message);
+                    // console.log(e.message);
                 }
             }
 

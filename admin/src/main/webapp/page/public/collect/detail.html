@@ -2,6 +2,7 @@
 <html>
 <head>
     <script src="../../../statics/libs/jquery-1.10.2.min.js"></script>
+    <script src="../../../statics/js/jquery.extend.js"></script>
     <link rel="stylesheet" href="../../../statics/css/font-awesome.min.css">
     <!--layui ztree样式-->
     <link rel="stylesheet" href="../../../statics/plugins/layui/css/layui.css" media="all">
@@ -14,6 +15,12 @@
     <script src="../../../statics/plugins/editgrid/plugin/My97DatePicker/WdatePicker.js" type="text/javascript" charset="utf-8"></script>
 
     <script src="../../../statics/plugins/echarts/echarts.js"></script>
+
+    <style type="text/css">
+        .img{
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
 <div class="layui-card">
@@ -49,12 +56,13 @@
                     <div class="oneHeard">
                         <div class="oneLeft">
                             <span>操作人：</span>
-                            <span>admin</span>
-                            <span>系统管理员</span>
+                            <span id="userName">admin</span>
+                            <span >|</span>
+                            <span id="orgName">系统管理员</span>
                         </div>
                         <div class="oneRight">
                             <span>日期：</span>
-                            <span>2018-8-21</span>
+                            <span id="nowDate">2018-8-21</span>
                         </div>
                     </div>
                     <!--<div class="oneBody">
@@ -171,9 +179,9 @@
                                 </div>
                             </li>
                             <li class="layui-row">
-                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*藏品描述</div>
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR" style="height: 220px;">*藏品描述</div>
                                 <div class="layui-form-item m0 layui-col-md8 layui-col-sm8">
-                                    <textarea type="text" name="msg" required lay-verify="required"  placeholder="请输入藏品描述"
+                                    <textarea type="text" name="msg" readonly="readonly" required lay-verify="required"  placeholder="请输入藏品描述"
                                               autocomplete="off" class="layui-input"
                                               style="padding: 5px;height:200px;"></textarea>
                                 </div>
@@ -183,7 +191,8 @@
                                 <!--<div class="layui-form-item m0 layui-col-md3 layui-col-sm3 pl30">-->
                                     <!--<a href="javascript:void (0)" class="imgs"></a>-->
                                 <!--</div>-->
-                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR myheight">*藏品图片</div>
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR " style="height:
+                                 177px;">*藏品图片</div>
                                 <div class="layui-form-item m0 layui-col-md3 layui-col-sm3 pl30 upload-btn-box">
                                     <!--<a href="javascript:void (0)" class="imgs"></a>-->
                                     <a class="" id="picUpload">

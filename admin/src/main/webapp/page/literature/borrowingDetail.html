@@ -2,6 +2,7 @@
 <html>
 <head>
     <script src="../../statics/libs/jquery-1.10.2.min.js"></script>
+    <script src="../../statics/js/jquery.extend.js"></script>
     <link rel="stylesheet" href="../../statics/css/font-awesome.min.css">
     <!--layui ztree样式-->
     <link rel="stylesheet" href="../../statics/plugins/layui/css/layui.css" media="all">
@@ -119,9 +120,9 @@
 
                 <div class="OneBody mt24">
                     <div class="oneHeard">
-                        <div class="oo"><i class="fa fa-warning"></i><span id="status">当前订单状态：已归还</span></div>
-                        <button id="borrow" class="layui-btn layui-btn-primary">借阅</button>
-                        <button id="back" class="layui-btn layui-btn-primary">归还</button>
+                        <div class="oo"><i class="fa fa-warning"></i><span id="status">当前订单状态：</span></div>
+                        <button id="borrow" class="layui-btn layui-hide layui-btn-primary">借阅</button>
+                        <button id="back" class="layui-btn layui-hide layui-btn-primary">归还</button>
                         <button id="print" class="layui-btn layui-btn-primary">打印</button>
                     </div>
                     <div class="oneBody">
@@ -141,7 +142,7 @@
                             <li class="layui-row">
                                 <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">借阅人</div>
                                 <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
-                                    <input type="text" name="applicant" id="applicant" disabled="disabled" autocomplete="off" class="layui-input">
+                                    <input type="text" name="applicantName" id="applicantName" disabled="disabled" autocomplete="off" class="layui-input">
                                 </div>
                             </li>
                             <li class="layui-row">
@@ -178,22 +179,41 @@
                                     <input type="text" name="approveId" disabled="disabled" id="approveId"  autocomplete="off" class="layui-input">
                                 </div>
                             </li>
-                            <li class="layui-row">
-                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">附件</div>
-                                <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                            <!--<li class="layui-row">-->
+                                <!--<div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">附件</div>-->
+                                <!--<div class="layui-form-item m0 layui-col-md6 layui-col-sm6">-->
 
-                                    <input type="text" name="attachmentId" disabled="disabled"  autocomplete="off" class="layui-input">
-                                </div>
-                            </li>
+                                    <!--<input type="text" name="attachmentId" disabled="disabled"  autocomplete="off" class="layui-input">-->
+                                <!--</div>-->
+                            <!--</li>-->
                         </ul>
                     </div>
                 </div>
             </div>
+            <div class="cardOne mt24">
+                <div class="title"><img src="" alt=""><span>附件资料</span></div>
 
+                <div class="OneBody mt24">
 
+                    <div class="oneBody mt24" style="width: 43%;position: relative">
+                        <input type="text" id="attachmentId" name="attachmentId" class="layui-hide">
+                        <!--<div class="layui-upload-drag" id="test10">-->
+                            <!--<img src="../../statics/images/videoList/Shapemax.png" alt="">-->
+                            <!--<p>点击或拖动文件上传</p>-->
+                            <!--<p class="tip">支持单个或批量上传。文件类型包括：图片、视频。音频。</p>-->
+                        <!--</div>-->
+                        <!--<button type="button" class="layui-btn" id="testListAction">开始上传</button>-->
+                        <div class="fileControl">
+                            <ul id="demoList">
 
+                            </ul>
+                            <ul class="imgList">
 
-
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </form>
 </div>

@@ -2,6 +2,7 @@
 <html>
 <head>
     <script src="../../../statics/libs/jquery-1.10.2.min.js"></script>
+    <script src="../../../statics/js/jquery.extend.js"></script>
     <link rel="stylesheet" href="../../../statics/css/font-awesome.min.css">
     <!--layui ztree样式-->
     <link rel="stylesheet" href="../../../statics/plugins/layui/css/layui.css" media="all">
@@ -62,13 +63,13 @@
                             <div class="layui-inline layui-col-md1 layui-col-sm1 tableTR">*资讯主题</div>
                             <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
                                 <input type="text" id="informationTheme" name="informationTheme" required  lay-verify="required"
-                                       placeholder="请输入资讯主题" autocomplete="off" class="layui-input">
+                                       placeholder="请输入资讯主题" readonly="readonly" autocomplete="off" class="layui-input">
                             </div>
                         </li>
                         <li class="layui-row">
                             <div class="layui-inline layui-col-md1 layui-col-sm1 tableTR">*资讯类型</div>
                             <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
-                                <select name="informationType"  id="informationType" lay-verify="required" placeholder="请输入资讯类型">
+                                <select name="informationType" readonly="readonly"  id="informationType" lay-verify="required" placeholder="请输入资讯类型">
                                     <option value=""></option>
                                 </select>
                             </div>
@@ -77,7 +78,7 @@
                             <div class="layui-inline layui-col-md1 layui-col-sm1 tableTR">*资讯封面</div>
                             <div class="layui-form-item m0 layui-col-md6 layui-col-sm6 pl30" id="picUpload">
                                 <div class="picDiv"></div>
-                                <a class="uploadBtn">
+                                <a class="uploadBtn" readonly="readonly">
                                     <span class="uploadIcon"></span>
                                     <span class="uploadTxt">上传图片</span>
                                     <span class="uploadTip">图片建议尺寸为600*450px</span>
@@ -87,7 +88,7 @@
 
                         <li class="layui-row" style="height:370px;">
                             <div class="layui-form-item m0 layui-col-md10 layui-col-sm10" style="height: 300px;width:100%;">
-                                <textarea id="informationContent" name="informationContent" style="display: none;"></textarea>
+                                <textarea id="informationContent" readonly="readonly" name="informationContent" style="display: none;"></textarea>
                             </div>
                         </li>
 

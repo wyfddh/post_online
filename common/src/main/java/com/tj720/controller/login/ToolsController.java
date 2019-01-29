@@ -1,5 +1,6 @@
 package com.tj720.controller.login;
 
+import com.tj720.controller.framework.auth.ControllerAop;
 import com.tj720.service.ICacheService;
 import com.tj720.utils.Const;
 import com.tj720.utils.MyCookie;
@@ -28,6 +29,7 @@ public class ToolsController {
     ICacheService cacheService;
 
     @RequestMapping("getImgCode")
+    @ControllerAop(action = "获取验证码")
     public void getImgvcode() throws IOException {
         // 设置response，输出图片客户端不缓存
         response.setDateHeader("Expires", 0);
@@ -39,6 +41,27 @@ public class ToolsController {
         String uuid = MyCookie.getCookie(Const.COOKIE_UUID, false, request);
         cacheService.setStr(Const.CACHE_IMGCODE + uuid, vservice.getCode() , 10 * 60);
         cacheService.setStr(Const.CACHE_IMGCODE_TIMES + uuid, "0" , 10 * 60);
+        try {
+            vservice.write(out);
+            out.flush();
+        } finally {
+            out.close();
+        }
+    }
+
+    @RequestMapping("getAdminImgCode")
+    @ControllerAop(action = "获取验证码")
+    public void getAdminImgCode() throws IOException {
+        // 设置response，输出图片客户端不缓存
+        response.setDateHeader("Expires", 0);
+        response.addHeader("Pragma", "no-cache");
+        response.setHeader("Cache-Control", "no-cache, no-store, max-age=0");
+        response.setContentType("image/jpeg");
+        ServletOutputStream out = response.getOutputStream();
+        ValidateCodeService vservice = new ValidateCodeService();
+        String uuid = MyCookie.getCookie(Const.COOKIE_UUID, false, request);
+        cacheService.setStr(Const.CACHE_ADMIN_IMGCODE + uuid, vservice.getCode() , 10 * 60);
+        cacheService.setStr(Const.CACHE_ADMIN_IMGCODE_TIMES + uuid, "0" , 10 * 60);
         try {
             vservice.write(out);
             out.flush();

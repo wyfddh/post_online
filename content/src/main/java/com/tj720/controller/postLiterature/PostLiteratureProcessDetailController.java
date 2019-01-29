@@ -2,7 +2,6 @@ package com.tj720.controller.postLiterature;
 
 import com.tj720.controller.framework.JsonResult;
 import com.tj720.controller.framework.auth.ControllerAop;
-import com.tj720.model.literature.PostLiteratureProcessDetail;
 import com.tj720.service.PostLiteratureProcessDetailService;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;

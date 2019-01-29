@@ -1,6 +1,5 @@
 /**
  * Created by 陈熠 on 2017/8/22
- * email   :  228112142@qq.com
  * 上传控件
  */
 (function ($) {

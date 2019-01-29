@@ -322,7 +322,7 @@ public class JedisDao {
 			// 返还到连接池
 			RedisUtil.returnResource(pool, jedis);
 		}
-		return 0l;
+		return 0L;
 	}
 	
 	/**

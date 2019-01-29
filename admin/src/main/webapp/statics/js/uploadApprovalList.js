@@ -11,7 +11,7 @@ var main={
         getDictData();
         setSelect();
         property.setUserInfo();
-        if (userInfo.orgName == '影视部'){
+        if (checkOrg(userInfo.userId)){
             userType = '1';
         }
         this.initTable();
@@ -144,7 +144,6 @@ function loadTable() {
         //监听行工具事件
         table.on('tool(test)', function(obj){
             var data = obj.data;
-            //console.log(obj)
             if(obj.event === 'detail'){
                 localStorage.videoId = data.partyId;
                 localStorage.pageType = "detail";

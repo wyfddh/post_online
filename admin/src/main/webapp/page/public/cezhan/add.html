@@ -2,6 +2,7 @@
 <html>
 <head>
     <script src="../../../statics/libs/jquery-1.10.2.min.js"></script>
+    <script src="../../../statics/js/jquery.extend.js"></script>
     <link rel="stylesheet" href="../../../statics/css/font-awesome.min.css">
 
     <!--layui ztree样式-->
@@ -70,10 +71,10 @@
                             </li>
 
                             <li class="layui-row">
-                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*主题展描述</div>
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR" style="height: 220px">*主题展描述</div>
                                 <div class="layui-form-item m0 layui-col-md6  layui-col-sm6">
                                     <textarea type="text" id="themeDescribe" name="themeDescribe"  required
-                                              placeholder="请输入标题" autocomplete="off" class="layui-input" ></textarea>
+                                              placeholder="请输入标题" autocomplete="off" class="layui-input" style="padding: 5px;height:200px;"></textarea>
                                 </div>
                             </li>
                             <li class="layui-row picture">
@@ -101,7 +102,7 @@
             <div class="OneBody">
                 <div class="mt24">
                     <div class="addLable layui-row">
-                        <ul class="lableList layui-inline layui-col-md9 layui-col-sm9">
+                        <ul class="lableList layui-inline layui-col-md12 layui-col-sm12">
                             <li class="layui-row">
                                 <div class="layui-form-item">
                                     <label class="layui-form-label" style="width: 110px">添加关联藏品</label>
@@ -123,7 +124,7 @@
                                             <option value="">全部</option>
                                         </select>
                                     </div>
-                                    <div class="layui-input-inline">
+                                    <div class="layui-input-block">
                                         <a href="javascript:void (0);" class="layui-col-md2 layui-col-sm2 addBtn"></a>
                                     </div>
                                 </div>
@@ -157,12 +158,13 @@
                 <div class="oneHeard">
                     <div class="oneLeft">
                         <span>操作人：</span>
-                        <span>admin</span>
-                        <span>系统管理员</span>
+                        <span id="userName1">admin</span>
+                        <span >|</span>
+                        <span id="orgName1">系统管理员</span>
                     </div>
                     <div class="oneRight">
                         <span>日期：</span>
-                        <span>2018-8-21</span>
+                        <span id="nowDate1">2018-8-21</span>
                     </div>
                 </div>
                 <div class="oneBody">

@@ -3,7 +3,7 @@
  * 账户设置
  */
 var pageType = "edit";
-var basePassword = ''
+var baseInfo = ''
 var userID = '';
 var main = {
 
@@ -21,10 +21,11 @@ var main = {
             var form = layui.form;
 
             form.verify({
+                pwd:[/^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$).{6,20}$/,'6-20位字符；数字、字母、特殊字符（除空格），起码其中两种组合'],
                 'oldpassword': function () {
                     var oldpassword = $("#oldpassword").val();
-                    oldpassword = hex_md5(oldpassword)
-                    if(oldpassword != basePassword)  {
+                    oldpassword = hex_md5(property.md5Str+oldpassword)
+                    if(oldpassword != baseInfo)  {
                         return '密码不正确，请输入正确的密码'
                     }
                 },
@@ -38,18 +39,18 @@ var main = {
             })
             //监听提交
             form.on('submit(formSubmit)', function (data) {
-                debugger;
+
                 var  url = "sysUser/changePassword.do";
                 var newPassword = $("#newpassword").val();
                 var surePassword = $("#surePassword").val();
-                newPassword = hex_md5(newPassword);
-                surePassword = hex_md5(surePassword);
+                newPassword = hex_md5(property.md5Str+newPassword);
+                surePassword = hex_md5(property.md5Str+surePassword);
 
                 var  data = {
                     id: userID,
                     password: newPassword,
                     surePassword: surePassword,
-                    oldPassword: basePassword
+                    oldPassword: baseInfo
                 }
 
                 $.ajax({
@@ -61,9 +62,20 @@ var main = {
                     type: 'post',
                     success: function (result) {
                         if (result.success == 1) {
-                            successMsg("密码修改成功,请重新登陆");
-                            parent.$t.goback("login.html");
-                        } else {
+                            successMsg("修改成功,请重新登陆！");
+                            // parent.$t.goback("login.html");
+                          setTimeout(function(){
+                            localStorage.removeItem("userInfo");
+                            $.ajax({
+                              type: "POST",
+                              url: property.getProjectPath()+"backLogin/loginOut.do",
+                              success: function (result) {
+                                top.location=property.projectPath+'/login.html';
+                              }
+                            });
+                          },1000);
+
+                        } else if (result.success == 0){
                             //top.layer.msg(result.error);
                             errorMsg("密码修改失败");
                         }
@@ -119,13 +131,14 @@ function loadData(id) {
                     var jsonData = result.data;
                     jsonData.passwordId = jsonData.password;
                     jsonData.surePasswordId = jsonData.surePassword;
-                    var show = yc.password;
+                    var show = yc.info;
                     jsonData.password = show;
                     jsonData.surePassword = show;
-                    jsonData.surePassword = "";  //清空密码值
+                    delete jsonData['surePassword'];
+                    // jsonData.surePassword = "";  //清空密码值
                     setFormData(jsonData);
                     form.render();
-                } else {
+                } else if (result.success == 0){
                     errorMsg(result.error.message);
                 }
             },
@@ -147,27 +160,27 @@ function setFormData(data) {
     property.setForm($("#userForm"), data);
     $("#userName").attr("disabled","disabled");
     $("#email").attr("disabled","disabled");
-    basePassword = data.passwordId
+    baseInfo = data.passwordId
     userID = data.id
 }
 
 
 
-
-function checkPassword(password, surePassword){
-
-    if (yc.isNull(password)) {
-        errorMsg("密码不能为空！");
-        return false;
-    } else {
-        if (password != surePassword) {
-            errorMsg("前后密码不一致!");
-            return false;
-        } else {
-            return true;
-        }
-    }
-}
+//
+// function checkPassword(content1, content2){
+//
+//     if (yc.isNull(content1)) {
+//         errorMsg("密码不能为空！");
+//         return false;
+//     } else {
+//         if (content1 != content2) {
+//             errorMsg("前后密码不一致!");
+//             return false;
+//         } else {
+//             return true;
+//         }
+//     }
+// }
 
 
 

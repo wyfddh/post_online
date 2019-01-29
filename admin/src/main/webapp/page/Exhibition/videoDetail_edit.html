@@ -2,6 +2,7 @@
 <html>
 <head>
     <script src="../../statics/libs/jquery-1.10.2.min.js"></script>
+    <script src="../../statics/js/jquery.extend.js"></script>
     <link rel="stylesheet" href="../../statics/css/font-awesome.min.css">
     <!--layui ztree样式-->
     <link rel="stylesheet" href="../../statics/plugins/layui/css/layui.css" media="all">
@@ -25,6 +26,17 @@
     }
     .xm-select-label {
         margin-top: -8px !important;
+    }
+    #testListAction {
+        position: absolute;
+        left: 710px;
+        bottom: 0px;
+    }
+    .fileControl {
+         padding-left: 0;
+    }
+    #test10{
+        margin: 0;
     }
 </style>
 <body>
@@ -155,8 +167,8 @@
                             </ul>
                             <a href="javascript:void (0);" class="layui-col-md2 layui-col-sm2 addBtn" id = "roomAddId"></a>
                         </div>
-                        <p class="myfont">已添加标注信息如下</p>
-                        <div class="layui-row" style="height: 250px">
+                        <p class="myfont">已添加展厅信息如下</p>
+                        <div class="layui-row" style="min-height: 250px">
                             <div class="layui-col-md10 layui-col-sm10">
                                 <table class="layui-table" id="tableRoom" lay-filter="tableRoom"></table>
                                 <script type="text/html" id="barDemo1">
@@ -180,24 +192,24 @@
                             <ul class="lableList layui-inline layui-col-md8 layui-col-sm8">
                                 <li class="layui-row">
                                     <div class="layui-form-item m0 layui-col-md5 layui-col-sm5">
-                                        <select name="culCategory" id="culCategory">
+                                        <select name="culCategory" id="culCategory" lay-filter="culCategory">
                                             <option value="">全部</option>
                                         </select>
                                     </div>
                                     <div class="layui-form-item mFree layui-col-md5 layui-col-sm5">
                                         <select id="culId" name="culId" xm-select="select1" xm-select-search="" xm-select-height="24px">
-                                            <option value="">输入藏品名，点击“搜索”，根据类型与藏品名搜索200条信息</option>
+                                            <!--<option value="">输入藏品名，点击“搜索”，根据类型与藏品名搜索200条信息</option>-->
                                         </select>
                                     </div>
-                                    <a class="layui-btn layui-btn-primary layui-btn-sm searchBtn" id="searchCollect" style="margin-top: 12px">
-                                        <i class="layui-icon">&#xe615;</i>搜索
-                                    </a>
+                                    <!--<a class="layui-btn layui-btn-primary layui-btn-sm searchBtn" id="searchCollect" style="margin-top: 12px">-->
+                                        <!--<i class="layui-icon">&#xe615;</i>搜索-->
+                                    <!--</a>-->
                                 </li>
                             </ul>
                             <a href="javascript:void (0);" class="layui-col-md2 layui-col-sm2 addBtn" id="addCollect"></a>
                         </div>
-                        <p class="myfont">已添加标注信息如下</p>
-                        <div class="layui-row" style="height: 250px">
+                        <p class="myfont">已添加关联藏品如下</p>
+                        <div class="layui-row" style="min-height: 250px">
                             <div class="layui-col-md10 layui-col-sm10">
                                 <table class="layui-table" id="test2" lay-filter="test2"></table>
                                 <script type="text/html" id="barDemo2">
@@ -222,24 +234,21 @@
                             <ul class="lableList layui-inline layui-col-md8 layui-col-sm8">
                                 <li class="layui-row">
                                     <div class="layui-form-item m0 layui-col-md5 layui-col-sm5">
-                                        <select name="saveType" id="saveType">
+                                        <select name="saveType" id="saveType" lay-filter="culCategory">
                                             <option value="">全部</option>
                                         </select>
                                     </div>
                                     <div class="layui-form-item mFree layui-col-md5 layui-col-sm5">
                                         <select id="videoId" name="videoId" xm-select="select2" xm-select-search="" xm-select-height="24px">
-                                            <option value="">输入关键字，点击“搜索”，根据类型与关键字搜索200条信息</option>
+                                            <!--<option value="">输入关键字，点击“搜索”，根据类型与关键字搜索200条信息</option>-->
                                         </select>
                                     </div>
-                                    <a class="layui-btn layui-btn-primary layui-btn-sm searchBtn" id="searchVideo" style="margin-top: 12px; background-color: rgba(255,255,255,1)">
-                                        <i class="layui-icon">&#xe615;</i>搜索
-                                    </a>
                                 </li>
                             </ul>
                             <a href="javascript:void (0);" class="layui-col-md2 layui-col-sm2 addBtn" id="addVideo"></a>
                         </div>
-                        <p class="myfont">已添加标注信息如下</p>
-                        <div class="layui-row" style="height: 250px">
+                        <p class="myfont">已添加关联资料如下</p>
+                        <div class="layui-row" style="min-height: 250px">
                             <div class="layui-col-md10 layui-col-sm10">
                                 <table class="layui-table" id="test" lay-filter="test"></table>
                                 <script type="text/html" id="barDemo">
@@ -258,7 +267,7 @@
                     <div class="oneHeard">
 
                     </div>
-                    <div class="oneBody mt24">
+                    <div class="oneBody mt24 " style="width: 43%;position: relative">
                         <input type="text" id="datumIds" name="datumIds" class="layui-hide">
                         <div class="layui-upload-drag" id="test10">
                             <img src="../../statics/images/videoList/Shapemax.png" alt="">
@@ -274,6 +283,14 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+
+
+            <div class="layui-hide">
+                <input type="text" name="id" id="id">
+                <input type="text" id="type" value="1">
+                <input type="text" id="picids" name="picids">
             </div>
 
             <div class="layui-form-item mt34">

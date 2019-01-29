@@ -119,7 +119,7 @@ public class PubUserController extends BaseController{
     public JSONObject getListPubUser(String name, String phone,String createTime,@RequestParam(defaultValue = "1") String orderBy,
                                      @RequestParam(defaultValue = "1") Integer currentPage, @RequestParam(defaultValue = "10") Integer size) {
 
-        return pubUserService.getListPubUser(name,phone,createTime, orderBy, currentPage, size);
+        return  pubUserService.getListPubUser(name,phone,createTime, orderBy, currentPage, size);
     }
 
 

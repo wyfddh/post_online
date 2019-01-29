@@ -36,7 +36,7 @@ function uploadPicture(projectName){
         },
         end :function() {
             var map = JSON.parse(localStorage["map"]);
-            console.log(map);
+            // console.log(map);
             //插入图片
             var picStr = '<div class="img picDiv" id="img'+ map.id +'">'
                 +'<div class="img1"><img src='+ map.absolutePath +' alt="" ></div>'

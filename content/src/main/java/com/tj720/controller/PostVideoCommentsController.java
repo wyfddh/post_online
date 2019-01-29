@@ -2,6 +2,7 @@ package com.tj720.controller;
 
 import com.tj720.controller.framework.JsonResult;
 import com.tj720.controller.framework.LayUiTableJson;
+import com.tj720.controller.framework.auth.ControllerAop;
 import com.tj720.model.common.video.PostVideoComments;
 import com.tj720.model.common.video.PostVideoCommentsDto;
 import com.tj720.service.PostVideoCommentsService;
@@ -28,11 +29,13 @@ public class PostVideoCommentsController {
      * @return
      */
     @RequestMapping("/queryPostVideoComments")
+    @ControllerAop(action = "查询影视资料标注")
     public JsonResult queryPostVideoComments(String postVideoId){
         JsonResult postVideoCommentList = postVideoCommentsService.getPostVideoCommentList(postVideoId);
         return postVideoCommentList;
     }
     @RequestMapping("/addPostVideoComments")
+    @ControllerAop(action = "添加影视资料标注")
     public JsonResult addPostVideoComments(@RequestBody PostVideoCommentsDto postVideoCommentsDto){
         return null;
     }

@@ -447,12 +447,6 @@
     <if test="sonTypeId != null and sonTypeId != ''">
       and son_type_id = #{sonTypeId}
     </if>
-    <if test="orderBy == 1" >
-      order by update_time desc
-    </if>
-    <if test="orderBy == 2" >
-      order by create_time desc
-    </if>
   </select>
 
   <select id="selectListByCollect" parameterType="java.util.Map"
@@ -547,7 +541,14 @@
     WHERE
     a.id = b.cid
     AND b.type = '2'
-    AND b.user_id = 1
+    <choose>
+      <when test="userId != null and userId != ''">
+        and b.user_id = #{userId}
+      </when>
+      <otherwise>
+        and b.user_id = ''
+      </otherwise>
+    </choose>
     AND b. STATUS = 1
     ) THEN
     '1'
@@ -942,7 +943,7 @@
     order by update_time  desc
   </select>
 
-  <select id="countByName" parameterType="java.lang.String" >
+  <select id="countByName" parameterType="java.lang.String"  resultType="java.lang.Integer">
     select count(1) from
     post_collection
     WHERE name = #{collectName}

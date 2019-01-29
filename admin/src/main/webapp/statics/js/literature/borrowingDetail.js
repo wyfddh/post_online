@@ -1,6 +1,9 @@
 var informationSourceList = null;
 var id = null;
 var info = null;
+var tableId = "";
+var attachmentsList = null;
+var attCount = 0;
 var main={
 
     init:function () {
@@ -56,18 +59,46 @@ var main={
         })
         //借阅
         $("#borrow").click(function () {
-            localStorage["dataObject"]=JSON.stringify(info);
-            parent.$t.goToPageSimple("page/literature/borrowing.html","文献资料-借阅申请","page/menu/menuList.html");
+            var inventoryState = localStorage.inventoryState;
+            if (inventoryState > 0) {
+                top.layer.confirm('您确定要借出吗？', {
+                    title: '借出确认',
+                    area: ['450px', '218px'],
+                    skin: 'demo-class',
+                    btn: ['取消', '确认']
+                }, function (index, layero) {
+                    top.layer.close(index);
+                }, function (index) {
+                    $.ajax({
+                        url: property.getProjectPath() + '/postLiteratureProcess/modifyState.do',
+                        type: 'post',
+                        data: {"id": id, "status": "2"},
+                        success: function (result) {
+                            if (result.success == "1") {
+                                successMsg("借出成功！");
+                            } else if (result.success == 0){
+                            var resultMsg = result.error.message;
+                            errorMsg(resultMsg);
+                            }
+                            tableIns.reload();
+                            top.layer.close(index);
+                        }
+                    })
+                });
+                return false;
+            } else {
+                alertMsg("库存数量不足！")
+            }
         });
         //归还
         $("#back").click(function () {
-            layer.confirm('您确定要归还吗？', {
+          top.layer.confirm('您确定要归还吗？', {
                 title: '归还确认',
                 area: ['450px', '218px'],
                 skin: 'demo-class',
                 btn: ['取消', '确认']
             }, function (index, layero) {
-                layer.close(index);
+            top.layer.close(index);
             }, function (index) {
                 $.ajax({
                     url: property.getProjectPath() + '/postLiteratureProcess/modifyState.do',
@@ -76,12 +107,12 @@ var main={
                     success: function (result) {
                         if (result.success == "1") {
                             successMsg("归还成功！");
-                        } else {
+                        } else if (result.success == 0){
                             var resultMsg = result.error.message;
                             errorMsg(resultMsg);
                         }
                         tableIns.reload();
-                        layer.close(index);
+                      top.layer.close(index);
                     }
                 })
             });
@@ -133,8 +164,8 @@ function loadData(id) {
                 if (result.success == 1) {
                     info = result.data;
                     setFormData(result.data);
-                    form.render('select');
-                } else {
+                  form.render('select');
+                } else if (result.success == 0){
                     errorMsg(result.error.message);
                 }
             },
@@ -146,15 +177,17 @@ function loadData(id) {
 }
 
 function setFormData(data) {
-    console.log(data);
     property.setForm($("#borrowingForm"),data);
     $("#informationSources").val(data.informationSources);
 
     $("#planReturnDate").val(formatSimpleDate(data.planReturnDate));
     var applicant = getUserName(data.applicant);
-    var approveId = getUserName(data.approveId);
     $("#applicant").val(applicant);
-    $("#approveId").val(approveId);
+    if (!isEmpty(data.approveId)) {
+        var approveId = getUserName(data.approveId);
+        $("#approveId").val(approveId);
+    }
+
     var text = "当前订单状态：";
     var status = property.getDictData("apply_status");
     text = text+property.getTextByValuePlus(status,data.applyStatus,"dictCode","dictName");
@@ -163,8 +196,7 @@ function setFormData(data) {
     if (data.applyStatus == "0" || data.applyStatus == "1"){
         $("#apply").text(applicant);
         $("#applyTime").text(formatDate(data.createTime));
-
-        $("#back").hide();
+        $("#borrow").removeClass("layui-hide");
     }
     //已借阅
     else if (data.applyStatus == "2"){
@@ -172,8 +204,7 @@ function setFormData(data) {
         $("#applyTime").text(formatDate(data.createTime));
         $("#approval").text(approveId);
         $("#approvalTime").text(formatDate(data.borrowingDate));
-
-        $("#borrow").hide();
+        $("#back").removeClass("layui-hide");
     }
     //已归还
     else if (data.applyStatus == "3"){
@@ -184,10 +215,91 @@ function setFormData(data) {
         $("#return").text(applicant);
         $("#returnTime").text(formatDate(data.realReturnDate));
 
-        $("#borrow").hide();
-        $("#back").hide();
-
     }
+
+  tableId = data.attachmentId;
+  attachmentsList = loadAttachments(tableId);
+  var attachmentsListSelect  = component.getSelectSimplePlus(attachmentsList,null,"attachmentList","attId","attName");
+  $("#attachmentsList").append(attachmentsListSelect);
+  if (null != attachmentsList){
+    if (true) {
+      //显示附件
+      if (null != attachmentsList){
+        var attList = '';
+        for (var i=0;i<attachmentsList.length;i++){
+          var attachment = attachmentsList[i];
+          var type = 'img'
+          var srcStr = attachment.attPath;
+          var data = attachment.attPath;
+          debugger;
+          if (attachment.attFileType == 1){
+            type = 'img';
+          }else if (attachment.attFileType == 4){
+            type = 'video';
+            srcStr = "../../statics/img/分组 2.svg";
+          }else if (attachment.attFileType == 3){
+            type = 'audio'
+            srcStr = "../../statics/img/分组 3.svg";
+          }else{
+              type = '';
+              srcStr = "../../statics/img/分组 2.svg";
+          }
+          var liStr = "<li class=\"imgItem\" data-type="+type+">\n" +
+              "                                <img  style='max-width: 200px;' src='"+srcStr+"' alt='' data='"+data+"'>\n" +
+              "                                <p class='myfont'>"+attachment.attName+"</p>\n" +
+
+              "                            </li>";
+          attList = attList+liStr;
+
+        }
+        $(".imgList").append(attList);
+        $(".imgList li").on({
+          'click':function () {
+            if($(this).attr("data-type")=="img"){
+              parent.layer.open({
+                type: 1,
+                title:false,
+                closeBtn: 0, //不显示关闭按钮
+                // area: ['420px', '240px'], //宽高
+                shadeClose: true, //开启遮罩关闭
+                content: "<div style='position: relative;height: 450px'><img style='max-width:" +
+                " 600px;position:" +
+                " absolute;max-height:100%;margin: auto;left: 0;right: 0;top:0;bottom:0'" +
+                " src='"+$(this).find("img").attr("data")+"'/></div> "
+                  /*  content: "<div style='position: relative;height: 800px'><img style='max-width: 800px;position:" +
+                   " absolute;margin: auto;left: 0;right: 0;top:0;bottom:0'" +
+                   " src='"+$(this).find("img").attr("data")+"'/></div> "*/
+              })
+            }else if($(this).attr("data-type")=="video"){
+              parent.layer.open({
+                type: 1,
+                title:false,
+                closeBtn: 0, //不显示关闭按钮
+                shadeClose: true, //开启遮罩关闭
+                content: "<video src='"+$(this).find("img").attr("data")+ "' controls='controls'" +
+                " height='300'>" +
+                "您的浏览器不支持 video 标签。" +
+                "'</video> "
+              })
+            }else if($(this).attr("data-type")=="img"){
+              parent.layer.open({
+                type: 1,
+                title:false,
+                closeBtn: 0, //不显示关闭按钮
+                shadeClose: true, //开启遮罩关闭
+                content: "<audio src='"+$(this).find("img").attr("data")+"' controls='controls'>" +
+                "</audio> "
+              })
+            }
+          }
+        })
+      }
+    } else {
+      attCount = attachmentsList.length;
+      $("#demoList").append(component.getAttachmentList(attachmentsList));
+    }
+  }
+
 }
 
 function setSelect() {
@@ -197,7 +309,6 @@ function setSelect() {
 function getUserName(id) {
     var data = null;
     var json = {"id":id};
-    console.log(id);
     $.ajax({
         type:"get",
         data:json,
@@ -206,7 +317,7 @@ function getUserName(id) {
         success:function(result) {
             if (result.success == 1) {
                 data = result.data.name;
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.error.message);
             }
         },
@@ -215,6 +326,27 @@ function getUserName(id) {
         }
     });
     return data;
+}
+function loadAttachments(fkId) {
+  var datas = null;
+  var json = {"fkId":fkId};
+  $.ajax({
+    type:"get",
+    data:json,
+    async:false,
+    url:property.getProjectPath()+"attach/getAttachmentsByFkId.do",
+    success:function(result) {
+      if (result.success == 1) {
+        datas = result.data;
+      } else if (result.success == 0){
+        errorMsg(result.data);
+      }
+    },
+    error:function(result) {
+      errorMsg("系统异常");
+    }
+  });
+  return datas;
 }
 
 // function getDetail(id) {

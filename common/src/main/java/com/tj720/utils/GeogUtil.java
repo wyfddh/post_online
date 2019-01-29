@@ -27,18 +27,24 @@ public class GeogUtil {
         double radLon1 = rad(lon1);  
         double radLon2 = rad(lon2);  
   
-        if (radLat1 < 0)  
-            radLat1 = Math.PI / 2 + Math.abs(radLat1);// south  
-        if (radLat1 > 0)  
-            radLat1 = Math.PI / 2 - Math.abs(radLat1);// north  
-        if (radLon1 < 0)  
-            radLon1 = Math.PI * 2 - Math.abs(radLon1);// west  
-        if (radLat2 < 0)  
-            radLat2 = Math.PI / 2 + Math.abs(radLat2);// south  
-        if (radLat2 > 0)  
-            radLat2 = Math.PI / 2 - Math.abs(radLat2);// north  
-        if (radLon2 < 0)  
-            radLon2 = Math.PI * 2 - Math.abs(radLon2);// west  
+        if (radLat1 < 0) {
+            radLat1 = Math.PI / 2 + Math.abs(radLat1);// south
+        }
+        if (radLat1 > 0) {
+            radLat1 = Math.PI / 2 - Math.abs(radLat1);// north
+        }
+        if (radLon1 < 0) {
+            radLon1 = Math.PI * 2 - Math.abs(radLon1);// west
+        }
+        if (radLat2 < 0) {
+            radLat2 = Math.PI / 2 + Math.abs(radLat2);// south
+        }
+        if (radLat2 > 0) {
+            radLat2 = Math.PI / 2 - Math.abs(radLat2);// north
+        }
+        if (radLon2 < 0) {
+            radLon2 = Math.PI * 2 - Math.abs(radLon2);// west
+        }
         double x1 = EARTH_RADIUS * Math.cos(radLon1) * Math.sin(radLat1);  
         double y1 = EARTH_RADIUS * Math.sin(radLon1) * Math.sin(radLat1);  
         double z1 = EARTH_RADIUS * Math.cos(radLat1);  

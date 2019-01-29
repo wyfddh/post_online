@@ -52,6 +52,11 @@ var main = {
         var _this = this;
         layui.use('form', function () {
             var form = layui.form;
+
+            form.verify({
+                pwd:[/^(?![\d]+$)(?![a-zA-Z]+$)(?![^\da-zA-Z]+$).{6,20}$/,'6-20位字符；数字、字母、特殊字符（除空格），起码其中两种组合']
+            });
+
             //监听提交
             form.on('submit(formSubmit)', function (data) {
                 var arrays = $("#userForm").serializeArray();
@@ -67,9 +72,9 @@ var main = {
                     // 新增查询的密码
                     var password = jsons['password'];
                     var surePassword = jsons['surePassword'];
-                    if (checkPassword(password, surePassword)) {
-                        password = hex_md5(password);
-                        surePassword = hex_md5(surePassword);
+                    if (checkMima(password, surePassword)) {
+                        password = hex_md5(property.md5Str+password);
+                        surePassword = hex_md5(property.md5Str+surePassword);
                     } else {
                         return false;
                     }
@@ -78,10 +83,10 @@ var main = {
                     url = "sysUser/updateSysUser.do";
                     var password = jsons['password'];
                     var surePassword = jsons['surePassword'];
-                    if (password != yc.password) {
-                        if (checkPassword(password, surePassword)) {
-                            password = hex_md5(password);
-                            surePassword = hex_md5(surePassword);
+                    if (password != yc.info) {
+                        if (checkMima(password, surePassword)) {
+                            password = hex_md5(property.md5Str+password);
+                            surePassword = hex_md5(property.md5Str+surePassword);
                         } else {
                             return false;
                         }
@@ -120,8 +125,8 @@ var main = {
                                 successMsg("添加用户成功");
                             }
                             parent.$t.goback("page/systemSetting/userManage/list.html");
-                        } else {
-                            errorMsg(result.error);
+                        } else if (result.success == 0){
+                            errorMsg(result.error.message);
                         }
                     },
                     error: function (result) {
@@ -167,7 +172,7 @@ function loadData(id) {
         var jsonData = datas.data;
         jsonData.passwordId = jsonData.password;
         jsonData.surePasswordId = jsonData.surePassword;
-        var show = yc.password; //10
+        var show = yc.info; //10
         jsonData.password = show;
         jsonData.surePassword = show;
         var roles = yc.ajaxGetByParams('sysUser/getRoleName', null, null, null).data;
@@ -202,7 +207,7 @@ function setFormData(data) {
             if (result.success == 1) {
                 var data = result.data;
                 $("#deptId").val(data.departmentName).attr("data-id", data.departmentId);
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.error.message);
             }
         },
@@ -213,13 +218,12 @@ function setFormData(data) {
 
 }
 
-function checkPassword(password, surePassword) {
-
-    if (yc.isNull(password)) {
+function checkMima(content1, content2) {
+    if (yc.isNull(content1)) {
         successMsg("密码不能为空！");
         return false;
     } else {
-        if (password != surePassword) {
+        if (content1 != content2) {
             errorMsg("前后密码不一致!");
             return false;
         } else {

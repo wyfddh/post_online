@@ -309,6 +309,9 @@
       and literature_id in (select id from post_literature where data_name like concat('%',#{key},'%') )
       OR applicant in (select id from sys_user where name like concat('%',#{key},'%'))
     </if>
+    <if test="dataRule == 1">
+      and applicant = #{userId}
+    </if>
   </select>
   <sql id="Column_List">
     a.id, a.literature_id,b.data_name as literatureName,b.data_type as literatureType, a.applicant,c.name as applicantName,
@@ -337,6 +340,9 @@
       and literature_id in (select id from post_literature where data_name like concat('%',#{key},'%') )
       OR applicant in (select id from sys_user where name like concat('%',#{key},'%'))
     </if>
+    <if test="dataRule == 1">
+     and applicant = #{userId}
+    </if>
     <if test="orderBy == 1" >
       order by update_time desc
     </if>
@@ -363,6 +369,9 @@
     <if test="borrowStatus == null or borrowStatus == ''">
       and apply_status &gt; 0
     </if>
+    <if test="dataRule == 1">
+      and applicant = #{userId}
+    </if>
     and approve_status = "2"
     and apply_type = '1'
   </select>
@@ -382,10 +391,19 @@
       and department = #{department}
     </if>
     <if test="borrowStatus != null and borrowStatus != ''">
-      and apply_status = #{borrowStatus}
+      <if test="borrowStatus == 4">
+        and TO_DAYS(NOW()) - TO_DAYS(plan_return_date) &gt; 0
+      </if>
+      <if test="borrowStatus != 4">
+        and apply_status = #{borrowStatus}
+      </if>
+
     </if>
     <if test="borrowStatus == null or borrowStatus == ''">
       and apply_status &gt; 0
+    </if>
+    <if test="dataRule == 1">
+      and applicant = #{userId}
     </if>
     and approve_status = "2"
     and apply_type = '1'
@@ -395,7 +413,6 @@
     <if test="orderBy == 2" >
       order by create_time
     </if>
-
     limit #{start},#{end}
 
   </select>

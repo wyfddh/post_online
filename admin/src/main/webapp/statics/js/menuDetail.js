@@ -51,7 +51,7 @@ var main={
                                 successMsg("添加功能成功");
                             }
                             parent.$t.goback("page/menu/menuList.html");
-                        } else {
+                        } else if (result.success == 0){
                             errorMsg(result.error.message);
                 }
                 },
@@ -104,7 +104,7 @@ function loadData(id) {
 
                     setFormData(result.data);
                     form.render('select');
-                } else {
+                } else if (result.success == 0){
                     errorMsg(result.error.message);
                 }
             },
@@ -136,7 +136,7 @@ function setFormData(data) {
             if (result.success == 1) {
                 var data = result.data;
                 $("#parentid").val(data.functionname).attr("data-id",data.id);
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.error.message);
             }
         },

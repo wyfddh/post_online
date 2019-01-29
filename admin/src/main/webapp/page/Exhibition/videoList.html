@@ -1,6 +1,7 @@
 <html>
 <head>
     <script src="../../statics/libs/jquery-1.10.2.min.js"></script>
+    <script src="../../statics/js/jquery.extend.js"></script>
     <link rel="stylesheet" href="../../statics/css/font-awesome.min.css">
     <!--layui ztree样式-->
     <link rel="stylesheet" href="../../statics/plugins/layui/css/layui.css" media="all">
@@ -16,6 +17,9 @@
     .layui-laydate td{
         padding: 0px;
         line-height: 0px;
+    }
+    .layui-table-view .layui-table{
+        /*width:100%!important;*/
     }
 </style>
 <body>
@@ -98,7 +102,7 @@
         <div class=" flexRight">
 
             <form action="" class="layui-form">
-                <button class="layui-btn layui-btn-green upload" data-url="page/Exhibition/videoDetail_add.html" title="添加展陈">
+                <button class="layui-btn layui-btn-green upload layui-hide" id="btnAdd" data-url="page/Exhibition/videoDetail_add.html" title="添加展陈">
                     添加展陈
                 </button>
 
@@ -119,7 +123,7 @@
         </script>
         <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-sm" lay-event="getCheckData">批量删除</button>
+                <button class="layui-btn layui-btn-sm layui-hide" id="batchDelete" lay-event="getCheckData">批量删除</button>
             </div>
         </script>
         <script type="text/html" id="barDemo">

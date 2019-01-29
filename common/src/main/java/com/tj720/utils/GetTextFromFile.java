@@ -129,14 +129,16 @@ public class GetTextFromFile {
 			e.printStackTrace();
 		} finally {
 			try {
-				if (fis != null)
-					fis.close();
+				if (fis != null) {
+                    fis.close();
+                }
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			try {
-				if (br != null)
-					br.close();
+				if (br != null) {
+                    br.close();
+                }
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

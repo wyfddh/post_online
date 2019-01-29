@@ -1,5 +1,6 @@
 package com.tj720.utils.common;
 
+import com.tj720.utils.Tools;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -21,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 
@@ -33,9 +35,12 @@ public class Utils {
 	private static String propFilePath=null;
 	private static Properties properties = new Properties();
 	private static Map<String, ArrayList<String>> localDefineMap = new HashMap<String, ArrayList<String>>(); 
-	public static final String DEFAULT_PROPERTY_FILE = "config.properties";
+	public static final String DEFAULT_PROPERTY_FILE = "CheckConfig.properties";
 
+	private static boolean acc = true;
 
+	@Autowired
+	private static HttpServletRequest request;
 	private static Pattern NUMBER_PATTERN = Pattern.compile("^-?[0-9]+");
 	private static Pattern DECIMAL_PATTERN = Pattern.compile("^$|^\\d{1,8}(\\.\\d{1,2})?$");
 
@@ -385,11 +390,13 @@ public class Utils {
 	}
 	public static String GetInetAddress(String  host){  
 	    String IPAddress = "";   
-	    InetAddress ReturnStr1 = null;  
+//	    InetAddress ReturnStr1 = null;
 	    try {  
-	        ReturnStr1 = InetAddress.getByName(host);
-	        IPAddress = ReturnStr1.getHostAddress();  
-	    } catch (UnknownHostException e) {  
+//	        ReturnStr1 = InetAddress.getByName(host);
+//	        IPAddress = ReturnStr1.getHostAddress();
+			IPAddress = Tools.getIpAddress(request);
+//			IPAddress = IdUtils.getIPAddress(ReturnStr1.getHostAddress());
+		} catch (Exception e) {
 	        e.printStackTrace();  
 	        return  IPAddress;  
 	    }  
@@ -414,13 +421,15 @@ public class Utils {
 			sb.append("\\u");
 			j = (c >>> 8); // 取出高8位
 			tmp = Integer.toHexString(j);
-			if (tmp.length() == 1)
+			if (tmp.length() == 1) {
 				sb.append("0");
+			}
 			sb.append(tmp);
 			j = (c & 0xFF); // 取出低8位
 			tmp = Integer.toHexString(j);
-			if (tmp.length() == 1)
+			if (tmp.length() == 1) {
 				sb.append("0");
+			}
 			sb.append(tmp);
 
 		}
@@ -468,7 +477,9 @@ public class Utils {
 	}
 
 	public static String processImgUrlByIos(String imgSrc) {
-		if(isEmpty(imgSrc)) return "";
+		if(isEmpty(imgSrc)) {
+			return "";
+		}
 		imgSrc = imgSrc.replaceAll("\"", "");
 		imgSrc = imgSrc.replaceAll("\\\\", "");
 		return imgSrc;
@@ -479,11 +490,13 @@ public class Utils {
 		try {
 			for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {
 				NetworkInterface intf = en.nextElement();
-				if (intf.getName().toLowerCase(Locale.ENGLISH).equals("eth0") || intf.getName().toLowerCase(Locale.ENGLISH).equals("wlan0")) {
+				if ("eth0".equals(intf.getName().toLowerCase(Locale.ENGLISH)) || "wlan0".equals(intf.getName().toLowerCase(Locale.ENGLISH))) {
 					for (Enumeration<InetAddress> enumIpAddr = intf.getInetAddresses(); enumIpAddr.hasMoreElements();) {
 						InetAddress inetAddress = enumIpAddr.nextElement();
 						if (!inetAddress.isLoopbackAddress()) {
-							ipAddress = inetAddress.getHostAddress();
+//							ipAddress = inetAddress.getHostAddress();
+							ipAddress = Tools.getIpAddress(request);
+//							ipAddress = IdUtils.getIPAddress(inetAddress.getHostAddress());
 							if (!ipAddress.contains("::")) {// ipV6的地址
 								return ipAddress;
 							}
@@ -493,7 +506,7 @@ public class Utils {
 					continue;
 				}
 			}
-		} catch (SocketException ex) {
+		} catch (Exception ex) {
 		}
 		return null;
 	}
@@ -533,42 +546,42 @@ public class Utils {
 	}
 	
 
-	public static Boolean isChanged(Object before,Object after,String[] objectThree) throws Exception{
-    	Map<String,Object> oldMap = objectToMap(before);//数据库里面的旧数据
-		Map<String,Object> subMap = objectToMap(after);//提交的数据
-		String[] strlist = objectThree;
-		Boolean change = false;
-		for(String enter:strlist){
-			if(org.springframework.util.StringUtils.isEmpty(subMap.get(enter))){
-				if(!org.springframework.util.StringUtils.isEmpty(oldMap.get(enter))){
-					change =true;
-					break;
-				}
-			}else{
-				if(!subMap.get(enter).equals(oldMap.get(enter))){
-					change =true;
-					break;
-				}
-			}
-        }
-		return change;
-    }
+//	public static Boolean isChanged(Object before,Object after,String[] objectThree) throws Exception{
+//    	Map<String,Object> oldMap = objectToMap(before);//数据库里面的旧数据
+//		Map<String,Object> subMap = objectToMap(after);//提交的数据
+//		String[] strlist = objectThree;
+//		Boolean change = false;
+//		for(String enter:strlist){
+//			if(org.springframework.util.StringUtils.isEmpty(subMap.get(enter))){
+//				if(!org.springframework.util.StringUtils.isEmpty(oldMap.get(enter))){
+//					change =true;
+//					break;
+//				}
+//			}else{
+//				if(!subMap.get(enter).equals(oldMap.get(enter))){
+//					change =true;
+//					break;
+//				}
+//			}
+//        }
+//		return change;
+//    }
 	
-	public static Map<String, Object> objectToMap(Object obj) throws Exception { 
-		
-        if(obj == null){    
-            return null;    
-        }   
-        Map<String, Object> map = new HashMap<String, Object>();    
-  
-        Field[] declaredFields = obj.getClass().getDeclaredFields();    
-        for (Field field : declaredFields) {    
-            field.setAccessible(true);  
-            map.put(field.getName(), field.get(obj));  
-        }    
-  
-        return map;  
-	}
+//	public static Map<String, Object> objectToMap(Object obj) throws Exception {
+//
+//        if(obj == null){
+//            return null;
+//        }
+//        Map<String, Object> map = new HashMap<String, Object>();
+//
+//        Field[] declaredFields = obj.getClass().getDeclaredFields();
+//        for (Field field : declaredFields) {
+//            field.setAccessible(acc);
+//            map.put(field.getName(), field.get(obj));
+//        }
+//
+//        return map;
+//	}
 	
 	/** 
      * 两个时间之间相差距离多少天 或者多少小时

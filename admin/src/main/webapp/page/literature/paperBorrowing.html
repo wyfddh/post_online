@@ -2,6 +2,7 @@
 <html>
 <head>
     <script src="../../statics/libs/jquery-1.10.2.min.js"></script>
+    <script src="../../statics/js/jquery.extend.js"></script>
     <link rel="stylesheet" href="../../statics/css/font-awesome.min.css">
     <!--layui ztree样式-->
     <link rel="stylesheet" href="../../statics/plugins/layui/css/layui.css" media="all">
@@ -15,6 +16,14 @@
 
     <script src="../../statics/plugins/echarts/echarts.js"></script>
 </head>
+<style type="text/css">
+    #testListAction{
+        position: absolute;
+        left: 700px;
+        bottom: 0px;
+    }
+
+</style>
 <body>
 <div class="layui-card">
     <form action=""  class="layui-form">
@@ -38,6 +47,7 @@
                             <li class="layui-row">
                                 <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*借阅人</div>
                                 <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
+                                    <input type="text" name="approveId" id="approveId" required  lay-verify="required" autocomplete="off" class="layui-input layui-hide">
                                     <select name="applicant" id="applicant" required  lay-verify="required" lay-filter="applicant" lay-search>
                                         <option value="">请选择</option>
                                     </select>
@@ -84,12 +94,40 @@
                                 <!--</div>-->
                             <!--</li>-->
                         </ul>
-                        <div class="layui-form-item mt34">
-                            <div class="layui-input-block bodyBtn">
-                                <button class="layui-btn" lay-submit lay-filter="formDemo">申请借阅</button>
-                                <button type="reset" class="layui-btn layui-btn-primary quxiao">取消</button>
-                            </div>
-                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="cardOne mt24">
+            <div class="title"><img src="" alt=""><span>上传资料</span></div>
+
+            <div class="OneBody mt24">
+                <div class="oneHeard">
+
+                </div>
+                <div class="oneBody mt24" style="width: 43%;position: relative">
+                    <input type="text" id="attachmentId" name="attachmentId" class="layui-hide">
+                    <div class="layui-upload-drag" id="test10">
+                        <img src="../../statics/images/videoList/Shapemax.png" alt="">
+                        <p>点击或拖动文件上传</p>
+                        <p class="tip">支持单个或批量上传。文件类型包括：图片、视频。音频。</p>
+                    </div>
+                    <button type="button" class="layui-btn" id="testListAction">开始上传</button>
+                    <div class="fileControl">
+                        <ul id="demoList">
+
+                        </ul>
+                        <ul class="imgList">
+
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="layui-form-item mt34">
+                    <div class="layui-input-block bodyBtn">
+                        <button class="layui-btn" lay-submit lay-filter="formDemo">申请借阅</button>
+                        <button type="reset" class="layui-btn layui-btn-primary quxiao">取消</button>
                     </div>
                 </div>
             </div>

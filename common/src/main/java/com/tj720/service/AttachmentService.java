@@ -123,5 +123,28 @@ public interface AttachmentService{
 
 //	void downloadFile(String filePath, OutputStream out);
 
+	/**
+	 * 获取单个附件（映射后）
+	 * @param attId
+	 * @return
+	 */
+	Attachment getFileTransPath(String attId);
+
+
+	String getFileTransPathByPath(String path);
+
+	/**
+	 * 获取主图（映射后）
+	 * @param attId
+	 * @return
+	 */
+	List<Attachment> getMainFileTransPath(String attId);
+
+	/**
+	 * 获取附件列表
+	 * @param attId 附件id
+	 * @return
+	 */
+	List<Attachment> getFileTransPathList(String attId);
 
 }

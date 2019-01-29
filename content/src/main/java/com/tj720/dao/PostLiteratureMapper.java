@@ -143,25 +143,25 @@ public interface PostLiteratureMapper {
      * 影视采集统计
      * @return
      */
-    HashMap<String,Object> getVideoCjCount();
+    HashMap<String,Object> getVideoCjCount(HashMap<String,Object> condition);
 
     /**
      * 公开影视资料
      * @return
      */
-    Integer getVideoOpenCount();
+    Integer getVideoOpenCount(HashMap<String,Object> condition);
 
     /**
      * 累计申请
      * @return
      */
-    Integer getVideoCxApply();
+    Integer getVideoCxApply(HashMap<String,Object> condition);
 
     /**
      * 累计通过
      * @return
      */
-    Integer getVideoCxApproval();
+    Integer getVideoCxApproval(HashMap<String,Object> condition);
 
     /**
      * 查询待办

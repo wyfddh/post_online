@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @Date: 2018/11/16 15:41
  */
 @RestController
-@RequestMapping("/Copyright")
+@RequestMapping("/copyRight")
 public class CopyrightController {
     @Autowired
     CopyrightService copyrightService;
@@ -34,7 +34,7 @@ public class CopyrightController {
      * @param copyrightSetting
      * @return
      */
-    @RequestMapping("saveCopyright")
+    @RequestMapping("/saveCopyright")
     public JsonResult saveCopyright(CopyrightSetting copyrightSetting){
         JsonResult jsonResult = copyrightService.saveCopyrightInfo(copyrightSetting);
         return jsonResult;

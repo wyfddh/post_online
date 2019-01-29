@@ -60,7 +60,7 @@ public interface ExhibitionService {
      * @return
      */
     public JSONObject getListExhibition(String name, String planTime, String orderBy, Integer currentPage, Integer
-            size);
+            size,String module);
 
     /**
      * 根据id批量删除展陈

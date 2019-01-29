@@ -9,7 +9,7 @@ var main={
         getDictData();
         setSelect();
         property.setUserInfo();
-        if (userInfo.orgName == '影视部'){
+        if (checkOrg(userInfo.userId)){
             userType = '1';
         }
         // 给type 下拉框赋值
@@ -114,6 +114,7 @@ var main={
             $("[type='reset']").click(function () {
                 $(this).parents(".layui-form").find("select").val("");
                 $(this).parents(".layui-form").find("input").val("");
+                $("#searchName").val("");
                 $(this).prev().click();
             });
 
@@ -183,7 +184,7 @@ function getDictData() {
             if (result.code == 0) {
                 videoMarkList = result.data;
             } else {
-                errorMsg(result.message);
+                errorMsg();
             }
         },
         error:function(result) {
@@ -239,6 +240,7 @@ function loadVideoTable() {
         table.render({
             elem: '#test'
             ,url:property.getProjectPath()+"PostVideo/queryVedilListForCompreQuery.do?keywords="+keywords+"&videoMark="+videoMark+"&orderBy="+$("#orderBy").val()
+            +"&module=-2"
             // ,toolbar: '#toolbarDemo'
             ,title: '影视资料数据表'
             ,cols: [[
@@ -285,7 +287,6 @@ function loadVideoTable() {
         //监听行工具事件
         table.on('tool(test)', function(obj){
             var data = obj.data;
-            //console.log(obj)
             if(obj.event === 'videoDetail'){
                 localStorage.videoId = data.id;
                 localStorage.pageType = "detail";
@@ -300,7 +301,7 @@ function loadLiteratureTable() {
         var table = layui.table;
         var tableIns = table.render({
             elem: '#test'
-            , url: projectName + '/postLiterature/postLiteratureList.do'
+            , url: projectName + '/postLiterature/postLiteratureList.do'+'?module=-2'
             , where: {
                 key: $("#searchName").val(),
                 dataType: $('#literatureDataType').val(),
@@ -341,7 +342,6 @@ function loadLiteratureTable() {
         //监听行工具事件
         table.on('tool(test)', function(obj){
             var data = obj.data;
-            //console.log(obj)
             if (obj.event == 'literatureDetail') {
                 localStorage["dataObject"]=JSON.stringify(data);
                 parent.$t.goToPage(this, "main/comprehensiveQuery.html");
@@ -361,7 +361,7 @@ function loadExhibitionTable() {
                 planTime: $('#exhibitionPlanTime').val(),
                 orderBy: $('#orderBy').val()
             },
-            url: property.getProjectPath() + 'exhib/getListExhibition.do',
+            url: property.getProjectPath() + 'exhib/getListExhibition.do'+'?module=-2',
             request:{
                 pageName: 'currentPage',
                 limitName: 'size'
@@ -400,7 +400,6 @@ function loadExhibitionTable() {
         //监听行工具事件
         table.on('tool(test)', function(obj){
             var data = obj.data;
-            //console.log(obj)
             if (obj.event == 'exhibitionDetail') {
                 localStorage.ExhibType = "detail";
                 localStorage.ExhibId = data.id;
@@ -415,7 +414,7 @@ function loadSocialistTable() {
         var table = layui.table;
         var tableObj = table.render({
             elem: '#test'
-            , url: property.getProjectPath() + "postsocial/getSocialList.do?keywords=" + $("#searchName").val()
+            , url: property.getProjectPath() + "postsocial/getSocialList.do?keywords=" + $("#searchName").val()+'&module=-2'
             , request: {
                 pageName: 'currentPage',
                 limitName: 'size',
@@ -448,7 +447,6 @@ function loadSocialistTable() {
         //监听行工具事件
         table.on('tool(test)', function(obj){
             var data = obj.data;
-            //console.log(obj)
             if (obj.event == 'socialistDetail') {
                 localStorage.socialType = "detail";
                 localStorage.id = data.id;
@@ -498,7 +496,6 @@ function initCollectTable() {
                 //监听行工具事件
                 table.on('tool(test)', function(obj){
                     var data = obj.data;
-                    //console.log(obj)
                     if (obj.event == 'socialistDetail') {
                         localStorage.socialType = "detail";
                         localStorage.id = data.id;

@@ -17,22 +17,22 @@ var main={
         // } else {
         //     top.layer.msg('查询详情错误，请联系管理员');
         // }
-
+        property.setUserInfo()
         this.id = parent.$t.getQueryStringFrame('id');
         var datas = yc.ajaxGetByParams('collect/getOneCollect', {id: this.id}, null, null);
-
+        debugger;
         picList = datas.data.attachmentList;
         for (var i = 0;i < picList.length;i++) {
             var picStr1;
             if (picList[i].isMain === "1") {
                 picStr1 = '<div class="img" id="img'+ picList[i].attId +'">'
-                    +'<div class="img1"><img src='+ picList[i].attPath +' alt="" ></div>'
+                    +'<div class="img1"><img src="'+ picList[i].attPath +'" alt="" ></div>'
                     +'<div class="img2"><span class="img3" id="span'+ picList[i].attId +'" mark='+ picList[i].attId +' style="color:red">主图</span><span class="img4" mark='+ picList[i].attId +'>删除图片</span></div>'
                     +'</div>'
                 $("#isMain").val(picList[i].attId);
             } else {
                 picStr1 = '<div class="img picDiv" id="img'+ picList[i].attId +'">'
-                    +'<div class="img1"><img src='+ picList[i].attPath +' alt="" ></div>'
+                    +'<div class="img1"><img src="'+ picList[i].attPath +'" alt="" ></div>'
                     +'<div class="img2"><span class="img3" id="span'+ picList[i].attId +'" mark='+ picList[i].attId +'></span><span class="img4" mark='+ picList[i].attId +'></span></div>'
                     +'</div>'
             }
@@ -48,7 +48,7 @@ var main={
             selectType = collect.typeId;
             selectSonType = collect.sonTypeId || null;
             property.setForm($("#collectForm"), collect);
-        } else {
+        } else if (success == 0){
             errorMsg('页面加载错误，请联系管理员');
         }
 
@@ -75,7 +75,6 @@ var main={
                ,xhr:xhrOnProgress
                 ,progress:function(index,value){//上传进度回调 value进度值
                     element.progress('progressBar'+index, value+'%')//设置页面进度条
-                    console.log(e,value);
                 }
                 ,bindAction: '#testListAction'
                 ,choose: function(obj){
@@ -177,7 +176,6 @@ var main={
             //监听行工具事件
             table.on('tool(test)', function(obj){
                 var data = obj.data;
-                //console.log(obj)
                 if(obj.event === 'del'){
                     layer.confirm('真的删除行么', function(index){
                         obj.del();

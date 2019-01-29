@@ -13,7 +13,7 @@ var main={
         getDictData();
         setSelect();
         property.setUserInfo();
-        if (userInfo.orgName == '影视部'){
+        if (checkOrg(userInfo.userId)){
             userType = '1';
         }
         this.initTable();
@@ -58,10 +58,11 @@ function loadTable() {
         var keywords = $("#keywords").val();
         var applyOrg = $("#applyOrg").val();
         var applyStatus = $("#applyStatus").val();
+        var currentId = localStorage.functinId;
         table.render({
             elem: '#test'
             ,url:property.getProjectPath()+"PostVideo/getQueryVideoList.do?keywords="+keywords+
-            "&applyOrg="+applyOrg+"&applyStatus="+applyStatus
+            "&applyOrg="+applyOrg+"&applyStatus="+applyStatus+'&module='+currentId
             +"&currentUserId="+userInfo.userId
             ,toolbar: '#toolbarDemo'
             ,title: '影视资料数据表'
@@ -131,7 +132,6 @@ function loadTable() {
         //监听行工具事件
         table.on('tool(test)', function(obj){
             var data = obj.data;
-            //console.log(obj)
             if(obj.event === 'detail'){
                 localStorage.videoId = data.partyId;
                 localStorage.pageType = "detail";
@@ -155,7 +155,7 @@ function loadTable() {
                         if (result.success == 1) {
                             successMsg("删除成功!")
                             loadTable();
-                        } else {
+                        } else if (result.success == 0){
                             errorMsg(result.error.message);
                         }
                     },
@@ -164,7 +164,7 @@ function loadTable() {
                     }
                 });
             }else if (obj.event === 'revoke'){
-                var json = {"processInstId":data.id,"apply":userInfo.userId};
+                var json = {"processInstId":data.id,"apply":userInfo.userId,"applyOrg":userInfo.orgId};
                 $.ajax({
                     type:"post",
                     data:JSON.stringify(json),
@@ -175,7 +175,7 @@ function loadTable() {
                         if (result.success == 1) {
                             successMsg("撤回成功!")
                             loadTable();
-                        } else {
+                        } else if (result.success == 0){
                             errorMsg(result.error.message);
                         }
                     },
@@ -195,7 +195,7 @@ function loadTable() {
                         if (result.success == 1) {
                             successMsg("提交成功!")
                             loadTable();
-                        } else {
+                        } else if (result.success == 0){
                             errorMsg(result.error.message);
                         }
                     },

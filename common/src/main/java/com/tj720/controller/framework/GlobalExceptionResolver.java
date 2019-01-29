@@ -134,8 +134,9 @@ public class GlobalExceptionResolver implements HandlerExceptionResolver {
 			e.printStackTrace();
 		}finally{
 			try {
-				if(pw!=null)
+				if(pw!=null) {
 					pw.close();
+				}
 			} catch (Exception e2) {
 			}
 		}

@@ -31,6 +31,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.zip.ZipOutputStream;
 
 /**
@@ -87,13 +92,14 @@ public class PostVideoController {
     @ControllerAop(action = "查询影视资料列表")
     @RequestMapping("/queryPostVideoList")
     public LayUiTableJson queryPostVideoList(String keywords, String videoMark, String status,@RequestParam() String userId,
-                                             @RequestParam() String uploadOrg,@RequestParam() String userType,@RequestParam(defaultValue = "1") int page
+                                             @RequestParam() String uploadOrg,@RequestParam() String userType,
+                                             @RequestParam() String module,@RequestParam(defaultValue = "1") int page
             , @RequestParam(defaultValue = "10") int limit){
         Page pageInfo = new Page();
         pageInfo.setCurrentPage(page);
         pageInfo.setSize(limit);
         JsonResult postVideoList = postVideoService.getPostVideoList(keywords, videoMark, status
-                , pageInfo,uploadOrg,userId,userType);
+                , pageInfo,uploadOrg,userId,userType,module);
         if (postVideoList != null && postVideoList.getSuccess() == 1){
             if (null != postVideoList){
                 List<PostVideo> postVideos = (List<PostVideo>)postVideoList.getData();
@@ -102,7 +108,7 @@ public class PostVideoController {
                 return new LayUiTableJson(0,postVideoList.getMsg(),0,null);
             }
         }else {
-            return new LayUiTableJson(1,postVideoList.getMsg(),0,null);
+            return new LayUiTableJson(0,postVideoList.getMsg(),0,null);
         }
 
     }
@@ -124,7 +130,7 @@ public class PostVideoController {
                     return new LayUiTableJson(0,postVideoList.getMsg(),0,null);
                 }
             }else {
-                return new LayUiTableJson(1,postVideoList.getMsg(),0,null);
+                return new LayUiTableJson(0,postVideoList.getMsg(),0,null);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -150,30 +156,32 @@ public class PostVideoController {
             postVideo = ((List<PostVideo>)jsonResult.getData()).get(0);
             //新增编目信息
             List<PostVideoComments> postVideoComments = postVideoDto.getPostVideoComments();
-            JsonResult PostVideoCommentsResult = postVideoCommentsService.addPostVideoCommentList(postVideo.getId()
-                    , postVideoComments);
-            if (null == PostVideoCommentsResult || PostVideoCommentsResult.getSuccess() == 0){
-                return PostVideoCommentsResult;
+            if(null != postVideoComments && postVideoComments.size()>0){
+                JsonResult PostVideoCommentsResult = postVideoCommentsService.addPostVideoCommentList(postVideo.getId()
+                        , postVideoComments);
+                if (null == PostVideoCommentsResult || PostVideoCommentsResult.getSuccess() == 0){
+                    return PostVideoCommentsResult;
+                }
             }
             //添加流程信息
             String actionType = postVideoDto.getActionType();
             //0:草稿,1:提交中,2:不走流程直接发布
             //草稿
-            if (actionType.equals("1")){
-
-                WfAction wfAction = wfService.addWfAction(postVideo.getId(),"1","0"
-                        ,postVideoDto.getCurrentUserId(),postVideo.getUploadOrg(), new Date(),postVideo.getVideoName(),"1"
-                        ,postVideo.getApproval());
+            if ("1".equals(actionType)){
                 boolean flag = postVideoService.checkUserOrg(Tools.getUserId());
                 //非影视部
                 if (!flag){
+                    WfAction wfAction = wfService.addWfAction(postVideo.getId(),"1","0"
+                            ,postVideoDto.getCurrentUserId(),postVideo.getUploadOrg(), new Date(),postVideo.getVideoName(),"1"
+                            ,postVideo.getApproval());
+
                     wfService.addWfDetail(wfAction.getXid(),"0","2","1","创建申请",
                             new Date(),postVideoDto.getCurrentUserId(),postVideoDto.getCurrentUserId(),postVideo.getUploadOrg());
                 }
 
             }
             //保存并提交
-            else if (actionType.equals("2")){
+            else if ("2".equals(actionType)){
                 WfAction wfAction = wfService.addWfAction(postVideo.getId(),"1","0"
                         ,postVideoDto.getCurrentUserId(),postVideo.getUploadOrg(), new Date(),postVideo.getVideoName(),"1"
                         ,postVideo.getApproval());
@@ -197,7 +205,7 @@ public class PostVideoController {
 
             }
             //保存并发布
-            else if (actionType.equals("3")){
+            else if ("3".equals(actionType)){
                 //直接发布资料
                 postVideo.setStatus("4");
                 postVideoService.updateVideo(postVideo);
@@ -228,19 +236,21 @@ public class PostVideoController {
         if (null != jsonResult && jsonResult.getSuccess() == 1){
             //修改标注信息
             List<PostVideoComments> postVideoComments = postVideoDto.getPostVideoComments();
-            JsonResult PostVideoCommentsResult = postVideoCommentsService.updatePostVideoCommentList(postVideo.getId(),postVideoComments);
-            if (null == PostVideoCommentsResult || PostVideoCommentsResult.getSuccess() == 0){
-                return PostVideoCommentsResult;
+            if(null != postVideoComments && postVideoComments.size()>0){
+                JsonResult PostVideoCommentsResult = postVideoCommentsService.updatePostVideoCommentList(postVideo.getId(),postVideoComments);
+                if (null == PostVideoCommentsResult || PostVideoCommentsResult.getSuccess() == 0){
+                    return PostVideoCommentsResult;
+                }
             }
             String actionType = postVideoDto.getActionType();
             //如果是非影视部编辑
-            if (actionType.equals("1")){
+            if ("1".equals(actionType)){
                 //修改审批人(暂不处理)
                 WfAction wfActionByPartyId = wfService.getWfActionByPartyId(postVideo.getId(), "1");
                 //若果是草稿
-                if (wfActionByPartyId.getApplyStatus().equals("1")){
-
-                }
+//                if ("1".equals(wfActionByPartyId.getApplyStatus())){
+//
+//                }
             }
             return jsonResult;
         }else {
@@ -369,7 +379,7 @@ public class PostVideoController {
             List<WfDetail> wfDetailList = (List<WfDetail>)actionInfo.getData();
             return new LayUiTableJson(0,null,wfDetailList.size(),wfDetailList);
         }else {
-            return new LayUiTableJson(1,actionInfo.getMsg(),0,null);
+            return new LayUiTableJson(0,actionInfo.getMsg(),0,null);
         }
     }
 
@@ -389,10 +399,10 @@ public class PostVideoController {
                 List<WfDetail> wfDetailList = (List<WfDetail>)actionInfo.getData();
                 return new LayUiTableJson(0,null,wfDetailList.size(),wfDetailList);
             }else {
-                return new LayUiTableJson(1,actionInfo.getMsg(),0,null);
+                return new LayUiTableJson(0,actionInfo.getMsg(),0,null);
             }
         }else {
-            return new LayUiTableJson(1,"无数据",0,null);
+            return new LayUiTableJson(0,"无数据",0,null);
         }
 
 
@@ -419,7 +429,7 @@ public class PostVideoController {
         pageInfo.setSize(limit);
         JsonResult uplodApprovalList = postVideoService.getUplodApprovalList(keywords, source, status, pageInfo,currentUserId);
         if (null == uplodApprovalList || uplodApprovalList.getSuccess()==0){
-            return new LayUiTableJson(1,"系统异常",0,null);
+            return new LayUiTableJson(0,"系统异常",0,null);
         }else {
             return new LayUiTableJson(0,null,pageInfo.getAllRow(),(List<UploadApprovalDto>) uplodApprovalList.getData());
         }
@@ -438,14 +448,14 @@ public class PostVideoController {
     @ControllerAop(action = "查询影视资料查询列表")
     @RequestMapping("/queryPostVideoQueryList")
     public LayUiTableJson queryPostVideoQueryList(String keywords, String videoMark, String status,
-                                                  @RequestParam String currentUserId,@RequestParam String uploadOrg, @RequestParam() String userType
+                                                  @RequestParam String currentUserId,@RequestParam String uploadOrg, @RequestParam() String userType,@RequestParam() String module
             ,@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int limit){
         Page pageInfo = new Page();
         pageInfo.setCurrentPage(page);
         pageInfo.setSize(limit);
         JsonResult postVideoList = postVideoService.getPostVideoQueryList(keywords, videoMark, status,
                 currentUserId,uploadOrg
-                , pageInfo,userType);
+                , pageInfo,userType,module);
         if (postVideoList != null && postVideoList.getSuccess() == 1){
             if (null != postVideoList){
                 List<PostVideo> postVideos = (List<PostVideo>)postVideoList.getData();
@@ -454,7 +464,7 @@ public class PostVideoController {
                 return new LayUiTableJson(0,postVideoList.getMsg(),0,null);
             }
         }else {
-            return new LayUiTableJson(1,"查询失败",0,null);
+            return new LayUiTableJson(0,"查询失败",0,null);
         }
 
     }
@@ -581,6 +591,23 @@ public class PostVideoController {
     }
 
     /**
+     * 查询查询资料的审批记录
+     * @param processInstId
+     * @return
+     */
+    @ControllerAop(action = "查询查询资料的审批记录")
+    @RequestMapping("/getQueryApplyRecord")
+    public LayUiTableJson getQueryApplyRecord(@RequestParam String processInstId){
+            JsonResult actionInfo = wfService.getWfDetailByProcessId(processInstId);
+            if (actionInfo != null && actionInfo.getSuccess() == 1){
+                List<WfDetail> wfDetailList = (List<WfDetail>)actionInfo.getData();
+                return new LayUiTableJson(0,null,wfDetailList.size(),wfDetailList);
+            }else {
+                return new LayUiTableJson(1,actionInfo.getMsg(),0,null);
+            }
+    }
+
+    /**
      * 申请管理列表
      * @param keywords
      * @param applyOrg
@@ -593,14 +620,14 @@ public class PostVideoController {
      */
     @ControllerAop(action = "查询申请管理列表")
     @RequestMapping("/getQueryVideoList")
-    public LayUiTableJson getQueryVideoList(String keywords,String applyOrg,String applyStatus,String currentUserId
+    public LayUiTableJson getQueryVideoList(String keywords,String applyOrg,String applyStatus,String currentUserId,@RequestParam String module
             ,String userType,@RequestParam(defaultValue = "1") int page
             , @RequestParam(defaultValue = "10") int limit){
         Page pageInfo = new Page();
         pageInfo.setCurrentPage(page);
         pageInfo.setSize(limit);
         JsonResult jsonResult = postVideoService.getQueryVideoList(keywords,applyOrg,applyStatus,currentUserId,
-                pageInfo);
+                pageInfo,module);
         if (null == jsonResult || jsonResult.getSuccess()==0){
             return new LayUiTableJson(1,"查询失败",0,null);
         }else {
@@ -650,7 +677,7 @@ public class PostVideoController {
     }
     @ControllerAop(action = "更新申请")
     @RequestMapping("/updateApply")
-    public JsonResult updateApply(@RequestParam String processInstId,String applyReason,String remarks,String approval){
+    public JsonResult updateApply( String processInstId,String applyReason,String remarks,String approval){
         try {
             WfAction wfAction = wfService.getWfActionById(processInstId);
             wfAction.setActionName(applyReason);
@@ -666,7 +693,7 @@ public class PostVideoController {
     }
     @ControllerAop(action = "更新申请并提交")
     @RequestMapping("/updateApplyAndSubmit")
-    public JsonResult updateApplyAndSubmit(@RequestParam String processInstId,String applyReason,String remarks,String approval){
+    public JsonResult updateApplyAndSubmit(String processInstId,String applyReason,String remarks,String approval){
         try {
             WfAction wfAction = wfService.getWfActionById(processInstId);
             wfAction.setActionName(applyReason);
@@ -862,8 +889,8 @@ public class PostVideoController {
      */
     @ControllerAop(action = "查询影视采集统计")
     @RequestMapping("/getVideoCjCount")
-    public JsonResult getVideoCjCount(){
-        JsonResult count = postVideoService.getVideoCjCount();
+    public JsonResult getVideoCjCount(@RequestParam String module){
+        JsonResult count = postVideoService.getVideoCjCount(module);
         return count;
     }
     /**
@@ -872,8 +899,8 @@ public class PostVideoController {
      */
     @ControllerAop(action = "查询影视查询统计")
     @RequestMapping("/getVideoCxCount")
-    public JsonResult getVideoCxCount(){
-        JsonResult count = postVideoService.getVideoCxCount();
+    public JsonResult getVideoCxCount(@RequestParam String module){
+        JsonResult count = postVideoService.getVideoCxCount(module);
         return count;
     }
 
@@ -942,8 +969,16 @@ public class PostVideoController {
         try {
             request.setCharacterEncoding("UTF-8");//设定请求字符编码
             response.setContentType("application/x-msdownload;charset=utf-8");
-            response.setHeader("Content-disposition", "attachment; filename=" +  URLEncoder.encode(zipName, "UTF-8"));
-//            FtpUtil ftpUtil = new FtpUtil(config.getFtpUrl(), Integer.valueOf(config.getFtpPort()), config.getFtpUserName(), config.getFtpPassWord());
+            zipName = new String(zipName.getBytes("UTF-8"), "ISO-8859-1");
+
+            String regex = "[`~!@#$%^&*()\\+\\=\\{}|:\"?><【】\\/r\\/n]";
+            Pattern pa = Pattern.compile(regex);
+            Matcher ma = pa.matcher(zipName);
+            if(ma.find()){
+                zipName = ma.replaceAll("");
+            }
+            response.setHeader("Content-disposition", "attachment; filename=" +zipName);
+//            FtpUtil ftpUtil = new FtpUtil(CheckConfig.getFtpUrl(), Integer.valueOf(CheckConfig.getFtpPort()), CheckConfig.getFtpUserName(), CheckConfig.getFtpPassWord());
 //            ftpUtil.downFtpFiletoZip(fileList,out,response);
             fileUploadConfig = new FileUploadConfig(config);
             fileUploadConfig.downloadFileToZip(fileList,out,response);
@@ -963,7 +998,7 @@ public class PostVideoController {
     @RequestMapping("/batchDownloadVideoFile")
     public void  batchDownloadVideoFile(String postVideoId, HttpServletRequest request, HttpServletResponse response)throws IOException{
         String[] list = postVideoId.split(",");
-        String zipName = "影视资料.zip";
+        String zipName = "影视资料.xls";
         List<HashMap<String,Object>> attachments = new ArrayList<HashMap<String,Object>>();
         ZipOutputStream out = new ZipOutputStream(response.getOutputStream());
         for (String id : list) {
@@ -983,8 +1018,14 @@ public class PostVideoController {
         try {
             request.setCharacterEncoding("UTF-8");//设定请求字符编码
             response.setContentType("application/x-msdownload;charset=utf-8");
-            response.setHeader("Content-disposition", "attachment; filename=" +  URLEncoder.encode(zipName, "UTF-8"));
-//            FtpUtil ftpUtil = new FtpUtil(config.getFtpUrl(), Integer.valueOf(config.getFtpPort()), config.getFtpUserName(), config.getFtpPassWord());
+            String regex = "[`~!@#$%^&*()\\+\\=\\{}|:\"?><【】\\/r\\/n]";
+            Pattern pa = Pattern.compile(regex);
+            Matcher ma = pa.matcher(zipName);
+            if(ma.find()){
+                zipName = ma.replaceAll("");
+            }
+            response.setHeader("Content-disposition", "attachment; filename=" +zipName);
+//            FtpUtil ftpUtil = new FtpUtil(CheckConfig.getFtpUrl(), Integer.valueOf(CheckConfig.getFtpPort()), CheckConfig.getFtpUserName(), CheckConfig.getFtpPassWord());
 //            ftpUtil.downFtpFiletoZipPlus(attachments,out,response);
             fileUploadConfig = new FileUploadConfig(config);
             fileUploadConfig.downloadFileToZipPlus(attachments,out,response);
@@ -996,10 +1037,10 @@ public class PostVideoController {
     @RequestMapping("/exportVideoCjReport1")
     public void exportVideoCjReport1(String status,String startTime,String endTime,String type,
                                      HttpServletRequest request, HttpServletResponse response)throws IOException{
-        String zipName = "影视采集统计1.zip";
+        String zipName = "影视采集统计1.xls";
         //交叉表数据
         String[] tableRow = new String[]{"存储类型","文物馆藏","中心活动","收集资料","拍摄素材","播出成片","其他"};
-        if (type.equals("2")){
+        if ("2".equals(type)){
             tableRow = new String[]{"操作类型","展陈","社教","研究","新闻发布","其他"};
         }
         HashMap<String,Object> condition = new HashMap<String,Object>();
@@ -1008,7 +1049,7 @@ public class PostVideoController {
         condition.put("endTime",endTime);
         JsonResult videoCjTable = postVideoService.getVideoCjTable(condition);
         List<Object[]> tableData = new ArrayList<Object[]>();
-        if (type.equals("2")){
+        if ("2".equals(type)){
             videoCjTable = postVideoService.getVideoCxTable(condition);
             List<HashMap<String,Object>> list = (List<HashMap<String,Object>>)videoCjTable.getData();
             for (HashMap<String, Object> map : list) {
@@ -1039,12 +1080,12 @@ public class PostVideoController {
 
         //饼图数据
         String[] pieRow = new String[]{"存储类型","总数"};
-        if (type.equals("2")){
+        if ("2".equals(type)){
             pieRow = new String[]{"申请原因","总数"};
         }
         JsonResult videoCjPie = postVideoService.getVideoCjPie(condition);
         List<Object[]> pieData = new ArrayList<Object[]>();
-        if (type.equals("2")){
+        if ("2".equals(type)){
             videoCjPie = postVideoService.getVideoCxPie(condition);
             List<HashMap<String,Object>> list = (List<HashMap<String,Object>>)videoCjPie.getData();
             for (HashMap<String, Object> map : list) {
@@ -1065,12 +1106,12 @@ public class PostVideoController {
 
         //折线图数据
         String[] lineRow = new String[]{"操作日期","图片","视频","音频"};
-        if (type.equals("2")){
+        if ("2".equals(type)){
             lineRow = new String[]{"操作日期","申请","下载"};
         }
         JsonResult videoCjLine = postVideoService.getVideoCjLine(condition);
         List<Object[]> linedata = new ArrayList<Object[]>();
-        if (type.equals("2")){
+        if ("2".equals(type)){
             videoCjLine = postVideoService.getVideoCxLine(condition);
             List<HashMap<String,Object>> list = (List<HashMap<String,Object>>)videoCjLine.getData();
             for (HashMap<String, Object> map : list) {
@@ -1098,37 +1139,35 @@ public class PostVideoController {
         String execelName1 = "采集类型交叉表统计";
         String execelName2 = "采集类型饼图统计";
         String execelName3 = "采集类型折线图统计";
-        if (type.equals("2")){
+        if ("2".equals(type)){
             execelName1 = "操作类型交叉表统计";
             execelName2 = "操作类型饼图统计";
             execelName3 = "操作类型折线图统计";
         }
-        ExportExcelUtil exportExcelUtil = new ExportExcelUtil(execelName1,tableRow,tableData);
-        HSSFWorkbook sheets = exportExcelUtil.exportMulti(response);
-        ExportExcelUtil exportExcelUtil2 = new ExportExcelUtil(execelName2,pieRow,pieData);
-        HSSFWorkbook sheets2 = exportExcelUtil2.exportMulti(response);
-        ExportExcelUtil exportExcelUtil3 = new ExportExcelUtil(execelName3,lineRow,linedata);
-        HSSFWorkbook sheets3 = exportExcelUtil3.exportMulti(response);
-        ZipOutputStream out = new ZipOutputStream(response.getOutputStream());
-        try
-        {
-            request.setCharacterEncoding("UTF-8");//设定请求字符编码
-            response.setContentType("application/x-msdownload;charset=utf-8");
-            response.setHeader("Content-disposition", "attachment; filename=" +  URLEncoder.encode(zipName, "UTF-8"));
-            ExportExcelUtil.doCompress(sheets,execelName1+".xls",out);
-            ExportExcelUtil.doCompress(sheets2,execelName2+".xls",out);
-            ExportExcelUtil.doCompress(sheets3,execelName3+".xls",out);
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }finally {
-            if(out != null){
-                try {out.close();} catch (IOException e) {}
-            }
-        }
 
+        List<HashMap<String,Object>> excelInfo = new ArrayList<HashMap<String,Object>>();
 
+        HashMap ext1 = new HashMap();
+        ext1.put("title",execelName1);
+        ext1.put("rowName",tableRow);
+        ext1.put("dataList",tableData);
+        excelInfo.add(ext1);
+
+        HashMap ext2 = new HashMap();
+        ext2.put("title",execelName2);
+        ext2.put("rowName",pieRow);
+        ext2.put("dataList",pieData);
+        excelInfo.add(ext2);
+
+        HashMap ext3 = new HashMap();
+        ext3.put("title",execelName3);
+        ext3.put("rowName",lineRow);
+        ext3.put("dataList",linedata);
+        excelInfo.add(ext3);
+
+        ExportExcelUtil exportExcelUtil = new ExportExcelUtil();
+        exportExcelUtil.exportMultiSheet(response,excelInfo);
+//        ZipOutputStream out = new ZipOutputStream(response.getOutputStream());
     }
     @ControllerAop(action = "导出影视统计")
     @RequestMapping("/exportVideoCjReport2")
@@ -1139,7 +1178,7 @@ public class PostVideoController {
         condition.put("status",status);
         condition.put("startTime",startTime);
         condition.put("endTime",endTime);
-        if (type.equals("2")){
+        if ("2".equals(type)){
             //折线图数据
             String[] barRow = new String[]{"部门","申请","下载"};
             JsonResult videoCjBar = postVideoService.getVideoCxBar(condition);
@@ -1153,8 +1192,8 @@ public class PostVideoController {
                 barData.add(temp);
             }
 
-            ExportExcelUtil exportExcelUtil = new ExportExcelUtil("操作类型部门统计",barRow,barData);
-            HSSFWorkbook sheets = exportExcelUtil.exportMulti(response);
+//            ExportExcelUtil exportExcelUtil = new ExportExcelUtil("操作类型部门统计",barRow,barData);
+//            HSSFWorkbook sheets = exportExcelUtil.exportMulti(response);
 
             //折线图数据
             String[] barRow1 = new String[]{"用户名","申请","下载"};
@@ -1169,25 +1208,41 @@ public class PostVideoController {
                 barData1.add(temp);
             }
 
-            ExportExcelUtil exportExcelUtil1 = new ExportExcelUtil("操作类型用户统计",barRow1,barData1);
-            HSSFWorkbook sheets1 = exportExcelUtil1.exportMulti(response);
-            ZipOutputStream out = new ZipOutputStream(response.getOutputStream());
-            try
-            {
-                request.setCharacterEncoding("UTF-8");//设定请求字符编码
-                response.setContentType("application/x-msdownload;charset=utf-8");
-                response.setHeader("Content-disposition", "attachment; filename=" +  URLEncoder.encode(zipName, "UTF-8"));
-                ExportExcelUtil.doCompress(sheets,"操作类型部门统计.xls",out);
-                ExportExcelUtil.doCompress(sheets1,"操作类型用户统计.xls",out);
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }finally {
-                if(out != null){
-                    try {out.close();} catch (IOException e) {}
-                }
-            }
+//            ExportExcelUtil exportExcelUtil1 = new ExportExcelUtil("操作类型用户统计",barRow1,barData1);
+//            HSSFWorkbook sheets1 = exportExcelUtil1.exportMulti(response);
+//            ZipOutputStream out = new ZipOutputStream(response.getOutputStream());
+//            try
+//            {
+//                request.setCharacterEncoding("UTF-8");//设定请求字符编码
+//                response.setContentType("application/x-msdownload;charset=utf-8");
+//                response.setHeader("Content-disposition", "attachment; filename=" +  URLEncoder.encode(zipName, "UTF-8"));
+//                ExportExcelUtil.doCompress(sheets,"操作类型部门统计.xls",out);
+//                ExportExcelUtil.doCompress(sheets1,"操作类型用户统计.xls",out);
+//            }
+//            catch (IOException e)
+//            {
+//                e.printStackTrace();
+//            }finally {
+//                if(out != null){
+//                    try {out.close();} catch (IOException e) {}
+//                }
+//            }
+            List<HashMap<String,Object>> excelInfo = new ArrayList<HashMap<String,Object>>();
+
+            HashMap ext1 = new HashMap();
+            ext1.put("title","操作类型部门统计");
+            ext1.put("rowName",barRow);
+            ext1.put("dataList",barData);
+            excelInfo.add(ext1);
+
+            HashMap ext2 = new HashMap();
+            ext2.put("title","操作类型用户统计");
+            ext2.put("rowName",barRow1);
+            ext2.put("dataList",barData1);
+            excelInfo.add(ext2);
+
+            ExportExcelUtil exportExcelUtil = new ExportExcelUtil();
+            exportExcelUtil.exportMultiSheet(response,excelInfo);
         }else {
             //折线图数据
             String[] barRow = new String[]{"部门","图片","视频","音频"};
@@ -1204,23 +1259,7 @@ public class PostVideoController {
             }
 
             ExportExcelUtil exportExcelUtil = new ExportExcelUtil("采集类型部门统计",barRow,barData);
-            HSSFWorkbook sheets = exportExcelUtil.exportMulti(response);
-            ZipOutputStream out = new ZipOutputStream(response.getOutputStream());
-            try
-            {
-                request.setCharacterEncoding("UTF-8");//设定请求字符编码
-                response.setContentType("application/x-msdownload;charset=utf-8");
-                response.setHeader("Content-disposition", "attachment; filename=" +  URLEncoder.encode(zipName, "UTF-8"));
-                ExportExcelUtil.doCompress(sheets,"采集类型部门统计.xls",out);
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }finally {
-                if(out != null){
-                    try {out.close();} catch (IOException e) {}
-                }
-            }
+           exportExcelUtil.export(response);
         }
     }
     @ControllerAop(action = "检验当前用户身份")

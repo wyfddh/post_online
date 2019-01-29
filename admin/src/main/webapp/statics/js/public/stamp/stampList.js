@@ -1,4 +1,4 @@
-﻿var typeList = [];
+﻿﻿var typeList = [];
 var main={
 
     init:function () {
@@ -202,7 +202,7 @@ function loadTable(){
                             if (result.success == 1) {
                                 successMsg("删除集邮资讯成功");
                                 loadTable();
-                            } else {
+                            } else if (result.success == 0){
                                 //top.layer.msg(result.error.message);
                                 errorMsg("删除集邮资讯失败");
                             }
@@ -211,7 +211,7 @@ function loadTable(){
                             errorMsg("系统异常");
                         }
                     });
-                    layer.close(index);
+                    parent.layer.close(index);
                 });
             } else if(obj.event === 'edit'){
                 localStorage.HomeType = "edit";

@@ -60,7 +60,9 @@ public class OSSUtils {
 
         String bucketName = OSSUtils.getBucketName(fileUrl);       //根据url获取bucketName
         String fileName = OSSUtils.getFileName(fileUrl);           //根据url获取fileName
-        if (bucketName == null || fileName == null) return false;
+        if (bucketName == null || fileName == null) {
+            return false;
+        }
         OSSClient ossClient = null;
         try {
             ossClient = new OSSClient(config.getEndpoint(), config.getAccessKeyId(), config.getAccessKeySecret());
@@ -85,7 +87,9 @@ public class OSSUtils {
         int deleteCount = 0;    //成功删除的个数
         String bucketName = OSSUtils.getBucketName(fileUrls.get(0));       //根据url获取bucketName
         List<String> fileNames = OSSUtils.getFileName(fileUrls);         //根据url获取fileName
-        if (bucketName == null || fileNames.size() <= 0) return 0;
+        if (bucketName == null || fileNames.size() <= 0) {
+            return 0;
+        }
         OSSClient ossClient = null;
         try {
             ossClient = new OSSClient(config.getEndpoint(), config.getAccessKeyId(), config.getAccessKeySecret());
@@ -194,7 +198,7 @@ public class OSSUtils {
                 String key = path.toString();
                 key = key.replaceAll("\\\\", "/");
                 OSSObject object = ossClient.getObject(config.getBucketName(), path);
-//                ObjectMetadata object = ossClient.getObject(new GetObjectRequest(config.getBucketName(), key), new File(fileName));
+//                ObjectMetadata object = ossClient.getObject(new GetObjectRequest(CheckConfig.getBucketName(), key), new File(fileName));
                 InputStream input = object.getObjectContent();
                 doCompress(input,file.getAttName(),out);
                 //多个文件下载时，此句必加
@@ -265,46 +269,29 @@ public class OSSUtils {
      * @Description: 获取文件类型
      */
     private static String contentType(String fileType) {
-        fileType = fileType.toLowerCase();
         String contentType = "";
-        switch (fileType) {
-            case "bmp":
-                contentType = "image/bmp";
-                break;
-            case "gif":
-                contentType = "image/gif";
-                break;
-            case "png":
-            case "jpeg":
-            case "jpg":
-                contentType = "image/jpeg";
-                break;
-            case "html":
-                contentType = "text/html";
-                break;
-            case "txt":
-                contentType = "text/plain";
-                break;
-            case "vsd":
-                contentType = "application/vnd.visio";
-                break;
-            case "ppt":
-            case "pptx":
-                contentType = "application/vnd.ms-powerpoint";
-                break;
-            case "doc":
-            case "docx":
-                contentType = "application/msword";
-                break;
-            case "xml":
-                contentType = "text/xml";
-                break;
-            case "mp4":
-                contentType = "video/mp4";
-                break;
-            default:
-                contentType = "application/octet-stream";
-                break;
+        if ("bmp".equalsIgnoreCase(fileType)){
+            contentType = "image/bmp";
+        }else if ("gif".equalsIgnoreCase(fileType)){
+            contentType = "image/gif";
+        }else if ("jpeg".equalsIgnoreCase(fileType)||"png".equalsIgnoreCase(fileType)||"jpg".equalsIgnoreCase(fileType)){
+            contentType = "image/jpeg";
+        }else if ("html".equalsIgnoreCase(fileType)){
+            contentType = "text/html";
+        }else if ("txt".equalsIgnoreCase(fileType)){
+            contentType = "text/plain";
+        }else if ("vsd".equalsIgnoreCase(fileType)){
+            contentType = "application/vnd.visio";
+        }else if ("ppt".equalsIgnoreCase(fileType)||"pptx".equalsIgnoreCase(fileType)){
+            contentType = "application/vnd.ms-powerpoint";
+        }else if ("doc".equalsIgnoreCase(fileType)||"docx".equalsIgnoreCase(fileType)){
+            contentType = "application/msword";
+        }else if ("xml".equalsIgnoreCase(fileType)){
+            contentType = "text/xml";
+        }else if ("mp4".equalsIgnoreCase(fileType)){
+            contentType = "video/mp4";
+        }else {
+            contentType = "application/octet-stream";
         }
         return contentType;
     }
@@ -343,7 +330,9 @@ public class OSSUtils {
     private static String getFileName(String fileUrl) {
         String str = "aliyuncs.com/";
         int beginIndex = fileUrl.indexOf(str);
-        if (beginIndex == -1) return null;
+        if (beginIndex == -1) {
+            return null;
+        }
         return fileUrl.substring(beginIndex + str.length());
     }
 
@@ -424,6 +413,16 @@ public class OSSUtils {
             }
         }
         return basePath;
+    }
+
+    public InputStream getFileStreamPath(String path){
+        config = config == null ? new OSSConfig(sysConfig) : config;
+        OSSClient ossClient = new OSSClient(config.getEndpoint(), config.getAccessKeyId(), config.getAccessKeySecret());
+        String key = path.toString();
+        key = key.replaceAll("\\\\", "/");
+        OSSObject object = ossClient.getObject(config.getBucketName(), key);
+        InputStream input = object.getObjectContent();
+        return input;
     }
 
 

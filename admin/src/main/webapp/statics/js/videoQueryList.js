@@ -11,7 +11,7 @@ var main={
         getDictData();
         setSelect();
         property.setUserInfo();
-        if (userInfo.orgName == '影视部'){
+        if (checkOrg(userInfo.userId)){
             userType = '1';
         }
         this.initTable();
@@ -99,10 +99,11 @@ function loadTable() {
         var keywords = $("#keywords").val();
         var videoMark = $("#videoMark").val();
         var status = $("#status").val();
+        var currentId = localStorage.functinId;
         table.render({
             elem: '#test'
             ,url:property.getProjectPath()+"PostVideo/queryPostVideoQueryList.do?keywords="+keywords+"&videoMark="+videoMark+"&status="+status
-            +"&currentUserId="+userInfo.userId+"&uploadOrg="+userInfo.orgId+'&userType='+userType
+            +"&currentUserId="+userInfo.userId+"&uploadOrg="+userInfo.orgId+'&userType='+userType+'&module='+currentId
             ,toolbar: '#toolbarDemo'
             ,title: '影视资料数据表'
             ,cols: [[
@@ -178,9 +179,15 @@ function loadTable() {
                         if (count>0){
                             alertMsg("已自动剔除无效选项！");
                         }
-                        localStorage.videoData = JSON.stringify(newData);
-                        parent.$t.goToPage(this,"page/video/videoQueryList.html");
+                        if (newData.length>0){
+                            localStorage.videoData = JSON.stringify(newData);
+                            parent.$t.goToPage(this,"page/video/videoQueryList.html");
+                        } else {
+                            alertMsg("所选项无可申请项！");
+                        }
+
                     }
+                    break;
                 case 'batchDownload':
                     var data = checkStatus.data;
                     if (data.length<=0){
@@ -218,7 +225,6 @@ function loadTable() {
         //监听行工具事件
         table.on('tool(test)', function(obj){
             var data = obj.data;
-            //console.log(obj)
             if(obj.event === 'del'){
                 var index = layer.confirm('真的删除行么', function(index){
                     // obj.del();
@@ -309,7 +315,7 @@ function getDictData() {
             if (result.code == 0) {
                 videoMarkList = result.data;
             } else {
-                errorMsg(result.message);
+                errorMsg();
             }
         },
         error:function(result) {

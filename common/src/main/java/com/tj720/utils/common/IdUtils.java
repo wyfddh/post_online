@@ -1,6 +1,12 @@
 package com.tj720.utils.common;
 
 import com.tj720.utils.TimeUtil;
+import com.tj720.utils.Tools;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import javax.servlet.http.HttpServletRequest;
+import javax.tools.Tool;
 import org.apache.commons.lang3.StringUtils;
 
 import java.lang.management.ManagementFactory;
@@ -10,6 +16,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.UUID;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *  用于生产各种各样的ID
@@ -18,6 +25,8 @@ public class IdUtils {
 
     static int id = 1000;
     private static String middle = "";
+    @Autowired
+    private static HttpServletRequest request;
 
     static {
         middle = MathUtils.makeUpNewData(Math.abs(NetworkUtils.getHostIP().hashCode()) + "", 4) +   //4位IP地址hash
@@ -154,13 +163,48 @@ public class IdUtils {
          */
         public static String getHostIP(){
             try {
-                return InetAddress.getLocalHost().getHostAddress();
-            } catch (UnknownHostException e) {
+//                String hostAddress = InetAddress.getLocalHost().getHostAddress();
+                String hostAddress = Tools.getIpAddress(request);
+//                String ipAddress = getIPAddress(hostAddress);
+                return hostAddress;
+            } catch (Exception e) {
                 return DEFAULT_HOST_IP;
             }
         }
 
     }
+
+
+
+//    public static String getIPAddress(String hostname) throws IOException {
+//        Process process;
+//        String ipAddress = null;
+//        String localIpAddress = null;
+//        String[] commandArray;
+//
+//        if(System.getProperty("os.name").startsWith("Windows")) {
+//            commandArray = new String[] {"cmd", "/c", "ping "+hostname+ " -4 | findstr Pinging"}; // For Windows
+//        } else {
+//            commandArray = new String[] { "bash", "-c", "host "+hostname}; // For Linux and OSX
+//        }
+//        process = Runtime.getRuntime().exec(commandArray);
+//        BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
+//        String[] output;
+//        // Reading the output of a command executed.
+//        while ((localIpAddress = stdInput.readLine()) != null) {
+//            if(System.getProperty("os.name").startsWith("Windows")) {
+//                output = localIpAddress.split(" ");
+//                ipAddress = output[2].replace("[", "").replace("]", "").trim();
+//            } else {
+//                output = localIpAddress.split("has address");
+//                ipAddress = output[1];
+//            }
+//        }
+//
+//        return ipAddress;
+//    }
+
+
 
     /* ---------------------------------------------分割线------------------------------------------------ */
     /** 数据处理的相关类  */
@@ -207,14 +251,18 @@ public class IdUtils {
         public static String randomDigitNumber(int length){
             int start = Integer.parseInt(makeUpNewData("", length));//1000+8999=9999
             int end = Integer.parseInt(makeUpNewData("", length + 1)) - start;//9000
-            SecureRandom random = null;
+//            SecureRandom random = null;
+            String s = "";
             try {
-                random = SecureRandom.getInstance("SHA1PRNG");
+                SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
+
+                s = (int) (random.nextDouble() * end) + start + "";
+
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
             }
             //return (int)(Math.random() * end) + start + "";
-            return (int)(random.nextDouble() * end) + start + "";
+            return s;
         }
 
 

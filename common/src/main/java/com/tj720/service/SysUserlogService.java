@@ -13,7 +13,7 @@ public interface SysUserlogService{
 
     JsonResult batchRemove(String[] ids) throws Exception;
 
-    JSONObject userlogList(String username, String logintime,Integer currentPage, Integer size) throws Exception;
+    JSONObject userlogList(String username, String logintime,String endTime,Integer currentPage, Integer size) throws Exception;
 
     JSONObject getUserOptions() throws Exception;
 

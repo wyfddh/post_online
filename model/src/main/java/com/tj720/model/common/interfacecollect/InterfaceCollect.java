@@ -37,8 +37,8 @@ public class InterfaceCollect implements Serializable {
 
     private String culId;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date culYear;
+
+    private String culYear;
 
     private String culLevel;
 
@@ -174,11 +174,11 @@ public class InterfaceCollect implements Serializable {
         this.culId = culId;
     }
 
-    public Date getCulYear() {
+    public String getCulYear() {
         return culYear;
     }
 
-    public void setCulYear(Date culYear) {
+    public void setCulYear(String culYear) {
         this.culYear = culYear;
     }
 

@@ -49,7 +49,7 @@ public interface PostPublicCuratorService {
     JsonResult updateHomeByIds(List<String> ids);
 
 
-
+    public JsonResult approvalInfo(String id,String approval,String remarks);
 
 
 

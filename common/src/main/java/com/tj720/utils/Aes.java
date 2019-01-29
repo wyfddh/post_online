@@ -15,7 +15,7 @@ public class Aes
 		}
 		return apiKey;
 	}
-	 public static final String iv="CRAPG_@W8#_19#10";
+	 public static final String IV="CRAPG_@W8#_19#10";
 	 public static String encrypt(String data){
 		 //String PWD = "mipApiKey";
          String mm = "mipApiKey";
@@ -34,7 +34,7 @@ public class Aes
              System.arraycopy(dataBytes, 0, plaintext, 0, dataBytes.length);
               
              SecretKeySpec keyspec = new SecretKeySpec(mm.getBytes(), "AES");
-             IvParameterSpec ivspec = new IvParameterSpec(iv.getBytes());
+             IvParameterSpec ivspec = new IvParameterSpec(IV.getBytes());
  
              cipher.init(Cipher.ENCRYPT_MODE, keyspec, ivspec);
              byte[] encrypted = cipher.doFinal(plaintext);
@@ -55,7 +55,7 @@ public class Aes
          mm = handlerKey(mm);
          try
          {
-        	 if(data==null||data.equals("")){
+        	 if(data==null||"".equals(data)){
         		 return "";
         	 }
         	 data=data.trim();
@@ -63,7 +63,7 @@ public class Aes
               
              Cipher cipher = Cipher.getInstance("AES/CBC/NoPadding");
              SecretKeySpec keyspec = new SecretKeySpec(mm.getBytes(), "AES");
-             IvParameterSpec ivspec = new IvParameterSpec(iv.getBytes());
+             IvParameterSpec ivspec = new IvParameterSpec(IV.getBytes());
               
              cipher.init(Cipher.DECRYPT_MODE, keyspec, ivspec);
  
@@ -96,8 +96,9 @@ public class Aes
       * @return
       */
      public static byte[] parseHexStr2Byte(String hexStr) {
-             if (hexStr.length() < 1)
-                     return null;
+             if (hexStr.length() < 1) {
+                 return null;
+             }
              byte[] result = new byte[hexStr.length()/2];
              for (int i = 0;i< hexStr.length()/2; i++) {
                      int high = Integer.parseInt(hexStr.substring(i*2, i*2+1), 16);

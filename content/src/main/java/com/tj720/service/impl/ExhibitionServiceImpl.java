@@ -5,19 +5,19 @@ package com.tj720.service.impl;/**
 import com.alibaba.fastjson.JSON;
 import com.tj720.controller.framework.JsonResult;
 import com.tj720.controller.springbeans.Config;
-import com.tj720.dao.ExhibCollectionMapper;
-import com.tj720.dao.ExhibRoomMapper;
-import com.tj720.dao.ExhibVideoMapper;
-import com.tj720.dao.ExhibitionMapper;
+import com.tj720.dao.*;
 import com.tj720.model.common.Attachment;
 import com.tj720.model.common.exhibition.*;
 import com.tj720.model.common.interfacecollect.InterfaceCollect;
+import com.tj720.model.common.system.department.SysDepartment;
 import com.tj720.model.common.video.PostExhibVideo;
 import com.tj720.model.common.video.PostVideo;
 import com.tj720.service.AttachmentService;
 import com.tj720.service.ExhibitionService;
 import com.tj720.service.PictureService;
+import com.tj720.service.ResAuthService;
 import com.tj720.utils.Page;
+import com.tj720.utils.Tools;
 import com.tj720.utils.common.IdUtils;
 import com.tj720.utils.common.Utils;
 import net.sf.json.JSONObject;
@@ -60,8 +60,13 @@ public class ExhibitionServiceImpl implements ExhibitionService {
     @Autowired
     private Config config;
 
+    @Autowired
+    SysDepartmentMapper sysDepartmentMapper;
 
-    private static String userId = "sysadmin";
+    @Autowired
+    ResAuthService resAuthService;
+
+
 //    private static String userId = Tools.getUserId();
 
 
@@ -108,13 +113,13 @@ public class ExhibitionServiceImpl implements ExhibitionService {
         //}
 //    展陈主表
         Exhibition exhibition = exhibitionDto.getExhibition();
-        exhibition.setUpdater(userId);
+        exhibition.setUpdater(Tools.getUserId());
         exhibition.setUpdateTime(date);
 
 // 因为新增展陈时，藏品-展厅-影视都可能一次性录入多个，所以 需要集合来存取；
         List<ExhibRoom> listExhibRoom = exhibitionDto.getListExhibRoom();
         for (ExhibRoom exhibRoom : listExhibRoom) {
-            exhibRoom.setUpdater(userId);
+            exhibRoom.setUpdater(Tools.getUserId());
             exhibRoom.setUpdateTime(date);
             // 在新增展陈时 同时新增的 多个 展厅，需要录入关联的展陈id
 
@@ -122,20 +127,20 @@ public class ExhibitionServiceImpl implements ExhibitionService {
 
         List<InterfaceCollect> listExhibCollection = exhibitionDto.getListExhibCollection();
         for (InterfaceCollect exhibCollection : listExhibCollection) {
-            exhibCollection.setUpdater(userId);
+            exhibCollection.setUpdater(Tools.getUserId());
             exhibCollection.setUpdateTime(date);
         }
 
         List<PostExhibVideo> listExhibVideo = exhibitionDto.getListExhibVideo();
         for (PostVideo exhibVideo : listExhibVideo) {
-            exhibVideo.setUpdater(userId);
+            exhibVideo.setUpdater(Tools.getUserId());
             exhibVideo.setUpdateTime(date);
         }
 
         // 0代表 没有创建的用户，录入创建人和创建时间
         if ("0".equals(type)) {
             String id = IdUtils.getIncreaseIdByNanoTime();
-            exhibition.setCreator(userId);
+            exhibition.setCreator(Tools.getUserId());
             exhibition.setCreateTime(date);
             exhibition.setId(exhibId);
             exhibition.setIsdelete(0);
@@ -143,7 +148,7 @@ public class ExhibitionServiceImpl implements ExhibitionService {
 
             for (ExhibRoom exhibRoom : listExhibRoom) {
                 String roomId = IdUtils.getIncreaseIdByNanoTime();
-                exhibRoom.setCreator(userId);
+                exhibRoom.setCreator(Tools.getUserId());
                 exhibRoom.setCreateTime(date);
                 // 在新增展陈时 同时新增的 多个 展厅，需要录入关联的展陈id
                 exhibRoom.setId(roomId);
@@ -154,7 +159,7 @@ public class ExhibitionServiceImpl implements ExhibitionService {
 
             for (InterfaceCollect exhibCollection : listExhibCollection) {
                 String collectId = IdUtils.getIncreaseIdByNanoTime();
-                exhibCollection.setCreator(userId);
+                exhibCollection.setCreator(Tools.getUserId());
                 exhibCollection.setCreateTime(date);
                 exhibCollection.setStatus(1);
                 // 在新增展陈时 同时新增的 多个 展厅，需要录入关联的展陈id
@@ -164,7 +169,7 @@ public class ExhibitionServiceImpl implements ExhibitionService {
 
             for (PostExhibVideo exhibVideo : listExhibVideo) {
                 String videoId = IdUtils.getIncreaseIdByNanoTime();
-                exhibVideo.setCreator(userId);
+                exhibVideo.setCreator(Tools.getUserId());
                 exhibVideo.setCreateTime(date);
                 exhibVideo.setStatus("1");
                 // 在新增展陈时 同时新增的 多个 展厅，需要录入关联的展陈id
@@ -195,6 +200,8 @@ public class ExhibitionServiceImpl implements ExhibitionService {
             //前端校验必填项
             if ("add".equals(type)) {
                 Exhibition exhibition = exhibitionDto.getExhibition();
+                exhibition.setCreateTime(new Date());
+                exhibition.setUpdateTime(new Date());
                 exhibition.setStatus(1);
                 exhibition.setCollectNum(exhibitionDto.getListExhibCollection().size());
                 exhibition.setVideoNum(exhibitionDto.getListExhibVideo().size());
@@ -258,7 +265,7 @@ public class ExhibitionServiceImpl implements ExhibitionService {
             Exhibition exhibition = new Exhibition();
             exhibition.setId(id);
             exhibition.setIsdelete(1);
-            exhibition.setUpdater(userId);
+            exhibition.setUpdater(Tools.getUserId());
             exhibition.setUpdateTime(date);
             int exhibCount = exhibitionMapper.updateByPrimaryKeySelective(exhibition);
             // 是否删除 展厅-藏品-影视的表
@@ -348,18 +355,19 @@ public class ExhibitionServiceImpl implements ExhibitionService {
         try {
 
 
-
-
             Exhibition exhibition = exhibitionDto.getExhibition();
 
             String deleteId = exhibition.getId();
 
-            pictureService.setMain(picids, picids, null);
-            exhibition.setDatumIds(picids);
+            /*if(StringUtils.isNotBlank(picids)){
+                pictureService.setMain(picids, picids, null);
+                exhibition.setDatumIds(picids);
+            }*/
 
             exhibition.setRoomNum(exhibitionDto.getListExhibRoom().size());
             exhibition.setVideoNum(exhibitionDto.getListExhibVideo().size());
             exhibition.setCollectNum(exhibitionDto.getListExhibCollection().size());
+            exhibition.setUpdateTime(new Date());
             int exhibResult = exhibitionMapper.updateByPrimaryKeySelective(exhibition);
 
             int roomResult = deleteExhibiRoomById(deleteId, date).getSuccess();
@@ -408,10 +416,11 @@ public class ExhibitionServiceImpl implements ExhibitionService {
              /*   if(!StringUtils.isBlank(exhibition.getDatumIds())){
                     //获取图片url
                     exhibition.setMainPicUrl("");
+
                     List<Attachment> picList = new ArrayList<Attachment>();
                     picList = attachmentService.getListByIds(exhibition.getDatumIds());
                     for (Attachment attachment : picList) {
-                        attachment.setAttPath(config.getRootUrl()+attachment.getAttPath());
+                        attachment.setAttPath(CheckConfig.getRootUrl()+attachment.getAttPath());
                     }
                     exhibition.setPicList(picList);
                 }*/
@@ -468,10 +477,10 @@ public class ExhibitionServiceImpl implements ExhibitionService {
 
     @Override
     public JSONObject getListExhibition(String name, String planTime, String orderBy, Integer currentPage, Integer
-            size) {
+            size,String module) {
         JSONObject jsonObject = new JSONObject();
         Map map = new HashMap();
-        try {
+
             Page page = new Page();
             if (StringUtils.isNotBlank(name)) {
                 map.put("name", name);
@@ -482,44 +491,65 @@ public class ExhibitionServiceImpl implements ExhibitionService {
             if (StringUtils.isNotBlank(orderBy)) {
                 map.put("orderBy", orderBy);
             }
-            page.setSize(size);
-            page.setCurrentPage(currentPage);
-            Integer count = exhibitionMapper.selectCountByExhibVo(map);
-            page.setAllRow(count);
-            map.put("start", page.getStart());
-            map.put("end", page.getSize());
-            List<ExhibitionVo> listExhibition = exhibitionMapper.selectListByExhibVo(map);
-
-            for (ExhibitionVo exhibitionVo: listExhibition){
-
-                //获取图片url
-                exhibitionVo.setMainPicUrl("");
-                List<Attachment> picList = new ArrayList<Attachment>();
-                if(StringUtils.isNotBlank(exhibitionVo.getDatumIds())){
-                    picList = attachmentService.getListByIds(exhibitionVo.getDatumIds());
-                    for (Attachment attachment : picList) {
-                        if(! attachment.getAttPath().contains(config.getRootUrl())){
-                            attachment.setAttPath(config.getRootUrl()+attachment.getAttPath());
-                        }
-                    }
-                    exhibitionVo.setPicList(picList);
+            String userId = Tools.getUserId();
+//        JSONObject jsonObject = new JSONObject();
+            if (null != userId) {
+                try {
+                SysDepartment deptById = sysDepartmentMapper.getDeptById(userId);
+                String orgId = deptById.getDepartmentId();
+                map.put("userId", userId);
+                map.put("orgId", orgId);
+                JsonResult jsonResult = resAuthService.getDataAuthRule(userId, module);
+                String dataRule = (String) jsonResult.getData();
+                if (dataRule.equals("")) {
+                    jsonObject.put("code", 0);
+                    jsonObject.put("msg", "");
+                    jsonObject.put("count", 0);
+                    jsonObject.put("data", null);
+                    return jsonObject;
                 }
+                map.put("dataRule", dataRule);
+                map.put("userId", userId);
+                page.setSize(size);
+                page.setCurrentPage(currentPage);
+                Integer count = exhibitionMapper.selectCountByExhibVo(map);
+                page.setAllRow(count);
+                map.put("start", page.getStart());
+                map.put("end", page.getSize());
+                List<ExhibitionVo> listExhibition = exhibitionMapper.selectListByExhibVo(map);
+
+                for (ExhibitionVo exhibitionVo : listExhibition) {
+                    //获取图片url
+                    exhibitionVo.setMainPicUrl("");
+                    List<Attachment> picList = new ArrayList<Attachment>();
+                    if (StringUtils.isNotBlank(exhibitionVo.getDatumIds())) {
+                        picList = attachmentService.getListByIds(exhibitionVo.getDatumIds());
+                        for (Attachment attachment : picList) {
+                            if (!attachment.getAttPath().contains(config.getRootUrl())) {
+                                attachment.setAttPath(config.getRootUrl() + attachment.getAttPath());
+                            }
+                        }
+                        exhibitionVo.setPicList(picList);
+                    }
+                }
+
+
+                String jsonString = JSON.toJSONString(listExhibition);
+                jsonObject.put("code", 0);
+                jsonObject.put("success", 1);
+                jsonObject.put("msg", "");
+                jsonObject.put("count", page.getAllRow());
+                jsonObject.put("data", jsonString);
+            } catch(NumberFormatException e){
+                jsonObject.put("msg", "");
+                jsonObject.put("count", null);
+                jsonObject.put("data", null);
+                jsonObject.put("error", e.getMessage());
             }
-
-
-            String jsonString = JSON.toJSONString(listExhibition);
-            jsonObject.put("code", 0);
-            jsonObject.put("success", 1);
-            jsonObject.put("msg", "");
-            jsonObject.put("count", page.getAllRow());
-            jsonObject.put("data", jsonString);
-        } catch (NumberFormatException e) {
-            jsonObject.put("msg", "");
-            jsonObject.put("count", null);
-            jsonObject.put("data", null);
-            jsonObject.put("error", e.getMessage());
+            return jsonObject;
+        }else{
+            return jsonObject;
         }
-        return jsonObject;
     }
 
     @Override
@@ -527,7 +557,7 @@ public class ExhibitionServiceImpl implements ExhibitionService {
         try {
             Integer size = ids.size();
             Integer i = exhibitionMapper.updateExhibByIds(ids);
-            if (size == i) {
+            if (size.equals(i)) {
                 return new JsonResult(1, null);
             } else {
                 return new JsonResult(0, "30000014");
@@ -542,7 +572,7 @@ public class ExhibitionServiceImpl implements ExhibitionService {
     public JsonResult deleteExhibColleById(String id) {
         Map<String, Object> parma = new HashMap<String, Object>(2);
         parma.put("id", id);
-        parma.put("updator", userId);
+        parma.put("updator", Tools.getUserId());
         Integer count = exhibitionMapper.deleteExhibColleById(parma);
         if (count > -1) {
             return new JsonResult(1);

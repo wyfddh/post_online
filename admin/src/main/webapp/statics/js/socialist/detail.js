@@ -57,9 +57,13 @@ var main = {
                         type: 1,
                         title:false,
                         closeBtn: 0, //不显示关闭按钮
-                        area: ['420px', '240px'], //宽高
+                        //area: ['420px', '240px'], //宽高
                         shadeClose: true, //开启遮罩关闭
-                        content: "<img src='"+$(this).find("img").attr("src")+"'/> "
+                        content: "<div style='position: relative;height: 450px'><img style='max-width:" +
+                        " 600px;position:" +
+                        " absolute;max-height:100%;margin: auto;left: 0;right: 0;top:0;bottom:0'" +
+                        " src='"+$(this).find("img").attr("src")+"'/></div> "
+                      /*  content: "<img src='"+$(this).find("img").attr("src")+"'/> "*/
                     })
                 }else if($(this).attr("data-type")=="video"){
                     parent.layer.open({
@@ -138,7 +142,7 @@ function loadData(id) {
                         $(".imgList").append(attList);
                         main.tabBind();
                     }
-                } else {
+                } else if (result.success == 0){
                     //top.layer.msg(result.error.message);
                     errorMsg("系统异常");
                 }
@@ -181,9 +185,8 @@ function loadAttachments(fkId) {
         url:property.getProjectPath()+"attach/getAttachmentsByFkId.do",
         success:function(result) {
             if (result.success == 1) {
-                console.log(result.data);
                 datas = result.data;
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.data);
             }
         },

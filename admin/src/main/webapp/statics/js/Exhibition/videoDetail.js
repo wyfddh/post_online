@@ -89,7 +89,6 @@ var main = {
                 , xhr: xhrOnProgress
                 , progress: function (index, value) {//上传进度回调 value进度值
                     element.progress('progressBar' + index, value + '%')//设置页面进度条
-                    console.log(e, value);
                 }
                 , bindAction: '#testListAction'
                 , choose: function (obj) {
@@ -112,7 +111,9 @@ var main = {
                         "                                    </div>" +
                         "                                    <div class=\"upRight\">" +
                         "                                        <div class='layui-progress layui-col-md8 layui-col-sm8' lay-showPercent='yes' lay-filter='progressBar" + index + "'>" +
-                        "                                            <div class=\"layui-progress-bar layui-bg-red\" lay-percent=\"30%\"></div>" +
+                        "                                            <div class=\"layui-progress-bar" +
+                        " layui-progress-big layui-bg-red\"" +
+                        " lay-percent=\"30%\"></div>" +
                         "                                        </div>" +
                         "                                        <span class=\"layui-col-md2 layui-col-sm2\">0%</span>" +
                         "                                        <a href=\"javascript:void (0);\" class=\"layui-col-md1 layui-col-sm1 demo-reload\">重传</a>" +
@@ -189,7 +190,6 @@ var main = {
             //监听行工具事件
             table.on('tool(test)', function (obj) {
                 var data = obj.data;
-                //console.log(obj)
                 if (obj.event === 'del') {
                     parent.layer.confirm('确定要删除么',{icon:3, title:'删除确认'}, function(index){
                         obj.del();
@@ -227,9 +227,13 @@ var main = {
                         type: 1,
                         title:false,
                         closeBtn: 0, //不显示关闭按钮
-                        area: ['420px', '240px'], //宽高
+                        //area: ['420px', '240px'], //宽高
                         shadeClose: true, //开启遮罩关闭
-                        content: "<img src='"+$(this).find("img").attr("src")+"'/> "
+                        content: "<div style='position: relative;height: 450px'><img style='max-width:" +
+                        " 600px;position:" +
+                        " absolute;max-height:100%;margin: auto;left: 0;right: 0;top:0;bottom:0'" +
+                        " src='"+$(this).find("img").attr("src")+"'/></div> "
+                       /* content: "<img src='"+$(this).find("img").attr("src")+"'/> "*/
                     })
                 }else if($(this).attr("data-type")=="video"){
                     parent.layer.open({
@@ -252,43 +256,7 @@ var main = {
                     })
                 }
             }
-        })
-
-
-
-        /*$(".imgList li").on({
-            'click':function () {
-                if($(this).attr("data-type")=="img"){
-                    parent.layer.open({
-                        type: 1,
-                        title:false,
-                        closeBtn: 0, //不显示关闭按钮
-                        area: ['420px', '240px'], //宽高
-                        shadeClose: true, //开启遮罩关闭
-                        content: '<img src="../../images/user_pic.png"/> '
-                    })
-                }else if($(this).attr("data-type")=="video"){
-                    parent.layer.open({
-                        type: 1,
-                        title:false,
-                        closeBtn: 0, //不显示关闭按钮
-                        shadeClose: true, //开启遮罩关闭
-                        content: '<video src="http://www.w3school.com.cn/tiy/loadtext.asp?f=html5_video" controls="controls" width="400px" height="220px">' +
-                            '您的浏览器不支持 video 标签。' +
-                            '</video> '
-                    })
-                }else{
-                    parent.layer.open({
-                        type: 1,
-                        title:false,
-                        closeBtn: 0, //不显示关闭按钮
-                        shadeClose: true, //开启遮罩关闭
-                        content: '<audio src="../../11.mp4" controls="controls">' +
-                            '</audio> '
-                    })
-                }
-            }
-        })*/
+        });
         //取消
         $("button[type='reset']").click(function () {
             parent.$t.goback("page/Exhibition/videoList.html");
@@ -335,6 +303,7 @@ function setDatas(data1, data2, data3) {
         table.render({
             elem: '#tableRoom'
             , data: data1
+            , page: true
             , cols: [[
                 {type: 'numbers', title: '序号'}
                 , {field: 'roomName', title: '展厅名称'}
@@ -356,7 +325,6 @@ function setDatas(data1, data2, data3) {
         //渲染关联影视资料
         table.render({
             elem: '#videoDemo'
-            // , url: '../../statics/json/demo1.json'
             , cols: [[
                 {type: 'numbers', title: '序号'}
                 , {field: 'saveType', title: '类型', templet: function(res){
@@ -391,7 +359,19 @@ function setDatas(data1, data2, data3) {
                 {title: '操作', toolbar: '#barDemo'}
             ]]
             , data: data3
+          , page: true
         });
+
+          //监听行工具事件
+          table.on('tool(videoDemo)', function(obj){
+            var data = obj.data;
+            if(obj.event === 'show'){
+              localStorage.videoId = data.videoId;
+              parent.$t.goToPage(this,"page/Exhibition/videoList.html");
+            }
+          });
+
+
     });
 }
 
@@ -406,7 +386,7 @@ function loadAttachments(fkId) {
         success:function(result) {
             if (result.success == 1) {
                 datas = result.data;
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.data);
             }
         },

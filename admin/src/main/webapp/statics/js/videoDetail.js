@@ -74,7 +74,7 @@ var main={
         }else
         {
             alert("用户未登陆，请先登录!");
-            window.location.href='/login.html';
+            window.location.href='/admin/login.html';
         }
         if (pageType == "add"){
             var ls = property.getLs("videoList","video");
@@ -106,7 +106,6 @@ var main={
                     url:property.getProjectPath()+"PostVideo/queryPostVideoDtoById.do",
                     success:function(result) {
                         if (result.success == 1) {
-                            console.log(result.data);
                             setFormData(result.data);
                             attachmentsList = loadAttachments(tableId);
                             var attachmentsListSelect  = component.getSelectSimplePlus(attachmentsList,null,"attachmentList","attId","attName");
@@ -120,7 +119,7 @@ var main={
                             }
                             main.initTable();
                             main.tabBind();
-                        } else {
+                        } else if (result.success == 0){
                             errorMsg(result.error.message);
                         }
                     },
@@ -265,7 +264,7 @@ var main={
                         if (result.success == 1) {
                             successMsg("保存成功");
                             parent.$t.goback("page/video/videoList.html");
-                        } else {
+                        } else if (result.success == 0){
                             errorMsg(result.error.message);
                         }
                     },
@@ -303,7 +302,7 @@ var main={
                         if (result.success == 1) {
                             successMsg("保存成功");
                             parent.$t.goback("page/video/videoList.html");
-                        } else {
+                        } else if (result.success == 0){
                             errorMsg(result.error.message);
                         }
                     },
@@ -341,7 +340,7 @@ var main={
                         if (result.success == 1) {
                             successMsg("发布成功");
                             parent.$t.goback("page/video/videoList.html");
-                        } else {
+                        } else if (result.success == 0){
                             errorMsg(result.error.message);
                         }
                     },
@@ -368,7 +367,6 @@ var main={
                         ,tds = tr.children();
                     tds.eq(1).html('<span style="color: red;">正在上传</span>');
                     element.progress('progressBar'+index, value+'%')//设置页面进度条
-                    // console.log(e,value);
                 }
                 ,bindAction: '#testListAction'
                 ,choose: function(obj){
@@ -391,7 +389,7 @@ var main={
                          "                                    </div>" +
                          "                                    <div class=\"upRight\">" +
                          "                                        <div class='layui-progress layui-col-md8 layui-col-sm8' lay-showPercent='yes' lay-filter='progressBar"+index+"'>" +
-                         "                                            <div class=\"layui-progress-bar layui-progress-big layui-bg-red\" lay-percent=\"30%\">" +
+                         "                                            <div class=\"layui-progress-bar layui-progress-big layui-bg-blue\" lay-percent=\"30%\">" +
                          '<span class="layui-progress-text">'+'0%'+'</span>'+'</div>' +
                          "                                        </div>" +
                          "                                        <a href=\"javascript:void (0);\" style='margin-left:15px;' class=\"layui-col-md1 layui-col-sm1 layui-hide demo-reload\">重传</a>" +
@@ -423,14 +421,27 @@ var main={
                         tr.siblings(".upRight").find(".demo-cancel").attr("data-id",res.data.id);
                         tr.siblings(".upRight").find(".demo-delete").removeClass("demo-cancel");
 
-                        tr.siblings(".upRight").find(".layui-bg-red").addClass("layui-bg-green");
-                        tr.siblings(".upRight").find(".layui-bg-green").removeClass("layui-bg-red");
+                        tr.siblings(".upRight").find(".layui-bg-blue").addClass("layui-bg-green");
+                        tr.siblings(".upRight").find(".layui-bg-green").removeClass("layui-bg-blue");
                         //重新设置下拉框
                         attachmentsList = loadAttachments(tableId);
-                        var attachmentsListSelect  = component.getSelectSimplePlus(attachmentsList,null,"attachmentList","attId","attName");
+                        var attachmentsList1 = attachmentsList;
+                        for(var i=0;i<attachmentsList1.length;i++){
+                            for(var j=0;j<commentsList.length;j++){
+                                if (commentsList[j].attachment == attachmentsList1[i].attId){
+                                    attachmentsList1.splice(i,1);
+                                    break;
+                                }
+                            }
+                        }
+                        var attachmentsListSelect  = component.getSelectSimplePlus(attachmentsList1,null,"attachmentList","attId","attName");
                         $("#attachmentsList").empty();
                         $("#attachmentsList").append(attachmentsListSelect);
                         form1.render('select');
+                        // var attachmentsListSelect  = component.getSelectSimplePlus(attachmentsList,null,"attachmentList","attId","attName");
+                        // $("#attachmentsList").empty();
+                        // $("#attachmentsList").append(attachmentsListSelect);
+                        // form1.render('select');
                         return delete this.files[index]; //删除文件队列已经上传成功的文件
                     }else {
                         var tr = demoListView.find('#upload-'+ index)
@@ -448,6 +459,8 @@ var main={
                     //     ,tds = tr.children();
                     // tds.eq(1).html('<span style="color: #FF5722;">上传失败</span>');
                     tr.siblings(".upRight").find('.demo-reload').removeClass('layui-hide'); //显示重传
+                    tr.siblings(".upRight").find(".layui-bg-blue").addClass("layui-bg-red");
+                    tr.siblings(".upRight").find(".layui-bg-red").removeClass("layui-bg-blue");
                 }
             });
 
@@ -459,10 +472,23 @@ var main={
             $(this).parent().parent().remove();
             deleteAttachment(attId);
             attachmentsList = loadAttachments(tableId);
-            var attachmentsListSelect  = component.getSelectSimplePlus(attachmentsList,null,"attachmentList","attId","attName");
+            var attachmentsList1 = attachmentsList;
+            for(var i=0;i<attachmentsList1.length;i++){
+                for(var j=0;j<commentsList.length;j++){
+                    if (commentsList[j].attachment == attachmentsList1[i].attId){
+                        attachmentsList1.splice(i,1);
+                        break;
+                    }
+                }
+            }
+            var attachmentsListSelect  = component.getSelectSimplePlus(attachmentsList1,null,"attachmentList","attId","attName");
             $("#attachmentsList").empty();
             $("#attachmentsList").append(attachmentsListSelect);
             form1.render('select');
+            // var attachmentsListSelect  = component.getSelectSimplePlus(attachmentsList,null,"attachmentList","attId","attName");
+            // $("#attachmentsList").empty();
+            // $("#attachmentsList").append(attachmentsListSelect);
+            // form1.render('select');
             attCount = attCount-1;
             // uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
         });
@@ -514,14 +540,25 @@ var main={
                     url:property.getProjectPath()+"attach/getAttachmentsById.do",
                     success:function(result) {
                         if (result.success == 1) {
-                            console.log(result.data);
                             var commentName = result.data.attName;
                             var commentType = result.data.attFileType;
                             var comments = $("#comment").val();
                             var json = {"attachment":attId,"commentName":commentName,"commentType":commentType,"comments":comments};
                             commentsList.push(json);
+                            attachmentsList = loadAttachments(tableId);
+                            var attachmentsList1 = attachmentsList;
+                            for(var i=0;i<attachmentsList1.length;i++){
+                                if(attachmentsList1[i].attId == attId){
+                                    attachmentsList1.splice(i,1);
+                                    break;
+                                }
+                            }
+                            var attachmentsListSelect  = component.getSelectSimplePlus(attachmentsList1,null,"attachmentList","attId","attName");
+                            $("#attachmentsList").empty();
+                            $("#attachmentsList").append(attachmentsListSelect);
+                            form1.render('select');
                             loadTable();
-                        } else {
+                        } else if (result.success == 0){
                             errorMsg(result.error.message);
                         }
                     },
@@ -573,7 +610,7 @@ function getDictData() {
             if (result.code == 0) {
                 videoMarkList = result.data;
             } else {
-                errorMsg(result.message);
+                errorMsg();
             }
         },
         error:function(result) {
@@ -613,10 +650,9 @@ function loadData(id) {
             url:property.getProjectPath()+"PostVideo/queryPostVideoDtoById.do",
             success:function(result) {
                 if (result.success == 1) {
-                    console.log(result.data);
                     setFormData(result.data);
                     form.render('select');
-                } else {
+                } else if (result.success == 0){
                     errorMsg(result.error.message);
                 }
             },
@@ -653,9 +689,8 @@ function loadAttachments(fkId) {
         url:property.getProjectPath()+"attach/getAttachmentsByFkId.do",
         success:function(result) {
             if (result.success == 1) {
-                console.log(result.data);
                 datas = result.data;
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.data);
             }
         },
@@ -676,9 +711,8 @@ function queryPostVideoComments(postVideoId) {
         url:property.getProjectPath()+"PostVideoComments/queryPostVideoComments.do",
         success:function(result) {
             if (result.success == 1) {
-                console.log(result.data);
                 datas = result.data;
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.data);
             }
         },
@@ -737,9 +771,28 @@ function loadTable() {
         //监听行工具事件
         table.on('tool(comments)', function(obj){
             var data = obj.data;
-            //console.log(obj)
             if(obj.event === 'del'){
-                commentsList.splice(commentsList.indexOf(data),1);
+                for (var i=0;i<commentsList.length;i++){
+                    if (commentsList[i].attachment == data.attachment){
+                        commentsList.splice(i,1);
+                        break;
+                    }
+                }
+                attachmentsList = loadAttachments(tableId);
+                var attachmentsList1 = attachmentsList;
+                for(var i=0;i<attachmentsList1.length;i++){
+                   for(var j=0;j<commentsList.length;j++){
+                       if (commentsList[j].attachment == attachmentsList1[i].attId){
+                           attachmentsList1.splice(i,1);
+                           break;
+                       }
+                   }
+                }
+                var attachmentsListSelect  = component.getSelectSimplePlus(attachmentsList1,null,"attachmentList","attId","attName");
+                $("#attachmentsList").empty();
+                $("#attachmentsList").append(attachmentsListSelect);
+                form1.render('select');
+                // commentsList.splice(commentsList.indexOf(data),1);
                 loadTable();
             } else if(obj.event === 'edit'){
                 layer.prompt({
@@ -772,7 +825,7 @@ function deleteAttachment(attId) {
                 var attachmentsListSelect  = component.getSelectSimplePlus(attachmentsList,null,"attachmentList","attId","attName");
                 $("#attachmentsList").append(attachmentsListSelect);
                 form1.render('select');
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.data);
             }
         },

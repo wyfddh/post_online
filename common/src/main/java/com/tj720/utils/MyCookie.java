@@ -1,4 +1,5 @@
 package com.tj720.utils;
+import com.tj720.utils.common.Base64Utils;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,12 +38,13 @@ public class MyCookie {
 		if(jiami){
 			value = Aes.encrypt(value);
 		}else{
-			value =new String(new Base64().encode(value.getBytes()));
+			value =new String(Base64Utils.encode(value.getBytes()));
 		}
 		Cookie myCookie=new Cookie(key,value);
 		myCookie.setMaxAge(time);
 		// 多个路径下可以共享cookie
 		myCookie.setPath("/");
+//		myCookie.setPath("/admin");
 		response.addCookie(myCookie);
 	}
 	public static String getCookie(String key,HttpServletRequest request){
@@ -57,12 +59,13 @@ public class MyCookie {
 		          String keyname= allCookie[i].getName();
 		          if((key).equals(keyname))
 		          {
-					  if(allCookie[i].getValue()==null)
-						  return "";
-					  else if(jiami)
-						return Aes.desEncrypt(allCookie[i].getValue());
-					  else
-						  return new String(new Base64().decode(allCookie[i].getValue()));
+					  if(allCookie[i].getValue()==null) {
+                          return "";
+                      } else if(jiami) {
+                          return Aes.desEncrypt(allCookie[i].getValue());
+                      } else {
+                          return new String(Base64Utils.decode(allCookie[i].getValue()));
+                      }
 		          }
 		         
 		      }

@@ -36,7 +36,7 @@ function loadData(id) {
             success:function(result) {
                 if (result.success == 1) {
                     setFormData(result.data);
-                } else {
+                } else if (result.success == 0){
                     errorMsg("系统异常");
                 }
             },
@@ -80,14 +80,17 @@ function setFormData(data){
 
     var picList = data.picList;
     //$(".picUpload").val(picList);
-    for (var i = 0;i < picList.length;i++) {
-        var picStr1;
-        picStr1 = '<div class="img picDiv"  style="margin-top: 30px" id="img'+ picList[i].attId +'">'
-            +'<div class="img1"><img src='+ picList[i].attPath +' alt=""  style="border-radius:50px;"></div>'+'<p' +
-            ' class="myfont"' +
-            ' id="nickName1"></p>'+'</div>';
-        $("#picUpload").append(picStr1);
+    if (!isEmpty(picList)){
+        for (var i = 0;i < picList.length;i++) {
+            var picStr1;
+            picStr1 = '<div class="img picDiv"  style="margin-top: 30px" id="img'+ picList[i].attId +'">'
+                +'<div class="img1"><img src="'+ picList[i].attPath +'" alt=""  style="border-radius:50px;"></div>'+'<p' +
+                ' class="myfont"' +
+                ' id="nickName1"></p>'+'</div>';
+            $("#picUpload").append(picStr1);
+        }
     }
+
 
 
     $("#nickName1").html(data.nickName);

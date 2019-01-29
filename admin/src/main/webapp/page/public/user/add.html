@@ -2,6 +2,7 @@
 <html>
 <head>
     <script src="../../../statics/libs/jquery-1.10.2.min.js"></script>
+    <script src="../../../statics/js/jquery.extend.js"></script>
     <link rel="stylesheet" href="../../../statics/css/font-awesome.min.css">
     <!--layui ztree样式-->
     <link rel="stylesheet" href="../../../statics/plugins/layui/css/layui.css" media="all">
@@ -19,7 +20,7 @@
 </head>
 <body>
 <div class="layui-card">
-    <form action="" id="pubUserForm" class="layui-form">
+    <form action="" id="pubUserForm" class="layui-form" method="post">
         <div class="layui-card-header">
             <div class="flexLeft">
                 <span class="carFont">用户详情</span>
@@ -103,29 +104,28 @@
                             <li class="layui-row">
                                 <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">个性签名</div>
                                 <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
-                                    <input type="text" id="singleName"  name="singleName" required
-                                           lay-verify="required"
+                                    <input type="text" id="singleName"  name="singleName"
                                            placeholder="请输入标题" autocomplete="off" class="layui-input">
                                 </div>
                             </li>
                             <li class="layui-row">
-                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">手机号</div>
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*手机号</div>
                                 <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
                                     <input type="text" id="phone" name="phone" required  lay-verify="required"
                                            placeholder="请输入标题" autocomplete="off" class="layui-input">
                                 </div>
                             </li>
                             <li class="layui-row">
-                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">新密码</div>
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*新密码</div>
                                 <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
-                                    <input type="text" id="password" name="password" required  lay-verify="required"
+                                    <input type="password" id="password" name="password" required  lay-verify="required"
                                            placeholder="请输入标题" autocomplete="off" class="layui-input">
                                 </div>
                             </li>
                             <li class="layui-row">
-                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">确认新密码</div>
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*确认新密码</div>
                                 <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
-                                    <input type="text" id="surePassword" name="surePassword" required  lay-verify="required"
+                                    <input type="password" id="surePassword" name="surePassword" required  lay-verify="required"
                                            placeholder="请输入标题" autocomplete="off" class="layui-input">
                                 </div>
                             </li>

@@ -6,7 +6,6 @@ var pageType = "add";
 var main = {
 
     init: function() {
-        debugger;
         property.setUserInfo();
         pageType = localStorage.roleType;
         if(pageType == 'edit') {
@@ -23,7 +22,6 @@ var main = {
 
             //监听提交
             form.on('submit(formSubmit)', function(data) {
-                console.log(data);
                 var url = "Role/addRole.do";
                 if (pageType == "edit"){
                     url = "Role/updateRole.do";
@@ -43,7 +41,7 @@ var main = {
                                 successMsg("添加角色成功");
                             }
                             parent.$t.goback("page/systemSetting/roleManage/list.html");
-                        } else {
+                        } else if (result.success == 0){
                             errorMsg(result.error.message);
                         }
                     },
@@ -95,10 +93,9 @@ function loadData(id) {
             url:property.getProjectPath()+"Role/queryRoleById.do",
             success:function(result) {
                 if (result.success == 1) {
-                    console.log(result.data);
                     setFormData(result.data);
                     // form.render('select');
-                } else {
+                } else if (result.success == 0){
                     errorMsg(result.error.message);
                 }
             },

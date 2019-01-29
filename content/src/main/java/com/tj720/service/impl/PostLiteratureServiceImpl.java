@@ -3,13 +3,7 @@ package com.tj720.service.impl;
 import com.alibaba.druid.support.json.JSONUtils;
 import com.alibaba.fastjson.JSON;
 import com.tj720.controller.framework.JsonResult;
-import com.tj720.dao.PostLiteratureMapper;
-import com.tj720.dao.PostLiteratureProcessDetailMapper;
-import com.tj720.dao.PostLiteratureProcessMapper;
-import com.tj720.dao.PostLiteratureTypeMapper;
-import com.tj720.dao.PostVideoMapper;
-import com.tj720.dao.SysRoleAuthMapper;
-import com.tj720.dao.SysUserMapper;
+import com.tj720.dao.*;
 import com.tj720.model.common.Attachment;
 import com.tj720.model.common.dict.SysDict;
 import com.tj720.model.common.system.department.SysDepartment;
@@ -19,10 +13,7 @@ import com.tj720.model.literature.PostLiteratureProcess;
 import com.tj720.model.literature.PostLiteratureProcessDetail;
 import com.tj720.model.literature.PostLiteratureType;
 import com.tj720.model.literature.PostLiteratureWithBLOBs;
-import com.tj720.service.PostLiteratureSerialNumberService;
-import com.tj720.service.PostLiteratureService;
-import com.tj720.service.SysDictSevice;
-import com.tj720.service.SysNoticeService;
+import com.tj720.service.*;
 import com.tj720.service.jedis.JedisService;
 import com.tj720.utils.ExportExcelUtil;
 import com.tj720.utils.Page;
@@ -46,6 +37,8 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author wyf
@@ -64,10 +57,6 @@ public class PostLiteratureServiceImpl implements PostLiteratureService {
     @Autowired
     private SysDictSevice sysDictSevice;
     @Autowired
-    private SysRoleAuthMapper sysRoleAuthMapper;
-    @Autowired
-    private SysUserMapper sysUserMapper;
-    @Autowired
     private PostLiteratureTypeMapper postLiteratureTypeMapper;
     @Autowired
     private SysNoticeService sysNoticeService;
@@ -78,12 +67,18 @@ public class PostLiteratureServiceImpl implements PostLiteratureService {
 
     private HttpServletResponse response;
 
+    @Autowired
+    SysDepartmentMapper sysDepartmentMapper;
+
+    @Autowired
+    ResAuthService resAuthService;
+
     /** 文献类型Redis key */
     public static final String LITERATURE_TYPE_REDIS_KEY = "literature_type_redis_key";
 
     @Override
     public JSONObject postLiteratureList(String key, String dataType, String status,String inventoryState, String orderBy, String open,
-                                         Integer currentPage, Integer size) {
+                                         Integer currentPage, Integer size,String module) {
         //分页对象
         Page page = new Page();
         page.setCurrentPage(currentPage);
@@ -113,27 +108,46 @@ public class PostLiteratureServiceImpl implements PostLiteratureService {
             //默认1
             map.put("orderBy", 1);
         }
-        //符合检索条件的数量
-        Integer count = postLiteratureMapper.countPostLiteratureList(map);
-
-        page.setAllRow(count);
-        Integer start = page.getStart();
-        map.put("start", start);
-        map.put("end", size);
-        //获取分页后数据集合
-        List<PostLiteratureWithBLOBs> list = postLiteratureMapper.getPostLiteratureList(map);
-        String jsonString = null;
-        if (list != null && list.size() > 0) {
-            List<PostLiteratureWithBLOBs> postLiteratureList = handleData(list);
-            jsonString = JSON.toJSONString(postLiteratureList);
-        }
+        String userId = Tools.getUserId();
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("code", 0);
-        jsonObject.put("msg", "");
-        jsonObject.put("count", page.getAllRow());
-        jsonObject.put("data", jsonString);
+        if (null != userId) {
+            SysDepartment deptById = sysDepartmentMapper.getDeptById(userId);
+            String orgId = deptById.getDepartmentId();
+            map.put("userId", userId);
+            map.put("orgId", orgId);
+            JsonResult jsonResult = resAuthService.getDataAuthRule(userId, module);
+            String dataRule = (String) jsonResult.getData();
+            if (dataRule.equals("")) {
+                jsonObject.put("code", 0);
+                jsonObject.put("msg", "");
+                jsonObject.put("count", 0);
+                jsonObject.put("data", null);
+                return jsonObject;
+            }
+            map.put("dataRule", dataRule);
+            //符合检索条件的数量
+            Integer count = postLiteratureMapper.countPostLiteratureList(map);
+            page.setAllRow(count);
+            Integer start = page.getStart();
+            map.put("start", start);
+            map.put("end", size);
+            //获取分页后数据集合
+            List<PostLiteratureWithBLOBs> list = postLiteratureMapper.getPostLiteratureList(map);
+            String jsonString = null;
+            if (list != null && list.size() > 0) {
+                List<PostLiteratureWithBLOBs> postLiteratureList = handleData(list);
+                jsonString = JSON.toJSONString(postLiteratureList);
+            }
 
-        return jsonObject;
+            jsonObject.put("code", 0);
+            jsonObject.put("msg", "");
+            jsonObject.put("count", page.getAllRow());
+            jsonObject.put("data", jsonString);
+
+            return jsonObject;
+        }else{
+            return jsonObject;
+        }
     }
 
     @Override
@@ -540,8 +554,16 @@ public class PostLiteratureServiceImpl implements PostLiteratureService {
             long fileLength = new File(downLoadPath).length();//获取文件长度
             response.setContentType("application/x-msdownload;");//下面这三行是固定形式
             //            response.setHeader("Content-disposition", "attachment; filename=" + new String(fileName.getBytes("utf-8"), "ISO8859-1"));
-            response.setHeader("Content-disposition", "attachment; filename=" + URLEncoder.encode(fileName, "UTF-8"));
+            String regex = "[`~!@#$%^&*()\\+\\=\\{}|:\"?><【】\\/r\\/n]";
+            Pattern pa = Pattern.compile(regex);
+            Matcher ma = pa.matcher(fileName);
+            if(ma.find()){
+                fileName = ma.replaceAll("");
+            }
+//            response.setHeader("Content-disposition", "attachment; filename=" +fileName);
 
+//            response.setHeader("Content-disposition", "attachment; filename=" + fileName);
+            response.setHeader("Content-disposition", "attachment; filename=\"" + new String( fileName.getBytes("gb2312"), "ISO8859-1" )+"\"");
             response.setHeader("Content-Length", String.valueOf(fileLength));
             bis = new BufferedInputStream(new FileInputStream(downLoadPath));//创建输入输出流实例
             bos = new BufferedOutputStream(response.getOutputStream());
@@ -585,6 +607,7 @@ public class PostLiteratureServiceImpl implements PostLiteratureService {
     }
 
     @Override
+    @Transactional
     public JsonResult batchRecall(String[] arr) {
         JsonResult jsonResult = null;
         try {
@@ -640,7 +663,12 @@ public class PostLiteratureServiceImpl implements PostLiteratureService {
             map = new HashMap<String, Object>(3);
             map.put("name", type.getTypeName());
             map.put("id", type.getId());
-            map.put("children", this.getLiteratureTypeTree(type.getId()));
+            List<PostLiteratureType> literatures1 = postLiteratureTypeMapper.getLiteratureTypeByPid(type.getId());
+            if (literatures1 != null && literatures1.size()>0){
+                map.put("children", this.getLiteratureTypeTree(type.getId()));
+            }else{
+                map.put("children", null);
+            }
             result.add(map);
         }
         return result;
@@ -675,7 +703,7 @@ public class PostLiteratureServiceImpl implements PostLiteratureService {
     public JsonResult getLiteratureCjReport1(HashMap<String, Object> condition, String type) {
         try {
             HashMap<String,Object> data = new HashMap<String,Object>();
-            if (type.equals("1")){
+            if ("1".equals(type)){
                 List<HashMap<String,Object>> table = postLiteratureMapper.getVideoCjTable(condition);
                 List<HashMap<String,Object>> pie = postLiteratureMapper.getVideoCjPie(condition);
                 List<HashMap<String,Object>> line = postLiteratureMapper.getVideoCjLine(condition);
@@ -700,7 +728,7 @@ public class PostLiteratureServiceImpl implements PostLiteratureService {
                     }
                     temp.put("data",values);
                     temp.put("type","line");
-                    temp.put("stack","总量");
+                    temp.put("stack","总量"+i);
                     yAxis.add(temp);
                 }
                 lineData.put("data",yAxis);
@@ -733,7 +761,7 @@ public class PostLiteratureServiceImpl implements PostLiteratureService {
                     }
                     temp.put("data",values);
                     temp.put("type","line");
-                    temp.put("stack","总量");
+                    temp.put("stack","总量"+i);
                     yAxis.add(temp);
                 }
                 lineData.put("data",yAxis);
@@ -916,10 +944,26 @@ public class PostLiteratureServiceImpl implements PostLiteratureService {
      * @return
      */
     @Override
-    public JsonResult getVideoCjCount() {
+    public JsonResult getVideoCjCount(String module) {
         try {
-            HashMap<String,Object> count =  postLiteratureMapper.getVideoCjCount();
-            return new JsonResult(1,count);
+            String userId = Tools.getUserId();
+            HashMap<String,Object> condition = new HashMap<String,Object>();
+            if (null != userId) {
+                SysDepartment deptById = sysDepartmentMapper.getDeptById(userId);
+                String orgId = deptById.getDepartmentId();
+                condition.put("userId", userId);
+                condition.put("orgId", orgId);
+                JsonResult jsonResult = resAuthService.getDataAuthRule(userId, module);
+                String dataRule = (String) jsonResult.getData();
+                if (dataRule.equals("")) {
+                    return new JsonResult(0, null, "111116");
+                }
+                condition.put("dataRule", dataRule);
+                HashMap<String, Object> count = postLiteratureMapper.getVideoCjCount(condition);
+                return new JsonResult(1, count);
+            }else{
+                return new JsonResult("111116");
+            }
         }catch (Exception e){
             e.printStackTrace();
             return new JsonResult("111116");
@@ -932,16 +976,32 @@ public class PostLiteratureServiceImpl implements PostLiteratureService {
      * @return
      */
     @Override
-    public JsonResult getVideoCxCount() {
+    public JsonResult getVideoCxCount(String module) {
         try {
-            HashMap<String,Integer> count =  new HashMap<>(3);
-            Integer videoOpenCount = postLiteratureMapper.getVideoOpenCount();
-            Integer videoCxApply = postLiteratureMapper.getVideoCxApply();
-            Integer videoCxApproval = postLiteratureMapper.getVideoCxApproval();
-            count.put("videoOpenCount",videoOpenCount);
-            count.put("videoCxApply",videoCxApply);
-            count.put("videoCxApproval",videoCxApproval);
-            return new JsonResult(1,count);
+            String userId = Tools.getUserId();
+            HashMap<String,Object> condition = new HashMap<String,Object>();
+            if (null != userId) {
+                SysDepartment deptById = sysDepartmentMapper.getDeptById(userId);
+                String orgId = deptById.getDepartmentId();
+                condition.put("userId", userId);
+                condition.put("orgId", orgId);
+                JsonResult jsonResult = resAuthService.getDataAuthRule(userId, module);
+                String dataRule = (String) jsonResult.getData();
+                if (dataRule.equals("")) {
+                    return new JsonResult(0, null, "111116");
+                }
+                condition.put("dataRule", dataRule);
+                HashMap<String, Integer> count = new HashMap<>(3);
+                Integer videoOpenCount = postLiteratureMapper.getVideoOpenCount(condition);
+                Integer videoCxApply = postLiteratureMapper.getVideoCxApply(condition);
+                Integer videoCxApproval = postLiteratureMapper.getVideoCxApproval(condition);
+                count.put("videoOpenCount", videoOpenCount);
+                count.put("videoCxApply", videoCxApply);
+                count.put("videoCxApproval", videoCxApproval);
+                return new JsonResult(1, count);
+            }else {
+                return new JsonResult("111116");
+            }
         }catch (Exception e){
             e.printStackTrace();
             return new JsonResult("111116");

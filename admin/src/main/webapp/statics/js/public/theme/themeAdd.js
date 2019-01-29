@@ -105,7 +105,7 @@ var main = {
                                 successMsg("添加主题展成功");
                             }
                             parent.$t.goback("page/public/theme/list.html");
-                        } else {
+                        } else if (result.success == 0){
                             //top.layer.msg(result.error.message);
                             errorMsg("操作主题展数据异常");
                         }
@@ -134,26 +134,30 @@ var main = {
 
             //一级菜单下拉框监听
             form.on('select(collect)', function(data){
-                getDictListByPid(data.value)
+                if (null != data.value && data.value != ''){
+                    getDictListByPid(data.value);
+                }
             })
 
             //二级菜单下拉框监听
             form.on('select(city)', function(data){
-                var formSelects = layui.formSelects;
-                var sonTypeId = data.value;
-                var typeId = $('#collectId').val();
-                // 先清空
-                formSelects.data('select1', 'local',{
-                    arr:[]
-                });
-                if (null == sonTypeId || sonTypeId == '') {
-                    return false;
-                }
-                // 查询二级
-                formSelects.data('select1', 'server',{
-                    url:property.getProjectPath()+"collect/selectListByTypeAndSonType.do?sonTypeId="+data.value+"&typeId="+typeId
-                });
+                // if (null != data.value && data.value != ''){
+                    var formSelects = layui.formSelects;
+                    var sonTypeId = data.value;
+                    var typeId = $('#collectId').val();
+                    // 先清空
+                    formSelects.data('select1', 'local',{
+                        arr:[]
+                    });
+                    if (null == sonTypeId || sonTypeId == '') {
+                        return false;
+                    }
+                    // 查询二级
 
+                    formSelects.data('select1', 'server',{
+                        url:property.getProjectPath()+"collect/selectListByTypeAndSonType.do?sonTypeId="+data.value+"&typeId="+typeId
+                    });
+                // }
             })
 
 
@@ -211,9 +215,8 @@ var main = {
                                 arr:[]
                             });
                             form.render("select");
-                        } else {
+                        } else if (result.success == 0){
                             //top.layer.msg(result.error.message);
-                            console.dir(result)
                             errorMsg("系统异常");
                         }
                     },
@@ -255,7 +258,7 @@ var main = {
                     }else if(layEvent === 'detail'){
                          data = obj.data;
                          localStorage.id = data.id;
-                         parent.$t.goToPage(this, "page/public/collect/add.html");
+                         parent.$t.goToPage(this, "page/public/theme/list.html");
 
                     }
                 });
@@ -376,7 +379,7 @@ function loadData(id) {
                 if (result.success == 1) {
                     formInfo = result.data
                     setFormData(result.data);
-                } else {
+                } else if (result.success == 0){
                     //top.layer.msg(result.error.message);
                     errorMsg("系统异常");
                 }
@@ -404,7 +407,7 @@ function setFormData(data) {
         for (var i = 0;i < picList.length;i++) {
             var picStr1;
             picStr1 = '<div class="img picDiv" id="img'+ picList[i].attId +'">'
-                +'<div class="img1"><img src='+ picList[i].attPath +' alt="" ></div>'
+                +'<div class="img1"><img src="'+ picList[i].attPath +'" alt="" ></div>'
                 +'<div class="img2"><span class="img3" id="span'+ picList[i].attId +'" mark='+ picList[i].attId +'>更换图片</span><span class="img4" mark='+ picList[i].attId +'>删除图片</span></div>'
                 +'</div>'
 

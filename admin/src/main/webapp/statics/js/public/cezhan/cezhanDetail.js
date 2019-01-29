@@ -41,7 +41,7 @@ function loadData(id) {
             success:function(result) {
                 if (result.success == 1) {
                     setFormData(result.data);
-                } else {
+                } else if (result.success == 0){
                     errorMsg("系统异常");
                 }
             },
@@ -81,7 +81,7 @@ function setFormData(data) {
         for (var i = 0;i < picList.length;i++) {
             var picStr1;
             picStr1 = '<div class="img picDiv" id="img'+ picList[i].attId +'">'
-                +'<div class="img1"><img src='+ picList[i].attPath +' alt="" ></div>'
+                +'<div class="img1"><img src="'+ picList[i].attPath +'" alt="" ></div>'
                 +'<div class="img2"><span class="img3" id="span'+ picList[i].attId +'" mark='+ picList[i].attId +'>更换图片</span><span class="img4" mark='+ picList[i].attId +'>删除图片</span></div>'
                 +'</div>'
 

@@ -248,7 +248,7 @@ function loadData(id) {
             success:function(result) {
                 if (result.success == 1) {
                     setFormData(result.data);
-                } else {
+                } else if (result.success == 0){
                     errorMsg("系统异常");
                 }
             },
@@ -296,6 +296,9 @@ function setFormData(data){
     }
 
     property.setForm($("#volForm"),data);
+    $("#startTime").val(formatDate(data.startTime));
+    $("#endTime").val(formatDate(data.endTime));
+    $("#endSignTime").val(formatDate(data.endSignTime));
 }
 
 

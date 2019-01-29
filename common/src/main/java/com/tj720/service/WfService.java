@@ -63,11 +63,20 @@ public interface WfService {
     public JsonResult deleteWfAction(String actionId);
 
     /**
+     * 根据关联表删除所有流程信息
+     * @param partyId
+     * @return
+     */
+//    public JsonResult deleteWfActionByPartyId(String partyId);
+
+    /**
      * 修改流程记录
      * @param wfAction
      * @return
      */
     public JsonResult updateWfAction(WfAction wfAction);
+
+    public JsonResult updateWfActionPlus(WfAction wfAction);
 
     /**
      * 修改流程记录状态
@@ -84,6 +93,9 @@ public interface WfService {
      */
     public JsonResult addWfDetail(WfDetail wfDetail);
 
+    public JsonResult addWfDetailPlus(WfDetail wfDetail);
+
+
     /**
      * 添加流程操作详情
      * @param processId 流程实例ID
@@ -99,12 +111,22 @@ public interface WfService {
     public JsonResult addWfDetail(String processId, String actionType, String actionStatus
             , String actionResult, String actionName, Date actionTime,String apply,String ext1,String applyOrg);
 
+
+    public JsonResult addWfDetailPlus(String processId, String actionType, String actionStatus
+            , String actionResult, String actionName, Date actionTime,String apply,String ext1,String applyOrg);
     /**
      * 修改流程操作详情
      * @param wfDetail
      * @return
      */
     public JsonResult updateWfDetail(WfDetail wfDetail);
+
+    /**
+     * 根据流程id删除流程记录
+     * @param processId
+     * @return
+     */
+    public JsonResult deleteWfDetailByProcessId(String processId);
 
     /**
      * 根据流程实例ID修改流程详情

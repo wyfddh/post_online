@@ -111,11 +111,15 @@ public interface SysResAuthMapper {
      * @param type 功能类型
      * @return
      */
-    List<SysFunction> getFunctionByUser(@Param("userId") String userId,@Param("type") String type);
+    List<SysFunction> getFunctionByUser(@Param("userId") String userId,@Param("type") String type,@Param("currentId") String currentId);
 
     void deleteByRoleId(String roleId);
 
     List<SysResAuth> selectByMap(HashMap<String, Object> map);
 
+    List<SysFunction> getDataRule(HashMap<String, Object> map);
+
     void deleteByFunctionId(String functionId);
+
+    List<SysFunction> getFunctionByRole(@Param("roleId") String roleId,@Param("type") String type,@Param("currentId") String currentId);
 }

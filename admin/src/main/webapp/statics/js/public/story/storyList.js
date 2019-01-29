@@ -91,7 +91,7 @@ function getStoryTypeOptions(){
             if (result.success == 1) {
                 typeList = result.data;
                 setSelect();
-            } else {
+            } else if (result.success == 0){
                 errorMsg("数据异常");
             }
         },
@@ -205,7 +205,7 @@ function reloadTable(){
                             if (result.success == 1) {
                                 successMsg("删除邮政故事成功");
                                 reloadTable();
-                            } else {
+                            } else if (result.success == 0){
                                 //top.layer.msg(result.error.message);
                                 errorMsg("删除邮政故事失败");
                             }

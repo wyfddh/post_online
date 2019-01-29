@@ -93,7 +93,13 @@ public interface PostThemeShowMapper{
     //Web端接口
     int countWeb(Map map);
 
+    List<PostThemeShow> themeshowWebListRelation(Map map);
+
+
+    int countWebRelation(Map map);
+
     List<PostThemeShow> themeshowWebList(Map map);
+
 
     PostThemeShow selectWebByPrimaryKey(String id);
 

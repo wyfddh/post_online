@@ -5,30 +5,32 @@ import com.tj720.controller.framework.JsonResult;
 import com.tj720.controller.framework.auth.ControllerAop;
 import com.tj720.controller.springbeans.Config;
 import com.tj720.model.common.Attachment;
-import com.tj720.model.common.video.PostVideo;
 import com.tj720.model.literature.PostLiterature;
 import com.tj720.model.literature.PostLiteratureWithBLOBs;
 import com.tj720.service.PostLiteratureSerialNumberService;
 import com.tj720.service.PostLiteratureService;
-import java.io.IOException;
-import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.zip.ZipOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import com.tj720.utils.ExportExcelUtil;
-import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.zip.ZipOutputStream;
 
 /**
  * @author wyf
@@ -64,9 +66,10 @@ public class PostLiteratureController {
     @ControllerAop(action = "获取列表数据")
     @RequestMapping("postLiteratureList")
     public JSONObject postLiteratureList(String key,String dataType,String status,String inventoryState,String orderBy,String open,
+            @RequestParam String module,
             @RequestParam(defaultValue = "1") Integer currentPage, @RequestParam(defaultValue = "10") Integer size) {
 
-        JSONObject jsonObject = postLiteratureService.postLiteratureList(key,dataType,status,inventoryState,orderBy,open,currentPage,size);
+        JSONObject jsonObject = postLiteratureService.postLiteratureList(key,dataType,status,inventoryState,orderBy,open,currentPage,size,module);
 
         return jsonObject;
     }
@@ -151,9 +154,9 @@ public class PostLiteratureController {
     public ResponseEntity<byte[]> downDemo(String type,HttpServletRequest request,HttpServletResponse response) throws IOException {
         String fileName = "";
         if ("1".equals(type)) {
-            fileName = "demo.xlsx";
+            fileName = "文献导入模板.xlsx";
         } else if ("2".equals(type)) {
-            fileName = "demoType.xlsx";
+            fileName = "文献分类.xlsx";
         } else {
             return null;
         }
@@ -286,7 +289,7 @@ public class PostLiteratureController {
         String zipName = "文献转化分析.zip";
         //交叉表数据
         String[] tableRow = new String[]{"类型","纸质版本(次)","电子版本(次)","档案版本(次)"};
-        if (type.equals("2")){
+        if ("2".equals(type)){
             tableRow = new String[]{"流程状态","纸质版本","档案版本"};
         }
         HashMap<String,Object> condition = new HashMap<String,Object>();
@@ -295,7 +298,7 @@ public class PostLiteratureController {
         condition.put("endTime",endTime);
         JsonResult videoCjTable = postLiteratureService.getVideoCjTable(condition);
         List<Object[]> tableData = new ArrayList<Object[]>();
-        if (type.equals("2")){
+        if ("2".equals(type)){
             videoCjTable = postLiteratureService.getVideoCxTable(condition);
             List<HashMap<String,Object>> list = (List<HashMap<String,Object>>)videoCjTable.getData();
             for (HashMap<String, Object> map : list) {
@@ -319,12 +322,12 @@ public class PostLiteratureController {
 
         //饼图数据
         String[] pieRow = new String[]{"文献类型","总数"};
-        if (type.equals("2")){
+        if ("2".equals(type)){
             pieRow = new String[]{"申请类型","总数"};
         }
         JsonResult videoCjPie = postLiteratureService.getVideoCjPie(condition);
         List<Object[]> pieData = new ArrayList<Object[]>();
-        if (type.equals("2")){
+        if ("2".equals(type)){
             videoCjPie = postLiteratureService.getVideoCxPie(condition);
             List<HashMap<String,Object>> list = (List<HashMap<String,Object>>)videoCjPie.getData();
             for (HashMap<String, Object> map : list) {
@@ -345,12 +348,12 @@ public class PostLiteratureController {
 
         //折线图数据
         String[] lineRow = new String[]{"操作日期","纸质版本","电子版本","档案版本"};
-        if (type.equals("2")){
+        if ("2".equals(type)){
             lineRow = new String[]{"操作日期","申请","借阅","归还"};
         }
         JsonResult videoCjLine = postLiteratureService.getVideoCjLine(condition);
         List<Object[]> linedata = new ArrayList<Object[]>();
-        if (type.equals("2")){
+        if ("2".equals(type)){
             videoCjLine = postLiteratureService.getVideoCxLine(condition);
             List<HashMap<String,Object>> list = (List<HashMap<String,Object>>)videoCjLine.getData();
             for (HashMap<String, Object> map : list) {
@@ -379,35 +382,33 @@ public class PostLiteratureController {
         String execelName1 = "文献转化分析交叉表统计";
         String execelName2 = "文献转化分析饼图统计";
         String execelName3 = "文献转化分析折线图统计";
-        if (type.equals("2")){
+        if ("2".equals(type)){
             execelName1 = "文献借阅统计交叉表统计";
             execelName2 = "文献借阅统计饼图统计";
             execelName3 = "文献借阅统计折线图统计";
         }
-        ExportExcelUtil exportExcelUtil = new ExportExcelUtil(execelName1,tableRow,tableData);
-        HSSFWorkbook sheets = exportExcelUtil.exportMulti(response);
-        ExportExcelUtil exportExcelUtil2 = new ExportExcelUtil(execelName2,pieRow,pieData);
-        HSSFWorkbook sheets2 = exportExcelUtil2.exportMulti(response);
-        ExportExcelUtil exportExcelUtil3 = new ExportExcelUtil(execelName3,lineRow,linedata);
-        HSSFWorkbook sheets3 = exportExcelUtil3.exportMulti(response);
-        ZipOutputStream out = new ZipOutputStream(response.getOutputStream());
-        try
-        {
-            request.setCharacterEncoding("UTF-8");//设定请求字符编码
-            response.setContentType("application/x-msdownload;charset=utf-8");
-            response.setHeader("Content-disposition", "attachment; filename=" +  URLEncoder.encode(zipName, "UTF-8"));
-            ExportExcelUtil.doCompress(sheets,execelName1+".xls",out);
-            ExportExcelUtil.doCompress(sheets2,execelName2+".xls",out);
-            ExportExcelUtil.doCompress(sheets3,execelName3+".xls",out);
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }finally {
-            if(out != null){
-                try {out.close();} catch (IOException e) {}
-            }
-        }
+        List<HashMap<String,Object>> excelInfo = new ArrayList<HashMap<String,Object>>();
+
+        HashMap ext1 = new HashMap();
+        ext1.put("title",execelName1);
+        ext1.put("rowName",tableRow);
+        ext1.put("dataList",tableData);
+        excelInfo.add(ext1);
+
+        HashMap ext2 = new HashMap();
+        ext2.put("title",execelName2);
+        ext2.put("rowName",pieRow);
+        ext2.put("dataList",pieData);
+        excelInfo.add(ext2);
+
+        HashMap ext3 = new HashMap();
+        ext3.put("title",execelName3);
+        ext3.put("rowName",lineRow);
+        ext3.put("dataList",linedata);
+        excelInfo.add(ext3);
+
+        ExportExcelUtil exportExcelUtil = new ExportExcelUtil();
+        exportExcelUtil.exportMultiSheet(response,excelInfo);
 
 
     }
@@ -434,23 +435,7 @@ public class PostLiteratureController {
         }
 
         ExportExcelUtil exportExcelUtil = new ExportExcelUtil("文献分类统计",barRow,barData);
-        HSSFWorkbook sheets = exportExcelUtil.exportMulti(response);
-        ZipOutputStream out = new ZipOutputStream(response.getOutputStream());
-        try
-        {
-            request.setCharacterEncoding("UTF-8");//设定请求字符编码
-            response.setContentType("application/x-msdownload;charset=utf-8");
-            response.setHeader("Content-disposition", "attachment; filename=" +  URLEncoder.encode(zipName, "UTF-8"));
-            ExportExcelUtil.doCompress(sheets,"文献分类统计.xls",out);
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }finally {
-            if(out != null){
-                try {out.close();} catch (IOException e) {}
-            }
-        }
+        exportExcelUtil.export(response);
     }
 
     /**
@@ -459,8 +444,8 @@ public class PostLiteratureController {
      */
     @ControllerAop(action = "查询文献采集统计")
     @RequestMapping("/getVideoCjCount")
-    public JsonResult getVideoCjCount(){
-        JsonResult count = postLiteratureService.getVideoCjCount();
+    public JsonResult getVideoCjCount(@RequestParam String module){
+        JsonResult count = postLiteratureService.getVideoCjCount(module);
         return count;
     }
     /**
@@ -469,8 +454,8 @@ public class PostLiteratureController {
      */
     @ControllerAop(action = "查询文献查询统计")
     @RequestMapping("/getVideoCxCount")
-    public JsonResult getVideoCxCount(){
-        JsonResult count = postLiteratureService.getVideoCxCount();
+    public JsonResult getVideoCxCount(@RequestParam String module){
+        JsonResult count = postLiteratureService.getVideoCxCount(module);
         return count;
     }
 
@@ -567,9 +552,14 @@ public class PostLiteratureController {
         try {
             request.setCharacterEncoding("UTF-8");//设定请求字符编码
             response.setContentType("application/x-msdownload;charset=utf-8");
-            response.setHeader("Content-disposition", "attachment; filename=" +  URLEncoder.encode(zipName, "UTF-8"));
-            //            FtpUtil ftpUtil = new FtpUtil(config.getFtpUrl(), Integer.valueOf(config.getFtpPort()), config.getFtpUserName(), config.getFtpPassWord());
-            //            ftpUtil.downFtpFiletoZip(fileList,out,response);
+            String regex = "[`~!@#$%^&*()\\+\\=\\{}|:\"?><【】\\/r\\/n]";
+
+            Pattern pa = Pattern.compile(regex);
+            Matcher ma = pa.matcher(zipName);
+            if(ma.find()){
+                zipName = ma.replaceAll("");
+            }
+            response.setHeader("Content-disposition", "attachment; filename=" +  zipName);
             fileUploadConfig = new FileUploadConfig(config);
             fileUploadConfig.downloadFileToZip(fileList,out,response);
         } catch (Exception e) {

@@ -13,7 +13,7 @@ $(function () {
   var $dataRotate = $('#dataRotate');
   var $dataScaleX = $('#dataScaleX');
   var $dataScaleY = $('#dataScaleY');
-  console.log("111");
+  // console.log("111");
   var options = {
         aspectRatio: 640 / 386,
         preview: '.img-preview',
@@ -38,22 +38,22 @@ $(function () {
   // Cropper
   $image.on({
     ready: function (e) {
-      console.log(e.type);
+      // console.log(e.type);
     },
     cropstart: function (e) {
-      console.log(e.type, e.action);
+      // console.log(e.type, e.action);
     },
     cropmove: function (e) {
-      console.log(e.type, e.action);
+      // console.log(e.type, e.action);
     },
     cropend: function (e) {
-      console.log(e.type, e.action);
+      // console.log(e.type, e.action);
     },
     crop: function (e) {
-      console.log(e.type, e.x, e.y, e.width, e.height, e.rotate, e.scaleX, e.scaleY);
+      // console.log(e.type, e.x, e.y, e.width, e.height, e.rotate, e.scaleX, e.scaleY);
     },
     zoom: function (e) {
-      console.log(e.type, e.ratio);
+      // console.log(e.type, e.ratio);
     }
   }).cropper(options);
 
@@ -125,7 +125,7 @@ $(function () {
           try {
             data.option = JSON.parse($target.val());
           } catch (e) {
-            console.log(e.message);
+            // console.log(e.message);
           }
         }
       }
@@ -173,7 +173,7 @@ $(function () {
         try {
           $target.val(JSON.stringify(result));
         } catch (e) {
-          console.log(e.message);
+          // console.log(e.message);
         }
       }
 

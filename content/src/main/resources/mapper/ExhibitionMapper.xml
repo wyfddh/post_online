@@ -561,19 +561,21 @@
     SELECT se.id, se.exhib_name as 'exhibName', se.inport_word as 'inportWord', se.room_num as roomNum,
     se.plan_time as 'planTime', se.start_time as 'startTime', se.end_time as 'endTime', se.remark,
 
-    (select count(1) from post_collection p  where p.id = se.collect_id ) as 'colleNum',
+    (select count(1) from post_exhib_collection p  where p.exhib_id = se.id ) as 'colleNum',
 
-    (select count(1) from post_video t where t.id = se.video_id ) as 'videoNum'
+    (select count(1) from post_exhib_video t where t.exhib_id = se.id ) as 'videoNum'
 
     FROM post_exhib se where se.isdelete = 0
 
     <if test="name != null and key != ''">
-      --             前台传入一个姓名名称，模糊查询名称或关键词
       and (se.exhib_name like concat('%',#{name},'%')
       or se.inport_word like concat('%',#{name},'%'))
     </if>
     <if test="planTime != null and planTime != ''">
       and DATE_FORMAT(se.plan_time, '%Y-%m-%d') = #{planTime}
+    </if>
+    <if test="dataRule == 1">
+      and se.creator = #{userId}
     </if>
     <!--<if test="startDate != null and startDate != ''" >-->
     <!--and se.plan_time <![CDATA[ >= ]]> #{startDate}-->
@@ -605,6 +607,9 @@
     </if>
     <if test="planTime != null and planTime != ''">
       and se.plan_time = #{planTime}
+    </if>
+    <if test="dataRule == 1">
+      and se.creator = #{userId}
     </if>
   </select>
 

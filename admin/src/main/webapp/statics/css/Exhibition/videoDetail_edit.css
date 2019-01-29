@@ -161,7 +161,7 @@ th>div,td>div{
     border-top-width: 0px;
 }
 .oneBody .layui-row>div{
-    height: 50px;
+    /*height: 50px;*/
     line-height: 50px;
 }
 .oneBody .layui-row input{

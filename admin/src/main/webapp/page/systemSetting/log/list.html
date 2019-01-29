@@ -2,6 +2,7 @@
 <html>
     <head>
         <script src="../../../statics/libs/jquery-1.10.2.min.js"></script>
+        <script src="../../../statics/js/jquery.extend.js"></script>
         <link rel="stylesheet" href="../../../statics/css/font-awesome.min.css">
         <!--layui ztree样式-->
         <link rel="stylesheet" href="../../../statics/plugins/layui/css/layui.css" media="all">
@@ -34,10 +35,10 @@
                     <button class="layui-btn layui-btn-green" lay-submit="" lay-filter="moreSearch">
                         <i class="fa fa-chevron-down">&nbsp;</i>展开筛选
                     </button>
-                    <button class="layui-btn search-btn myBtn"  lay-submit="" lay-filter="formDemo">
+                    <button class="layui-btn search-btn myBtn layui-hide" id="search"  lay-submit="" lay-filter="formDemo">
                         <!--<i class="fa fa-search">&nbsp;</i>-->查询
                     </button>
-                    <button type="reset" class="layui-btn myBtn" lay-submit="" lay-filter="clear"><!--<i class="fa fa-refresh">&nbsp;</i>-->重置</button>
+                    <button type="reset" class="layui-btn myBtn layui-hide" id="reset" lay-submit="" lay-filter="clear"><!--<i class="fa fa-refresh">&nbsp;</i>-->重置</button>
                 </div>
             </div>
             <div class="layui-card-body">
@@ -53,7 +54,7 @@
                         <label class="layui-form-label">操作日期:</label>
                         <div class="layui-input-block">
                             <input readonly="readonly" type="text" name="loginTime" id="loginTime" maxlength="20" value=""
-                                placeholder="请选择开始时间" class="layui-input Wdate">
+                                placeholder="请选择记录时间" class="layui-input Wdate">
                         </div>
                     </div>
                 </div>
@@ -79,7 +80,7 @@
             <table class="layui-hide" id="test" lay-filter="test"></table>
             <script type="text/html" id="toolbarDemo">
                 <div class="layui-btn-container">
-                    <button class="layui-btn layui-btn-sm" lay-event="getCheckData">批量删除</button>
+                    <button class="layui-btn layui-btn-sm layui-hide" id="batchDelete" lay-event="getCheckData">批量删除</button>
                 </div>
             </script>
         </div>

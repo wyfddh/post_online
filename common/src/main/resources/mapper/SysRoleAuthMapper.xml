@@ -479,9 +479,7 @@
     <include refid="Base_Column_List1" />
     from sys_user
     where user_name = #{userId}
-    <if test="isDelete != null and isDelete!=''">
-      and isdelete = #{isDelete}
-    </if>
+
   </select>
 
   <select id="getUserListByName" resultMap="BaseResultMap2">
@@ -489,9 +487,6 @@
     <include refid="Base_Column_List1" />
     from sys_user
     where name like concat('%',#{userName},'%')
-    <if test="isDelete != null and isDelete!=''">
-      and isdelete = #{isDelete}
-    </if>
   </select>
 
   <!--获取所有权限-->

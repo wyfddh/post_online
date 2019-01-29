@@ -21,7 +21,6 @@ public class NoticeController {
     @Autowired
     SysNoticeService sysNoticeSevice;
 
-    private String userId = "sysadmin";
 
     /**
      * 发消息功能
@@ -40,8 +39,8 @@ public class NoticeController {
         notice.setCreateTime(new Date());
         notice.setUpdateTime(new Date());
 //        String userId = Tools.getUserId();
-        notice.setCreator(userId);
-        notice.setUpdater(userId);
+        notice.setCreator(Tools.getUserId());
+        notice.setUpdater(Tools.getUserId());
         notice.setStatus(0);
         JsonResult jsonResult = sysNoticeSevice.sendNotice(notice);
         return jsonResult;
@@ -58,7 +57,7 @@ public class NoticeController {
         notice.setId(id);
         notice.setUpdateTime(new Date());
 //        String userId = Tools.getUserId();
-        notice.setUpdater(userId);
+        notice.setUpdater(Tools.getUserId());
         notice.setStatus(1);
         JsonResult jsonResult = sysNoticeSevice.updateNotice(notice);
         return jsonResult;
@@ -74,7 +73,7 @@ public class NoticeController {
     public JsonResult getNoticeList(){
         SysNotice notice = new SysNotice();
 //        String userId = Tools.getUserId();
-        JsonResult jsonResult = sysNoticeSevice.getNoticeList(userId);
+        JsonResult jsonResult = sysNoticeSevice.getNoticeList(Tools.getUserId());
         return jsonResult;
     }
 

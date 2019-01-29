@@ -54,9 +54,10 @@ public class PostSocialController {
     @ControllerAop(action = "查询社教列表")
     @RequestMapping("/getSocialList")
     @ResponseBody
-    public JSONObject getSocialList(String keywords, @RequestParam(defaultValue = "1") String orderBy,@RequestParam
+    public JSONObject getSocialList(String keywords, @RequestParam(defaultValue = "1") String orderBy,
+                 @RequestParam String module,@RequestParam
             (defaultValue = "1") Integer currentPage, @RequestParam(defaultValue = "10") Integer size) throws Exception{
-        return  postSocialService.getSocials(keywords,orderBy,currentPage,size);
+        return  postSocialService.getSocials(keywords,orderBy,currentPage,size,module);
     }
 
 

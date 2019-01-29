@@ -3,7 +3,8 @@
 <generatorConfiguration>
 	<!-- 第三方连接驱动 -->
 
-	<classPathEntry location="D:\source\repository\mysql\mysql-connector-java\5.1.34\mysql-connector-java-5.1.34.jar" />
+	<classPathEntry location="D:\repository\mysql\mysql-connector-java\5.1.34\mysql-connector-java-5.1.34.jar" />
+
 	<context id="context1" targetRuntime="MyBatis3">
 		<commentGenerator>
 			<property name="suppressDate" value="true"/>
@@ -12,13 +13,13 @@
 		</commentGenerator>
 		<!-- 数据库相关属性设置 -->
 		<jdbcConnection driverClass="com.mysql.jdbc.Driver"
-			connectionURL="jdbc:mysql://192.168.5.199:3306/bj_postoffice?useUnicode=true&amp;characterEncoding=UTF-8"
-			userId="root" password="123456" />
+						connectionURL="jdbc:mysql://192.168.5.199:3306/bj_postoffice?useUnicode=true&amp;characterEncoding=UTF-8"
+						userId="root" password="123456" />
 
 		<!-- 生成实体类地址 -->
 
-		<javaModelGenerator targetPackage="com.tj720.model.common.copyright"
-			targetProject="src/main/java">
+		<javaModelGenerator targetPackage="com.tj720.model.common.system.department"
+							targetProject="src/main/java">
 
 			<!-- 是否在当前路径下新加一层schema,eg：fase路径com.oop.eksp.user.model， true:com.oop.eksp.user.model.[schemaName] -->
 			<property name="enableSubPackages" value="false" />
@@ -29,7 +30,7 @@
 		<!-- 生成mapxml文件 -->
 
 		<sqlMapGenerator targetPackage="mapper"
-			targetProject="src/main/java">
+						 targetProject="src/main/java">
 			<!-- 是否在当前路径下新加一层schema,eg：fase路径com.oop.eksp.user.model， true:com.oop.eksp.user.model.[schemaName] -->
 			<property name="enableSubPackages" value="false" />
 		</sqlMapGenerator>
@@ -37,7 +38,7 @@
 		<!-- 生成mapxml对应client，也就是接口dao -->
 
 		<javaClientGenerator targetPackage="com.tj720.dao"
-			targetProject="src/main/java" type="XMLMAPPER">
+							 targetProject="src/main/java" type="XMLMAPPER">
 
 			<!-- 是否在当前路径下新加一层schema,eg：fase路径com.oop.eksp.user.model， true:com.oop.eksp.user.model.[schemaName] -->
 			<property name="enableSubPackages" value="false" />
@@ -48,8 +49,9 @@
 		<!--<table schema="bj_postoffice" tableName="sys_role_auth" domainObjectName="SysRoleAuth" />-->
 		<!--<table schema="bj_postoffice" tableName="sys_function" domainObjectName="SysFunction" />-->
 		<!--<table schema="bj_postoffice" tableName="sys_res_auth" domainObjectName="SysResAuth" />-->
-        <!--<table schema="bj_postoffice" tableName="post_collection" domainObjectName="Collect" />-->
-		<table schema="bj_postoffice" tableName="copyright_setting" domainObjectName="CopyrightSetting" />
+		<!-- <table schema="bj_postoffice" tableName="post_collection_type" domainObjectName="PostCollectionType" />-->
+		<table schema="bj_postoffice" tableName="post_stamp_story" domainObjectName="StampStory" />
+		<table schema="bj_postoffice" tableName="post_information_manage" domainObjectName="InformationManage" />
 
 	</context>
 </generatorConfiguration>

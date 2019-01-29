@@ -54,12 +54,6 @@
     <if test="createTime != null and createTime !=''">
       and  date(create_time) = #{createTime}
     </if>
-    <if test="orderBy == 1" >
-      order by update_time desc
-    </if>
-    <if test="orderBy == 2" >
-      order by create_time desc
-    </if>
   </select>
 
 
@@ -275,7 +269,6 @@
     <if test="createTime != null and createTime !=''">
       and  date(create_time) = #{createTime}
     </if>
-    order by update_time  desc
   </select>
 
 

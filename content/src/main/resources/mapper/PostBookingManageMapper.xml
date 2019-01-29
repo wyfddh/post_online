@@ -115,6 +115,9 @@
       or contacts_phone like concat('%',#{contacts},'%')
       )
     </if>
+    <if test="userId != null and userId != ''">
+      and user_id = #{userId}
+    </if>
     <if test="orderTime != null and orderTime !=''">
       and  date(order_time) = #{orderTime}
     </if>
@@ -140,15 +143,13 @@
       or contacts_phone like concat('%',#{contacts},'%')
       )
     </if>
+    <if test="userId != null and userId != ''">
+      and user_id = #{userId}
+    </if>
     <if test="orderTime != null and orderTime !=''">
       and  date(order_time) = #{orderTime}
     </if>
-    <if test="orderBy == 1" >
-      order by update_time desc
-    </if>
-    <if test="orderBy == 2" >
-      order by create_time desc
-    </if>
+
   </select>
 
   <select id="countByUserId" resultType="java.lang.Integer">

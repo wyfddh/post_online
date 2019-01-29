@@ -66,7 +66,7 @@ var main = {
                                 successMsg("添加分类成功");
                             }
                             parent.$t.goback("page/video/videoTypeList.html");
-                        } else {
+                        } else if (result.success == 0){
                             errorMsg(result.error.message);
                         }
                     },
@@ -126,10 +126,9 @@ function loadData(id) {
             url:property.getProjectPath()+"PostVideo/queryPostVideoTypeById.do",
             success:function(result) {
                 if (result.success == 1) {
-                    console.log(result.data);
                     setFormData(result.data);
                     // form.render('select');
-                } else {
+                } else if (result.success == 0){
                     errorMsg(result.error.message);
                 }
             },
@@ -186,7 +185,7 @@ function getDictData(currentId) {
             if (result.success == 1) {
                 videoTypeList = result.data;
                 setSelect();
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.error.message);
             }
         },
@@ -246,7 +245,7 @@ function getCodeType(id) {
             if (result.success == 1) {
                 var data = result.data;
                 typeCode = data.typeCode;
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.error.message);
             }
         },

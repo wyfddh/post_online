@@ -56,10 +56,10 @@
     AS user_amount
     FROM
     sys_department d
-    <if test="orderBy == '2'">
-      order by d.create_time desc,d.sequence desc
+    <if test="orderBy == 2">
+      order by d.create_time,d.sequence desc
     </if>
-    <if test="orderBy == '1'">
+    <if test="orderBy == 1">
       order by d.update_time desc,d.sequence desc
     </if>
     <if test="start != null and end != null">

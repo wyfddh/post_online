@@ -36,7 +36,6 @@ public class RoleAuthServiceImpl implements RoleAuthService{
     @Autowired
     SysDepartmentMapper sysDepartmentMapper;
 //    private static String userId = Tools.getUserId();
-    private static String userId = "sysadmin";
     @Autowired
     SysRoleAuthMapper sysRoleAuthMapper;
     @Autowired
@@ -50,11 +49,11 @@ public class RoleAuthServiceImpl implements RoleAuthService{
         }catch (Exception e){
             e.printStackTrace();
         }
-        sysRoleAuth.setUpdater(userId);
+        sysRoleAuth.setUpdater(Tools.getUserId());
         sysRoleAuth.setUpdateTime(date);
         if (type == "0"){
             sysRoleAuth.setCreateTime(date);
-            sysRoleAuth.setCreator(userId);
+            sysRoleAuth.setCreator(Tools.getUserId());
         }
         return sysRoleAuth;
     }
@@ -154,6 +153,7 @@ public class RoleAuthServiceImpl implements RoleAuthService{
     }
 
     @Override
+    @Transactional
     public JsonResult batchUpdateRoleAuth(String roleId, List<HashMap<String, String>> party) {
         //删除原有权限
 //        SysRoleAuthExample example = new SysRoleAuthExample();
@@ -329,17 +329,16 @@ public class RoleAuthServiceImpl implements RoleAuthService{
     @Override
     public JsonResult getUserByUserId(String userId) {
         try {
-            SysUser user = sysRoleAuthMapper.getUserByUserId(userId,"0");
+            SysUser user = sysRoleAuthMapper.getUserByUserId(userId);
             if (!StringUtils.isEmpty(user)){
-                return new JsonResult(1,user);
-            }else {
-                SysUser newUser = sysRoleAuthMapper.getUserByUserId(userId,"1");
-                if (!StringUtils.isEmpty(newUser)){
+                if (user.getStatus()==1){
+                    return new JsonResult(1,user);
+                }else{
                     return new JsonResult(0,null,"20000013");
-                }else {
-                    return new JsonResult(0,null,"10000005");
                 }
 
+            }else {
+                return new JsonResult(0,null,"20000023");
             }
 
         }catch (Exception e){
@@ -357,7 +356,7 @@ public class RoleAuthServiceImpl implements RoleAuthService{
     @Override
     public JsonResult getUserListByName(String userName) {
         try {
-            List<SysUser> userListByName = sysRoleAuthMapper.getUserListByName(userName, "0");
+            List<SysUser> userListByName = sysRoleAuthMapper.getUserListByName(userName);
             return new JsonResult(1,userListByName);
         }catch (Exception e){
             return new JsonResult(0,null,"10000010");

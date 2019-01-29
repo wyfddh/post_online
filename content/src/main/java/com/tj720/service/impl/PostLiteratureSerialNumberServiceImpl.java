@@ -144,8 +144,8 @@ public class PostLiteratureSerialNumberServiceImpl implements PostLiteratureSeri
         String unknowName = map.get("unknowName");
         String knowName = "";
         if (!unknowName.equals(typeName)) {
-            if (unknowName.length() == 1 && (unknowName.equals(")") || unknowName.equals("）"))) {
-                unknowName = null;
+            if (unknowName.length() == 1 && (")".equals(unknowName) || "）".equals(unknowName))) {
+                unknowName = "";
             } else {
                 Integer site = typeName.indexOf(unknowName);
                 knowName = typeName.substring(0, typeName.indexOf(unknowName));
@@ -544,6 +544,8 @@ public class PostLiteratureSerialNumberServiceImpl implements PostLiteratureSeri
                     }
                 }
                 break;
+                default:
+                    return 0;
         }
         return 0;
     }

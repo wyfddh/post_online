@@ -65,8 +65,8 @@ var main = {
                 }else {
                     status = 0;
                 }
-                var roleId = $(obj.elem).attr("data-id");
-                var json = {"status":status,"typeId":typeId};
+                var typeId = $(obj.elem).attr("data-id");
+                var json = {"status":status,"id":typeId};
                 $.ajax({
                     type:"post",
                     data:json,
@@ -77,7 +77,7 @@ var main = {
                             // loadTable();
                             successMsg("操作成功");
                             loadTable();
-                        } else {
+                        } else if (result.success == 0){
                             errorMsg(result.error.message);
                         }
                     },
@@ -163,7 +163,7 @@ function loadTable() {
                             if (result.success == 1) {
                                 successMsg("删除分类成功");
                                 loadTable();
-                            } else {
+                            } else if (result.success == 0){
                                 errorMsg(result.error.message);
                             }
                         },
@@ -218,7 +218,6 @@ function setSelect() {
         $("#typeLevel").append(typeLevelSelect);
         form.render('select');
         // form.on('select(pid)', function(data){
-        //     console.log(data.value); //得到被选中的值
         // });
 
     })

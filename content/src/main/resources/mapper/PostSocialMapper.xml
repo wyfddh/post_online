@@ -46,6 +46,9 @@
         key_word like concat('%', #{keywords},'%')
         )
       </if>
+    <if test="dataRule == 1">
+      and creator = #{userId}
+    </if>
     <if test="orderBy == 1" >
       order by update_time desc
     </if>
@@ -66,12 +69,6 @@
         or
         key_word like concat('%', #{keywords},'%')
         )
-      </if>
-      <if test="orderBy == 1" >
-        order by update_time desc
-      </if>
-      <if test="orderBy == 2" >
-        order by create_time desc
       </if>
   </select>
 

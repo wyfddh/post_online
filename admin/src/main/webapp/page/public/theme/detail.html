@@ -2,6 +2,7 @@
 <html>
 <head>
     <script src="../../../statics/libs/jquery-1.10.2.min.js"></script>
+    <script src="../../../statics/js/jquery.extend.js"></script>
     <link rel="stylesheet" href="../../../statics/css/font-awesome.min.css">
     <!--layui ztree样式-->
     <link rel="stylesheet" href="../../../statics/plugins/layui/css/layui.css" media="all">
@@ -45,13 +46,14 @@
                             <li class="layui-row">
                                 <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*主题展名称</div>
                                 <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
-                                    <input type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input">
+                                    <input type="text" name="title" required  lay-verify="required"
+                                           placeholder="请输入标题" autocomplete="off" class="layui-input" style="padding: 5px;height:200px;">
 
                                 </div>
                             </li>
 
                             <li class="layui-row">
-                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*主题展描述</div>
+                                <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR" style="height: 220px">*主题展描述</div>
                                 <div class="layui-form-item m0 layui-col-md8 layui-col-sm8">
                                     <textarea type="text" name="title" required  placeholder="请输入标题" autocomplete="off" class="layui-input" ></textarea>
                                 </div>

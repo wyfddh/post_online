@@ -82,9 +82,10 @@ public class PostLiteratureProcessController {
     @ControllerAop(action = "获取申请列表")
     @RequestMapping("postLiteratureProcessList")
     public JSONObject postLiteratureProcessList(String key,String department,String approveStatus,String orderBy,
+            @RequestParam String module,
             @RequestParam(defaultValue = "1") Integer currentPage, @RequestParam(defaultValue = "10") Integer size) {
 
-        JSONObject jsonObject = postLiteratureProcessService.postLiteratureProcessList(key,department,approveStatus,orderBy,currentPage,size);
+        JSONObject jsonObject = postLiteratureProcessService.postLiteratureProcessList(key,department,approveStatus,orderBy,currentPage,size,module);
 
         return jsonObject;
     }
@@ -140,10 +141,10 @@ public class PostLiteratureProcessController {
      */
     @ControllerAop(action = "借阅列表")
     @RequestMapping("borrowingList")
-    public JSONObject borrowingList(String key,String department,String borrowStatus,String orderBy,
+    public JSONObject borrowingList(String key,String department,String borrowStatus,String orderBy,@RequestParam String module,
             @RequestParam(defaultValue = "1") Integer currentPage, @RequestParam(defaultValue = "10") Integer size) {
 
-        JSONObject jsonObject = postLiteratureProcessService.borrowingList(key,department,borrowStatus,orderBy,currentPage,size);
+        JSONObject jsonObject = postLiteratureProcessService.borrowingList(key,department,borrowStatus,orderBy,currentPage,size,module);
 
         return jsonObject;
     }

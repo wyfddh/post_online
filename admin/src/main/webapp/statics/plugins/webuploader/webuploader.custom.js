@@ -152,7 +152,7 @@
     /**
      * 直接来源于jquery的代码。
      * @fileOverview Promise/A+
-     * @beta
+     * @beta_236
      */
     define('promise-builtin',[
         'dollar'

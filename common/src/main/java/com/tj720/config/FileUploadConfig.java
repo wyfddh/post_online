@@ -10,6 +10,8 @@ import org.apache.commons.lang.StringUtils;
 import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.zip.ZipOutputStream;
@@ -22,6 +24,7 @@ import java.util.zip.ZipOutputStream;
  */
 
 import com.tj720.utils.FtpUtil;
+import sun.misc.BASE64Encoder;
 
 public class FileUploadConfig {
 
@@ -144,6 +147,41 @@ public class FileUploadConfig {
         }
     }
 
+
+    public String getFileStreamPath(String path){
+//        ossUtils = new OSSUtils(CheckConfig);
+        String newPath = "";
+//        InputStream inputStream = ossUtils.getFileStreamPath(path);
+        InputStream inputStream = null;
+        try {
+            URL url = new URL(path);
+            // 创建链接
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            //            URLConnection urlConnection = url.openConnection();
+            //            int contentLength = urlConnection.getContentLength();
+            inputStream = conn.getInputStream();
+            byte[] data = new byte[conn.getContentLength()];
+            byte[] temp = new byte[2048];
+            int total = 0;
+            int len = 0;
+            while ((len = inputStream.read(temp)) > 0) {
+                System.arraycopy(temp, 0, data, total, len);
+                total += len;
+            }
+            inputStream.close();
+            newPath = new String(new BASE64Encoder().encode(data));
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            try {
+                inputStream.close();
+            }catch (Exception e){
+
+            }
+
+        }
+        return "data:image/png;base64,"+ newPath;
+    }
 
 }
 

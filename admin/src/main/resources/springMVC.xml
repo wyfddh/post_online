@@ -28,11 +28,11 @@
 
 	<mvc:default-servlet-handler />
 
-	<!-- <context:annotation-config />
+	<!-- <context:annotatCheckConfignfig />
 	<bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor"/>
 	<context:component-scan base-package="com.tj720.mip"></context:component-scan> -->
 
-
+    <!--Spring AOP 通过CGLIB生成代理-->
 	<aop:aspectj-autoproxy proxy-target-class="true"/>
 	<!-- 采用注解的方式配置，在部分操作系统或tomcat中由于初始化顺序不一致，会报错 -->
 	<!-- 必须放在component-scan之上，优先创建该bean -->
@@ -119,8 +119,8 @@
 	</bean>
 
 
-	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-	</bean>
+	<!--<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">-->
+	<!--</bean>-->
 	<!-- 异常处理类 -->
 	<bean id="exceptionHandler" class="com.tj720.controller.framework.GlobalExceptionResolver" />
 	<!-- hibernate的事物管理sevices层面实现事物管理,而且达到和平台无关 -->
@@ -143,17 +143,46 @@
 	<!--<mvc:resources location="file:/mnt/file/" mapping="/file/**"/>-->
 
 	<!-- 邮件类 -->
-	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-		<property name="username"><value>${mail.username}</value></property>
-		<property name="password"><value>${mail.info}</value></property>
-		<property name="host"><value>${mail.host}</value></property>
-		<property name="javaMailProperties">
-			<props>
-				<prop key="mail.smtp.auth">${mail.auth}</prop>
-				<prop key="mail.smtp.timeout">${mail.timeout}</prop>
-			</props>
+	<!--<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">-->
+		<!--<property name="username"><value>${mail.username}</value></property>-->
+		<!--<property name="password"><value>${mail.info}</value></property>-->
+		<!--<property name="host"><value>${mail.host}</value></property>-->
+		<!--<property name="javaMailProperties">-->
+			<!--<props>-->
+				<!--<prop key="mail.smtp.auth">${mail.auth}</prop>-->
+				<!--<prop key="mail.smtp.timeout">${mail.timeout}</prop>-->
+			<!--</props>-->
+		<!--</property>-->
+	<!--</bean>-->
+	<bean id="wfService" name="wfService" class="com.tj720.service.impl.WfServiceImpl"></bean>
+
+	<!--&lt;!&ndash; spring-mvc jsp视图解析器 &ndash;&gt;-->
+	<!--<bean id="viewResolver"-->
+		<!--class="org.springframework.web.servlet.view.InternalResourceViewResolver">-->
+		<!--<property name="viewClass"-->
+			<!--value="org.springframework.web.servlet.view.JstlView"></property>-->
+		<!--<property name="prefix" value="/WEB-INF/html/"></property>-->
+		<!--<property name="suffix" value=".jsp"></property>-->
+		<!--<property name="order" value="1"></property>-->
+	<!--</bean>-->
+
+	<!-- 设置freeMarker的配置文件路径 -->
+	<bean id="freemarkerConfiguration"
+		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="location" value="classpath:freemarker.properties" />
+	</bean>
+	<!-- html视图解析器 必须先配置freemarkerConfig,注意html是没有prefix前缀属性的 -->
+	<bean id="freemarkerConfig"
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">
+		<property name="freemarkerSettings" ref="freemarkerConfiguration" />
+		<property name="templateLoaderPath">
+			<value></value>
 		</property>
 	</bean>
-
-	<bean id="wfService" name="wfService" class="com.tj720.service.impl.WfServiceImpl"></bean>
+	<bean id="htmlviewResolver"
+		class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+		<property name="suffix" value=".html" />
+		<property name="order" value="0"></property>
+		<property name="contentType" value="text/html;charset=UTF-8"></property>
+	</bean>
 </beans>

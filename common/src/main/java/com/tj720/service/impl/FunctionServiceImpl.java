@@ -12,6 +12,7 @@ import com.tj720.utils.Tools;
 import com.tj720.utils.common.IdUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.text.SimpleDateFormat;
@@ -107,6 +108,7 @@ public class FunctionServiceImpl implements FunctionService{
     }
 
     @Override
+    @Transactional
     public JsonResult deleteFunctionById(String functionId) {
         if (StringUtils.isEmpty(functionId)){
             return new JsonResult(0,null,"200208");
@@ -129,9 +131,9 @@ public class FunctionServiceImpl implements FunctionService{
     @Override
     public JsonResult queryFunctionList(String type,String functionName) {
         try {
-                List<MenuTreeDto> sysFunctions = null;
-                sysFunctions = sysFunctionMapper.selectByCondition(type,functionName);
-                return new JsonResult(1,sysFunctions);
+            List<MenuTreeDto> sysFunctions = null;
+            sysFunctions = sysFunctionMapper.selectByCondition(type,functionName);
+            return new JsonResult(1,sysFunctions);
         }catch (Exception e){
             e.printStackTrace();
             return new JsonResult(0,null,"200209");

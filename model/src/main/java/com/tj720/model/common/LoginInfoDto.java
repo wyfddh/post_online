@@ -2,6 +2,7 @@ package com.tj720.model.common;
 
 import com.tj720.model.common.system.user.MipUser;
 
+import com.tj720.model.common.system.user.SysUser;
 import java.io.Serializable;
 
 
@@ -21,6 +22,10 @@ public class LoginInfoDto implements Serializable {
 		this.userName = user.getName();
 		this.id = user.getId();
 	}
+	public LoginInfoDto(SysUser user) {
+		this.userName = user.getUserName();
+		this.id = user.getId();
+	}
 
 	public String getUserName() {
 		return userName;
@@ -31,8 +36,9 @@ public class LoginInfoDto implements Serializable {
 	}
 
 	public String getAuthStr() {
-		if (authStr == null)
-			return "";
+		if (authStr == null) {
+            return "";
+        }
 		return authStr;
 	}
 

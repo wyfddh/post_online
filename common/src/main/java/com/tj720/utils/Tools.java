@@ -1,10 +1,22 @@
 package com.tj720.utils;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
+import com.tj720.controller.framework.MyException;
+import com.tj720.controller.framework.SpringContextHolder;
+import com.tj720.controller.springbeans.Config;
+import com.tj720.model.common.CrumbDto;
+import com.tj720.service.ICacheService;
+import com.tj720.service.impl.CacheServiceImpl;
+import org.hibernate.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.ContextLoader;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.text.ParseException;
@@ -14,33 +26,14 @@ import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.tj720.controller.framework.MyException;
-import com.tj720.controller.framework.SpringContextHolder;
-import com.tj720.controller.springbeans.Config;
-import com.tj720.model.common.Attachment;
-import com.tj720.model.common.CrumbDto;
-import com.tj720.model.common.LoginInfoDto;
-import com.tj720.model.common.themeshow.PostThemeShow;
-import com.tj720.service.ICacheService;
-import com.tj720.service.impl.CacheService;
-import org.hibernate.Query;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.StringUtils;
-import org.springframework.web.context.ContextLoader;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
 
 public class Tools {
 	@Autowired
 	HttpServletRequest request;
 	@Autowired
 	private Config config;
+	private static Pattern p = Pattern.compile("\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*");
+
 	public static void staticize(String html, String filePath) throws MyException, IOException {
 		if (html == null) {
 			throw new MyException("000045");
@@ -102,8 +95,9 @@ public class Tools {
 		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		for (int i = 0; i < params.length; i = i + 2) {
-			if (!MyString.isEmpty(params[i + 1]))
+			if (!MyString.isEmpty(params[i + 1])) {
 				map.put(params[i].toString(), params[i + 1]);
+			}
 		}
 		return map;
 
@@ -115,8 +109,9 @@ public class Tools {
 		}
 		Map<String, String> map = new HashMap<String, String>();
 		for (int i = 0; i < params.length; i = i + 2) {
-			if (!MyString.isEmpty(params[i + 1]))
+			if (!MyString.isEmpty(params[i + 1])) {
 				map.put(params[i], params[i + 1]);
+			}
 		}
 		return map;
 
@@ -157,7 +152,7 @@ public class Tools {
 				String[] keys = key.split("\\|");
 				keys[0] = keys[0].replaceAll("\\.", "_");
 
-				if (keys[1].equals("in")) {
+				if ("in".equals(keys[1])) {
 					hql.append(keys[0] + " in (:" + keys[0] + "_in) and ");
 				}
 
@@ -174,25 +169,25 @@ public class Tools {
 				else if (keys[1].equals(Const.BLANK)) {
 					hql.append(keys[0] + " ='' and ");
 					removes.add(key);
-				} else if (keys[1].equals("like")) {
+				} else if ("like".equals(keys[1])) {
 					hql.append(keys[0] + " like :" + keys[0] + " and  ");
-				} else if (keys[1].equals("or")) {
+				} else if ("or".equals(keys[1])) {
 					hql.replace(hql.lastIndexOf("and"), hql.length(), " or  ");
 					hql.append(keys[0] + " like :" + keys[0] + " and  ");
-				} else if (keys[1].equals("overtime")) {
+				} else if ("overtime".equals(keys[1])) {
 					hql.append(keys[0] + " < :" + keys[0] + " and  ");
-				} else if (keys[1].equals("staTime")) {
+				} else if ("staTime".equals(keys[1])) {
 					hql.append(keys[0] + " >= :" + keys[0] + " and  ");
-				} else if (keys[1].equals("endTime")) {
+				} else if ("endTime".equals(keys[1])) {
 					hql.append(keys[0] + " <= :" + keys[0] + " and  ");
 				} else {
 					hql.append(keys[0] + " " + keys[1] + ":" + keys[0] + " and ");
 				}
-			} else if (key.equals("beginTime")) {
+			} else if ("beginTime".equals(key)) {
 				hql.append(key + ">=:" + key.replaceAll("\\.", "_") + " and ");
-			} else if (key.equals("endTime")) {
+			} else if ("endTime".equals(key)) {
 				hql.append(key + "<=:" + key.replaceAll("\\.", "_") + " and ");
-			} else if (key.equals("publish") && String.valueOf(entry.getValue()).equals("-128")) {
+			} else if ("publish".equals(key) && "-128".equals(String.valueOf(entry.getValue()))) {
 				hql.append(key + ">:" + key.replaceAll("\\.", "_") + " and ");
 
 			} else {
@@ -230,13 +225,13 @@ public class Tools {
 			}
 			Object value = entry.getValue();
 			key = key.replaceAll("\\.", "_");
-			if (operator.toUpperCase(Locale.ENGLISH).equals("LIKE")) {
+			if ("LIKE".equals(operator.toUpperCase(Locale.ENGLISH))) {
 				query.setString(key, "%" + value.toString() + "%");
-			} else if (operator.toUpperCase(Locale.ENGLISH).equals("OR")) {
+			} else if ("OR".equals(operator.toUpperCase(Locale.ENGLISH))) {
 				query.setString(key, "%" + value.toString() + "%");
-			} else if (operator.toUpperCase(Locale.ENGLISH).equals("STATIME")) {
+			} else if ("STATIME".equals(operator.toUpperCase(Locale.ENGLISH))) {
 				query.setParameter(key, value);
-			} else if (operator.toUpperCase(Locale.ENGLISH).equals("ENDTIME")) {
+			} else if ("ENDTIME".equals(operator.toUpperCase(Locale.ENGLISH))) {
 				query.setParameter(key, value);
 			} else if (value instanceof Integer) {
 				query.setInteger(key, Integer.parseInt(value.toString()));
@@ -260,22 +255,25 @@ public class Tools {
 	public static String getChar(int num) {
 		String md = "123456789abcdefghijkmnpqrstuvwxyzABCDEFGHIJKLMNPQRSTUVWXYZ789abcd";
 		//Random random = new Random();
-		SecureRandom random = null;
+//		SecureRandom random = null;
+		String temp = "";
 		try {
-			random = SecureRandom.getInstance("SHA1PRNG");
+			SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
+
+			for (int i = 0; i < num; i++) {
+				temp = temp + md.charAt(random.nextInt(50));
+			}
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
-		String temp = "";
-		for (int i = 0; i < num; i++) {
-			temp = temp + md.charAt(random.nextInt(50));
-		}
+
 		return temp;
 	}
 
 	public static boolean isEmail(String email) {
-		if (null == email || "".equals(email))
+		if (null == email || "".equals(email)) {
 			return false;
+		}
 		// Pattern p = Pattern.compile("\\w+@(\\w+.)+[a-z]{2,3}");
 		Pattern p = Pattern.compile("\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*");
 		Matcher m = p.matcher(email);
@@ -331,6 +329,63 @@ public class Tools {
 	 */
 	public static String getUserId() {
 		return MyCookie.getCookie(Const.COOKIE_USERID, false, Tools.getRequest());
+	}
+
+
+	/**
+	 * 获取ip
+	 * @param request
+	 * @return
+	 */
+	public static String getIpAddress(HttpServletRequest request) {
+		String ip = request.getHeader("x-forwarded-for");
+		if (null != ip){
+			String regex1 = "[`~!@#$%^&*()\\+\\=\\{}|:\"?><【】\\/r\\/n]";
+			Pattern pa1 = Pattern.compile(regex1);
+			Matcher ma1 = pa1.matcher(ip);
+			if(ma1.find()){
+				ip = ma1.replaceAll("");
+			}
+		}
+
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("Proxy-Client-IP");
+			if (null != ip) {
+				String regex = "[`~!@#$%^&*()\\+\\=\\{}|:\"?><【】\\/r\\/n]";
+				Pattern pa = Pattern.compile(regex);
+				Matcher ma = pa.matcher(ip);
+				if (ma.find()) {
+					ip = ma.replaceAll("");
+				}
+			}
+		}
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("WL-Proxy-Client-IP");
+			if (null != ip) {
+				String regex = "[`~!@#$%^&*()\\+\\=\\{}|:\"?><【】\\/r\\/n]";
+				Pattern pa = Pattern.compile(regex);
+				Matcher ma = pa.matcher(ip);
+				if (ma.find()) {
+					ip = ma.replaceAll("");
+				}
+			}
+		}
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getRemoteAddr();
+			if (null != ip) {
+				String regex = "[`~!@#$%^&*()\\+\\=\\{}|:\"?><【】\\/r\\/n]";
+				Pattern pa = Pattern.compile(regex);
+				Matcher ma = pa.matcher(ip);
+				if (ma.find()) {
+					ip = ma.replaceAll("");
+				}
+			}
+		}
+		if (ip.contains(",")) {
+			return ip.split(",")[0];
+		} else {
+			return ip;
+		}
 	}
 
 	/**
@@ -433,7 +488,7 @@ public class Tools {
 
 	// 获取图形验证码
 	public static String getImgCode(HttpServletRequest request) throws MyException{
-		ICacheService cacheService = SpringContextHolder.getBean("cacheService", CacheService.class);
+		ICacheService cacheService = SpringContextHolder.getBean("cacheService", CacheServiceImpl.class);
 		String timesStr = cacheService.getStr(Const.CACHE_IMGCODE_TIMES + MyCookie.getCookie(Const.COOKIE_UUID, false, request));
 		int times = 0;
 		if(timesStr != null){
@@ -444,6 +499,22 @@ public class Tools {
 		}
 		cacheService.setStr(Const.CACHE_IMGCODE_TIMES + MyCookie.getCookie(Const.COOKIE_UUID, false, request), times + "", 10 * 60);
 		String imgCode = cacheService.getStr(Const.CACHE_IMGCODE + MyCookie.getCookie(Const.COOKIE_UUID, false, request));
+		return imgCode == null? System.currentTimeMillis()+"" : imgCode.toString();
+	}
+
+	// 获取图形验证码
+	public static String getAdminImgCode(HttpServletRequest request) throws MyException{
+		ICacheService cacheService = SpringContextHolder.getBean("cacheService", CacheServiceImpl.class);
+		String timesStr = cacheService.getStr(Const.CACHE_ADMIN_IMGCODE_TIMES + MyCookie.getCookie(Const.COOKIE_UUID, false, request));
+		int times = 0;
+		if(timesStr != null){
+			times = Integer.parseInt(timesStr.toString()) + 1;
+		}
+		if(times > 3){
+			throw new MyException("000011");
+		}
+		cacheService.setStr(Const.CACHE_ADMIN_IMGCODE_TIMES + MyCookie.getCookie(Const.COOKIE_UUID, false, request), times + "", 10 * 60);
+		String imgCode = cacheService.getStr(Const.CACHE_ADMIN_IMGCODE + MyCookie.getCookie(Const.COOKIE_UUID, false, request));
 		return imgCode == null? System.currentTimeMillis()+"" : imgCode.toString();
 	}
 

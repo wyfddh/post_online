@@ -6,7 +6,6 @@ layui.use('element', function () {
     var element = layui.element;
     //tabs切换
     element.on('tab(tabs)', function (data) {
-        console.log(data);
     });
     //选项卡删除
     element.on('tabDelete(tabs)', function (data) {
@@ -38,13 +37,16 @@ $(function () {
         var $this = $(this);
         var name = $this.text() || $this.attr("title");
         var url = baseUrl+$this.attr("data-url")|| "";
+        localStorage.functinId = $this.attr("data");
         //判断该页面是否已存在
         if ($("#navTab").find("li[data-url='" + url + "']").length === 0) {
             var index = Loading.open(1,false);
             //如果不存在
             //$("#navTab").find("li").removeClass("layui-this");
             //新增tab页
-            var _li = '<li class="layui-this main-tab" style="width:100%" data-url="' + url + '">'+"<span style='float:left'>"+name+"</span>"+"<span style='float:right' class='myRefresh'><i class=\"fa fa-refresh\">&nbsp;</i>刷新</span>"+ '</li>';
+            var _li = '<li class="layui-this main-tab" style="width:100%" data-url="' + url + '">'
+                +"<span style='float:left'>"+name+"</span>"
+                +"<span style='float:right' class='myRefresh'><i class=\"fa fa-refresh\">&nbsp;</i>刷新</span>"+ '</li>';
             $("#navTab").find("ul").empty().append(_li);
 
             //$("#main").find("iframe").removeClass("cy-show");
@@ -57,7 +59,6 @@ $(function () {
                 Loading.close(index);
                 $(".myRefresh").on({
                     'click':function () {
-                       // console.log(iframe);
                         iframe[0].contentWindow.main.initTable();
                     }
                 })
@@ -88,6 +89,12 @@ $(function () {
             return false
         });
 
+    });
+
+    $('#searchName').keypress(function(e){
+        if(e.keyCode==13){
+            $('#startSearch').click();
+        }
     });
 
     $('#startSearch').click(function () {

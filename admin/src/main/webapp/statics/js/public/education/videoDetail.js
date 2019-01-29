@@ -18,13 +18,13 @@ var main = {
                 var picStr1;
                 if (picList[i].isMain === "1") {
                     picStr1 = '<div class="img" id="img' + picList[i].attId + '">'
-                        + '<div class="img1"><img src=' + picList[i].attPath + ' alt="" ></div>'
+                        + '<div class="img1"><img src="' + picList[i].attPath + '" alt="" ></div>'
                         + '<div class="img2"><span class="img3" id="span' + picList[i].attId + '" mark=' + picList[i].attId + ' style="color:red">主图</span><span class="img4" mark=' + picList[i].attId + '>删除图片</span></div>'
                         + '</div>'
                     $("#isMain").val(picList[i].attId);
                 } else {
                     picStr1 = '<div class="img picDiv" style="margin-top: 10px;margin-bottom: 0" id="img' + picList[i].attId + '">'
-                        + '<div class="img1"><img src=' + picList[i].attPath + ' alt="" ></div>'
+                        + '<div class="img1"><img src="' + picList[i].attPath + '" alt="" ></div>'
                         + '<div class="img2"><span class="img3" id="span' + picList[i].attId + '" mark=' + picList[i].attId + '></span><span class="img4" mark=' + picList[i].attId + '></span></div>'
                         + '</div>'
                 }
@@ -53,7 +53,6 @@ var main = {
         });
         layui.use('upload', function () {
             var upload = layui.upload;
-
             //执行实例
             var uploadInst = upload.render({
                 elem: '#test1' //绑定元素
@@ -102,7 +101,6 @@ var main = {
             //监听行工具事件
             table.on('tool(test)', function (obj) {
                 var data = obj.data;
-                //console.log(obj)
                 if (obj.event === 'del') {
                     layer.confirm('真的删除行么', function (index) {
                         obj.del();

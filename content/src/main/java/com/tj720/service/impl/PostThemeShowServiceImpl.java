@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
@@ -57,7 +58,7 @@ public class PostThemeShowServiceImpl implements PostThemeShowService{
             PostThemeShow info = new PostThemeShow();
             info.setId(id);
             info.setDataState("0");
-            info.setUpdateBy("sysadmin");
+            info.setUpdateBy(Tools.getUserId());
             info.setUpdateDate(new Date());
             int count = postThemeShowMapper.updateByPrimaryKeySelective(info);
             if (count > 0) {
@@ -72,6 +73,7 @@ public class PostThemeShowServiceImpl implements PostThemeShowService{
     }
 
     @Override
+    @Transactional
     public JsonResult batchRemove(String[] ids) throws Exception {
         try {
             if(ids.length<0){
@@ -92,6 +94,7 @@ public class PostThemeShowServiceImpl implements PostThemeShowService{
     }
 
     @Override
+    @Transactional
     public JsonResult updateThemebByIds(List<String> ids) {
         try {
             Integer count= postThemeShowMapper.updateThemebByIds(ids);
@@ -125,10 +128,10 @@ public class PostThemeShowServiceImpl implements PostThemeShowService{
                 //获取图片url
                 postThemeShow.setMainPicUrl("");
                 List<Attachment> picList = new ArrayList<Attachment>();
-                picList = attachmentService.getListByIds(postThemeShow.getDatumIds());
+                picList = attachmentService.getFileTransPathList(postThemeShow.getDatumIds());
                 for (Attachment attachment : picList) {
-                    attachment.setAttPath(config.getRootUrl()+attachment.getAttPath());
-                    if (attachment.getIsMain().equals("1")){
+//                    attachment.setAttPath(CheckConfig.getRootUrl()+attachment.getAttPath());
+                    if ("1".equals(attachment.getIsMain())){
                         postThemeShow.setMainPicUrl(attachment.getAttPath());
                         break;
                     }
@@ -154,10 +157,10 @@ public class PostThemeShowServiceImpl implements PostThemeShowService{
                 //获取图片url
                 postThemeShow.setMainPicUrl("");
                 List<Attachment> picList = new ArrayList<Attachment>();
-                picList = attachmentService.getListByIds(postThemeShow.getDatumIds());
+                picList = attachmentService.getFileTransPathList(postThemeShow.getDatumIds());
                 for (Attachment attachment : picList) {
-                    attachment.setAttPath(config.getRootUrl()+attachment.getAttPath());
-                    if (attachment.getIsMain().equals("1")){
+//                    attachment.setAttPath(CheckConfig.getRootUrl()+attachment.getAttPath());
+                    if ("1".equals(attachment.getIsMain())){
                         postThemeShow.setMainPicUrl(attachment.getAttPath());
                         break;
                     }
@@ -202,6 +205,7 @@ public class PostThemeShowServiceImpl implements PostThemeShowService{
     }
 
     @Override
+    @Transactional
     public JsonResult  insertSelective(PostThemeShow record,String picids){
         String  userId = Tools.getUserId();
         try {
@@ -213,7 +217,6 @@ public class PostThemeShowServiceImpl implements PostThemeShowService{
                 //设置图片
                 pictureService.setMain(picids, picids, null);
                 record.setDatumIds(picids);
-
                 record.setId(IdUtils.getIncreaseIdByNanoTime());
                 record.setCollectionAmount(Integer.toString(collectionListArray.size()));
                 record.setThemeSource("1");
@@ -231,7 +234,7 @@ public class PostThemeShowServiceImpl implements PostThemeShowService{
                 collInfo.setStatus("1");
                 collInfo.setCreateBy(userId);
                 collInfo.setCreateDate(new Date());
-                collInfo.setUpdateBy("sysadmin");
+                collInfo.setUpdateBy(Tools.getUserId());
                 collInfo.setUpdateDate(new Date());
                 collInfo.setId(IdUtils.getIncreaseIdByNanoTime());
             }
@@ -244,6 +247,7 @@ public class PostThemeShowServiceImpl implements PostThemeShowService{
     }
 
     @Override
+    @Transactional
     public JsonResult  updateByPrimaryKeySelective(PostThemeShow record,String picids){
         String  userId = Tools.getUserId();
         try{

@@ -39,10 +39,11 @@ public class MapValueComparator implements Comparator<Long> {
         Comparator<K> valueComparator = new Comparator<K>() {
             public int compare(K k1, K k2) {
                 int compare = map.get(k2).compareTo(map.get(k1));
-                if (compare == 0)
-                    return 1;
-                else
-                    return compare;
+                if (compare == 0) {
+					return 1;
+				} else {
+					return compare;
+				}
             }
         };
         Map<K, V> sortedByValues = new TreeMap<K, V>(valueComparator);
@@ -103,7 +104,9 @@ public class MapValueComparator implements Comparator<Long> {
 		for(int i=0;i<str.length();i++){
 	   	if(i<2){
 	   		sb.setCharAt(i, str.charAt(i));
-	   	}else sb.setCharAt(i, '0');
+	   	}else {
+			sb.setCharAt(i, '0');
+		}
 	   }
 	   String s=sb.toString();
 	   int e=Integer.valueOf(s);

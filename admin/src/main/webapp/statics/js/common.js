@@ -3,9 +3,9 @@ var PROPERTY = function () {
 }
 
 
-PROPERTY.prototype.projectPath = "http://192.168.5.44:8080/admin/"
+PROPERTY.prototype.projectPath = getRootPath();
 
-
+PROPERTY.prototype.md5Str="tj720";
 
 PROPERTY.prototype.getProjectPath = function () {
     return this.projectPath;
@@ -50,7 +50,7 @@ PROPERTY.prototype.getDictData = function (key) {
         success:function(result) {
             if (result.success == 1) {
                 datas = result.data;
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.data);
             }
         },
@@ -72,7 +72,7 @@ PROPERTY.prototype.getSysDictListByPid = function(id) {
         success:function(result) {
             if (result.success == 1) {
                 datas = result.data;
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.data);
             }
         },
@@ -97,7 +97,7 @@ PROPERTY.prototype.getDictDataMulti = function (keys) {
         success:function(result) {
             if (result.success == 1) {
                 datas = result.data;
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.error.message);
             }
         },
@@ -219,7 +219,7 @@ PROPERTY.prototype.getLs = function (lsKey,lsType) {
         success:function(result) {
             if (result.success == 1) {
                 datas = result.data;
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.error.message);
             }
         },
@@ -261,7 +261,7 @@ PROPERTY.prototype.getApprovalList = function (roleCode) {
         success:function(result) {
             if (result.success == 1) {
                 datas = result.data;
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.error.message);
             }
         },
@@ -284,7 +284,7 @@ PROPERTY.prototype.getAllUserList = function () {
         success:function(result) {
             if (result.success == 1) {
                 datas = result.data;
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.error.message);
             }
         },
@@ -308,7 +308,7 @@ PROPERTY.prototype.getAllOrgList = function () {
         success:function(result) {
             if (result.success == 1) {
                 datas = result.data;
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.error.message);
             }
         },
@@ -340,8 +340,11 @@ PROPERTY.prototype.setUserInfo = function () {
         var nowdate = getNowFormatDate();
         $("#nowDate").text(nowdate);
     }else{
-        alert("用户未登陆，请先登录!");
-        window.location.href='/admin/login.html';
+        alertMsg("用户未登陆，请先登录!");
+        setTimeout(function() {
+          window.location.href='/admin/login.html';
+        },1500);
+
     }
 }
 
@@ -365,35 +368,40 @@ PROPERTY.prototype.setUserInfoPlus = function (a,b,c) {
  * 控制按钮权限
  */
 PROPERTY.prototype.setButtonAuth = function () {
-    var currentId = localStorage.currentId;
-    if (null != userInfo){
-        var json = {"userId":userInfo.userId,"type":"1","currentId":currentId}
+    var currentId = localStorage.functinId;
+    if (null != localStorage.userInfo) {
+        userInfo = JSON.parse(localStorage.userInfo);
+    }
+    if (null != userInfo) {
+        var json = {"userId": userInfo.userId, "type": "1", "currentId": currentId}
         $.ajax({
-            type:"post",
-            async:false,
-            url:property.getProjectPath()+"RoleAuth/getAllOrgList.do",
-            success:function(result) {
+            type: "post",
+            async: false,
+            data: json,
+            url: property.getProjectPath() + "ResAuth/getFunctionByUser.do",
+            success: function (result) {
                 if (result.success == 1) {
                     var datas = result.data;
-                    if (null != datas){
-                        for (var i=0;i<datas.length;i++){
+                    if (null != datas) {
+                        for (var i = 0; i < datas.length; i++) {
                             var tempId = datas[i].functionurl;
-                            $("#"+tempId).removeClass('layui-hide');
-                            $("#"+tempId).show();
+                            $("#" + tempId).removeClass('layui-hide');
+                            $("#" + tempId).show();
                         }
                     }
-                } else {
+                } else if (result.success == 0) {
                     errorMsg(result.error.message);
                 }
             },
-            error:function(result) {
+            error: function (result) {
                 errorMsg("系统异常");
             }
         });
-    }else{
-        alert("用户未登陆，请先登录!");
-        window.location.href='/login.html';
     }
+    // }else{
+    //     alert("用户未登陆，请先登录!");
+    //     window.location.href='/login.html';
+    // }
 }
 
 /**
@@ -412,7 +420,7 @@ PROPERTY.prototype.getProcessStatus = function (userId,postVideoId,type) {
         success:function(result) {
             if (result.success == 1) {
                 datas = result.data;
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.error.message);
             }
         },
@@ -423,10 +431,25 @@ PROPERTY.prototype.getProcessStatus = function (userId,postVideoId,type) {
     return datas;
 }
 
+PROPERTY.prototype.indexOf = function(array,val) {
+
+    for (var i = 0; i < array.length; i++) {
+        if (array[i] == val) return i;
+    }
+    return -1;
+};
+
+PROPERTY.prototype.remove = function(array,val) {
+    var index = property.indexOf(array,val);
+    if (index > -1) {
+        array.splice(index, 1);
+    }
+};
+
 
 
 var property = new PROPERTY();
-// property.setButtonAuth();
+property.setButtonAuth();
 
 
 //格式化时间(时间戳转换为 日期格式   年月日时分秒)
@@ -447,6 +470,7 @@ function formatDate(v) {
     }
     if(day < 10) {
         day = "0" + day;
+
     }
     if(hours < 10) {
         hours = "0" + hours;
@@ -667,7 +691,7 @@ function checkOrg(userId) {
         success:function(result) {
             if (result.success == "1") {
                 flag = result.data;
-            } else {
+            } else if (result.success == 0){
                 var resultMsg = result.error.message;
                 errorMsg(resultMsg);
             }
@@ -691,6 +715,32 @@ function getCollectionInfo(data) {
     }
     return name.join("，");
 }
+
+function getRootPath(){
+    //获取当前网址，如： http://localhost:8083/uimcardprj/share/meun.jsp
+    var curWwwPath=window.document.location.href;
+    //获取主机地址之后的目录，如： uimcardprj/share/meun.jsp
+    var pathName=window.document.location.pathname;
+    var pos=curWwwPath.indexOf(pathName);
+    //获取主机地址，如： http://localhost:8083
+    var localhostPaht=curWwwPath.substring(0,pos);
+    //获取带"/"的项目名，如：/uimcardprj
+    var projectName=pathName.substring(0,pathName.substr(1).indexOf('/')+1);
+    return(localhostPaht+projectName+"/");
+}
+
+
+// $.ajaxSetup({
+//     //ajax完成时检查返回数据中是否有页面跳转的命令，如果存在则跳转页面
+//     complete: function (XMLHttpRequest, textStatus) {
+//         var result = XMLHttpRequest.responseText;
+//         if (result.indexOf("url") != -1 && result.indexOf("Redirect") != -1) {
+//             var url = result.substring(4,result.indexOf("&Redirect"));
+//             // var login = property.getProjectPath() + url;
+//             top.location = url;
+//         }
+//     }
+// });
 
 (function($) {
     var _ajax = $.ajax;

@@ -36,8 +36,8 @@ var main={
                     url = "pubUser/updatePubUser.do";
                 }
                 var  data = JSON.parse(JSON.stringify(data.field));
-                data.password = hex_md5(data.password);
-                data.surePassword = hex_md5(data.surePassword);
+                data.password = hex_md5(property.md5Str+data.password);
+                data.surePassword = hex_md5(property.md5Str+data.surePassword);
                 data = JSON.stringify(data)
                 $.ajax({
                     contentType: 'application/json;charset=UTF-8',
@@ -53,7 +53,7 @@ var main={
                                 successMsg("添加公众用户成功");
                             }
                             parent.$t.goback("page/public/user/list.html");
-                        } else {
+                        } else if (result.success == 0){
                             //top.layer.msg(result.error.message);
                             errorMsg("操作公众用户数据异常");
                         }
@@ -81,7 +81,6 @@ var main={
                 ,xhr:xhrOnProgress
                 ,progress:function(index,value){//上传进度回调 value进度值
                     element.progress('progressBar'+index, value+'%')//设置页面进度条
-                    console.log(e,value);
                 }
                 ,bindAction: '#testListAction'
                 ,choose: function(obj){
@@ -183,7 +182,6 @@ var main={
             //监听行工具事件
             table.on('tool(test)', function(obj){
                 var data = obj.data;
-                //console.log(obj)
                 if(obj.event === 'del'){
                     layer.confirm('真的删除行么', function(index){
                         obj.del();
@@ -278,7 +276,7 @@ function loadData(id) {
                 if (result.success == 1) {
                     userInfo = result.data
                     setFormData(result.data);
-                } else {
+                } else if (result.success == 0){
                     errorMsg("系统异常");
                 }
             },
@@ -294,12 +292,16 @@ function loadData(id) {
            var cityList =  CityList.find(function (obj) {
                return obj.value == data.value
            })
-            var newList = cityList.children.map(function (obj) {
-                return {value: obj.value, text: obj.label}
-            })
-            var cityStr = component.getSelect(newList, null, "cityId");
-            $("#cityId").html(cityStr);
-            form.render('select');
+
+            if(!isEmpty(cityList)){
+                var newList = cityList.children.map(function (obj) {
+                    return {value: obj.value, text: obj.label}
+                })
+                var cityStr = component.getSelect(newList, null, "cityId");
+                $("#cityId").html(cityStr);
+                form.render('select');
+            }
+
         });
 
         /*form.on('select(cityId)', function(data){
@@ -354,9 +356,9 @@ function getAreaData(type,init,data){
                                 }
                             }
                             $("#cityId").html(cityStr);
-                            form.render('select');
-                        }
 
+                        }
+                        form.render('select');
                     }
                 }
             }
@@ -399,9 +401,6 @@ function setFormData(data){
         $("#sexRadio").append(sexRadioStr);
         form.render('radio');
     });
-
-
-
 
 }
 

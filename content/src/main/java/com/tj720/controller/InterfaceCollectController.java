@@ -2,6 +2,7 @@ package com.tj720.controller;
 
 import com.tj720.controller.base.controller.BaseController;
 import com.tj720.controller.framework.JsonResult;
+import com.tj720.controller.framework.auth.ControllerAop;
 import com.tj720.service.InterfaceCollectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,7 @@ public class InterfaceCollectController extends BaseController {
      * 获取接口藏品类型
      * @return
      */
+    @ControllerAop(action = "获取接口藏品类型")
     @RequestMapping("/getCollctTypeList")
     public JsonResult getCollctTypeList() {
         try {
@@ -42,6 +44,7 @@ public class InterfaceCollectController extends BaseController {
      * @param culName 藏品名称
      * @return
      */
+    @ControllerAop(action = "根据藏品列表和藏品名称，模糊查询藏品下拉")
     @RequestMapping("/getCollectByTypeAndName")
     public JsonResult getCollectByTypeAndName(String culCategory, String culName) {
         try {

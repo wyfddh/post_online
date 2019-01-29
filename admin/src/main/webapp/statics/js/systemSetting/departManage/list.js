@@ -43,8 +43,8 @@ var main = {
                     url:property.getProjectPath()+"sysdepartment/modifyDeptStatus.do",
                     success:function(result) {
                         if (result.success == 1) {
-                            errorMsg("操作成功");
-                        } else {
+                            successMsg("操作成功");
+                        } else if (result.success == 0){
                             errorMsg(result.error.message);
                         }
                     },
@@ -150,7 +150,7 @@ function reloadTable(){
                             if (result.success == 1) {
                                 successMsg("删除部门成功");
                                 tableObj.reload();
-                            } else {
+                            } else if (result.success == 0){
                                 errorMsg(result.error.message);
                             }
                         },

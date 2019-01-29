@@ -27,7 +27,6 @@ var main={
                ,xhr:xhrOnProgress
                 ,progress:function(index,value){//上传进度回调 value进度值
                     element.progress('progressBar'+index, value+'%')//设置页面进度条
-                    console.log(e,value);
                 }
                 ,bindAction: '#testListAction'
                 ,choose: function(obj){
@@ -114,14 +113,12 @@ var main={
                 switch(obj.event){
                     case 'getCheckData':
                         var data = checkStatus.data;
-                        layer.alert(JSON.stringify(data));
+
                         break;
                     case 'getCheckLength':
                         var data = checkStatus.data;
-                        layer.msg('选中了：'+ data.length + ' 个');
                         break;
                     case 'isAll':
-                        layer.msg(checkStatus.isAll ? '全选': '未全选');
                         break;
                 };
             });
@@ -129,7 +126,6 @@ var main={
             //监听行工具事件
             table.on('tool(test)', function(obj){
                 var data = obj.data;
-                //console.log(obj)
                 if(obj.event === 'del'){
                     layer.confirm('真的删除行么', function(index){
                         obj.del();

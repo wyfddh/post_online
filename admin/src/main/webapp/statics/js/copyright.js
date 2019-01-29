@@ -1,8 +1,10 @@
 var projectName = property.getProjectPath();
 var tableId = null;
+var form;
 var main = {
 
   init: function () {
+      property.setUserInfo();
     if (null == tableId){
       tableId = property.getTimeJson();
     }
@@ -19,15 +21,19 @@ var main = {
   },
 
   initTable: function () {
+      //加载配置
+
 
       layui.use(['upload','element','form'], function(){
           var $ = layui.jquery
               ,upload = layui.upload,element = layui.element;
-          var form  = layui.form;
+          form  = layui.form;
+
+          loadConfig();
           var demoListView = $('#demoList')
               ,uploadListIns = upload.render({
               elem: '#upload'
-              ,url: property.getProjectPath()+"attach/upload.do?tableName="+"copyright"+"&tableId="+tableId
+              ,url: property.getProjectPath()+"attach/upload.do?tableName="+"copyright"
               ,accept: 'file'
               ,multiple: true
               ,auto: true
@@ -77,7 +83,6 @@ var main = {
               }
               ,done: function(res, index, upload){
                   if(res.code == 1){ //上传成功
-                      attCount = attCount+1;
                       var tr = demoListView.find('#upload-'+ index)
                           ,tds = tr.children();
                       tds.eq(1).html('<span style="color: #5FB878;">上传成功</span>');
@@ -90,6 +95,9 @@ var main = {
 
                       tr.siblings(".upRight").find(".layui-bg-red").addClass("layui-bg-green");
                       tr.siblings(".upRight").find(".layui-bg-green").removeClass("layui-bg-red");
+                      var attId = res.data.id;
+                      var absolutePath = res.data.absolutePath;
+                      $("#watermarkPath").val(absolutePath);
                       return delete this.files[index]; //删除文件队列已经上传成功的文件
                   }else {
                       var tr = demoListView.find('#upload-'+ index)
@@ -110,7 +118,59 @@ var main = {
               }
           });
 
+          form.on('radio(watermarkStatus)', function (data) {
+              var value = data.value;
+              if (value == "0"){
+                  $("#upload").hide();
+              }else{
+                  $("#upload").show();
+              }
+          });
+
+          form.on('radio(copyrightStatus)', function (data) {
+              var value = data.value;
+              if (value == "0"){
+                  $("#copyrightContent").hide();
+              }else{
+                  $("#copyrightContent").show();
+              }
+          });
+
+
       });
+      
+      $("#submit").click(function () {
+          var watermarkStatus = $('input[name="watermarkStatus"]:checked ').val();
+          var copyrightStatus = $('input[name="copyrightStatus"]:checked ').val();
+          var watermarkPath = $("#watermarkPath").val();
+          var copyrightContent = $("#copyrightContent").val();
+          if (watermarkStatus == 1){
+              if(watermarkPath == null){
+                  alertMsg("请上传水印文件");
+                  return false;
+              }
+          }
+          var json = {"xid":$("#id").val(),"watermarkStatus":watermarkStatus,"copyrightStatus":copyrightStatus,
+          "watermarkPath":watermarkPath,"copyrightContent":copyrightContent};
+          $.ajax({
+              type:"post",
+              async:false,
+              data:json,
+              url:property.getProjectPath()+"copyRight/saveCopyright.do",
+              success:function(result) {
+                  if (result.success == 1) {
+                      successMsg("保存成功");
+                  } else if (result.success == 0){
+                      errorMsg(result.error.message);
+                  }
+              },
+              error:function(result) {
+                  errorMsg("系统异常");
+              }
+          });
+
+      })
+      
       //删除附件
       $('#demoList').on('click','.demo-delete',function(){
           var attId = $(this).attr("data-id");
@@ -175,6 +235,52 @@ function xhrOnProgress(fun) {
     return xhr;
   }
 }
+
+function loadConfig() {
+    $.ajax({
+        type:"post",
+        async:false,
+        url:property.getProjectPath()+"copyRight/getCopyright.do",
+        success:function(result) {
+            if (result.success == 1) {
+                var data = result.data;
+                if (null != data){
+                    var watermarkStatus = data.watermarkStatus;
+                    var copyrightStatus = data.copyrightStatus;
+                    if (watermarkStatus == 1){
+                        $("input[name='watermarkStatus'][value=1]").attr("checked",true);
+                    }else{
+                        $("input[name='watermarkStatus'][value=0]").attr("checked",true);
+                        $("#upload").hide();
+                    }
+                    if (copyrightStatus == 1){
+                        $("input[name='copyrightStatus'][value=1]").attr("checked",true);
+                    }else{
+                        $("input[name='copyrightStatus'][value=0]").attr("checked",true);
+                        $("#copyrightContent").hide();
+                    }
+                    $("#id").val(data.xid);
+                    $("#watermarkPath").val(data.watermarkPath);
+                    $("#copyrightContent").val(data.copyrightContent);
+                }else{
+                    $("input[name='watermarkStatus'][value=0]").attr("checked",true);
+                    $("input[name='copyrightStatus'][value=0]").attr("checked",true);
+                    $("#upload").hide();
+                    $("#copyrightContent").hide();
+                }
+                form.render();
+
+            } else if (result.success == 0){
+                errorMsg(result.error.message);
+            }
+        },
+        error:function(result) {
+            errorMsg("系统异常");
+        }
+    });
+}
+
+
 
 
 

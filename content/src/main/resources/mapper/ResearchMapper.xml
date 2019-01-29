@@ -208,12 +208,7 @@
     <if test="startTime != null and startTime != ''" >
     and create_time <![CDATA[ <= ]]> #{startTime}
     </if>
-    <if test="orderBy == 1" >
-      order by update_time desc
-    </if>
-    <if test="orderBy == 2" >
-      order by create_time desc
-    </if>
+
   </select>
 
   <select id="selectListByResearch" parameterType="java.util.Map"

@@ -2,6 +2,7 @@
 <html>
     <head>
         <script src="../../statics/libs/jquery-1.10.2.min.js"></script>
+        <script src="../../statics/js/jquery.extend.js"></script>
         <link rel="stylesheet" href="../../statics/css/font-awesome.min.css">
         <!--layui ztree样式-->
         <link rel="stylesheet" href="../../statics/plugins/layui/css/layui.css" media="all">
@@ -68,7 +69,7 @@
             <div class=" flexRight">
 
                 <form action="" class="layui-form">
-                    <button id="btnAdd" class="layui-btn layui-btn-green myBtn" data-url="page/video/videoTypeAdd.html" title="添加分类">
+                    <button id="btnAdd" class="layui-btn layui-btn-green myBtn layui-hide" id="btnAdd" data-url="page/video/videoTypeAdd.html" title="添加分类">
                         添加分类
                     </button>
                     <div class="layui-input-inline" style="width:100px;">
@@ -89,8 +90,8 @@
             </script>
 
             <script type="text/html" id="setting">
-                <a class="layui-btn layui-btn-xs cy-page" lay-event="addChildren" data-url="page/video/videoTypeAdd.html" title="新增下级">新增下级</a>
-                <a class="layui-btn layui-btn-xs cy-page" lay-event="showChildren" data-url="page/video/videoTypeAdd.html" title="查看下级">查看下级</a>
+                <a class="layui-btn layui-btn-xs cy-page {{d.typeLevel== '3' ? 'layui-hide' : '' }}" lay-event="addChildren" data-url="page/video/videoTypeAdd.html" title="新增下级">新增下级</a>
+                <a class="layui-btn layui-btn-xs cy-page {{d.typeLevel== '3' ? 'layui-hide' : '' }}" lay-event="showChildren" data-url="page/video/videoTypeAdd.html" title="查看下级">查看下级</a>
             </script>
             <script type="text/html" id="barDemo">
                 <a class="layui-btn layui-btn-xs cy-page" lay-event="edit" data-url="page/video/videoTypeAdd.html" title="编辑分类">编辑</a>

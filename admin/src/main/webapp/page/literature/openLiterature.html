@@ -1,6 +1,7 @@
 <html>
 <head>
     <script src="../../statics/libs/jquery-1.10.2.min.js"></script>
+    <script src="../../statics/js/jquery.extend.js"></script>
     <link rel="stylesheet" href="../../statics/css/font-awesome.min.css">
     <!--layui ztree样式-->
     <link rel="stylesheet" href="../../statics/plugins/layui/css/layui.css" media="all">
@@ -21,13 +22,13 @@
                 <span class="carFont">筛选查询</span>
             </div>
             <div class="layui-btn-group flexRight">
-                <button class="layui-btn layui-btn-green" lay-submit="" lay-filter="moreSearch">
+                <button class="layui-btn layui-btn-green " lay-submit="" lay-filter="moreSearch">
                     <i class="fa fa-chevron-up">&nbsp;</i>收起筛选
                 </button>
-                <button class="layui-btn search-btn myBtn"  lay-submit="" lay-filter="formDemo">
+                <button class="layui-btn search-btn myBtn layui-hide" id="search"  lay-submit="" lay-filter="formDemo">
                     <!--<i class="fa fa-search">&nbsp;</i>-->查询
                 </button>
-                <button type="reset" class="layui-btn myBtn" lay-submit="" lay-filter="clear"><!--<i class="fa fa-refresh">&nbsp;</i>-->重置</button>
+                <button type="reset" class="layui-btn myBtn layui-hide" id="reset" lay-submit="" lay-filter="clear"><!--<i class="fa fa-refresh">&nbsp;</i>-->重置</button>
             </div>
         </div>
         <div class="layui-card-body">

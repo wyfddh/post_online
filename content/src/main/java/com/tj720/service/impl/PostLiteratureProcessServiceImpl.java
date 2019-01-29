@@ -2,10 +2,7 @@ package com.tj720.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.tj720.controller.framework.JsonResult;
-import com.tj720.dao.PostLiteratureProcessDetailMapper;
-import com.tj720.dao.PostLiteratureProcessMapper;
-import com.tj720.dao.SysUserDeptMapper;
-import com.tj720.dao.SysUserMapper;
+import com.tj720.dao.*;
 import com.tj720.model.common.dict.SysDict;
 import com.tj720.model.common.system.department.SysDepartment;
 import com.tj720.model.common.system.department.SysUserDept;
@@ -14,10 +11,7 @@ import com.tj720.model.literature.PostLiterature;
 import com.tj720.model.literature.PostLiteratureProcess;
 import com.tj720.model.literature.PostLiteratureProcessDetail;
 import com.tj720.model.literature.PostLiteratureWithBLOBs;
-import com.tj720.service.PostLiteratureProcessService;
-import com.tj720.service.PostLiteratureService;
-import com.tj720.service.SysDictSevice;
-import com.tj720.service.SysNoticeService;
+import com.tj720.service.*;
 import com.tj720.utils.Page;
 import com.tj720.utils.Tools;
 import com.tj720.utils.common.IdUtils;
@@ -55,7 +49,11 @@ public class PostLiteratureProcessServiceImpl implements PostLiteratureProcessSe
     @Autowired
     private SysNoticeService sysNoticeService;
 
+    @Autowired
+    SysDepartmentMapper sysDepartmentMapper;
 
+    @Autowired
+    ResAuthService resAuthService;
     @Override
     public JsonResult getApproveList() {
         JsonResult jsonResult = null;
@@ -169,7 +167,7 @@ public class PostLiteratureProcessServiceImpl implements PostLiteratureProcessSe
 
     @Override
     public JSONObject postLiteratureProcessList(String key, String department, String approveStatus, String orderBy,
-                                                Integer currentPage, Integer size) {
+                                                Integer currentPage, Integer size,String module) {
         //分页对象
         Page page = new Page();
         page.setCurrentPage(currentPage);
@@ -193,28 +191,46 @@ public class PostLiteratureProcessServiceImpl implements PostLiteratureProcessSe
             map.put("orderBy", 1);
         }
         String userId  = Tools.getUserId();
-        map.put("userId",userId);
-        //符合检索条件的数量
-        Integer count = postLiteratureProcessMapper.countPostLiteratureProcessList(map);
-
-        page.setAllRow(count);
-        Integer start = page.getStart();
-        map.put("start", start);
-        map.put("end", size);
-
-        List<PostLiteratureProcess> list = postLiteratureProcessMapper.getPostLiteratureProcessList(map);
-        String jsonString = null;
-        if (list != null && list.size() > 0) {
-            List<PostLiteratureProcess> postLiteratureProcesses = handleData(list);
-            jsonString = JSON.toJSONString(postLiteratureProcesses);
-        }
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("code", 0);
-        jsonObject.put("msg", "");
-        jsonObject.put("count", page.getAllRow());
-        jsonObject.put("data", jsonString);
+        if (null != userId) {
+            SysDepartment deptById = sysDepartmentMapper.getDeptById(userId);
+            String orgId = deptById.getDepartmentId();
+            map.put("userId", userId);
+            map.put("orgId", orgId);
+            JsonResult jsonResult = resAuthService.getDataAuthRule(userId, module);
+            String dataRule = (String) jsonResult.getData();
+            if (dataRule.equals("")) {
+                jsonObject.put("code", 0);
+                jsonObject.put("msg", "");
+                jsonObject.put("count", 0);
+                jsonObject.put("data", null);
+                return jsonObject;
+            }
+            map.put("dataRule", dataRule);
+//            map.put("userId", userId);
+            //符合检索条件的数量
+            Integer count = postLiteratureProcessMapper.countPostLiteratureProcessList(map);
 
-        return jsonObject;
+            page.setAllRow(count);
+            Integer start = page.getStart();
+            map.put("start", start);
+            map.put("end", size);
+
+            List<PostLiteratureProcess> list = postLiteratureProcessMapper.getPostLiteratureProcessList(map);
+            String jsonString = null;
+            if (list != null && list.size() > 0) {
+                List<PostLiteratureProcess> postLiteratureProcesses = handleData(list);
+                jsonString = JSON.toJSONString(postLiteratureProcesses);
+            }
+            jsonObject.put("code", 0);
+            jsonObject.put("msg", "");
+            jsonObject.put("count", page.getAllRow());
+            jsonObject.put("data", jsonString);
+
+            return jsonObject;
+        }else {
+            return jsonObject;
+        }
     }
 
     @Override
@@ -338,6 +354,7 @@ public class PostLiteratureProcessServiceImpl implements PostLiteratureProcessSe
     }
 
     @Override
+    @Transactional
     public JsonResult batchApprove(String[] arr, String setting, String approveName, String preApproveId,
             String approveId, String approveRemark) {
         JsonResult jsonResult = null;
@@ -453,7 +470,7 @@ public class PostLiteratureProcessServiceImpl implements PostLiteratureProcessSe
 
     @Override
     public JSONObject borrowingList(String key, String department, String borrowStatus, String orderBy,
-                                    Integer currentPage, Integer size) {
+                                    Integer currentPage, Integer size,String module) {
         JSONObject jsonObject = new JSONObject();
         Page page = new Page();
         page.setCurrentPage(currentPage);
@@ -476,27 +493,49 @@ public class PostLiteratureProcessServiceImpl implements PostLiteratureProcessSe
             //默认1
             map.put("orderBy", 1);
         }
-        Integer count = postLiteratureProcessMapper.countBorrowingList(map);
-        page.setAllRow(count);
-        Integer start = page.getStart();
-        map.put("start", start);
-        map.put("end", size);
+        String userId  = Tools.getUserId();
+//        JSONObject jsonObject = new JSONObject();
+        if (null != userId) {
+            SysDepartment deptById = sysDepartmentMapper.getDeptById(userId);
+            String orgId = deptById.getDepartmentId();
+            map.put("userId", userId);
+            map.put("orgId", orgId);
+            JsonResult jsonResult = resAuthService.getDataAuthRule(userId, module);
+            String dataRule = (String) jsonResult.getData();
+            if (dataRule.equals("")) {
+                jsonObject.put("code", 0);
+                jsonObject.put("msg", "");
+                jsonObject.put("count", 0);
+                jsonObject.put("data", null);
+                return jsonObject;
+            }
+            map.put("dataRule", dataRule);
+            map.put("userId", userId);
+            Integer count = postLiteratureProcessMapper.countBorrowingList(map);
+            page.setAllRow(count);
+            Integer start = page.getStart();
+            map.put("start", start);
+            map.put("end", size);
 
-        List<PostLiteratureProcess> list = postLiteratureProcessMapper.getBorrowingList(map);
+            List<PostLiteratureProcess> list = postLiteratureProcessMapper.getBorrowingList(map);
 
-        String jsonString = null;
-        if (list != null && list.size() > 0) {
-            List<PostLiteratureProcess> postLiteratureProcesses = handleBorrowingData(list);
-            jsonString = JSON.toJSONString(postLiteratureProcesses);
+            String jsonString = null;
+            if (list != null && list.size() > 0) {
+                List<PostLiteratureProcess> postLiteratureProcesses = handleBorrowingData(list);
+                jsonString = JSON.toJSONString(postLiteratureProcesses);
+            }
+            jsonObject.put("code", 0);
+            jsonObject.put("msg", "");
+            jsonObject.put("count", page.getAllRow());
+            jsonObject.put("data", jsonString);
+            return jsonObject;
+        }else {
+            return jsonObject;
         }
-        jsonObject.put("code", 0);
-        jsonObject.put("msg", "");
-        jsonObject.put("count", page.getAllRow());
-        jsonObject.put("data", jsonString);
-        return jsonObject;
     }
 
     @Override
+    @Transactional
     public JsonResult modifyState(String id, String status) {
         JsonResult jsonResult = null;
         String userId  = Tools.getUserId();
@@ -582,12 +621,35 @@ public class PostLiteratureProcessServiceImpl implements PostLiteratureProcessSe
         List<SysDict> borrowStatusList = sysDictSevice.getDictListByKey("borrow_status");
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         for (PostLiteratureProcess postLiteratureProcess : list) {
-            for (SysDict sysDict : borrowStatusList) {
-                if (StringUtils.isNotBlank(postLiteratureProcess.getApplyStatus()) && sysDict.getDictCode().equals(postLiteratureProcess.getApplyStatus())) {
-                    postLiteratureProcess.setApplyStatusName(sysDict.getDictName());
-                    break;
-                }
-            }
+           if(postLiteratureProcess.getApplyStatus().equals("2") ){
+               Date nowDate = new Date();
+               String planDate = postLiteratureProcess.getPlanReturnDate();
+               try {
+                   Date planDateDate = format.parse(planDate);
+                   if(nowDate.after(planDateDate)){
+                       postLiteratureProcess.setApplyStatusName("已超期");
+                   }else{
+                       for (SysDict sysDict : borrowStatusList) {
+                           if (StringUtils.isNotBlank(postLiteratureProcess.getApplyStatus()) && sysDict.getDictCode().equals(postLiteratureProcess.getApplyStatus())) {
+                               postLiteratureProcess.setApplyStatusName(sysDict.getDictName());
+                               break;
+                           }
+                       }
+                   }
+               }catch (Exception e){
+
+               }
+           }else{
+               for (SysDict sysDict : borrowStatusList) {
+                   if (StringUtils.isNotBlank(postLiteratureProcess.getApplyStatus()) && sysDict.getDictCode().equals(postLiteratureProcess.getApplyStatus())) {
+                       postLiteratureProcess.setApplyStatusName(sysDict.getDictName());
+                       break;
+                   }
+               }
+           }
+
+
+
             if ("1".equals(postLiteratureProcess.getInformationSources())) {
                 postLiteratureProcess.setInformationSourcesName("PC端");
             } else if ("2".equals(postLiteratureProcess.getInformationSources())) {
@@ -603,6 +665,7 @@ public class PostLiteratureProcessServiceImpl implements PostLiteratureProcessSe
             } else {
                 postLiteratureProcess.setRealReturnDateStr("");
             }
+
 
         }
 

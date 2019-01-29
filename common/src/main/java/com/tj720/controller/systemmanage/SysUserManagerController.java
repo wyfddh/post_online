@@ -7,6 +7,7 @@ import com.tj720.model.common.system.user.SysUserDto;
 import com.tj720.service.RoleService;
 import com.tj720.service.SysDepartmentService;
 import com.tj720.service.SysUserService;
+import com.tj720.utils.CheckPWD;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -103,7 +104,7 @@ public class SysUserManagerController {
     @ControllerAop(action= "删除用户")
     @RequestMapping("/deleteSysUser")
     public JsonResult deleteSysUser(SysUserDto sysUserDto){
-        return sysUserService.deleteSysUser(sysUserDto);
+        return sysUserService.deleteSysUserById(sysUserDto.getId());
     }
 
     /**
@@ -123,9 +124,9 @@ public class SysUserManagerController {
      * @param
      * @return
      */
-    @ControllerAop(action= "删除用户")
-    @RequestMapping("/查询用户列表")
-    public JSONObject getSysUserList(String name, String departmentName, String orderBy,
+    @ControllerAop(action= "查询用户列表")
+    @RequestMapping("/getSysUserList")
+    public JSONObject getSysUserList(String name, String departmentName,@RequestParam(defaultValue = "1")String orderBy,
                                      @RequestParam(defaultValue = "1") Integer currentPage, @RequestParam(defaultValue = "10") Integer size){
 
         return sysUserService.getSysUserList(name, departmentName, orderBy, currentPage, size);
@@ -167,6 +168,5 @@ public class SysUserManagerController {
     public JsonResult getRoleName(){
         return roleService.getRoleList();
     }
-
 
 }

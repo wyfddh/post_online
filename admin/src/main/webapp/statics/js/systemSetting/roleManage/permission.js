@@ -4,6 +4,8 @@
  * eleTree组件文档：https://fly.layui.com/extend/eleTree/#doc
  */
 var roleId = localStorage.roleId;
+var buttonAddList = getButtonListByUser();
+var authAddList = getAuthListByUser();
 var main = {
 
     init: function() {
@@ -181,16 +183,22 @@ var main = {
                 var functionList = new Array();
                 var list1 = eleTree.checkedData(".ele1");
                 var list2 = eleTree.checkedData(".ele2");
+                list2 = concatWithNoSpeat(list2,buttonAddList);
                 var list3 = eleTree.checkedData(".ele3");
+                list3 = concatWithNoSpeat(list3,authAddList);
                 for (var i=0;i<list1.length;i++){
                     var temp = list1[i];
                     var json = {"functionId":temp.key,"name":temp.label};
                     functionList.push(json);
                 }
+                var tempList = new Array();
                 for (var i=0;i<list2.length;i++){
                     var temp = list2[i];
                     var json = {"functionId":temp.key,"name":temp.label};
-                    functionList.push(json);
+                   if (tempList == null || tempList.length==0||tempList.indexOf(temp.key)==-1){
+                       functionList.push(json);
+                       tempList.push(temp.key);
+                   }
                 }
                 for (var i=0;i<list3.length;i++){
                     var temp = list3[i];
@@ -212,8 +220,10 @@ var main = {
                             data = result.data;
 
                             successMsg("权限设置成功!");
+                            buttonAddList = getButtonListByUser();
+                            authAddList = getAuthListByUser();
 
-                        } else {
+                        } else if (result.success == 0){
                             errorMsg(result.error.message);
                         }
                     },
@@ -222,13 +232,56 @@ var main = {
                     }
                 });
             })
-            eleTree.on("checkbox(data1)",function(data) {
-                console.log(data);
+
+            eleTree.on("checkbox(data2)",function(d) {
+                if(d.currentData.checked == true){
+
+                }else{
+                    for (var i=0;i<buttonAddList.length;i++){
+                        if(buttonAddList[i].functionId == d.currentData.key){
+                            buttonAddList.splice(i,1);
+                            return false;
+                        }
+                    }
+                }
+            })
+
+            eleTree.on("checkbox(data3)",function(d) {
+                if(d.currentData.checked == true){
+
+                }else{
+                    for (var i=0;i<authAddList.length;i++){
+                        if(authAddList[i].key == d.currentData.key){
+                            authAddList.splice(i,1);
+                            return false;
+                        }
+                    }
+                }
             })
             //节点切换操作
             eleTree.on("toggleSlide(data1)",function(data) {
                 var currentData = data.currentData;
+                var list1 = eleTree.checkedData(".ele2");
+                if (null != list1 && list1.length>0){
+                    buttonAddList = concatWithNoSpeat(list1,buttonAddList);
+                }
+                var list2 = eleTree.checkedData(".ele3");
+                if (null != list2 && list2.length>0){
+                    authAddList = concatWithNoSpeat(list2,authAddList);
+                }
                 data2 = _this.loadTree(currentData.key,1);
+                if (null != data2 && data2.length>0){
+                    for (var i=0;i<data2.length;i++){
+                        if (null != buttonAddList && buttonAddList.length>0) {
+                            for (var j=0;j<buttonAddList.length;j++){
+                                if (data2[i].key == buttonAddList[j].key){
+                                    data2[i].checked = true;
+                                }
+                            }
+                        }
+                    }
+                }
+
                 eleTree.render({
                     elem: '.ele2',
                     // url: "../../data/home/tree.json",
@@ -241,7 +294,18 @@ var main = {
                 });
 
 
-                // data3 = _this.loadTree(currentData.key,2);
+                data3 = _this.loadTree(currentData.key,2);
+                if (null != data3 && data3.length>0){
+                    for (var i=0;i<data3.length;i++){
+                        if (null != authAddList && authAddList.length>0) {
+                            for (var j=0;j<authAddList.length;j++){
+                                if (data3[i].key == authAddList[j].key){
+                                    data3[i].checked = true;
+                                }
+                            }
+                        }
+                    }
+                }
                 eleTree.render({
                     elem: '.ele3',
                     // url: "../../data/home/tree.json",
@@ -272,7 +336,7 @@ var main = {
                 if (result.success == 1) {
                     var data = result.data;
                     $("#roleName").text(data.name);
-                } else {
+                } else if (result.success == 0){
                     errorMsg(result.error.message);
                 }
             },
@@ -292,7 +356,7 @@ var main = {
             success:function(result) {
                 if (result.success == 1) {
                     data = result.data;
-                } else {
+                } else if (result.success == 0){
                     errorMsg(result.error.message);
                 }
             },
@@ -317,6 +381,64 @@ function getChildrenList(functionList,dataList) {
             functionList.push(json);
         }
     }
+}
+
+function getButtonListByUser() {
+    var json = {"roleId":roleId,"type":"1"};
+    var datas = null;
+    $.ajax({
+        type:"post",
+        async:false,
+        data:json,
+        url:property.getProjectPath()+"ResAuth/getFunctionTreeByRole.do",
+        success:function(result) {
+            if (result.success == 1) {
+                datas = result.data;
+
+            } else if (result.success == 0) {
+                errorMsg(result.error.message);
+            }
+        },
+        error:function(result) {
+            errorMsg("系统异常");
+        }
+    });
+    return datas;
+}
+
+function getAuthListByUser() {
+    var json = {"roleId":roleId,"type":"2"};
+    var datas = null;
+    $.ajax({
+        type:"post",
+        async:false,
+        data:json,
+        url:property.getProjectPath()+"ResAuth/getFunctionTreeByRole.do",
+        success:function(result) {
+            if (result.success == 1) {
+                datas = result.data;
+
+            } else if (result.success == 0) {
+                errorMsg(result.error.message);
+            }
+        },
+        error:function(result) {
+            errorMsg("系统异常");
+        }
+    });
+    return datas;
+}
+
+function concatWithNoSpeat(array1,array2){
+    for (var i=0;i<array1.length;i++){
+        for (var j=0;j<array2.length;j++){
+            if (array1[i].key ==  array2[j].key){
+                array2.splice(j,1);
+            }
+        }
+    }
+    array1 = array1.concat(array2);
+    return array1;
 }
 
 

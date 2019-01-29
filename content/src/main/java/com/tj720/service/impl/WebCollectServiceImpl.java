@@ -79,11 +79,11 @@ public class WebCollectServiceImpl implements PostWebCollectService{
                             return new JsonResult(1, "添加收藏成功");
                         }catch(Exception e) {
                             e.printStackTrace();
-                            return new JsonResult(3, "系统异常！");
+                            return new JsonResult("111116");
                         }
                     }else{
                         if (postWebCollect.getStatus() == 1) {
-                            return new JsonResult(4, "重复收藏！");
+                            return new JsonResult(0, "重复收藏！");
                         } else if (postWebCollect.getStatus() == 0) {
                             postWebCollect.setStatus((byte) 1);
                             postWebCollect.setCreatetime(new Date());
@@ -92,10 +92,10 @@ public class WebCollectServiceImpl implements PostWebCollectService{
                                 postWebCollectMapper.updateByPrimaryKeySelective(postWebCollect);
                                 return new JsonResult(1);
                             } catch (Exception e) {
-                                return new JsonResult(3, "系统异常！");
+                                return new JsonResult("111116");
                             }
                         } else {
-                            return new JsonResult(3, "系统异常！");
+                            return new JsonResult("111116");
                         }
                     }
                 }else{
@@ -140,7 +140,7 @@ public class WebCollectServiceImpl implements PostWebCollectService{
             map.put("status", 1);
             PostWebCollect postWebCollect =  postWebCollectMapper.getWebCollect(map);
             //添加收藏
-            if (hasCollected.equals("1")){
+            if ("1".equals(hasCollected)){
                 if (null != postWebCollect){
                     return new JsonResult("重复收藏了！");
                 }

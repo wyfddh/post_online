@@ -1,5 +1,6 @@
 var pageType = "add";
 var hasChild = false;
+console.log(11111);
 var main = {
 
     init: function () {
@@ -74,7 +75,114 @@ var main = {
             })
 
 */
+            if (pageType == 'edit') {
 
+                $('.uploadBtn').css('display','none');
+                var picList = [];
+                this.id = parent.$t.getQueryStringFrame('id');
+                var datas = yc.ajaxGetByParams('collect/getOneCollect', {id: this.id}, null, null);
+                picList = datas.data.attachmentList;
+                $("#picids").val(datas.data.collect.pictureids);
+                for (var i = 0;i < picList.length;i++) {
+                    var picStr1;
+                    if (picList[i].isMain === "1") {
+                        picStr1 = '<div class="img" id="img'+ picList[i].attId +'">'
+                            +'<div class="img1"><img src="'+ picList[i].attPath +'" alt="" ></div>'
+                            +'<div class="img2"><span class="img3" type-isMain = ' + 1 + ' id="span'+ picList[i].attId +'" mark='+ picList[i].attId +' style="color:red">主图</span><span class="img4" mark='+ picList[i].attId +'>删除图片</span></div>'
+                            +'</div>'
+                        $("#isMain").val(picList[i].attId);
+                    } else {
+                        picStr1 = '<div class="img picDiv" id="img'+ picList[i].attId +'">'
+                            +'<div class="img1"><img src="'+ picList[i].attPath +'" alt="" ></div>'
+                            +'<div class="img2"><span class="img3" type-isMain = ' + 0 + ' id="span'+ picList[i].attId +'" mark='+ picList[i].attId +'>更换主图</span><span class="img4" mark='+ picList[i].attId +'>删除图片</span></div>'
+                            +'</div>'
+                    }
+                    $(".uploadBtn").before(picStr1);
+                    $(".showStatus").hide();
+                }
+                var success = datas.success || ''
+                if (success == 1) {
+                    let data = datas.data;
+                    let collect = data.collect;
+                    collect.type = data.type;
+                    collect.sonType = data.sonType;
+                    selectType = collect.typeId;
+                    selectSonType = collect.sonTypeId || null;
+                    property.setForm($("#collectForm"), collect);
+                } else {
+                    errorMsg('页面加载错误，请联系管理员');
+                }
+
+                var typeDatas = property.getDictData('post_collect');
+                /* var typeData = typeDatas.data.map((obj) => {
+                     return {value: obj.id, text: obj.dictName}
+                 });*/
+                // var typeData = typeDatas.data.map(function (obj) {
+                //     return { value: obj.id, text: obj.dictName };
+                // });
+
+                // $.each(typeDatas, function(i, item) {
+                //     console.log(item)
+                // })
+
+                var typeData = $.map(typeDatas, function(obj) {
+                    console.log(obj)
+                    return { value: obj.id, text: obj.dictName };
+                })
+
+                var selects_types = component.getSelect(typeData, selectType, "typeId");
+                console.log('----', selects_types)
+                $("#typeId").html(selects_types);
+                var typeCheck = $("#typeId").val();
+                if (!yc.isNull(typeCheck)) {
+                    var sonTypeId = datas.data.sonTypeId;
+                    var sonTypeData = [];
+                    var sonTypeDatas = yc.ajaxGetByParams('collect/getSysDictListByPid.do', {pid: typeCheck}, null).data || [];
+                    // let sonTypeDatas = yc.ajaxGetByParams('sysDict/getSelectDataByKey.do', {key: 'post_collect_two'}, null);
+                    if (sonTypeDatas.length > 0) {
+                        /* sonTypeData = sonTypeDatas.map((obj) => {
+                             return {value: obj.id, text: obj.dictName}
+                         });*/
+                        sonTypeData = sonTypeDatas.map(function (obj) {
+                            return { value: obj.id, text: obj.dictName };
+                        });
+                    }
+                    var selects_sonTypes = component.getSelect(sonTypeData, sonTypeId, "sonTypeId");
+                    $("#sonTypeId").html(selects_sonTypes);
+                    form.render();
+                }
+
+            } else {
+                // 给type 下拉框赋值
+                var typeDatas = yc.ajaxGetByParams('sysDict/getSelectDataByKey.do', {key: 'post_collect'}, null);
+                /* var typeData = typeDatas.data.map((obj) => {
+                     return {value: obj.id, text: obj.dictName}
+                 });*/
+                var typeData = typeDatas.data.map(function (obj){
+                    return {value: obj.id, text: obj.dictName}
+                });
+                var selects_types = component.getSelect(typeData, selectType, "typeId");
+                $("#typeId").html(selects_types);
+                console.log(selects_types);
+                var typeCheck = $("#typeId").val();
+                if (!yc.isNull(typeCheck)) {
+                    var sonTypeData = [];
+                    var sonTypeDatas = yc.ajaxGetByParams('collect/getSysDictListByPid.do', {pid: typeCheck}, null).data || [];
+                    // let sonTypeDatas = yc.ajaxGetByParams('sysDict/getSelectDataByKey.do', {key: 'post_collect_two'}, null);
+                    if (sonTypeDatas.length > 0) {
+                        /*sonTypeData = sonTypeDatas.map((obj) => {
+                            return {value: obj.id, text: obj.dictName}
+                        });*/
+                        sonTypeData = sonTypeDatas.map(function (obj){
+                            return {value: obj.id, text: obj.dictName}
+                        });
+                    }
+                    var selects_sonTypes = component.getSelect(sonTypeData, null, "sonTypeId");
+                    console.log(selects_sonTypes);
+                    $("#sonTypeId").html(selects_sonTypes);
+                }
+                form.render();
+            }
 
 
         });
@@ -82,86 +190,7 @@ var main = {
 
 
 
-        if (pageType == 'edit') {
 
-            $('.uploadBtn').css('display','none');
-            var picList = [];
-            this.id = parent.$t.getQueryStringFrame('id');
-            var datas = yc.ajaxGetByParams('collect/getOneCollect', {id: this.id}, null, null);
-            picList = datas.data.attachmentList;
-            $("#picids").val(datas.data.collect.pictureids);
-            for (var i = 0;i < picList.length;i++) {
-                var picStr1;
-                if (picList[i].isMain === "1") {
-                    picStr1 = '<div class="img" id="img'+ picList[i].attId +'">'
-                        +'<div class="img1"><img src='+ picList[i].attPath +' alt="" ></div>'
-                        +'<div class="img2"><span class="img3" type-isMain = ' + 1 + ' id="span'+ picList[i].attId +'" mark='+ picList[i].attId +' style="color:red">主图</span><span class="img4" mark='+ picList[i].attId +'>删除图片</span></div>'
-                        +'</div>'
-                    $("#isMain").val(picList[i].attId);
-                } else {
-                    picStr1 = '<div class="img picDiv" id="img'+ picList[i].attId +'">'
-                        +'<div class="img1"><img src='+ picList[i].attPath +' alt="" ></div>'
-                        +'<div class="img2"><span class="img3" type-isMain = ' + 0 + ' id="span'+ picList[i].attId +'" mark='+ picList[i].attId +'>更换主图</span><span class="img4" mark='+ picList[i].attId +'>删除图片</span></div>'
-                        +'</div>'
-                }
-                $(".uploadBtn").before(picStr1);
-                $(".showStatus").hide();
-            }
-            var success = datas.success || ''
-            if (success == 1) {
-                let data = datas.data;
-                let collect = data.collect;
-                collect.type = data.type;
-                collect.sonType = data.sonType;
-                selectType = collect.typeId;
-                selectSonType = collect.sonTypeId || null;
-                property.setForm($("#collectForm"), collect);
-            } else {
-                errorMsg('页面加载错误，请联系管理员');
-            }
-            var typeDatas = yc.ajaxGetByParams('sysDict/getSelectDataByKey.do', {key: 'post_collect'}, null);
-            var typeData = typeDatas.data.map((obj) => {
-                return {value: obj.id, text: obj.dictName}
-            });
-            var selects_types = component.getSelect(typeData, selectType, "typeId");
-            $("#typeId").html(selects_types);
-            var typeCheck = $("#typeId").val();
-            if (!yc.isNull(typeCheck)) {
-                var sonTypeId = datas.data.sonTypeId;
-                var sonTypeData = [];
-                var sonTypeDatas = yc.ajaxGetByParams('collect/getSysDictListByPid.do', {pid: typeCheck}, null).data || [];
-                // let sonTypeDatas = yc.ajaxGetByParams('sysDict/getSelectDataByKey.do', {key: 'post_collect_two'}, null);
-                if (sonTypeDatas.length > 0) {
-                    sonTypeData = sonTypeDatas.map((obj) => {
-                        return {value: obj.id, text: obj.dictName}
-                    });
-                }
-                var selects_sonTypes = component.getSelect(sonTypeData, sonTypeId, "sonTypeId");
-                $("#sonTypeId").html(selects_sonTypes);
-            }
-
-        } else {
-            // 给type 下拉框赋值
-            var typeDatas = yc.ajaxGetByParams('sysDict/getSelectDataByKey.do', {key: 'post_collect'}, null);
-            var typeData = typeDatas.data.map((obj) => {
-                return {value: obj.id, text: obj.dictName}
-            });
-            var selects_types = component.getSelect(typeData, selectType, "typeId");
-            $("#typeId").html(selects_types);
-            var typeCheck = $("#typeId").val();
-            if (!yc.isNull(typeCheck)) {
-                var sonTypeData = [];
-                var sonTypeDatas = yc.ajaxGetByParams('collect/getSysDictListByPid.do', {pid: typeCheck}, null).data || [];
-                // let sonTypeDatas = yc.ajaxGetByParams('sysDict/getSelectDataByKey.do', {key: 'post_collect_two'}, null);
-                if (sonTypeDatas.length > 0) {
-                    sonTypeData = sonTypeDatas.map((obj) => {
-                        return {value: obj.id, text: obj.dictName}
-                    });
-                }
-                var selects_sonTypes = component.getSelect(sonTypeData, null, "sonTypeId");
-                $("#sonTypeId").html(selects_sonTypes);
-            }
-        }
 
         layui.use('form', function () {
             var form = layui.form;
@@ -172,7 +201,10 @@ var main = {
                     var sonTypeDatas = yc.ajaxGetByParams('collect/getSysDictListByPid.do', {pid: typeId}, null).data || [];
                     if(sonTypeDatas.length >0) {
                         hasChild = true;
-                        sonTypeDatas = sonTypeDatas.map((obj) => {
+                        /*sonTypeDatas = sonTypeDatas.map((obj) => {
+                            return {value: obj.id, text: obj.dictName}
+                        });*/
+                        sonTypeDatas = sonTypeDatas.map(function(obj){
                             return {value: obj.id, text: obj.dictName}
                         });
                         var selects_sonTypes = component.getSelect(sonTypeDatas, null, "sonTypeId");

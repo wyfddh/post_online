@@ -87,6 +87,7 @@ function getSelectData(){
         //获取排序方式下拉框
         orderType = property.getDictData('order_by');
         var orderTypeSelect = component.getSelectSimplePlus(orderType, null, 'orderBy', 'dictCode', 'dictName');
+        $("#orderBy").empty();
         $("#orderBy").append(orderTypeSelect);
         form.render('select');
     });
@@ -101,17 +102,19 @@ main.init();
 
 
 function loadTable(that){
+
     layui.use('table', function(){
         var table = layui.table;
         var util = layui.util;
         var name  = $("#nameVague").val();
         var orderBy  = $("#orderBy").val();
         var planTime = $('#planTime').val();
+        var module = localStorage.functinId;
         // var data = returnDatas(null, "exhib/getListExhibition.do");
         table.render({
             elem: '#test',
             //where: where || {},
-            url: property.getProjectPath() + "exhib/getListExhibition.do?name="+name+"&orderBy="+orderBy+"&planTime="+planTime,
+            url: property.getProjectPath() + "exhib/getListExhibition.do?name="+name+"&orderBy="+orderBy+"&planTime="+planTime+"&module="+module,
             request:{
                 pageName: 'currentPage',
                 limitName: 'size'
@@ -155,7 +158,10 @@ function loadTable(that){
                 case 'getCheckData':
                     var data = checkStatus.data;
                     // layer.alert(JSON.stringify(data));
-                    var idsArray = data.map(obj => obj.id) || [];
+                    //var idsArray = data.map(obj => obj.id) || [];
+                    var  idsArray = data.map(function (obj){
+                        return obj.id;
+                    }) || [];
                     if (idsArray.length == 0) {
                         errorMsg('请选择多选框');
                         return ;
@@ -164,10 +170,13 @@ function loadTable(that){
                         parent.layer.confirm('确定要删除么',{icon:3, title:'删除确认'}, function(index){
                             var ids = idsArray.join(',');
                             yc.ajaxGetByParams('exhib/updateExhibByIds.do', {'ids': ids}, null);
-                            top.layer.msg("删除展陈成功");
-                            that.initTable(null);
+                            successMsg("批量删除展陈成功");
+                            loadTable();
+                            //top.layer.msg("删除展陈成功");
+                            //that.initTable(null);
+                            parent.layer.close(index);
                         });
-                        //parent.layer.close(index);
+
                     }
 
                     break;
@@ -184,17 +193,19 @@ function loadTable(that){
         //监听行工具事件
         table.on('tool(test)', function(obj){
             var data = obj.data;
-            //console.log(obj)
             if(obj.event === 'del'){
                 parent.layer.confirm('确定要删除么',{icon:3, title:'删除确认'}, function(index){
                     var delId = obj.data.id;
                     yc.ajaxGetByParams('exhib/updateExhibByIds.do', {'ids': delId}, null);
-                    top.layer.msg("删除展陈成功");
+                    successMsg("删除展陈成功");
+                    loadTable();
+                    //top.layer.msg("删除展陈成功");
                     //layer.close(index);
                     // _this.initTable(JSON.stringify(json))
-                    that.initTable(null);
+                    //that.initTable(null);
+                    parent.layer.close(index);
                 });
-                parent.layer.close(index);
+
             } else if(obj.event === 'edit'){
                 localStorage.ExhibType = "edit";
                 localStorage.ExhibId = data.id;

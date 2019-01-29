@@ -18,13 +18,14 @@ var main = {
     })
   },
   initTable: function () {
+      var  module = localStorage.functinId;
     var _this = this;
     layui.use(['form', 'table'], function () {
       var table = layui.table,
           form = layui.form;
       var tableIns = table.render({
         elem: '#applyList'
-        , url: projectName + '/postLiteratureProcess/postLiteratureProcessList.do'
+        , url: projectName + '/postLiteratureProcess/postLiteratureProcessList.do?module='+module
         , request:{
           pageName: 'currentPage',
           limitName: 'size'
@@ -203,7 +204,7 @@ var main = {
                   success:function(result) {
                     if (result.success == "1") {
                       successMsg("批量审批成功！");
-                    } else {
+                    } else if (result.success == 0){
                       var resultMsg = result.error.message;
                       errorMsg(resultMsg);
                     }

@@ -60,7 +60,7 @@ function loadData(id) {
             success:function(result) {
                 if (result.success == 1) {
                     setFormData(result.data);
-                } else {
+                } else if (result.success == 0){
                     errorMsg(result.error.message);
                 }
             },
@@ -94,7 +94,7 @@ function setFormData(data) {
             if (result.success == 1) {
                 var data = result.data;
                 $("#parentid").val(data.departmentName).attr("data-id",data.departmentId);
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.error.message);
             }
         },

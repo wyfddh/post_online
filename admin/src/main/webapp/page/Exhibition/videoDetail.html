@@ -2,6 +2,7 @@
 <html>
 <head>
     <script src="../../statics/libs/jquery-1.10.2.min.js"></script>
+    <script src="../../statics/js/jquery.extend.js"></script>
     <link rel="stylesheet" href="../../statics/css/font-awesome.min.css">
     <!--layui ztree样式-->
     <link rel="stylesheet" href="../../statics/plugins/layui/css/layui.css" media="all">
@@ -58,7 +59,7 @@
                             <li class="layui-row">
                                 <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">*展陈名称</div>
                                 <div class="layui-form-item m0 layui-col-md6 layui-col-sm6">
-                                    <input type="text" name="exhibName" autocomplete="off" class="layui-input">
+                                    <input readonly="readonly" type="text" name="exhibName" autocomplete="off" class="layui-input">
                                 </div>
                             </li>
                             <li class="layui-row">
@@ -130,7 +131,7 @@
             <div class="cardOne mt24">
                 <div class="title">
                     <img src="" alt=""><span>展厅信息</span>
-                    <div class="layui-row" style="height: 250px">
+                    <div class="layui-row" style="min-height: 250px">
                         <div class="layui-col-md10 layui-col-sm10">
                             <table class="layui-table" id="tableRoom" lay-filter="tableRoom"></table>
                         </div>
@@ -142,7 +143,7 @@
 
                     </div>
                     <div class="mt24">
-                        <div class="layui-row" style="height: 250px">
+                        <div class="layui-row" style="min-height: 250px">
                             <div class="layui-col-md10 layui-col-sm10">
                                 <table class="layui-table" id="test1" lay-filter="test"></table>
                                 <script type="text/html" id="barDemo1">
@@ -161,11 +162,11 @@
 
                     </div>
                     <div class="mt24">
-                        <div class="layui-row" style="height: 250px">
+                        <div class="layui-row" style="min-height: 250px">
                             <div class="layui-col-md10 layui-col-sm10">
                                 <table class="layui-table" id="test2" lay-filter="test"></table>
                                 <script type="text/html" id="barDemo2">
-                                    <a class="layui-btn layui-btn-xs" lay-event="edit">查看</a>
+                                    <!--<a class="layui-btn layui-btn-xs" lay-event="edit">查看</a>-->
                                     <!--<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>-->
                                 </script>
                             </div>
@@ -181,11 +182,11 @@
 
                     </div>
                     <div class="mt24">
-                        <div class="layui-row" style="height: 250px">
+                        <div class="layui-row" style="min-height: 250px">
                             <div class="layui-col-md10 layui-col-sm10">
                                 <table class="layui-table" id="videoDemo" lay-filter="videoDemo"></table>
                                 <script type="text/html" id="barDemo">
-                                    <a class="layui-btn layui-btn-xs" lay-event="edit">查看</a>
+                                    <a class="layui-btn layui-btn-xs" lay-event="show" title="查看" data-url="page/video/videoShow.html">查看</a>
 
                                 </script>
                             </div>
@@ -202,42 +203,7 @@
                     </div>
                     <div class="mt24">
                         <ul class="imgList">
-                           <!-- <li class="imgItem" data-type="img">
-                                <img src="" alt   ="">
-                                <p class="myfont">开心的托马斯</p>
-                            </li>
-                            <li class="imgItem" data-type="video">
-                                <img src="" alt="">
-                                <p class="myfont">开心的托马斯</p>
-                            </li>
-                            <li class="imgItem" data-type="audio">
-                                <img src="" alt="">
-                                <p class="myfont">开心的托马斯</p>
-                            </li>
-                            <li class="imgItem">
-                                <img src="" alt="">
-                                <p class="myfont">开心的托马斯</p>
-                            </li>
-                            <li class="imgItem">
-                                <img src="" alt="">
-                                <p class="myfont">开心的托马斯</p>
-                            </li>
-                            <li class="imgItem">
-                                <img src="" alt="">
-                                <p class="myfont">开心的托马斯</p>
-                            </li>
-                            <li class="imgItem">
-                                <img src="" alt="">
-                                <p class="myfont">开心的托马斯</p>
-                            </li>
-                            <li class="imgItem">
-                                <img src="" alt="">
-                                <p class="myfont">开心的托马斯</p>
-                            </li>
-                            <li class="imgItem">
-                                <img src="" alt="">
-                                <p class="myfont">开心的托马斯</p>
-                            </li>-->
+
                         </ul>
                     </div>
                 </div>

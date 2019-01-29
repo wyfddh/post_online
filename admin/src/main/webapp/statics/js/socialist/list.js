@@ -2,6 +2,7 @@
  * author: zhangwei
  * 社教管理列表
  */
+var userList = property.getAllUserList();
 var main = {
 
     init: function() {
@@ -97,9 +98,10 @@ function loadTable(){
         var table = layui.table;
         var socialName = $("#socialName").val();
         var  orderBy = $("#orderBy").val();
+        var module = localStorage.functinId;
         var tableObj = table.render({
             elem: '#test'
-            ,url:property.getProjectPath()+"postsocial/getSocialList.do?keywords="+socialName+"&orderBy="+orderBy
+            ,url:property.getProjectPath()+"postsocial/getSocialList.do?keywords="+socialName+"&orderBy="+orderBy+"&module="+module
             ,request:{
                 pageName: 'currentPage',
                 limitName: 'size'
@@ -116,7 +118,9 @@ function loadTable(){
                 ,{field:'cooperationUnit', title:'合作单位'}
                 ,{field:'holdTime', title:'举办时间',templet:function(data){
                         return  formatSimpleDate(data.holdTime);}}
-                ,{field:'creator', title:'提交人'}
+                ,{field:'creator', title:'提交人',templet: function(res){
+                    return property.getTextByValuePlus(userList,res.creator,"id","name");
+                }}
                 ,{field:'remark', title:'备注'}
                 ,{title:'操作', toolbar: '#barDemo', width:200}
             ]]
@@ -139,9 +143,9 @@ function loadTable(){
                         url:property.getProjectPath()+"postsocial/deleteSocial.do",
                         success:function(result) {
                             if (result.success == 1) {
-                                errorMsg("删除社教成功");
+                                successMsg("删除社教成功");
                                 loadTable();
-                            } else {
+                            } else if (result.success == 0){
                                 //top.layer.msg(result.error.message);
                                 errorMsg("删除社教失败");
                             }
@@ -191,9 +195,9 @@ function loadTable(){
                             url:property.getProjectPath()+"postsocial/batchRemoves.do",
                             success:function(result) {
                                 if (result.success == 1) {
-                                    errorMsg("批量删除社教成功");
+                                    successMsg("批量删除社教成功");
                                     loadTable();
-                                } else {
+                                } else if (result.success == 0){
                                     //top.layer.msg(result.error.message);
                                     errorMsg("批量删除操作失败");
                                 }

@@ -7,7 +7,6 @@ var editIndex;
 var main = {
 
     init: function() {
-        debugger
         pageType = localStorage.HomeType;
 
         if(pageType == 'edit') {
@@ -53,13 +52,11 @@ var main = {
                     url: property.getProjectPath()+"/attach/uploadEditPic.do?projectName=informationEditPic",
                     type:"post",
                     xhr:function () {
-                        console.log(111);
                     }
                 }
             });
             //监听提交
             form.on('submit(formDemo)', function(data) {
-                debugger
                 layedit.sync(editIndex);
                 var url = "collecthome/saveCollectHome.do";
                 if (pageType == "edit"){
@@ -80,7 +77,7 @@ var main = {
                                 successMsg("添加集邮之家成功");
                             }
                             parent.$t.goback("page/public/stamp/list.html");
-                        } else {
+                        } else if (result.success == 0){
                             //top.layer.msg(result.error.message);
                             errorMsg("操作集邮之家数据异常");
                         }
@@ -166,7 +163,7 @@ function loadData(id) {
             success:function(result) {
                 if (result.success == 1) {
                     setFormData(result.data);
-                } else {
+                } else if (result.success == 0){
                     //top.layer.msg(result.error.message);
                     errorMsg("系统异常");
                 }

@@ -97,10 +97,12 @@ public class FtpUtil {
 			// 创建文件夹
 			String[] dirs = path.replace(File.separator, "/").split("/");
 			if (dirs != null && dirs.length > 0)// 目录路径都为英文,故不需要转码
+			{
 				for (String dir : dirs) {
 					ftp.makeDirectory(dir);
 					ftp.changeWorkingDirectory(dir);
 				}
+			}
 			ftp.storeFile(new String(fileName.getBytes("UTF-8"), "iso-8859-1"), file);
 			file.close();
 			ftp.logout();

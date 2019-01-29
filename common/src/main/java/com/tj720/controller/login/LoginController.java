@@ -6,6 +6,7 @@ import javax.servlet.http.HttpSession;
 
 import com.tj720.controller.base.controller.BaseController;
 import com.tj720.controller.framework.JsonResult;
+import com.tj720.controller.framework.auth.ControllerAop;
 import com.tj720.controller.springbeans.Config;
 import com.tj720.model.common.LoginDto;
 import com.tj720.model.common.system.user.MipUser;
@@ -41,6 +42,7 @@ public class LoginController extends BaseController {
 	 * 后台退出登录
 	 */
 	@RequestMapping("/back/loginOut.do")
+	@ControllerAop(action = "后台退出登录")
 	public String loginOut() {
 		String uid = MyCookie.getCookie(Const.COOKIE_USERID, false, request);
 		MyCookie.deleteCookie(Const.COOKIE_TOKEN, request, response);
@@ -70,10 +72,10 @@ public class LoginController extends BaseController {
 					MipUser user = users.get(0);
 					model.setId(user.getId());
 					if (user.getStatus() == 0) {
-						return new JsonResult(-1, "该账号已被停用！");
+						return new JsonResult(0, "该账号已被停用！");
 					}
 					if (user.getIsdelete() == 1) {
-						return new JsonResult(-1, "用户名或密码错误！");
+						return new JsonResult(0, "用户名或密码错误！");
 					}
 					String encrytMD5 = MD5.encrytMD5(model.getPassword());
 					if (!MyString.isEmpty(user.getPassword())

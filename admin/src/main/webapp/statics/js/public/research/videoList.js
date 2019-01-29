@@ -130,7 +130,7 @@ function reloadTable(){
                         return util.toDateString(res.createTime, 'yyyy-MM-dd HH:mm');
                     }
                 }
-                ,{field:'title', title:'资讯主题'}
+                ,{field:'title', title:'学术研究主题'}
                 ,{title:'操作', toolbar: '#barDemo', }
             ]]
             ,page: true
@@ -141,7 +141,10 @@ function reloadTable(){
             switch(obj.event){
                 case 'getCheckData':
                     var data = checkStatus.data;
-                    var ids = data.map(obj => obj.id);
+                    //var ids = data.map(obj => obj.id);
+                    var  ids = data.map(function (obj) {
+                        return  obj.id;
+                    });
                     var length = ids.length;
                     if (length <= 0) {
                         errorMsg('请勾选要删除的藏品信息');
@@ -170,7 +173,6 @@ function reloadTable(){
         //监听行工具事件
         table.on('tool(test)', function(obj){
             var data = obj.data;
-            //console.log(obj)
             if(obj.event === 'del'){
                 var id = obj.data.id;
                 layer.confirm('确定要删除么',{icon:3, title:'删除确认'}, function(index){

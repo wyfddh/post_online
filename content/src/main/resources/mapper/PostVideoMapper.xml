@@ -629,27 +629,8 @@
   end as other3
   from
   (
-<!--   查询本部门影视资料列表-->
-  select
-  <include refid="Base_Column_List"/>
-  FROM post_video where 1=1
-  <if test="keywords != null and keywords != ''">
-    and (video_name like concat('%',#{keywords},'%')
-    or video_code like concat('%',#{keywords},'%')
-    or relative_collection like concat('%',#{keywords},'%')
-    )
-  </if>
-  <if test="videoMark != null and videoMark != ''">
-    and video_mark = #{videoMark}
-  </if>
-  <if test="status != null and status != ''">
-    and status = #{status}
-  </if>
-  <if test="uploadOrg != null and uploadOrg !=''">
-    and upload_org = #{uploadOrg}
-  </if>
-  UNION
   <!--查询当前申请人影视资料列表-->
+
   select
   <include refid="Base_Column_List"/>
   from post_video
@@ -669,7 +650,36 @@
   <if test="userId != null and userId !=''">
     and other1 = #{userId}
   </if>
+  union
+    <!--   查询本部门影视资料列表-->
+    select
+    <include refid="Base_Column_List"/>
+    FROM post_video where 1=1
+    <if test="keywords != null and keywords != ''">
+      and (video_name like concat('%',#{keywords},'%')
+      or video_code like concat('%',#{keywords},'%')
+      or relative_collection like concat('%',#{keywords},'%')
+      )
+    </if>
+    <if test="videoMark != null and videoMark != ''">
+      and video_mark = #{videoMark}
+    </if>
+    <if test="status != null and status != ''">
+      and status = #{status}
+    </if>
+    <if test="uploadOrg != null and uploadOrg !=''">
+      and upload_org = #{uploadOrg}
+    </if>
   ) t
+  where 1=1
+  <if test="dataRule == 1">
+    and (t.approval = #{userId}
+    or t.creator =  #{userId}
+    )
+  </if>
+  <if test="dataRule == 2">
+    and t.upload_org = #{orgId}
+  </if>
   order by
   t.sequence,
   t.update_time desc
@@ -680,9 +690,9 @@
 
   select count(1) from
   (
-    <!--查询本部门影视资料列表-->
+  <!--查询当前申请人影视资料列表-->
     select
-    <include refid="Base_Column_List" />
+    <include refid="Base_Column_List"/>
     from post_video
     where 1=1
     <if test="keywords != null and keywords != ''">
@@ -691,37 +701,45 @@
       or relative_collection like concat('%',#{keywords},'%')
       )
     </if>
-  <if test="videoMark != null and videoMark != ''">
-    and video_mark = #{videoMark}
-  </if>
-    <if test="status != null and status != ''">
-      and status = #{status}
+    <if test="videoMark != null and videoMark != ''">
+      and video_mark = #{videoMark}
     </if>
-    <if test="uploadOrg != null and uploadOrg !=''">
-      and upload_org = #{uploadOrg}
-    </if>
-    union
-    <!--查询当前申请人影视资料列表-->
-    select
-    <include refid="Base_Column_List" />
-    from post_video
-    where 1=1
-    <if test="keywords != null and keywords != ''">
-      and (video_name like concat('%',#{keywords},'%')
-      or video_code like concat('%',#{keywords},'%')
-      or relative_collection like concat('%',#{keywords},'%')
-      )
-    </if>
-  <if test="videoMark != null and videoMark != ''">
-    and video_mark = #{videoMark}
-  </if>
     <if test="status != null and status != ''">
       and status = #{status}
     </if>
     <if test="userId != null and userId !=''">
       and other1 = #{userId}
     </if>
+    union
+    <!--   查询本部门影视资料列表-->
+    select
+    <include refid="Base_Column_List"/>
+    FROM post_video where 1=1
+    <if test="keywords != null and keywords != ''">
+      and (video_name like concat('%',#{keywords},'%')
+      or video_code like concat('%',#{keywords},'%')
+      or relative_collection like concat('%',#{keywords},'%')
+      )
+    </if>
+    <if test="videoMark != null and videoMark != ''">
+      and video_mark = #{videoMark}
+    </if>
+    <if test="status != null and status != ''">
+      and status = #{status}
+    </if>
+    <if test="uploadOrg != null and uploadOrg !=''">
+      and upload_org = #{uploadOrg}
+    </if>
   )t
+  where 1=1
+  <if test="dataRule == 1">
+    and (t.approval = #{userId}
+    or t.creator =  #{userId}
+    )
+  </if>
+  <if test="dataRule == 2">
+    and t.upload_org = #{orgId}
+  </if>
 </select>
 
   <select id="countVedilListForCompreQuery" parameterType="java.util.Map" resultType="java.lang.Integer">
@@ -789,27 +807,7 @@
     end as other3
     from
     (
-    <!--   查询本部门影视资料列表-->
-    select
-    <include refid="Base_Column_List"/>
-    from post_video
-    where 1=1
-    <if test="keywords != null and keywords != ''">
-      and (video_name like concat('%',#{keywords},'%')
-      or video_code like concat('%',#{keywords},'%')
-      or relative_collection like concat('%',#{keywords},'%')
-      )
-    </if>
-    <if test="videoMark != null and videoMark != ''">
-      and video_mark = #{videoMark}
-    </if>
-    <if test="status != null and status != ''">
-      and status = #{status}
-    </if>
-    <if test="uploadOrg != null and uploadOrg !=''">
-      and upload_org = #{uploadOrg}
-    </if>
-    UNION
+
     <!--查询当前审批人影视资料列表-->
     select
     <include refid="Base_Column_List"/>
@@ -825,13 +823,46 @@
       and video_mark = #{videoMark}
     </if>
     and (status = '3' or status = '4')
+
     <if test="status != null and status != ''">
       and status = #{status}
     </if>
     <if test="userId != null and userId !=''">
-      and approval = #{userId}
+      and (approval = #{userId}
+      or creator =  #{userId}
+      )
     </if>
+    union
+      <!--   查询本部门影视资料列表-->
+      select
+      <include refid="Base_Column_List"/>
+      from post_video
+      where 1=1
+      <if test="keywords != null and keywords != ''">
+        and (video_name like concat('%',#{keywords},'%')
+        or video_code like concat('%',#{keywords},'%')
+        or relative_collection like concat('%',#{keywords},'%')
+        )
+      </if>
+      <if test="videoMark != null and videoMark != ''">
+        and video_mark = #{videoMark}
+      </if>
+      <if test="status != null and status != ''">
+        and status = #{status}
+      </if>
+      <if test="uploadOrg != null and uploadOrg !=''">
+        and upload_org = #{uploadOrg}
+      </if>
     ) t
+    where 1=1
+    <if test="dataRule == 1">
+      and (t.approval = #{userId}
+      or t.creator =  #{userId}
+      )
+    </if>
+    <if test="dataRule == 2">
+      and t.upload_org = #{orgId}
+    </if>
     order by
     t.sequence,
     t.update_time desc
@@ -844,27 +875,6 @@
     select count(1)
     from
     (
-    <!--   查询本部门影视资料列表-->
-    select
-    <include refid="Base_Column_List"/>
-    from post_video
-    where 1=1
-    <if test="keywords != null and keywords != ''">
-      and (video_name like concat('%',#{keywords},'%')
-      or video_code like concat('%',#{keywords},'%')
-      or relative_collection like concat('%',#{keywords},'%')
-      )
-    </if>
-    <if test="videoMark != null and videoMark != ''">
-      and video_mark = #{videoMark}
-    </if>
-    <if test="status != null and status != ''">
-      and status = #{status}
-    </if>
-    <if test="uploadOrg != null and uploadOrg !=''">
-      and upload_org = #{uploadOrg}
-    </if>
-    UNION
     <!--查询当前审批人影视资料列表-->
     select
     <include refid="Base_Column_List"/>
@@ -879,11 +889,45 @@
     <if test="videoMark != null and videoMark != ''">
       and video_mark = #{videoMark}
     </if>
-      and (status = '3' or status = '4')
+    and (status = '3' or status = '4')
     <if test="userId != null and userId !=''">
-      and approval = #{userId}
+      and
+      (
+      approval = #{userId}
+      or creator = #{userId}
+      )
     </if>
+    union
+      <!--   查询本部门影视资料列表-->
+      select
+      <include refid="Base_Column_List"/>
+      from post_video
+      where 1=1
+      <if test="keywords != null and keywords != ''">
+        and (video_name like concat('%',#{keywords},'%')
+        or video_code like concat('%',#{keywords},'%')
+        or relative_collection like concat('%',#{keywords},'%')
+        )
+      </if>
+      <if test="videoMark != null and videoMark != ''">
+        and video_mark = #{videoMark}
+      </if>
+      <if test="status != null and status != ''">
+        and status = #{status}
+      </if>
+      <if test="uploadOrg != null and uploadOrg !=''">
+        and upload_org = #{uploadOrg}
+      </if>
     ) t
+    where 1=1
+    <if test="dataRule == 1">
+      and (t.approval = #{userId}
+      or t.creator =  #{userId}
+      )
+    </if>
+    <if test="dataRule == 2">
+      and t.upload_org = #{orgId}
+    </if>
   </select>
 
 
@@ -932,7 +976,6 @@
     <if test="keywords != null and keywords != ''">
       and (b.video_name like concat('%',#{keywords},'%')
       or b.video_code like concat('%',#{keywords},'%')
-
       )
     </if>
     <if test="source != null and source != ''">
@@ -1014,7 +1057,7 @@
     from post_video p
     where
     getOrgPid(p.upload_org) = getOrgPid(#{uploadOrg})
-    and p.auth_setting != '1'
+    and  (p.status != '1' and p.status != '5')
     <if test="keywords != null and keywords != ''">
       and (p.video_name like concat('%',#{keywords},'%')
       or p.video_code like concat('%',#{keywords},'%')
@@ -1028,6 +1071,14 @@
       and p.status = #{status}
     </if>
     ) t
+    where 1=1
+    <!--录入人数据权限-->
+    <if test="dataRule == 1">
+       and t.other1 = #{userId}
+    </if>
+    <if test="dataRule == 2">
+      and getOrgPid(t.upload_org) = getOrgPid(#{orgId})
+    </if>
     order by
     t.update_time desc
     limit #{currentPage},#{size}
@@ -1064,7 +1115,7 @@
     from post_video p
     where
     getOrgPid(p.upload_org) = getOrgPid(#{uploadOrg})
-    and p.auth_setting != '1'
+    and (p.status != '1' and p.status != '5')
     <if test="keywords != null and keywords != ''">
       and (p.video_name like concat('%',#{keywords},'%')
       or p.video_code like concat('%',#{keywords},'%')
@@ -1078,6 +1129,14 @@
       and p.status = #{status}
     </if>
     ) t
+    where 1=1
+    <!--录入人数据权限-->
+    <if test="dataRule == 1">
+      and t.other1 = #{userId}
+    </if>
+    <if test="dataRule == 2">
+      and getOrgPid(t.upload_org) = getOrgPid(#{orgId})
+    </if>
   </select>
 
   <select id="getPostVideoQueryListPlus" parameterType="java.util.HashMap" resultMap="BaseResultMap">
@@ -1085,9 +1144,15 @@
     <include refid="Base_Column_List1"/>
     ,'0' as other3
     from post_video
-    where status = '4'
-    and
-    (auth_setting != '1' or (auth_setting = '1' and getOrgPid(upload_org) = getOrgPid(#{uploadOrg})))
+    where
+    (
+          ( auth_setting != '1' and status = '4')
+          <!--若不需要展示本部门非草稿的数据，则去除此判断-->
+          or (auth_setting = '1'
+            and (status != '1' and status != '5')
+            and getOrgPid(upload_org) = getOrgPid(#{uploadOrg})
+          )
+    )
     <if test="keywords != null and keywords != ''">
       and (video_name like concat('%',#{keywords},'%')
       or video_code like concat('%',#{keywords},'%')
@@ -1099,6 +1164,13 @@
     </if>
     <if test="status != null and status != ''">
       and status = #{status}
+    </if>
+    <!--录入人数据权限-->
+    <if test="dataRule == 1">
+      and other1 = #{userId}
+    </if>
+    <if test="dataRule == 2">
+      and getOrgPid(t.upload_org) = getOrgPid(#{orgId})
     </if>
     order by
     update_time desc
@@ -1109,8 +1181,15 @@
     select
     count(1)
     from post_video
-    where status = '4'
-    and auth_setting != '1'
+    where
+    (
+      ( auth_setting != '1' and status = '4')
+      <!--若不需要展示本部门非草稿的数据，则去除此判断-->
+      or (auth_setting = '1'
+      and (status != '1' and status != '5')
+      and getOrgPid(upload_org) = getOrgPid(#{uploadOrg})
+      )
+    )
     <if test="keywords != null and keywords != ''">
       and (video_name like concat('%',#{keywords},'%')
       or video_code like concat('%',#{keywords},'%')
@@ -1123,7 +1202,13 @@
     <if test="status != null and status != ''">
       and status = #{status}
     </if>
-
+    <!--录入人数据权限-->
+    <if test="dataRule == 1">
+      and other1 = #{userId}
+    </if>
+    <if test="dataRule == 2">
+      and getOrgPid(t.upload_org) = getOrgPid(#{orgId})
+    </if>
   </select>
 
   <select id="getQueryVideoList" parameterType="java.util.HashMap" resultType="com.tj720.model.common.video.QueryVideoDto">
@@ -1148,14 +1233,24 @@
       <if test="keywords != null and keywords!= ''">
         and
         (b.video_name like concat('%',#{keywords},'%')
-        or a.apply  like concat('%',#{keywords},'%')
-          )
+        or a.apply
+        in (select s.id from sys_user s where
+        s.name like concat('%',#{keywords},'%')
+        )
+        )
       </if>
       <if test="applyOrg != null and applyOrg != ''">
         and a.apply_org = #{applyOrg}
       </if>
       <if test="applyStatus != null and applyStatus != ''">
         and a.apply_status = #{applyStatus}
+      </if>
+
+      <if test="dataRule == 1">
+        and apply = #{apply}
+      </if>
+      <if test="dataRule == 2">
+        and getOrgPid(a.apply_org) = getOrgPid(#{orgId})
       </if>
       order by
       a.update_time desc
@@ -1174,7 +1269,10 @@
     <if test="keywords != null and keywords!= ''">
       and
       (b.video_name like concat('%',#{keywords},'%')
-      or a.apply  like concat('%',#{keywords},'%')
+      or a.apply
+      in (select s.id from sys_user s where
+      s.name like concat('%',#{keywords},'%')
+      )
       )
     </if>
     <if test="applyOrg != null and applyOrg != ''">
@@ -1182,6 +1280,13 @@
     </if>
     <if test="applyStatus != null and applyStatus != ''">
       and a.apply_status = #{applyStatus}
+    </if>
+
+    <if test="dataRule == 1">
+      and apply = #{userId}
+    </if>
+    <if test="dataRule == 2">
+      and getOrgPid(a.apply_org) = getOrgPid(#{orgId})
     </if>
 
   </select>
@@ -1210,7 +1315,10 @@
     <if test="keywords != null and keywords!= ''">
       and
       (b.video_name like concat('%',#{keywords},'%')
-      or a.apply  like concat('%',#{keywords},'%')
+      or a.apply
+      in (select s.id from sys_user s where
+      s.name like concat('%',#{keywords},'%')
+      )
       )
     </if>
     <if test="applyOrg != null and applyOrg != ''">
@@ -1236,7 +1344,10 @@
     <if test="keywords != null and keywords!= ''">
       and
       (b.video_name like concat('%',#{keywords},'%')
-      or a.apply  like concat('%',#{keywords},'%')
+      or a.apply
+      in (select s.id from sys_user s where
+      s.name like concat('%',#{keywords},'%')
+      )
       )
     </if>
     <if test="applyOrg != null and applyOrg != ''">
@@ -1245,20 +1356,17 @@
     <if test="applyStatus != null and applyStatus != ''">
       and a.apply_status = #{applyStatus}
     </if>
-    order by
-    a.update_time desc
-
   </select>
   <!--查询关键词列表-->
   <select id="queryKeywordsList" parameterType="java.util.HashMap" resultType="java.util.HashMap">
     select t.keywords,count(1) as videoCount
     from (
-           select a.id,substring_index(substring_index(a.keywords, ',', b.help_topic_id + 1), ',', -1) keywords
+           select a.id,substring_index(substring_index(a.keywords, '；', b.help_topic_id + 1), '；', -1) keywords
            from post_video a
                   join
-                  mysql.help_topic b
+                  help_topic b
                   on
-                    (b.help_topic_id &lt; (length(a.keywords) - length(replace(a.keywords, ',', '')) + 1)
+                    (b.help_topic_id &lt; (length(a.keywords) - length(replace(a.keywords, '；', '')) + 1)
                       and a.keywords is not null and a.keywords != ''
                       )
            where a.keywords is not null
@@ -1272,112 +1380,125 @@
     select count(1) from (
     select t.keywords,count(1) as videoCount
     from (
-      select a.id,substring_index(substring_index(a.keywords,',',b.help_topic_id+1),',',-1) keywords
-      from post_video a join
-      mysql.help_topic b
-       on (b.help_topic_id &lt; (length(a.keywords) - length(replace(a.keywords, ',', '')) + 1)
-        and a.keywords is not null and a.keywords != ''
-        )
-      order by a.id
-      ) t GROUP BY t.keywords
+           select a.id,substring_index(substring_index(a.keywords, '；', b.help_topic_id + 1), '；', -1) keywords
+           from post_video a
+                  join
+                  help_topic b
+                  on
+                    (b.help_topic_id &lt; (length(a.keywords) - length(replace(a.keywords, '；', '')) + 1)
+                      and a.keywords is not null and a.keywords != ''
+                      )
+           where a.keywords is not null
+           order by a.id
+         ) t
+    GROUP BY t.keywords
     ) s
   </select>
 
   <select id="getVideoCjTable" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-        SELECT
-        case
-        when
-        t.dict_code = 'T' then '图片'
-        when
-        t.dict_code = 'S' then '视频'
-        when
-        t.dict_code = 'Y' then '音频'
-        else p.save_type
-        end
-        as 'saveType'
-    ,
-        CASE
-    WHEN p.video_type = 'W' THEN
-        count(1)
-    ELSE
-        0
-    END AS 'W',
-     CASE
-    WHEN p.video_type = 'Z' THEN
-        count(1)
-    ELSE
-        0
-    END AS 'Z',
-     CASE
-    WHEN p.video_type = 'S' THEN
-        count(1)
-    ELSE
-        0
-    END AS 'S',
-     CASE
-    WHEN p.video_type = 'P' THEN
-        count(1)
-    ELSE
-        0
-    END AS 'P',
-     CASE
-    WHEN p.video_type = 'B' THEN
-        count(1)
-    ELSE
-        0
-    END AS 'B',
-     CASE
-    WHEN p.video_type = 'Q' THEN
-        count(1)
-    ELSE
-        0
-    END AS 'Q'
+    SELECT
+    '图片' AS 'saveType',
+    count(if(p.video_type='W',true,null)) as 'W',
+    count(if(p.video_type='Z',true,null)) as 'Z',
+    count(if(p.video_type='S',true,null)) as 'S',
+    count(if(p.video_type='P',true,null)) as 'P',
+    count(if(p.video_type='B',true,null)) as 'B',
+    count(if(p.video_type='Q',true,null)) as 'Q'
     FROM
-        post_video p
-    RIGHT JOIN sys_dict t on
-    (
-    p.save_type = t.dict_code
+    post_video p
+    WHERE
+    p.save_type = 'T'
     <if test="status != null and status !=''">
       and p.status = #{status}
     </if>
     <if test="startTime != null and startTime !=''">
       and left(p.update_time,10) BETWEEN #{startTime} and #{endTime}
     </if>
-    )
-    where t.dict_type = 'video_save_type'
-
-    GROUP BY
-        t.dict_code
+    union
+    SELECT
+    '视频' AS 'saveType',
+    count(if(p.video_type='W',true,null)) as 'W',
+    count(if(p.video_type='Z',true,null)) as 'Z',
+    count(if(p.video_type='S',true,null)) as 'S',
+    count(if(p.video_type='P',true,null)) as 'P',
+    count(if(p.video_type='B',true,null)) as 'B',
+    count(if(p.video_type='Q',true,null)) as 'Q'
+    FROM
+    post_video p
+    WHERE
+    p.save_type = 'S'
+    <if test="status != null and status !=''">
+      and p.status = #{status}
+    </if>
+    <if test="startTime != null and startTime !=''">
+      and left(p.update_time,10) BETWEEN #{startTime} and #{endTime}
+    </if>
+    union
+    SELECT
+    '音频' AS 'saveType',
+    count(if(p.video_type='W',true,null)) as 'W',
+    count(if(p.video_type='Z',true,null)) as 'Z',
+    count(if(p.video_type='S',true,null)) as 'S',
+    count(if(p.video_type='P',true,null)) as 'P',
+    count(if(p.video_type='B',true,null)) as 'B',
+    count(if(p.video_type='Q',true,null)) as 'Q'
+    FROM
+    post_video p
+    WHERE
+    p.save_type = 'Y'
+    <if test="status != null and status !=''">
+      and p.status = #{status}
+    </if>
+    <if test="startTime != null and startTime !=''">
+      and left(p.update_time,10) BETWEEN #{startTime} and #{endTime}
+    </if>
   </select>
 
   <select id="getVideoCjPie" parameterType="java.util.HashMap" resultType="java.util.HashMap">
     SELECT
-    CASE
-    WHEN t.dict_code = 'T' THEN
     '图片'
-    WHEN t.dict_code = 'S' THEN
-    '视频'
-    WHEN t.dict_code = 'Y' THEN
-    '音频'
-    ELSE
-    p.save_type
-    END AS 'name',
+    AS 'name',
     count(p.save_type) AS 'value'
     FROM
     post_video p
-    RIGHT JOIN sys_dict t ON (
-    p.save_type = t.dict_code
+    WHERE
+    p.save_type = 'T'
     <if test="status != null and status !=''">
       and p.status = #{status}
     </if>
     <if test="startTime != null and startTime !=''">
       and left(p.update_time,10) BETWEEN #{startTime} and #{endTime}
     </if>
-    )
+    UNION
+    SELECT
+    '视频'
+    AS 'name',
+    count(p.save_type) AS 'value'
+    FROM
+    post_video p
     WHERE
-    t.dict_type = 'video_save_type'
-    GROUP BY
-    t.dict_code
+    p.save_type = 'S'
+    <if test="status != null and status !=''">
+      and p.status = #{status}
+    </if>
+    <if test="startTime != null and startTime !=''">
+      and left(p.update_time,10) BETWEEN #{startTime} and #{endTime}
+    </if>
+    UNION
+    SELECT
+    '音频'
+    AS 'name',
+    count(p.save_type) AS 'value'
+    FROM
+    post_video p
+    WHERE
+    p.save_type = 'Y'
+    <if test="status != null and status !=''">
+      and p.status = #{status}
+    </if>
+    <if test="startTime != null and startTime !=''">
+      and left(p.update_time,10) BETWEEN #{startTime} and #{endTime}
+    </if>
   </select>
 
 
@@ -1502,13 +1623,7 @@
 
   <select id="getVideoCxTable" parameterType="java.util.HashMap" resultType="java.util.HashMap">
     SELECT
-    case when
-    s.dict_code = '2'
-    then '申请'
-    when s.dict_code = '4'
-    then '下载'
-    end as type
-    ,
+    '申请' AS type,
     count(
     CASE
     WHEN t.action_name = '1' THEN
@@ -1551,61 +1666,128 @@
     ) AS 'qt'
     FROM
     wf_action t
-    RIGHT JOIN sys_dict s
-    on (
-    s.dict_code = t.apply_status
-    and t.party_type = '2'
-    <if test="startTime != null and startTime !=''">
-      and left(t.update_time,10) BETWEEN #{startTime} and #{endTime}
-    </if>
-    )
     WHERE
-    s.dict_type = 'video_status'
-    and s.dict_code != '1' and s.dict_code != '3'
-    and s.dict_code != '5'
-    GROUP BY
-    s.dict_code
+    t.party_type = '2'
+    AND t.apply_status > 0
+    and left(t.update_time,10) BETWEEN #{startTime} and #{endTime}
+    UNION
+    SELECT
+    '下载' AS type,
+    count(
+    CASE
+    WHEN t.action_name = '1' THEN
+    1
+    ELSE
+    NULL
+    END
+    ) AS 'zc',
+    count(
+    CASE
+    WHEN t.action_name = '2' THEN
+    1
+    ELSE
+    NULL
+    END
+    ) AS 'sj',
+    count(
+    CASE
+    WHEN t.action_name = '3' THEN
+    1
+    ELSE
+    NULL
+    END
+    ) AS 'yj',
+    count(
+    CASE
+    WHEN t.action_name = '4' THEN
+    1
+    ELSE
+    NULL
+    END
+    ) AS 'xwfb',
+    count(
+    CASE
+    WHEN t.action_name = '5' THEN
+    1
+    ELSE
+    NULL
+    END
+    ) AS 'qt'
+    FROM
+    wf_action t
+    WHERE
+    t.party_type = '2'
+    AND t.apply_status = '2'
+    and left(t.update_time,10) BETWEEN #{startTime} and #{endTime}
+
   </select>
 
   <select id="getVideoCxPie" parameterType="java.util.HashMap" resultType="java.util.HashMap">
     SELECT
-    CASE
-    WHEN t.dict_code = '1' THEN
-    '展陈'
-    WHEN t.dict_code = '2' THEN
-    '社教'
-    WHEN t.dict_code = '3' THEN
-    '研究'
-    WHEN t.dict_code = '4' THEN
-    '新闻发布'
-    WHEN t.dict_code = '5' THEN
-    '其他'
-    ELSE
-    t.dict_code
-    END AS 'name',
+    '展陈' AS 'name',
     count(p.action_name) AS 'value'
     FROM
     wf_action p
-    RIGHT JOIN sys_dict t ON (
-    p.action_name = t.dict_code
-    <if test="startTime != null and startTime !=''">
-      and left(update_time,10) BETWEEN #{startTime} and #{endTime}
-    </if>
-    )
     WHERE
-    t.dict_type = 'apply_reason'
-    GROUP BY
-    t.dict_code
+    p.party_type = '2'
+    AND p.apply_status > 0
+    AND p.action_name = '1'
+    and left(p.update_time,10) BETWEEN #{startTime} and #{endTime}
+    AND '2019-01-21'
+    UNION
+    SELECT
+    '社教' AS 'name',
+    count(p.action_name) AS 'value'
+    FROM
+    wf_action p
+    WHERE
+    p.party_type = '2'
+    AND p.apply_status > 0
+    AND p.action_name = '2'
+    and left(p.update_time,10) BETWEEN #{startTime} and #{endTime}
+    UNION
+    SELECT
+    '研究' AS 'name',
+    count(p.action_name) AS 'value'
+    FROM
+    wf_action p
+    WHERE
+    p.party_type = '2'
+    AND p.apply_status > 0
+    AND p.action_name = '3'
+    and left(p.update_time,10) BETWEEN #{startTime} and #{endTime}
+    UNION
+    SELECT
+    '新闻发布' AS 'name',
+    count(p.action_name) AS 'value'
+    FROM
+    wf_action p
+    WHERE
+    p.party_type = '2'
+    AND p.apply_status > 0
+    AND p.action_name = '4'
+    and left(p.update_time,10) BETWEEN #{startTime} and #{endTime}
+    UNION
+    SELECT
+    '其他' AS 'name',
+    count(p.action_name) AS 'value'
+    FROM
+    wf_action p
+    WHERE
+    p.party_type = '2'
+    AND p.apply_status > 0
+    AND p.action_name = '5'
+    and left(p.update_time,10) BETWEEN #{startTime} and #{endTime}
   </select>
 
   <select id="getVideoCxLine" parameterType="java.util.HashMap" resultType="java.util.HashMap">
     select  c.date as updateTime,
-    count(case when p.apply_status = '2'
+    count(case when p.apply_status > 0
     then 1
     else null
     end)
     as '申请',
-    count(case when p.apply_status = '4'
+    count(case when p.apply_status = '2'
     then 1
     else null
     end)
@@ -1616,6 +1798,7 @@
     on(
     c.date = left(p.update_time,10)
     and left(p.update_time,10) between #{startTime} and #{endTime}
+    and p.party_type = '2'
     )
     where c.date between #{startTime} and #{endTime}
     group by c.date
@@ -1626,12 +1809,12 @@
     getOrgPidName(s.department_id)
     as orgName
     ,
-    count(case when p.apply_status = '2'
+    count(case when p.apply_status > 0
     then 1
     else null
     end)
     as '申请',
-    count(case when p.apply_status = '4'
+    count(case when p.apply_status = '2'
     then 1
     else null
     end)
@@ -1640,6 +1823,7 @@
     wf_action p right JOIN sys_department s
     on
     (p.apply_org = s.department_id
+    and p.party_type = '2'
     <if test="startTime != null and startTime !=''">
       and left(p.update_time,10) BETWEEN #{startTime} and #{endTime}
     </if>
@@ -1655,12 +1839,12 @@
     getUserNameById(s.id)
     as apply
     ,
-    count(case when p.apply_status = '2'
+    count(case when p.apply_status > 0
     then 1
     else null
     end)
     as '申请',
-    count(case when p.apply_status = '4'
+    count(case when p.apply_status = '2'
     then 1
     else null
     end)
@@ -1670,11 +1854,13 @@
     right join sys_user s
     on (
     p.apply = s.id
+    and  p.party_type = '2'
     <if test="startTime != null and startTime !=''">
       and left(p.update_time,10) BETWEEN #{startTime} and #{endTime}
     </if>
     )
     where 1=1
+
     group by getUserNameById(s.id)
     order by count(p.apply_status) desc
     limit 0,10
@@ -1791,22 +1977,34 @@
       end) as Ycount
        from post_video
       where `status` = 4
+      <if test="dataRule == 1">
+        and creator = #{userId}
+      </if>
   </select>
 
   <select id="getVideoOpenCount" resultType="java.lang.Integer">
       select count(1) as openVideoCount from post_video
       where `status` = '4'
       and auth_setting != 1
+    <if test="dataRule == 1">
+      and creator = #{userId}
+    </if>
   </select>
 
   <select id="getVideoCxApply" resultType="java.lang.Integer">
     select count(1) as applyCount from wf_action
     where party_type = '2'
+    <if test="dataRule == 1">
+      and apply = #{userId}
+    </if>
   </select>
   <select id="getVideoCxApproval" resultType="java.lang.Integer">
     select count(1) as approvalCount from wf_action
     where party_type = '2'
     and apply_status = '2'
+    <if test="dataRule == 1">
+      and apply = #{userId}
+    </if>
   </select>
 
   <select id="checkUserOrg" resultType="com.tj720.model.common.system.user.SysUser">
@@ -1864,7 +2062,7 @@
     <include refid="Base_Column_List" />
     from post_video
     where
-    keywords = #{keyId}
+    keywords like concat('%',#{keyId},'%')
   </select>
   <select id="selectByMap" resultMap="BaseResultMap" parameterType="java.util.Map">
     select

@@ -6,12 +6,13 @@ var main = {
   },
   initTable: function () {
     var _this = this;
+    var  module = localStorage.functinId;
     layui.use(['form', 'table'], function () {
       var form = layui.form,
       table = layui.table;
       var tableIns = table.render({
         elem: '#openLiterature'
-        , url: projectName + '/postLiterature/postLiteratureList.do'
+        , url: projectName + '/postLiterature/postLiteratureList.do?module='+module
         , request:{
           pageName: 'currentPage',
           limitName: 'size'

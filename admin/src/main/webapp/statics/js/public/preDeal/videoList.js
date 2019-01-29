@@ -176,7 +176,7 @@ function loadTable(){
                             if (result.success == 1) {
                                 successMsg("删除预约成功");
                                 loadTable();
-                            } else {
+                            } else if (result.success == 0){
                                 //top.layer.msg(result.error.message);
                                 errorMsg("删除预约失败");
                             }

@@ -129,6 +129,12 @@ public class PostPublicCuratorController{
         return  postPublicCuratorService.updateByPrimaryKeySelective(record,picids);
     }
 
+    @ControllerAop(action = "审核公众策展")
+    @RequestMapping("/approvalCurator")
+    @ResponseBody
+    public JsonResult approvalCurator(PostThemeShow record) throws Exception{
+        return  postPublicCuratorService.approvalInfo(record.getId(),record.getProcessResult(),record.getRemarks());
+    }
 
 
 

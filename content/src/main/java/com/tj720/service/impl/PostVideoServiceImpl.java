@@ -6,6 +6,7 @@ import com.tj720.dao.PostVideoMapper;
 import com.tj720.dao.SysDepartmentMapper;
 import com.tj720.model.common.Attachment;
 import com.tj720.model.common.DelayTime;
+import com.tj720.model.common.system.department.SysDepartment;
 import com.tj720.model.common.system.menu.SysFunction;
 import com.tj720.model.common.system.menu.SysFunctionMenuDto;
 import com.tj720.model.common.system.user.SysUser;
@@ -23,6 +24,9 @@ import org.springframework.util.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 影视资料实现服务类
@@ -49,7 +53,6 @@ public class PostVideoServiceImpl implements PostVideoService{
     @Autowired
     SysDepartmentMapper sysDepartmentMapper;
 
-    private String userId = "sysadmin";
 
     private PostShortcutentrance setActionInfo(PostShortcutentrance postVideoType, String type){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -60,11 +63,11 @@ public class PostVideoServiceImpl implements PostVideoService{
         }catch (Exception e){
             e.printStackTrace();
         }
-        postVideoType.setUpdater(userId);
+        postVideoType.setUpdater(Tools.getUserId());
         postVideoType.setUpdateTime(date);
         if (type == "0"){
             postVideoType.setCreateTime(date);
-            postVideoType.setCreator(userId);
+            postVideoType.setCreator(Tools.getUserId());
         }
         return postVideoType;
     }
@@ -78,11 +81,11 @@ public class PostVideoServiceImpl implements PostVideoService{
         }catch (Exception e){
             e.printStackTrace();
         }
-        postVideo.setUpdater(userId);
+        postVideo.setUpdater(Tools.getUserId());
         postVideo.setUpdateTime(date);
         if (type == "0"){
             postVideo.setCreateTime(date);
-            postVideo.setCreator(userId);
+            postVideo.setCreator(Tools.getUserId());
         }
         return postVideo;
     }
@@ -108,7 +111,7 @@ public class PostVideoServiceImpl implements PostVideoService{
      */
     @Override
     public JsonResult getPostVideoQueryList(String keywords, String videoMark, String status
-            ,String currentUserId, String uploadOrg,Page page,String userType) {
+            ,String currentUserId, String uploadOrg,Page page,String userType,String module) {
         try {
             HashMap<String,Object> condition = new HashMap<String,Object>();
             condition.put("keywords",keywords);
@@ -116,23 +119,37 @@ public class PostVideoServiceImpl implements PostVideoService{
             condition.put("status",status);
             condition.put("currentUserId",currentUserId);
             condition.put("uploadOrg",uploadOrg);
-            //非影视部
-            if (userType.equals( "0")){
-                Integer integer = postVideoMapper.countPostVideoQueryList(condition);
-                page.setAllRow(integer);
-                condition.put("currentPage",page.getStart());
-                condition.put("size",page.getSize());
-                List<PostVideo> postVideoList = postVideoMapper.getPostVideoQueryList(condition);
-                return new JsonResult(1,postVideoList);
+            String userId = Tools.getUserId();
+            if (null != userId) {
+                SysDepartment deptById = sysDepartmentMapper.getDeptById(userId);
+                String orgId = deptById.getDepartmentId();
+                condition.put("userId", userId);
+                condition.put("orgId", orgId);
+                JsonResult jsonResult = resAuthService.getDataAuthRule(currentUserId, module);
+                String dataRule = (String) jsonResult.getData();
+                if (dataRule.equals("")) {
+                    return new JsonResult(0, null, "111116");
+                }
+                condition.put("dataRule", dataRule);
+                //非影视部
+                if ("0".equals(userType)){
+                    Integer integer = postVideoMapper.countPostVideoQueryList(condition);
+                    page.setAllRow(integer);
+                    condition.put("currentPage",page.getStart());
+                    condition.put("size",page.getSize());
+                    List<PostVideo> postVideoList = postVideoMapper.getPostVideoQueryList(condition);
+                    return new JsonResult(1,postVideoList);
+                }else {
+                    Integer integer = postVideoMapper.countPostVideoQueryListPlus(condition);
+                    page.setAllRow(integer);
+                    condition.put("currentPage",page.getStart());
+                    condition.put("size",page.getSize());
+                    List<PostVideo> postVideoList = postVideoMapper.getPostVideoQueryListPlus(condition);
+                    return new JsonResult(1,postVideoList);
+                }
             }else {
-                Integer integer = postVideoMapper.countPostVideoQueryListPlus(condition);
-                page.setAllRow(integer);
-                condition.put("currentPage",page.getStart());
-                condition.put("size",page.getSize());
-                List<PostVideo> postVideoList = postVideoMapper.getPostVideoQueryListPlus(condition);
-                return new JsonResult(1,postVideoList);
+                return new JsonResult(0,null,"111116");
             }
-
         }catch (Exception e){
             e.printStackTrace();
             return new JsonResult(0,null,"111116");
@@ -149,7 +166,7 @@ public class PostVideoServiceImpl implements PostVideoService{
      */
     @Override
     public JsonResult getPostVideoList(String keywords, String videoMark, String status,Page page
-            ,String uploadOrg,String userId,String userType) {
+            ,String uploadOrg,String userId,String userType,String module) {
         try {
             HashMap<String,Object> condition = new HashMap<String,Object>();
             condition.put("keywords",keywords);
@@ -157,21 +174,36 @@ public class PostVideoServiceImpl implements PostVideoService{
             condition.put("status",status);
             condition.put("uploadOrg",uploadOrg);
             condition.put("userId",userId);
-            //非影视部
-            if (userType.equals( "0")){
-                Integer integer = postVideoMapper.countPostVideoList(condition);
-                page.setAllRow(integer);
-                condition.put("currentPage",page.getStart());
-                condition.put("size",page.getSize());
-                List<PostVideo> postVideoList = postVideoMapper.getPostVideoList(condition);
-                return new JsonResult(1,postVideoList);
-            }else {
-                Integer integer = postVideoMapper.countPostVideoListPlus(condition);
-                page.setAllRow(integer);
-                condition.put("currentPage",page.getStart());
-                condition.put("size",page.getSize());
-                List<PostVideo> postVideoList = postVideoMapper.getPostVideoListPlus(condition);
-                return new JsonResult(1,postVideoList);
+            String userId1 = Tools.getUserId();
+            if (null != userId) {
+                SysDepartment deptById = sysDepartmentMapper.getDeptById(userId);
+                String orgId = deptById.getDepartmentId();
+                condition.put("userId", userId1);
+                condition.put("orgId", orgId);
+                JsonResult jsonResult = resAuthService.getDataAuthRule(userId1, module);
+                String dataRule = (String) jsonResult.getData();
+                if (dataRule.equals("")) {
+                    return new JsonResult(0, null, "111116");
+                }
+                condition.put("dataRule", dataRule);
+                //非影视部
+                if ("0".equals(userType)) {
+                    Integer integer = postVideoMapper.countPostVideoList(condition);
+                    page.setAllRow(integer);
+                    condition.put("currentPage", page.getStart());
+                    condition.put("size", page.getSize());
+                    List<PostVideo> postVideoList = postVideoMapper.getPostVideoList(condition);
+                    return new JsonResult(1, postVideoList);
+                } else {
+                    Integer integer = postVideoMapper.countPostVideoListPlus(condition);
+                    page.setAllRow(integer);
+                    condition.put("currentPage", page.getStart());
+                    condition.put("size", page.getSize());
+                    List<PostVideo> postVideoList = postVideoMapper.getPostVideoListPlus(condition);
+                    return new JsonResult(1, postVideoList);
+                }
+            }else{
+                return new JsonResult(0,null,"111116");
             }
 
         }catch (Exception e){
@@ -214,7 +246,8 @@ public class PostVideoServiceImpl implements PostVideoService{
             List<PostVideo> postVideoListByCode = getPostVideoListByCode(postVideo.getVideoCode());
             //资料编码是否重复
             if (null != postVideoListByCode && postVideoListByCode.size() >0){
-                return new JsonResult(0,null,"200508");
+                //更新资料编码
+                postVideo.setVideoCode(postLsService.getLsCode("videoList","video"));
             }
             List<PostVideo> postVideoListByName = getPostVideoListByCode(postVideo.getVideoName());
             //资料编码是否重复
@@ -268,6 +301,31 @@ public class PostVideoServiceImpl implements PostVideoService{
         }
     }
 
+    @Override
+    public JsonResult updateVideoPlus(PostVideo postVideo) {
+        //影视资料对象是否为空
+        if (StringUtils.isEmpty(postVideo)){
+            return new JsonResult(0,null,"000020");
+        }
+        //资料编码是否为空
+//        if (StringUtils.isEmpty(postVideo.getVideoCode())){
+//            return new JsonResult(0,null,"000020");
+//        }
+        try {
+//            postVideo = setActionInfo(postVideo,"1");
+            int count = postVideoMapper.updateByPrimaryKeySelective(postVideo);
+            JsonResult postVideoListByCode = getPostVideo(postVideo.getId());
+            if (count > 0){
+                return new JsonResult(1,postVideoListByCode.getData());
+            }else {
+                return new JsonResult(0,null,"200505");
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return new JsonResult(0,null,"200505");
+        }
+    }
+
     /**
      * 删除影视资料
      *
@@ -275,6 +333,7 @@ public class PostVideoServiceImpl implements PostVideoService{
      * @return
      */
     @Override
+    @Transactional
     public JsonResult deleteVideo(String id) {
         //影视资料对象是否为空
         if (StringUtils.isEmpty(id)){
@@ -284,6 +343,19 @@ public class PostVideoServiceImpl implements PostVideoService{
 
             int count = postVideoMapper.deleteByPrimaryKey(id);
             if (count > 0){
+                //删除上传流程
+                WfAction wfActionByPartyId = wfService.getWfActionByPartyId(id, "1");
+                if (null != wfActionByPartyId){
+                    wfService.deleteWfDetailByProcessId(wfActionByPartyId.getXid());
+                    wfService.deleteWfAction(wfActionByPartyId.getXid());
+                }
+
+                //删除查询流程
+                WfAction wfActionByPartyId1 = wfService.getWfActionByPartyId(id, "2");
+                if (null != wfActionByPartyId1){
+                    wfService.deleteWfDetailByProcessId(wfActionByPartyId1.getXid());
+                    wfService.deleteWfAction(wfActionByPartyId1.getXid());
+                }
                 return new JsonResult(1,null);
             }else {
                 return new JsonResult(0,null,"200506");
@@ -341,6 +413,7 @@ public class PostVideoServiceImpl implements PostVideoService{
      * @return
      */
     @Override
+    @Transactional
     public JsonResult revokeProcess(String id,String currentUserId) {
         WfAction wfAction = wfService.getWfActionByPartyId(id,"1");
         if (null == wfAction){
@@ -369,6 +442,7 @@ public class PostVideoServiceImpl implements PostVideoService{
      * @return
      */
     @Override
+    @Transactional
     public JsonResult commitProcess(String id,String currentUserId) {
 
         JsonResult jsonResult = getPostVideo(id);
@@ -425,6 +499,8 @@ public class PostVideoServiceImpl implements PostVideoService{
             postVideo.setId(id);
             postVideo.setStatus("4");
             updateVideo(postVideo);
+            postVideo = postVideoMapper.getPostVideo(id);
+            checkVideoCode(postVideo);
             return new JsonResult(1);
         }catch (Exception e){
             e.printStackTrace();
@@ -443,6 +519,7 @@ public class PostVideoServiceImpl implements PostVideoService{
      * @return
      */
     @Override
+    @Transactional
     public JsonResult approvalProcess(String id, String authSetting, String type, String approval, String remark,String currentUserId) {
         JsonResult jsonResult = getPostVideo(id);
         if (StringUtils.isEmpty(jsonResult) || jsonResult.getSuccess()==0){
@@ -451,7 +528,7 @@ public class PostVideoServiceImpl implements PostVideoService{
         PostVideo postVideo = (PostVideo) jsonResult.getData();
         try {
             WfAction wfAction = wfService.getWfActionByPartyId(id,"1");
-            if (type.equals("1")){
+            if ("1".equals(type)){
                 wfAction.setApplyStatus("2");
                 wfAction.setUpdater(currentUserId);
                 wfAction.setUpdateTime(new Date());
@@ -461,7 +538,7 @@ public class PostVideoServiceImpl implements PostVideoService{
                 wfDetail.setActionResult("4");
                 wfDetail.setActionName("通过");
                 wfDetail.setStatus("3");
-                wfDetail.setApplyOrg(sysDepartmentMapper.getDeptById(Tools.getUserId()).getDepartmentName());
+                wfDetail.setApplyOrg(sysDepartmentMapper.getDeptById(Tools.getUserId()).getDepartmentId());
                 wfService.updateWfDetail(wfDetail);
                 //更新所有流程记录的状态为已办结
                 wfService.updateWfDetailByProcessId(wfAction.getXid(),"3");
@@ -476,16 +553,16 @@ public class PostVideoServiceImpl implements PostVideoService{
 
                 //添加消息通知
                 String content = getNowDate()+";您提交的"+postVideo.getVideoName()+"上传申请已审批通过";
-                sysNoticeService.sendNoticePlus(wfDetail.getExt1(),"1","确定",currentUserId,
+                sysNoticeService.sendNoticePlus(wfAction.getApply(),"1","确定",currentUserId,
                         content,wfAction.getXid(),currentUserId);
-            }else if (type.equals("3")){
+            }else if ("3".equals(type)){
                 //更新当前操作状态
 
                 WfDetail wfDetail = wfService.getWfDetailByUserIdAndPid(currentUserId,wfAction.getXid(),"1");
                 wfDetail.setStatus("2");
                 wfDetail.setActionResult("3");
                 wfDetail.setActionName("通过并提交");
-                wfDetail.setApplyOrg(sysDepartmentMapper.getDeptById(Tools.getUserId()).getDepartmentName());
+                wfDetail.setApplyOrg(sysDepartmentMapper.getDeptById(Tools.getUserId()).getDepartmentId());
                 wfService.updateWfDetail(wfDetail);
                 wfService.addWfDetail(wfAction.getXid(),"4","1","3","通过并提交",new Date(),approval,currentUserId,postVideo.getUploadOrg());
                 if (null != authSetting){
@@ -497,22 +574,26 @@ public class PostVideoServiceImpl implements PostVideoService{
                 String content = getNowDate()+";您有一条"+postVideo.getVideoName()+"上传申请需要审批";
                 sysNoticeService.sendNoticePlus(approval,"1","确定",currentUserId,
                         content,wfAction.getXid(),currentUserId);
-            }else if (type.equals("2")){
-               WfDetail wfDetail = wfService.getWfDetailByUserIdAndPid(currentUserId,wfAction.getXid(),"1");
+            }else if ("2".equals(type)){
+                wfAction.setApplyStatus("2");
+                wfAction.setUpdater(currentUserId);
+                wfAction.setUpdateTime(new Date());
+                wfService.updateWfAction(wfAction);
+                WfDetail wfDetail = wfService.getWfDetailByUserIdAndPid(currentUserId,wfAction.getXid(),"1");
                //查询发送人
-                String ext1 = wfDetail.getExt1();
-                wfService.addWfDetail(wfAction.getXid(),"5","1","1","提交中",new Date(),currentUserId,ext1,postVideo.getUploadOrg());
+//                String ext1 = wfDetail.getExt1();
+//                wfService.addWfDetail(wfAction.getXid(),"5","1","1","提交中",new Date(),currentUserId,ext1,postVideo.getUploadOrg());
                 //设置当前操作人状态为已办
                 wfDetail.setStatus("2");
-                wfDetail.setActionResult("1");
+                wfDetail.setActionResult("5");
                 wfDetail.setActionName("驳回");
-                wfDetail.setApplyOrg(sysDepartmentMapper.getDeptById(Tools.getUserId()).getDepartmentName());
+                wfDetail.setApplyOrg(sysDepartmentMapper.getDeptById(Tools.getUserId()).getDepartmentId());
                 wfService.updateWfDetail(wfDetail);
-                postVideo.setStatus("1");
+                postVideo.setStatus("5");
                 updateVideo(postVideo);
                 //添加消息通知
                 String content = getNowDate()+";您提交的"+postVideo.getVideoName()+"上传申请已被驳回";
-                sysNoticeService.sendNoticePlus(ext1,"1","确定",currentUserId,
+                sysNoticeService.sendNoticePlus(wfAction.getApply(),"1","确定",currentUserId,
                         content,wfAction.getXid(),currentUserId);
             }
             return new JsonResult(1,null);
@@ -625,6 +706,7 @@ public class PostVideoServiceImpl implements PostVideoService{
      *
      * @return
      */
+    @Transactional
     public PostVideo checkVideoCode(PostVideo postVideo){
         if (StringUtils.isEmpty(postVideo)){
             return postVideo;
@@ -659,6 +741,7 @@ public class PostVideoServiceImpl implements PostVideoService{
      * @return
      */
     @Override
+    @Transactional
     public JsonResult saveQueryApply(String postVideoId, String apply, String applyOrg
             , Date applyTime, String applyReason, String remarks, String approval) {
         try {
@@ -682,6 +765,7 @@ public class PostVideoServiceImpl implements PostVideoService{
     }
 
     @Override
+    @Transactional
     public JsonResult saveAndSubmitQueryApply(String postVideoId, String apply, String applyOrg, Date applyTime, String applyReason, String remarks, String approval) {
         try {
             WfAction temp =  wfService.getWfActionByPartyIdAndStatus(postVideoId,"2",apply,"1");
@@ -743,6 +827,7 @@ public class PostVideoServiceImpl implements PostVideoService{
      * @return
      */
     @Override
+    @Transactional
     public JsonResult batchSaveAndSubmitQueryApply(String[] ids, String apply, String applyOrg, Date applyTime, String applyReason, String remarks, String approval) {
         try {
             for (int i = 0; i < ids.length; i++) {
@@ -771,6 +856,7 @@ public class PostVideoServiceImpl implements PostVideoService{
      * @return
      */
     @Override
+    @Transactional
     public JsonResult submitQueryApply(String processInstId,Date applyTime,String apply,String applyOrg
             ,String remarks,String approval) {
         //更新流程状态
@@ -809,6 +895,7 @@ public class PostVideoServiceImpl implements PostVideoService{
      * @return
      */
     @Override
+    @Transactional
     public JsonResult revokeQueryApply(String processInstId, String apply, String applyOrg) {
        try {
            WfAction wfAction = new WfAction();
@@ -827,7 +914,7 @@ public class PostVideoServiceImpl implements PostVideoService{
     }
 
     /**
-     * 审批影视资料查询
+     * 审批影视资料查询流程
      *
      * @param processInstId 流程实例ID
      * @param type    操作类型
@@ -838,6 +925,7 @@ public class PostVideoServiceImpl implements PostVideoService{
      * @return
      */
     @Override
+    @Transactional
     public JsonResult approvalQueryApply(String processInstId, String type, String approval,
                                          String apply, String applyOrg, String remarks,String currentUserId) {
         if (StringUtils.isEmpty(type)){
@@ -845,8 +933,9 @@ public class PostVideoServiceImpl implements PostVideoService{
         }
         try {
             WfAction wfAction = new WfAction();
+            WfAction wfAction1 = wfService.getWfActionById(processInstId);
             wfAction.setXid(processInstId);
-            if (type.equals("1")){
+            if ("1".equals(type)){
                 wfAction.setApplyStatus("2");
                 wfAction.setUpdater(currentUserId);
                 wfAction.setUpdateTime(new Date());
@@ -865,10 +954,10 @@ public class PostVideoServiceImpl implements PostVideoService{
                 PostVideo postVideo = (PostVideo)postVideoResult.getData();
                 //消息通知
                 String content = getNowDate()+";您提交的"+postVideo.getVideoName()+"查询申请已审批通过";
-                sysNoticeService.sendNoticePlus(wfDetail.getExt1(),"1","确定",apply,
+                sysNoticeService.sendNoticePlus(wfAction1.getApply(),"1","确定",apply,
                         content,wfAction.getXid(),apply);
 
-            }else if (type.equals("3")){
+            }else if ("3".equals(type)){
                 wfAction.setApplyStatus("1");
                 wfAction.setUpdater(currentUserId);
                 wfAction.setUpdateTime(new Date());
@@ -890,7 +979,7 @@ public class PostVideoServiceImpl implements PostVideoService{
                 String content = getNowDate()+";您有一条"+postVideo.getVideoName()+"查询申请需要审批";
                 sysNoticeService.sendNoticePlus(approval,"1","确定",apply,
                         content,wfAction.getXid(),apply);
-            }else if (type.equals("2")){
+            }else if ("2".equals(type)){
                 wfAction.setApplyStatus("3");
                 wfAction.setUpdater(currentUserId);
                 wfAction.setUpdateTime(new Date());
@@ -913,7 +1002,7 @@ public class PostVideoServiceImpl implements PostVideoService{
                 PostVideo postVideo = (PostVideo)postVideoResult.getData();
                 //消息通知
                 String content = getNowDate()+";您提交的"+postVideo.getVideoName()+"查询申请已被驳回";
-                sysNoticeService.sendNoticePlus(wfDetail.getExt1(),"1","确定",apply,
+                sysNoticeService.sendNoticePlus(wfAction1.getApply(),"1","确定",apply,
                         content,wfAction.getXid(),apply);
             }
             return new JsonResult(1,null);
@@ -934,20 +1023,36 @@ public class PostVideoServiceImpl implements PostVideoService{
      * @return
      */
     @Override
-    public JsonResult getQueryVideoList(String keywords, String applyOrg, String applyStatus, String currentUserId, Page page) {
+    public JsonResult getQueryVideoList(String keywords, String applyOrg, String applyStatus, String currentUserId, Page page,String module) {
         try {
             HashMap<String,Object> condition = new HashMap<String,Object>();
             condition.put("keywords",keywords);
             condition.put("applyOrg",applyOrg);
             condition.put("applyStatus",applyStatus);
             condition.put("apply",currentUserId);
-            Integer integer = postVideoMapper.countQueryVideoList(condition);
-            page.setAllRow(integer);
-            condition.put("currentPage",page.getStart());
-            condition.put("size",page.getSize());
-            List<QueryVideoDto> postVideoList = postVideoMapper.getQueryVideoList(condition);
-            return new JsonResult(1,postVideoList);
 
+
+            String userId = Tools.getUserId();
+            if (null != userId){
+                SysDepartment deptById = sysDepartmentMapper.getDeptById(userId);
+                String orgId = deptById.getDepartmentId();
+                condition.put("userId",userId);
+                condition.put("orgId",orgId);
+                JsonResult jsonResult = resAuthService.getDataAuthRule(currentUserId,module);
+                String dataRule = (String) jsonResult.getData();
+                if (dataRule.equals("")){
+                    return new JsonResult(0,null,"111116");
+                }
+                condition.put("dataRule",dataRule);
+                Integer integer = postVideoMapper.countQueryVideoList(condition);
+                page.setAllRow(integer);
+                condition.put("currentPage",page.getStart());
+                condition.put("size",page.getSize());
+                List<QueryVideoDto> postVideoList = postVideoMapper.getQueryVideoList(condition);
+                return new JsonResult(1,postVideoList);
+            }else{
+                return new JsonResult(0,null,"111116");
+            }
         }catch (Exception e){
             e.printStackTrace();
             return new JsonResult(0,null,"111116");
@@ -1159,7 +1264,7 @@ public class PostVideoServiceImpl implements PostVideoService{
     public JsonResult getVideoCjReport1(HashMap<String, Object> condition,String type) {
         try {
             HashMap<String,Object> data = new HashMap<String,Object>();
-            if (type.equals("1")){
+            if ("1".equals(type)){
                 List<HashMap<String,Object>> table = postVideoMapper.getVideoCjTable(condition);
                 List<HashMap<String,Object>> pie = postVideoMapper.getVideoCjPie(condition);
                 List<HashMap<String,Object>> line = postVideoMapper.getVideoCjLine(condition);
@@ -1184,7 +1289,7 @@ public class PostVideoServiceImpl implements PostVideoService{
                     }
                     temp.put("data",values);
                     temp.put("type","line");
-                    temp.put("stack","总量");
+                    temp.put("stack","总量"+i);
                     yAxis.add(temp);
                 }
                 lineData.put("data",yAxis);
@@ -1217,7 +1322,7 @@ public class PostVideoServiceImpl implements PostVideoService{
                     }
                     temp.put("data",values);
                     temp.put("type","line");
-                    temp.put("stack","总量");
+                    temp.put("stack","总量"+i);
                     yAxis.add(temp);
                 }
                 lineData.put("data",yAxis);
@@ -1235,7 +1340,7 @@ public class PostVideoServiceImpl implements PostVideoService{
     public JsonResult getVideoCjReport2(HashMap<String, Object> condition,String type) {
         try {
             HashMap<String,Object> data = new HashMap<String,Object>();
-            if (type.equals("1")){
+            if ("1".equals(type)){
                 List<HashMap<String,Object>> bar = postVideoMapper.getVideoCjBarPlus(condition);
                 HashMap<String,Object> barData = new HashMap<String,Object>();
                 String[] legend = new String[]{"图片","视频","音频"};
@@ -1379,10 +1484,26 @@ public class PostVideoServiceImpl implements PostVideoService{
      * @return
      */
     @Override
-    public JsonResult getVideoCjCount() {
+    public JsonResult getVideoCjCount(String module) {
         try {
-            HashMap<String,Object> count =  postVideoMapper.getVideoCjCount();
-            return new JsonResult(1,count);
+            String userId = Tools.getUserId();
+            HashMap<String,Object> condition = new HashMap<String,Object>();
+            if (null != userId) {
+                SysDepartment deptById = sysDepartmentMapper.getDeptById(userId);
+                String orgId = deptById.getDepartmentId();
+                condition.put("userId", userId);
+                condition.put("orgId", orgId);
+                JsonResult jsonResult = resAuthService.getDataAuthRule(userId, module);
+                String dataRule = (String) jsonResult.getData();
+                if (dataRule.equals("")) {
+                    return new JsonResult(0, null, "111116");
+                }
+                condition.put("dataRule", dataRule);
+                HashMap<String, Object> count = postVideoMapper.getVideoCjCount(condition);
+                return new JsonResult(1, count);
+            }else{
+                return new JsonResult("111116");
+            }
         }catch (Exception e){
             e.printStackTrace();
             return new JsonResult("111116");
@@ -1395,16 +1516,32 @@ public class PostVideoServiceImpl implements PostVideoService{
      * @return
      */
     @Override
-    public JsonResult getVideoCxCount() {
+    public JsonResult getVideoCxCount(String module) {
         try {
-            HashMap<String,Integer> count =  new HashMap<>(3);
-            Integer videoOpenCount = postVideoMapper.getVideoOpenCount();
-            Integer videoCxApply = postVideoMapper.getVideoCxApply();
-            Integer videoCxApproval = postVideoMapper.getVideoCxApproval();
-            count.put("videoOpenCount",videoOpenCount);
-            count.put("videoCxApply",videoCxApply);
-            count.put("videoCxApproval",videoCxApproval);
-            return new JsonResult(1,count);
+            String userId = Tools.getUserId();
+            HashMap<String,Object> condition = new HashMap<String,Object>();
+            if (null != userId) {
+                SysDepartment deptById = sysDepartmentMapper.getDeptById(userId);
+                String orgId = deptById.getDepartmentId();
+                condition.put("userId", userId);
+                condition.put("orgId", orgId);
+                JsonResult jsonResult = resAuthService.getDataAuthRule(userId, module);
+                String dataRule = (String) jsonResult.getData();
+                if (dataRule.equals("")) {
+                    return new JsonResult(0, null, "111116");
+                }
+                condition.put("dataRule", dataRule);
+                HashMap<String, Integer> count = new HashMap<>(3);
+                Integer videoOpenCount = postVideoMapper.getVideoOpenCount(condition);
+                Integer videoCxApply = postVideoMapper.getVideoCxApply(condition);
+                Integer videoCxApproval = postVideoMapper.getVideoCxApproval(condition);
+                count.put("videoOpenCount", videoOpenCount);
+                count.put("videoCxApply", videoCxApply);
+                count.put("videoCxApproval", videoCxApproval);
+                return new JsonResult(1, count);
+            }else {
+                return new JsonResult("111116");
+            }
         }catch (Exception e){
             e.printStackTrace();
             return new JsonResult("111116");
@@ -1440,7 +1577,7 @@ public class PostVideoServiceImpl implements PostVideoService{
                         List<SysFunctionMenuDto> tempList = sysFunctionMenuDto.getList();
                         if (null != tempList && tempList.size()>0){
                             for (SysFunctionMenuDto functionMenuDto : tempList) {
-                                if (functionMenuDto.getExt1().equals("1")){
+                                if ("1".equals(functionMenuDto.getExt1())){
                                     HashMap<String,Object> temp = new HashMap<String,Object>();
                                     temp.put("id",functionMenuDto.getKey());
                                     temp.put("name",functionMenuDto.getName());
@@ -1452,7 +1589,7 @@ public class PostVideoServiceImpl implements PostVideoService{
                                 }
                             }
                         }else{
-                            if (sysFunctionMenuDto.getExt1().equals("1")){
+                            if ("1".equals(sysFunctionMenuDto.getExt1())){
                                 HashMap<String,Object> temp = new HashMap<String,Object>();
                                 temp.put("id",sysFunctionMenuDto.getKey());
                                 temp.put("name",sysFunctionMenuDto.getName());
@@ -1478,7 +1615,7 @@ public class PostVideoServiceImpl implements PostVideoService{
                         List<SysFunctionMenuDto> tempList = sysFunctionMenuDto.getList();
                         if (null != tempList && tempList.size()>0){
                             for (SysFunctionMenuDto functionMenuDto : tempList) {
-                                if (functionMenuDto.getExt1().equals("1")) {
+                                if ("1".equals(functionMenuDto.getExt1())) {
                                     HashMap<String, Object> temp = new HashMap<String, Object>();
                                     temp.put("id", functionMenuDto.getKey());
                                     temp.put("name", functionMenuDto.getName());
@@ -1494,7 +1631,7 @@ public class PostVideoServiceImpl implements PostVideoService{
                                 }
                             }
                         }else {
-                            if (sysFunctionMenuDto.getExt1().equals("1")) {
+                            if ("1".equals(sysFunctionMenuDto.getExt1())) {
                                 HashMap<String, Object> temp = new HashMap<String, Object>();
                                 temp.put("id", sysFunctionMenuDto.getKey());
                                 temp.put("name", sysFunctionMenuDto.getName());
@@ -1529,6 +1666,7 @@ public class PostVideoServiceImpl implements PostVideoService{
      * @return
      */
     @Override
+    @Transactional
     public JsonResult setShortcutEntrance(String currentUserId, List<String> shortcutEntrance,String type) {
         try {
             int count  = postShortcutentranceMapper.deleteShortcutEntrance(currentUserId,type);
@@ -1560,7 +1698,7 @@ public class PostVideoServiceImpl implements PostVideoService{
     public boolean checkUserOrg(String userId) {
         String pid = postVideoMapper.getOrgPidByUser(userId);
         //馆领导
-        if (pid.equals("-1")){
+        if ("-1".equals(pid)){
             return true;
         }else {
             List<SysUser> ysb = postVideoMapper.checkUserOrg(userId, "ysb");

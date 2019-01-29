@@ -432,7 +432,7 @@
     <select id="selectSysUserCount" resultType="java.lang.Integer" parameterType="java.util.Map">
         select count(1)
         from sys_user su, sys_user_dept sud,sys_department sd,sys_role sr,sys_role_auth sra
-        where 1 = 1 and su.isdelete = 0
+        where 1 = 1
         and su.id= sud.user_id
         and sud.dept_id=sd.department_id AND su.id = sra.party_id and sra.role_id = sr.id
         <if test="name != null and key != ''">
@@ -440,14 +440,9 @@
             or su.name like concat('%',#{name},'%'))
         </if>
         <if test="departmentName != null and departmentName != ''">
-            and sd.department_name = #{departmentName}
+            and sd.department_id = #{departmentName}
         </if>
-        <if test="orderBy == 1" >
-            order by su.update_time desc
-        </if>
-        <if test="orderBy == 2" >
-            order by su.create_time desc
-        </if>
+
     </select>
 
     <select id="getSysUserList" resultType="com.tj720.model.common.system.user.SysUserDto"
@@ -456,7 +451,7 @@
         sd.department_name as "deptName", sr.name as "roleName",
         su.create_time as "createTime", su.status
         from sys_user su, sys_user_dept sud,sys_department sd,sys_role sr,sys_role_auth sra
-        where 1 = 1 and su.isdelete = 0
+        where 1 = 1
         and su.id= sud.user_id
         and sud.dept_id=sd.department_id AND su.id = sra.party_id and sra.role_id = sr.id
         <if test="name != null and key != ''">
@@ -464,7 +459,7 @@
             or su.name like concat('%',#{name},'%'))
         </if>
         <if test="departmentName != null and departmentName != ''">
-            and sd.department_name = #{departmentName}
+            and sd.department_id = #{departmentName}
         </if>
         <if test="orderBy == 1" >
             order by su.update_time desc
@@ -516,7 +511,6 @@
 --         and c.isdelete = 0
         )
         and a.status = 1
-        and a.isdelete = 0
         order by a.sequence desc,a.update_time desc
 
     </select>
@@ -529,7 +523,6 @@
         where
         c.role_code = #{code}
         and a.status = 1
-        and a.isdelete = 0
         order by a.sequence desc,a.update_time desc
     </select>
 
@@ -551,19 +544,16 @@
         <if test="userName != null and userName != ''" >
             and user_name = #{userName}
         </if>
-        <if test="isdelete != null and isdelete != ''">
-            and isdelete = #{isdelete,jdbcType=INTEGER}
-        </if>
+
     </select>
-    <select id="countByMap" parameterType="java.util.Map">
+    <select id="countByMap" parameterType="java.util.Map"  resultType="java.lang.Integer">
         select count(1) from sys_user
         where 1=1
         <if test="userId != null and userId != ''">
             and id = #{userId}
         </if>
-        <if test="isdelete != null and isdelete != ''">
-            and isdelete = #{isdelete,jdbcType=INTEGER}
-        </if>
+        and isdelete = 0
+
     </select>
 
 </mapper>

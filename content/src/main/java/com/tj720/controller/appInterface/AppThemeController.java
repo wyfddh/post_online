@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,9 +39,11 @@ public class AppThemeController{
     @RequestParam(defaultValue = "1") Integer currentPage, @RequestParam(defaultValue = "6") Integer size) throws Exception{
         Map<String, Object> data = new HashMap<String, Object>();
         //首页推荐主题展
-        JsonResult jsonResult1 = webCollectService.themeshowWebList(null, null,userId,null, 1, 1);
-        data.put("postThemeShow",jsonResult1.getData());
-
+        JsonResult jsonResult1 = webCollectService.getThemShow(id);
+        List<PostThemeShow> list = new ArrayList<PostThemeShow>();
+        PostThemeShow postThemeShow = (PostThemeShow)jsonResult1.getData();
+        list.add(postThemeShow);
+        data.put("postThemeShow",list);
 
         JsonResult themeList = webCollectService.themeshowWebNoPages(null, null,userId);
         List<CollectDto> lists = (List<CollectDto>) themeList.getData();

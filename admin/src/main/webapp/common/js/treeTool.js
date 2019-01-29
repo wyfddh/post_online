@@ -1,6 +1,6 @@
 /**
  * Created by 陈熠 on 2017/6/21
- * email   :  228112142@qq.com
+
  */
 (function ($) {
     var cyProps = {};

@@ -1,7 +1,6 @@
 package com.tj720.service.impl;
 
 import com.tj720.common.duanxin.HttpsRequest;
-import com.tj720.common.redis.JedisDao;
 import com.tj720.controller.framework.JsonResult;
 import com.tj720.controller.framework.MyException;
 import com.tj720.controller.springbeans.Config;
@@ -12,12 +11,13 @@ import com.tj720.model.common.pubuser.PubUser;
 import com.tj720.model.common.pubuser.PubUserDto;
 import com.tj720.model.common.pubuser.PubUserVo;
 import com.tj720.service.AttachmentService;
+import com.tj720.service.ICacheService;
+import com.tj720.service.ImageUtiilService;
 import com.tj720.service.PostLoginService;
+import com.tj720.utils.Const;
 import com.tj720.utils.MD5;
 import com.tj720.utils.Tools;
-import com.tj720.utils.common.Base64Utils;
 import com.tj720.utils.common.IdUtils;
-import java.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -28,7 +28,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
-import sun.misc.BASE64Encoder;
 
 /**
  * @author 杜昶
@@ -36,6 +35,8 @@ import sun.misc.BASE64Encoder;
  */
 @Service
 public class PostLoginServiceImpl implements PostLoginService {
+    @Autowired
+    ImageUtiilService imageUtiilService;
 
     /**
      * 设置ip限制次数
@@ -49,9 +50,10 @@ public class PostLoginServiceImpl implements PostLoginService {
     private AttachmentService attachmentService;
 
     @Autowired
-    private Config config;
+    private ICacheService cacheService;
 
-    private final String creator = "sysadmin";
+    @Autowired
+    private Config config;
 
     /** 注册短信验证码前缀 */
     private final String regiestCodeKey = "front_regies_mobile_";
@@ -80,69 +82,149 @@ public class PostLoginServiceImpl implements PostLoginService {
             }
 
             Map<String, String> param = new HashMap<String, String>(2);
+
+            if (StringUtils.isEmpty(session.getAttribute("userId"))) {
             PubUser pubUser = postLoginMapper.getUserByUserNameOrPhone(loginName);
             /**
              * 数据库数据校验
              */
             if (null == pubUser) {
+                session.setAttribute("userId",loginName);
                 return new JsonResult(0,null,"10000005");
             }
             Integer isdelete = pubUser.getIsdelete();
             if (null != isdelete && isdelete == 1) {
+                session.setAttribute("userId",loginName);
                 return new JsonResult(0,null,"20000013");
             }
             if (StringUtils.isEmpty(pubUser.getPassword())) {
+                session.setAttribute("userId",loginName);
                 return new JsonResult(0, null, "10000006");
             }
             if ("0".equals(pubUser.getStatus())) {
+                session.setAttribute("userId",loginName);
                 return new JsonResult("20000021");
             }
 
+//                session.removeAttribute("userId");
+//                String encrytMD5 = MD5.encrytMD5(password);
+                String truePass = pubUser.getPassword();
+                if (password.equals(truePass)){
+                    //if (pubUser!=null){
+                    // 密码正确
+                    // 封装返回前端对象
+                    PubUserVo returnUser = new PubUserVo();
+                    returnUser.setId(pubUser.getId());
+                    returnUser.setUserName(pubUser.getUserName());
+                    returnUser.setSex(pubUser.getSex());
+                    returnUser.setBirthday(pubUser.getBirthday());
+                    returnUser.setProvinceId(pubUser.getProvinceId());
+                    returnUser.setCityId(pubUser.getCityId());
+                    returnUser.setJob(pubUser.getJob());
+                    returnUser.setSingleName(pubUser.getSingleName());
+                    returnUser.setPhone(pubUser.getPhone());
+                    String avatarurl = pubUser.getAvatarurl();
+                    if (!StringUtils.isEmpty(avatarurl)) {
+                        Attachment attachment = attachmentService.getAttachmentsById(avatarurl);
+                        returnUser.setAvatarLink(attachment == null ? null : attachment.getAttPath());
+                    }
+                    if (StringUtils.isEmpty(session.getAttribute("userId"))) {
+                        session.removeAttribute("userId");
+                        return new JsonResult(1, returnUser);
+                    } else {
+                        // 验证码校验
+                        if (StringUtils.isEmpty(verification)){
+                            return new JsonResult(0, null, "10000007");
+                        }
+                        if (this.compareVerification(verification, request)) {
+                            session.removeAttribute("userId");
+                            return new JsonResult(1, returnUser);
+                        } else {
+                            return new JsonResult(0,null,"10000008");
+                        }
+                    }
+                } else {
+                    // 密码错误
+                    session.setAttribute("userId",loginName);
+                    return new JsonResult(0,null,"10000004");
+                }
+            } else {
+                // 验证码校验
+                if (StringUtils.isEmpty(verification)){
+                    return new JsonResult(0, null, "10000007");
+                }
+                if (this.compareVerification(verification, request)) {
+                    PubUser pubUser = postLoginMapper.getUserByUserNameOrPhone(loginName);
+                    if (null == pubUser) {
+                        session.setAttribute("userId",loginName);
+                        return new JsonResult(0,null,"10000005");
+                    }
+                    Integer isdelete = pubUser.getIsdelete();
+                    if (null != isdelete && isdelete == 1) {
+                        session.setAttribute("userId",loginName);
+                        return new JsonResult(0,null,"20000013");
+                    }
+                    if (StringUtils.isEmpty(pubUser.getPassword())) {
+                        session.setAttribute("userId",loginName);
+                        return new JsonResult(0, null, "10000006");
+                    }
+                    if ("0".equals(pubUser.getStatus())) {
+                        session.setAttribute("userId",loginName);
+                        return new JsonResult("20000021");
+                    }
+//                    String encrytMD5 = MD5.encrytMD5(password);
+                    String truePass = pubUser.getPassword();
+//                    session.removeAttribute("userId");
+                    if (password.equals(truePass)){
+                        //if (pubUser!=null){
+                        // 密码正确
+                        // 封装返回前端对象
+                        PubUserVo returnUser = new PubUserVo();
+                        returnUser.setId(pubUser.getId());
+                        returnUser.setUserName(pubUser.getUserName());
+                        returnUser.setSex(pubUser.getSex());
+                        returnUser.setBirthday(pubUser.getBirthday());
+                        returnUser.setProvinceId(pubUser.getProvinceId());
+                        returnUser.setCityId(pubUser.getCityId());
+                        returnUser.setJob(pubUser.getJob());
+                        returnUser.setSingleName(pubUser.getSingleName());
+                        returnUser.setPhone(pubUser.getPhone());
+                        String avatarurl = pubUser.getAvatarurl();
+                        if (!StringUtils.isEmpty(avatarurl)) {
+                            Attachment attachment = attachmentService.getAttachmentsById(avatarurl);
+                            returnUser.setAvatarLink(attachment == null ? null : attachment.getAttPath());
+                        }
+                        if (StringUtils.isEmpty(session.getAttribute("userId"))) {
+                            session.removeAttribute("userId");
+                            return new JsonResult(1, returnUser);
+                        } else {
+                            // 验证码校验
+                            if (StringUtils.isEmpty(verification)){
+                                return new JsonResult(0, null, "10000007");
+                            }
+                            if (this.compareVerification(verification, request)) {
+                                session.removeAttribute("userId");
+                                return new JsonResult(1, returnUser);
+                            } else {
+                                return new JsonResult(0,null,"10000008");
+                            }
+                        }
+                    } else {
+                        // 密码错误
+                        session.setAttribute("userId",loginName);
+                        return new JsonResult(0,null,"10000004");
+                    }
+                } else {
+                    return new JsonResult(0,null,"10000008");
+                }
+            }
             /**
              * 密码校验
              */
             //String encrytMD5 = MD5.encrytMD5(password);
-            String truePass = pubUser.getPassword();
+//            String truePass = pubUser.getPassword();
             //if (encrytMD5.equals(truePass) || password.equals(truePass)) {
-            if (password.equals(truePass)){
-            //if (pubUser!=null){
-                // 密码正确
-                // 封装返回前端对象
-                PubUserVo returnUser = new PubUserVo();
-                returnUser.setId(pubUser.getId());
-                returnUser.setUserName(pubUser.getUserName());
-                returnUser.setSex(pubUser.getSex());
-                returnUser.setBirthday(pubUser.getBirthday());
-                returnUser.setProvinceId(pubUser.getProvinceId());
-                returnUser.setCityId(pubUser.getCityId());
-                returnUser.setJob(pubUser.getJob());
-                returnUser.setSingleName(pubUser.getSingleName());
-                returnUser.setPhone(pubUser.getPhone());
-                String avatarurl = pubUser.getAvatarurl();
-                if (!StringUtils.isEmpty(avatarurl)) {
-                    Attachment attachment = attachmentService.getAttachmentsById(avatarurl);
-                    returnUser.setAvatarLink(attachment == null ? null : attachment.getAttPath());
-                }
-                if (StringUtils.isEmpty(session.getAttribute("userId"))) {
-                    session.removeAttribute("userId");
-                    return new JsonResult(1, returnUser);
-                } else {
-                    // 验证码校验
-                    if (StringUtils.isEmpty(verification)){
-                        return new JsonResult(0, null, "10000007");
-                    }
-                    if (this.compareVerification(verification, request)) {
-                        session.removeAttribute("userId");
-                        return new JsonResult(1, returnUser);
-                    } else {
-                        return new JsonResult(0,null,"10000008");
-                    }
-                }
-            } else {
-                // 密码错误
-                session.setAttribute("userId",loginName);
-                return new JsonResult(0,null,"10000004");
-            }
+
         } catch (Exception e) {
             e.printStackTrace();
             return new JsonResult(0,null,"10000006");
@@ -276,9 +358,10 @@ public class PostLoginServiceImpl implements PostLoginService {
                 return new JsonResult(0, null, "110000002");
             case 1:
                 String verificationCode = this.sendSMS(phone, request);
+                cacheService.setStr(phone,verificationCode,30*60);
                 if (null != verificationCode) {
                     request.getSession().setAttribute(this.regiestCodeKey + phone, verificationCode);
-                    return new JsonResult(1, verificationCode);
+                    return new JsonResult(1);
                 } else {
                     return new JsonResult(0, null, "110000003");
                 }
@@ -412,8 +495,8 @@ public class PostLoginServiceImpl implements PostLoginService {
         //pubUser.setSurePassword(MD5.encrytMD5(surePassword));
         pubUser.setPassword((password));
         pubUser.setSurePassword((surePassword));
-        pubUser.setCreator(creator);
-        pubUser.setUpdater(creator);
+        pubUser.setCreator(Tools.getUserId());
+        pubUser.setUpdater(Tools.getUserId());
         Integer index = postLoginMapper.insertPubUser(pubUser);
         if (index < 1) {
             return this.registerResponse(new JsonResult(0, null, "20000016"), request);
@@ -457,9 +540,10 @@ public class PostLoginServiceImpl implements PostLoginService {
         if (userExist.equals(step) && null != id) {
             // 发送验证码
             String verificationCode = this.sendSMS(phone, request);
+            cacheService.setStr(phone,verificationCode,30*60);
             if (!StringUtils.isEmpty(verificationCode)) {
                 request.getSession().setAttribute(String.format(this.changePhoneCodeKey, id, phone, step), verificationCode);
-                return new JsonResult(1, verificationCode);
+                return new JsonResult(1);
             } else {
                 return new JsonResult(0, null, "110000003");
             }
@@ -581,14 +665,14 @@ public class PostLoginServiceImpl implements PostLoginService {
         if (!password.equals(pubUserDto.getSurePassword())) {
             return new JsonResult(0, null, "110000012");
         }
-        if (6 < password.length() && password.length() > 20) {
-            return new JsonResult(0, null, "110000011");
-        }
+//        if (6 < password.length() && password.length() > 20) {
+//            return new JsonResult(0, null, "110000011");
+//        }
         /**
          * 保存数据
          */
-        pubUserDto.setPassword(MD5.encrytMD5(password));
-        pubUserDto.setSurePassword(MD5.encrytMD5(pubUserDto.getSurePassword()));
+        pubUserDto.setPassword(password);
+        pubUserDto.setSurePassword(pubUserDto.getSurePassword());
         PubUser userByPhone = postLoginMapper.getUserByPhone(pubUserDto.getPhone());
         pubUserDto.setId(userByPhone.getId());
         pubUserDto.setUpdater(userByPhone.getId());
@@ -613,11 +697,12 @@ public class PostLoginServiceImpl implements PostLoginService {
             return new JsonResult(0, null, "110000014");
         }
         String verificationCode = this.sendSMS(phone, request);
+        cacheService.setStr(phone,verificationCode,30*60);
         if (StringUtils.isEmpty(verificationCode)) {
             return new JsonResult(0, null, "110000003");
         }
         request.getSession().setAttribute(this.forgetMMCodeKey + phone, verificationCode);
-        return new  JsonResult(1, verificationCode);
+        return new  JsonResult(1);
     }
 
     @Override
@@ -655,12 +740,14 @@ public class PostLoginServiceImpl implements PostLoginService {
         }
         if(!oldPassword.equals(pubUser.getPassword())){
             return new JsonResult(0, null, "110000031");
+        }else{
+            pubUserDto.setPassword(password);
         }
         //pubUserDto.setPassword(MD5.encrytMD5(password));
         //pubUserDto.setSurePassword(MD5.encrytMD5(surePassword));
-        if(oldPassword.equals(pubUser.getPassword())){
-            pubUserDto.setPassword(password);
-        }
+//        if(oldPassword.equals(pubUser.getPassword())){
+//            pubUserDto.setPassword(password);
+//        }
 
         if(! pubUser.getPassword().equals(surePassword)){
             pubUserDto.setSurePassword(surePassword);
@@ -680,10 +767,10 @@ public class PostLoginServiceImpl implements PostLoginService {
         if (StringUtils.isEmpty(id)) {
             return new JsonResult(0, null, "000021");
         }
-        String userId = Tools.getUserId();
+       /* String userId = Tools.getUserId();
         if (org.apache.commons.lang3.StringUtils.isBlank(userId)) {
             return new JsonResult("111116");
-        }
+        }*/
 
         PubUser pubUser = postLoginMapper.getUserById(id);
         pubUser.setPassword(null);
@@ -727,9 +814,12 @@ public class PostLoginServiceImpl implements PostLoginService {
             returnUser.setBookManage(postLoginMapper.getBookManage(id));  //此处参数是用户id
             //returnUser.setPublicCuratorCount(postLoginMapper.getPublicCurator(postWebCollect.getId()));
             returnUser.setPublicCuratorCount(postLoginMapper.getPublicCurator(id));
+            returnUser.setAvatarLink(attachmentService.getFileTransPathByPath(returnUser.getAvatarLink()));
             return new JsonResult(1, returnUser);
         } else {
             return new JsonResult(0, null, "20000008");
         }
     }
+
+
 }

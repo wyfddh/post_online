@@ -13,7 +13,6 @@ var main = {
 
             //监听提交
             form.on('submit(formSubmit)', function(data) {
-                console.log(data);
                 layer.msg(JSON.stringify(data.field));
                 return false;
             });
@@ -29,15 +28,7 @@ var main = {
         });
     },
     getData: function() {
-        layui.use('form', function() {
-            var form = layui.form;
-            form.val("myform", {
-                "username": "贤心"
-                ,"email": '123@sina.com'
-                ,"name": "vvvvv"
-                ,"oldPassword": "1234"
-            });
-        });
+
     }
 }
 main.init();

@@ -200,11 +200,15 @@
         <if test="null != activitiesName and activitiesName !=''">
             and a.activities_name like concat('%', #{activitiesName}, '%')
         </if>
-
         <if test="orderBy == 1" >
-            order by update_date desc
+            order by
+            (case when a.end_time &lt; NOW() then 1
+            else 0 end) asc,
+            update_date desc
         </if>
         <if test="orderBy == 2" >
+            (case when a.end_time &lt; NOW() then 1
+            else 0 end) asc,
             order by create_date desc
         </if>
         <if test="start != null and size != null">

@@ -35,7 +35,7 @@ function loadData(id) {
             success:function(result) {
                 if (result.success == 1) {
                     setFormData(result.data);
-                } else {
+                } else if (result.success == 0) {
                     //top.layer.msg(result.error.message);
                     errorMsg("系统异常");
                 }
@@ -61,6 +61,7 @@ function getSelectData(data){
         $("#informationType").attr("disabled","disabled");
         form.render('select');
 
+
     });
 
 }
@@ -76,38 +77,47 @@ function setFormData(data) {
 
     $("#informationContent").text(data.informationContent);
     //赋值后,重新初始化
-    layui.use('layedit', function(){
-        var $ = layedit = layui.layedit;
-        layedit.build('informationContent');
+    layui.use(['form','layedit'], function(){
+        var form = layui.form;
+        var layedit = layui.layedit;
+        var editIndex = layedit.build('informationContent');
+        // layedit.setContent(editIndex, data.informationContent, false);
         getSelectData(data);
+
+      //创建一个编辑器
+        $('.uploadBtn').css('display','none');
+        picList = data.picList;
+        if (!isEmpty(picList)){
+            for (var i = 0;i < picList.length;i++) {
+                var picStr1;
+                if (picList[i].isMain === "1") {
+                    picStr1 = '<div class="img" id="img'+ picList[i].attId +'">'
+                        +'<div class="img1"><img src="'+ picList[i].attPath +'" alt="" ></div>'
+                        +'<div class="img2"><span class="img3" id="span'+ picList[i].attId +'" mark='+ picList[i].attId +' style="color:red">主图</span><span class="img4" mark='+ picList[i].attId +'>删除图片</span></div>'
+                        +'</div>'
+                    $("#isMain").val(picList[i].attId);
+                } else {
+                    picStr1 = '<div class="img picDiv" id="img'+ picList[i].attId +'">'
+                        +'<div class="img1"><img src="'+ picList[i].attPath +'" alt="" ></div>'
+                        +'<div class="img2"><span class="img3" id="span'+ picList[i].attId +'" mark='+ picList[i].attId +'></span><span class="img4" mark='+ picList[i].attId +'></span></div>'
+                        +'</div>'
+                }
+                $("#picUpload").html(picStr1);
+                $('.img2').css('display','none');
+                $(".showStatus").hide();
+            }
+        }
+
+        property.setForm($("#infoForm"),data);
+        $('input,select,textarea').attr("disabled","disabled");
+        $("iframe[textarea='informationContent']").contents().find('body').attr("contenteditable",false);
+        $(".layedit-tool-face").off();
+        $(".layedit-tool-link").off();
+        form.render();
     });
 
 
-    $('.uploadBtn').css('display','none');
-    picList = data.picList;
-    if (!isEmpty(picList)){
-        for (var i = 0;i < picList.length;i++) {
-            var picStr1;
-            if (picList[i].isMain === "1") {
-                picStr1 = '<div class="img" id="img'+ picList[i].attId +'">'
-                    +'<div class="img1"><img src='+ picList[i].attPath +' alt="" ></div>'
-                    +'<div class="img2"><span class="img3" id="span'+ picList[i].attId +'" mark='+ picList[i].attId +' style="color:red">主图</span><span class="img4" mark='+ picList[i].attId +'>删除图片</span></div>'
-                    +'</div>'
-                $("#isMain").val(picList[i].attId);
-            } else {
-                picStr1 = '<div class="img picDiv" id="img'+ picList[i].attId +'">'
-                    +'<div class="img1"><img src='+ picList[i].attPath +' alt="" ></div>'
-                    +'<div class="img2"><span class="img3" id="span'+ picList[i].attId +'" mark='+ picList[i].attId +'></span><span class="img4" mark='+ picList[i].attId +'></span></div>'
-                    +'</div>'
-            }
-            $("#picUpload").html(picStr1);
-            $('.img2').css('display','none');
-            $(".showStatus").hide();
-        }
-    }
 
-    $('input,select,textarea').attr("disabled","disabled");
-    property.setForm($("#infoForm"),data);
 
 
 }

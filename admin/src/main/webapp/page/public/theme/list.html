@@ -2,6 +2,7 @@
 <html>
 <head>
     <script src="../../../statics/libs/jquery-1.10.2.min.js"></script>
+    <script src="../../../statics/js/jquery.extend.js"></script>
     <link rel="stylesheet" href="../../../statics/css/font-awesome.min.css">
     <!--layui ztree样式-->
     <link rel="stylesheet" href="../../../statics/plugins/layui/css/layui.css" media="all">
@@ -35,10 +36,10 @@
                 <button class="layui-btn layui-btn-green" lay-submit="" lay-filter="moreSearch">
                     <i class="fa fa-chevron-down">&nbsp;</i>展开筛选
                 </button>
-                <button class="layui-btn search-btn myBtn"  lay-submit="" lay-filter="formDemo">
+                <button class="layui-btn search-btn myBtn layui-hide" id="search"  lay-submit="" lay-filter="formDemo">
                     <!--<i class="fa fa-search">&nbsp;</i>-->查询
                 </button>
-                <button type="reset" class="layui-btn myBtn" lay-submit="" lay-filter="clear"><!--<i class="fa fa-refresh">&nbsp;</i>-->重置</button>
+                <button type="reset" class="layui-btn myBtn layui-hide" id="reset" lay-submit="" lay-filter="clear"><!--<i class="fa fa-refresh">&nbsp;</i>-->重置</button>
             </div>
         </div>
         <div class="layui-card-body">
@@ -54,8 +55,7 @@
                 <div class="layui-form-item layui-col-md4 layui-col-sm4">
                     <label class="layui-form-label">来源: </label>
                     <div class="layui-input-block">
-                        <select id="themeSource" name="themeSource" lay-verify="">
-                            <option value="">请选择</option>
+                        <select id="themeSource" name="themeSource">
                         </select>
                     </div>
                 </div>
@@ -103,7 +103,7 @@
         <div class=" flexRight">
 
             <form action="" class="layui-form">
-                <button  id="btnAdd" class="layui-btn layui-btn-green upload" data-url="page/public/theme/add.html"
+                <button  id="btnAdd" class="layui-btn layui-btn-green upload layui-hide" data-url="page/public/theme/add.html"
                          title="添加主题展">
                     添加主题
                 </button>

@@ -475,5 +475,10 @@
 
   </select>
 
+  <delete id="deleteWfDetailByProcessId">
+      delete from wf_detail
+      where process_id = #{processId}
+  </delete>
+
 
 </mapper>

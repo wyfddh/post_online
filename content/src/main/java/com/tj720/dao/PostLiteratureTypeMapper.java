@@ -1,6 +1,7 @@
 package com.tj720.dao;
 
 import com.tj720.model.literature.PostLiteratureType;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,7 +18,9 @@ public interface PostLiteratureTypeMapper {
      * @param pid
      * @return
      */
-    List<PostLiteratureType> getLiteratureTypeByPid(String pid);
+    List<PostLiteratureType> getLiteratureTypeByPid(@Param("pid") String pid);
 
     PostLiteratureType getTypeById(String id);
+
+
 }

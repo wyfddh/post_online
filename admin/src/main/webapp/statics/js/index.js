@@ -103,7 +103,7 @@ function createMenu(url) {
                 $t.setStorageItem("menuList", result.data);
                 //显示菜单
                 setMenu(result.data);
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.error.message);
             }
         },
@@ -138,7 +138,7 @@ function setMenu(menuList) {
                 var $li = $(_li);
                 $li.find("a").after('<dl class="layui-nav-child">');
                 for (var j = 0; j < menuList[i].list.length; j++) {
-                    $li.find(".layui-nav-child").append(' <dd><a class="cy-page" href="javascript:;" data="'+menuList[i].key+'"  data-url="' + menuList[i].list[j].url + '" title="' + menuList[i].list[j].name + '">' + menuList[i].list[j].name + '</a></dd>');
+                    $li.find(".layui-nav-child").append(' <dd><a class="cy-page" href="javascript:;" data="'+menuList[i].list[j].key+'"  data-url="' + menuList[i].list[j].url + '" title="' + menuList[i].list[j].name + '">' + menuList[i].list[j].name + '</a></dd>');
                 }
             }
             _li = $li.prop("outerHTML");
@@ -149,6 +149,8 @@ function setMenu(menuList) {
         }
         $(".layui-nav-tree").append(_li);
 
+
+
        // $(".layui-nav-tree").eq(0).click();
     }
 
@@ -157,9 +159,13 @@ function setMenu(menuList) {
         element.render();
         $(".layui-nav-child")&&$(".layui-nav-child").each(function (i,elm) {
             if(i==0){
-                $(elm).find("dd").eq(0).find("a").click()
+                $(elm).find("dd").eq(0).find("a").click();
+                var bb = $(elm).find("dd").eq(0).find("a").attr("data");
+                localStorage.functinId = bb;
             }
         })
+        var aa = $(".layui-nav .layui-nav-tree").find(".layui-this").find('a').attr("data");
+        // console.log(aa);
     });
 }
 
@@ -245,8 +251,14 @@ $("#menuSearch").keyup(function () {
 $("#loginOut").click(function () {
     parent.layer.confirm('确定要退出么',{icon:3, title:'退出确认'}, function(index){
         localStorage.removeItem("userInfo");
-        window.location.href='/admin/login.html';
-        layer.close(index);
+        $.ajax({
+            type: "POST",
+            url: property.getProjectPath()+"backLogin/loginOut.do",
+            success: function (result) {
+                window.location.href='/admin/login.html';
+                layer.close(index);
+            }
+        });
     });
 
 });
@@ -290,7 +302,7 @@ function loadModules() {
                    }
                    })
                }
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.error.message);
             }
         },
@@ -300,6 +312,12 @@ function loadModules() {
     });
 
 }
+
+$('.saoma, .qqqun').hover(function() {
+    $(".qqqun").show();
+}, function() {
+    $(".qqqun").hide();
+});
 
 jQuery(document).ready(function () {
     if (window.history && window.history.pushState) {
@@ -312,4 +330,15 @@ jQuery(document).ready(function () {
     //
     window.history.pushState('forward', null, '');  //在IE中必须得有这两行
     window.history.forward(1);
+
+
 });
+
+/*document.onkeypress = function(e){
+    if(e.keyCode == 116){
+        e.preventDefault(); //组织默认刷新
+
+        /!*var iframeSrc = iframe.src;
+        iframe.src = "page/main/main.html";*!/
+    }
+}*/

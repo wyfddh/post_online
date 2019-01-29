@@ -4,6 +4,7 @@ package com.tj720.utils;/**
 
 
 import com.tj720.utils.common.Utils;
+import org.apache.commons.lang.StringUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -38,7 +39,7 @@ public class DatasMapUtils {
     }
 
     public static Date getFormatDate(Date date, String format) {
-        if (Utils.isEmpty(format)) {
+        if (StringUtils.isEmpty(format)) {
             format = "yyyy-MM-dd HH:mm:ss";
         }
         SimpleDateFormat dateFormat = new SimpleDateFormat(format);
@@ -53,7 +54,7 @@ public class DatasMapUtils {
 
     public static Date getFormatDate(String dates, String format) {
         Date date = null;
-        if (Utils.isEmpty(format)) {
+        if (StringUtils.isEmpty(format)) {
             format = "yyyy-MM-dd HH:mm:ss";
         }
         SimpleDateFormat dateFormat = new SimpleDateFormat(format);

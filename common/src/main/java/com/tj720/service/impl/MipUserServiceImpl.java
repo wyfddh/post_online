@@ -48,7 +48,7 @@ public class MipUserServiceImpl extends BaseServiceImpl<MipUser> implements MipU
 		}
 		MyCookie.addCookie("sessionAdminName", user.getNickName()==null?"":user.getNickName(), response);
 
-		MyCookie.deleteCookie(Const.COOKIE_PASSWORD, request, response);
+		MyCookie.deleteCookie(Const.COOKIE_INFO, request, response);
 		model.setSessionAdminName(user.getNickName());
 		model.setHeadimgurl(user.getAvatarurl());
 	}

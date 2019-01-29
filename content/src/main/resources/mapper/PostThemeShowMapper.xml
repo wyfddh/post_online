@@ -73,12 +73,6 @@
     <if test="themeSource != null and themeSource != ''">
       and theme_source = #{themeSource}
     </if>
-    <if test="orderBy == 1" >
-      order by update_date desc
-    </if>
-    <if test="orderBy == 2" >
-      order by create_date desc
-    </if>
   </select>
 
 
@@ -351,8 +345,6 @@
     <if test="themeSource != null and themeSource != ''">
       and theme_source = #{themeSource}
     </if>
-    order by
-    update_date desc
   </select>
 
 
@@ -514,19 +506,69 @@
     post_theme_show t
     where t.data_state = '1' and t.page_recommend = 1
     and (t.theme_source = 1 or (t.theme_source = '2' or t.process_result = '1'))
+    <if test="id != null">
+      and t.id = #{id}
+    </if>
     order by
     t.update_date desc
   </select>
-
 
 
 
   <select id="countWeb" resultType="int" parameterType="java.util.Map">
     select count(1) from  post_theme_show t
     where t.data_state = '1'  and t.page_recommend = 1
-    order by
-    t.update_date desc
   </select>
+
+
+
+  <select id="themeshowWebListRelation"  resultType="com.tj720.model.common.themeshow.PostThemeShow"
+          parameterType="java.util.Map">
+    select
+    t.id,
+    t.datum_ids  as datumIds,
+    t.theme_name as themeName,
+    t.theme_describe as themeDescribe,
+    t.create_date as createDate,
+    case
+    when exists (
+    select
+    w.id
+    from
+    post_web_collect w
+    where
+    t.id = w.cid
+    and  w.type = '1'
+    and  w.status =1
+    <choose>
+      <when test="userId != null and userId != ''">
+        and  w.user_id = #{userId}
+      </when>
+      <otherwise>
+        and  w.user_id = ''
+      </otherwise>
+    </choose>
+    ) then
+    '1'
+    else
+    '0'
+    end as hascollected
+    from
+    post_theme_show t
+    where t.data_state = '1' and t.id = #{id}
+    limit 1
+  </select>
+
+
+
+
+  <select id="countWebRelation" resultType="int" parameterType="java.util.Map">
+    select count(1) from  post_theme_show t
+    where t.data_state = '1'
+  </select>
+
+
+
 
 
   <select id="getCollectsById"  resultType="com.tj720.model.common.collect.Collect" parameterType="java.lang.String">

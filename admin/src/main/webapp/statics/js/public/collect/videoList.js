@@ -8,13 +8,19 @@ var main={
 
         // 给type 下拉框赋值
         var typeDatas = yc.ajaxGetByParams('sysDict/getSelectDataByKey.do', {key: 'post_collect'}, null);
-        var typeData = typeDatas.data.map((obj) => {return {value: obj.id, text: obj.dictName}});
+        var  typeData = typeDatas.data.map(function (obj){
+           return {value: obj.id, text: obj.dictName}
+        });
+        //var typeData = typeDatas.data.map((obj) => {return {value: obj.id, text: obj.dictName}});
         var selects_types = component.getSelect(typeData, null, "type");
         $("#type").html(selects_types);
         // 给 sonType 下拉框赋值
 
         var sonTypeDatas = yc.ajaxGetByParams('sysDict/getSelectDataByKey.do', {key: 'post_collect_two'}, null);
-        var sonTypeData = sonTypeDatas.data.map((obj) => {return {value: obj.id, text: obj.dictName}});
+        var sonTypeData = sonTypeDatas.data.map(function (obj) {
+            return { value: obj.id, text: obj.dictName };
+        });
+        //var sonTypeData = sonTypeDatas.data.map((obj) => {return {value: obj.id, text: obj.dictName}});
         var selects_sonTypes = component.getSelect(sonTypeData, null, "sonType");
         $("#sonType").html(selects_sonTypes);
 
@@ -80,7 +86,7 @@ var main={
                         if (result.success == 1) {
                             //reloadTable();
                             successMsg(msg);
-                        } else {
+                        } else if (result.success == 0){
                             //reloadTable();
                            // $(data.elem).attr("checked",false);
                             reloadTable();
@@ -218,10 +224,13 @@ function reloadTable(){
             switch(obj.event){
                 case 'getCheckData':
                     var data = checkStatus.data;
-                    var ids = data.map(obj => obj.id);
+                    //var ids = data.map(obj => obj.id);
+                    var ids = data.map(function (obj){
+                        return obj.id;
+                    });
                     var length = ids.length;
                     if (length <= 0) {
-                        errorMsg('请勾选要删除的藏品信息');
+                        alertMsg('请勾选要删除的藏品信息');
                         return ;
                     } else {
                         var idStr = ids.join(',');
@@ -229,7 +238,7 @@ function reloadTable(){
                         if (datas.success == 1) {
                             successMsg('批量删除成功');
                             reloadTable();
-                        } else {
+                        } else if (datas.success == 0){
                             errorMsg('批量删除失败');
                         }
                     }
@@ -247,7 +256,6 @@ function reloadTable(){
         //监听行工具事件
         table.on('tool(test)', function(obj){
             var data = obj.data;
-            //console.log(obj)
             if(obj.event === 'del'){
                 parent.layer.confirm('确定要删除么',{icon:3, title:'删除确认'}, function(index){
                     obj.del();
@@ -256,7 +264,7 @@ function reloadTable(){
                     if (datas.success == 1) {
                         successMsg('删除成功');
                         reloadTable();
-                    } else {
+                    } else if (datas.success == 0){
                         errorMsg('删除失败');
                     }
                     parent.layer.close(index);

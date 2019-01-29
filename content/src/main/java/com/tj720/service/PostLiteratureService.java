@@ -33,7 +33,7 @@ public interface PostLiteratureService {
      * @param size         每页显示数   @return com.tj720.controller.framework.JsonResult
      */
     JSONObject postLiteratureList(String key, String dataType, String status,String inventoryState, String orderBy, String open, Integer currentPage,
-            Integer size);
+            Integer size,String module);
 
     JsonResult postLiteratureSave(PostLiteratureWithBLOBs postLiteratureWithBLOBs);
 
@@ -137,13 +137,13 @@ public interface PostLiteratureService {
      * 查询文献采集统计
      * @return
      */
-    public JsonResult getVideoCjCount();
+    public JsonResult getVideoCjCount(String module);
 
     /**
      * 查询文献查询统计
      * @return
      */
-    public JsonResult getVideoCxCount();
+    public JsonResult getVideoCxCount(String module);
 
     /**
      * 查询待办

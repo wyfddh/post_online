@@ -33,8 +33,9 @@ public class TimeUtil {
 
 	static public String makeTempId() {
 		long ll = r.nextLong();
-		if (ll < 0)
+		if (ll < 0) {
 			ll = -ll;
+		}
 		String tid = "t" + Calendar.getInstance().getTimeInMillis() + "r" + ll;
 		return tid;
 	}
@@ -70,22 +71,25 @@ public class TimeUtil {
 	}
 
 	public static String parseDate(Calendar c) {
-		if (c == null)
+		if (c == null) {
 			return null;
+		}
 		String ddate = new SimpleDateFormat(DATE_FORMAT).format(c.getTime());
 		return ddate;
 	}
 
 	public static String parseTime(Calendar c) {
-		if (c == null)
+		if (c == null) {
 			return null;
+		}
 		String time = new SimpleDateFormat(TIME_FORMAT).format(c.getTime());
 		return time;
 	}
 
 	public static String parseDateTime(Calendar c) {
-		if (c == null)
+		if (c == null) {
 			return null;
+		}
 		String ddate = new SimpleDateFormat(DATETIME_FORMAT).format(c.getTime());
 		return ddate;
 	}
@@ -159,8 +163,9 @@ public class TimeUtil {
 	}
 
 	public static String date2String(Date tdate) {
-		if (tdate == null)
+		if (tdate == null) {
 			return null;
+		}
 		String date = new SimpleDateFormat(DATE_FORMAT).format(tdate);
 		if (date.length() == 8) {
 			date = date + "000000";
@@ -169,14 +174,16 @@ public class TimeUtil {
 	}
 
 	public static String string2SDate(String tt) {
-		if (tt == null || tt.length() < 8)
+		if (tt == null || tt.length() < 8) {
 			return "";
+		}
 		return tt.substring(0, 4) + "-" + tt.substring(4, 6) + "-" + tt.substring(6, 8);
 	}
 
 	public static String sDate2String(String tt) {
-		if (tt == null || tt.length() < 10)
+		if (tt == null || tt.length() < 10) {
 			return "";
+		}
 		return tt.substring(0, 4) + tt.substring(5, 7) + tt.substring(8, 10) + "000000";
 	}
 
@@ -328,10 +335,12 @@ public class TimeUtil {
 	 * @return
 	 */
 	public static long getDays(String date1, String date2) {
-		if (date1 == null || date1.isEmpty())
+		if (date1 == null || date1.isEmpty()) {
 			return 0;
-		if (date2 == null || date2.isEmpty())
+		}
+		if (date2 == null || date2.isEmpty()) {
 			return 0;
+		}
 		SimpleDateFormat myFormatter = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = null;
 		Date mydate = null;
@@ -404,7 +413,7 @@ public class TimeUtil {
 //		String[] times = getHoursMinutesSecondsBySec("36123230098");
 //		System.out.print("hour=" + times[0] + "--------minute=" + times[1] + "----------second=" + times[2]);
 		
-		System.out.println(getCurrentTime(1479205832650l));
+		System.out.println(getCurrentTime(1479205832650L));
 		Date date =new Date();
 		try{
 			SimpleDateFormat myFormatter = new SimpleDateFormat("yyyy-MM-dd");

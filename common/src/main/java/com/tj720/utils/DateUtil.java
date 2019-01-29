@@ -11,9 +11,9 @@ import java.util.Map;
   
 public class DateUtil {  
   
-    private static final ThreadLocal<SimpleDateFormat> threadLocal = new ThreadLocal<SimpleDateFormat>();  
+    private static final ThreadLocal<SimpleDateFormat> THREAD_LOCAL = new ThreadLocal<SimpleDateFormat>();
       
-    private static final Object object = new Object();  
+    private static final Object OBJECT = new Object();
       
     /** 
      * 获取SimpleDateFormat 
@@ -22,7 +22,7 @@ public class DateUtil {
      * @throws RuntimeException 异常：非法日期格式 
      */  
     private static SimpleDateFormat getDateFormat(String pattern) throws RuntimeException {  
-        SimpleDateFormat dateFormat = threadLocal.get();  
+        SimpleDateFormat dateFormat = THREAD_LOCAL.get();
         /*if (dateFormat == null) {
             synchronized (object) {  
                 if (dateFormat == null) {  
@@ -35,11 +35,11 @@ public class DateUtil {
         dateFormat.applyPattern(pattern);  
         return dateFormat; */
         // double-checked locking，而这是一种不正确的用法，并不能达到预期目标 modify by liqiang 2018/12/5
-        synchronized (object) {
+        synchronized (OBJECT) {
             if (dateFormat == null) {
                 dateFormat = new SimpleDateFormat(pattern);
                 dateFormat.setLenient(false);
-                threadLocal.set(dateFormat);
+                THREAD_LOCAL.set(dateFormat);
             }
             dateFormat.applyPattern(pattern);
             return dateFormat;
@@ -664,7 +664,9 @@ public class DateUtil {
             break;  
         case 6:  
             week = Week.SATURDAY;  
-            break;  
+            break;
+        default:
+            week = week;
         }  
         return week;  
     }  

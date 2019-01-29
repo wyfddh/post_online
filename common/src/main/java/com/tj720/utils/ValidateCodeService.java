@@ -84,49 +84,50 @@ public class ValidateCodeService {
 		Graphics g = buffImg.getGraphics();
 		// 生成随机数
 		//Random random = new Random();
-		SecureRandom random = null;
+//		SecureRandom random = null;
 		try {
-			random = SecureRandom.getInstance("SHA1PRNG");
+			SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
+			// 将图像填充为白色
+			Color color = new Color(255, 255, 255);
+			g.setColor(color);
+			g.fillRect(0, 0, width, height);
+			// 创建字体
+			Font font = new Font("",Font.BOLD,26);
+			g.setFont(font);
+
+			for (int i = 0; i < lineCount; i++) {
+				int xs = random.nextInt(width);
+				int ys = random.nextInt(height);
+				int xe = xs + random.nextInt(width / 8);
+				int ye = ys + random.nextInt(height / 8);
+				red = random.nextInt(255);
+				green = random.nextInt(255);
+				blue = random.nextInt(255);
+				g.setColor(new Color(red, green, blue));
+				g.drawLine(xs, ys, xe, ye);
+			}
+
+			// randomCode记录随机产生的验证码
+			StringBuffer randomCode = new StringBuffer();
+			// 随机产生codeCount个字符的验证码。
+			for (int i = 0; i < codeCount; i++) {
+				String strRand = String.valueOf(codeSequence[random
+						.nextInt(codeSequence.length)]);
+				// 产生随机的颜色值，让输出的每个字符的颜色值都将不同。
+				red = random.nextInt(255);
+				green = random.nextInt(255);
+				blue = random.nextInt(255);
+				g.setColor(new Color(red, green, blue));
+				g.drawString(strRand, (i + 1) * x, codeY);
+				// 将产生的四个随机数组合在一起。
+				randomCode.append(strRand);
+			}
+			// 将四位数字的验证码保存到Session中。
+			code = randomCode.toString();
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
-		// 将图像填充为白色
-		Color color = new Color(255, 255, 255);
-		g.setColor(color);
-		g.fillRect(0, 0, width, height);
-		// 创建字体
-		Font font = new Font("",Font.BOLD,26);
-		g.setFont(font);
 
-		for (int i = 0; i < lineCount; i++) {
-			int xs = random.nextInt(width);
-			int ys = random.nextInt(height);
-			int xe = xs + random.nextInt(width / 8);
-			int ye = ys + random.nextInt(height / 8);
-			red = random.nextInt(255);
-			green = random.nextInt(255);
-			blue = random.nextInt(255);
-			g.setColor(new Color(red, green, blue));
-			g.drawLine(xs, ys, xe, ye);
-		}
-
-		// randomCode记录随机产生的验证码
-		StringBuffer randomCode = new StringBuffer();
-		// 随机产生codeCount个字符的验证码。
-		for (int i = 0; i < codeCount; i++) {
-			String strRand = String.valueOf(codeSequence[random
-					.nextInt(codeSequence.length)]);
-			// 产生随机的颜色值，让输出的每个字符的颜色值都将不同。
-			red = random.nextInt(255);
-			green = random.nextInt(255);
-			blue = random.nextInt(255);
-			g.setColor(new Color(red, green, blue));
-			g.drawString(strRand, (i + 1) * x, codeY);
-			// 将产生的四个随机数组合在一起。
-			randomCode.append(strRand);
-		}
-		// 将四位数字的验证码保存到Session中。
-		code = randomCode.toString();
 	}
 
 	public void write(String path) throws IOException {

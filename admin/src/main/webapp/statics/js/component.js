@@ -145,12 +145,15 @@ Component.prototype.getAttachmentList = function (data) {
         "                                    </div>" +
         "                                    <div class=\"upRight\">" +
         "                                        <div class='layui-progress layui-col-md8 layui-col-sm8'  lay-filter='progressBar"+data[i].attId+"'>" +
-        "                                            <div class=\"layui-progress-bar layui-bg-green\" lay-percent=\"100%\"></div>" +
-        "                                        </div>" +
-        "                                        <span class=\"layui-col-md2 layui-col-sm2\">100%</span>" +
-        "                                        <a href=\"javascript:void (0);\" class=\"layui-col-md1 layui-col-sm1 demo-delete\" data-id='"+data[i].attId+"'>删除</a>" +
-        "                                    </div>" +
-        "                                </li>";
+        "                                            <div class=\"layui-progress-bar layui-progress-big layui-bg-green\" lay-percent=\"100%\">" +
+            "<span class=\"layui-col-md2 layui-col-sm2\">100%</span>" +
+            "</div></div>" +
+
+            "                                        <a href=\"javascript:void (0);\" style=\"margin-left:15px;\"" +
+            " class=\"layui-col-md1 layui-col-sm1 demo-delete\" data-id='"+data[i].attId+"'>删除</a>" +
+            "                                    </div>" +
+
+            "                                </li>";
         htmlStr = htmlStr+tr;
     }
     return htmlStr;

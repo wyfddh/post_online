@@ -1,17 +1,10 @@
 package com.tj720.controller.base.controller;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 
 import com.tj720.controller.framework.MyException;
-import com.tj720.model.common.TokenCode;
 import com.tj720.model.common.system.user.UserDto;
-import com.tj720.utils.common.TokenCodeUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,23 +41,23 @@ public class BaseController {
         this.session = request.getSession(); 
     } 
     
-    /**
-     * 获取当前登录用户ID
-     * </p>
-     * @param token
-     * 			登录签名
-     * @return
-     */
-    public String getLoginUser(String token) {
-		String cuserId = (String) this.session.getAttribute("userId");
-		if (StringUtils.isBlank(cuserId)) {
-			TokenCode tokenCode = TokenCodeUtil.getTokenCode(token);
-			if (tokenCode != null && StringUtils.isNotBlank(tokenCode.getUserId())) {
-				cuserId = tokenCode.getUserId();
-			}
-		}
-		return cuserId;
-	}
+//    /**
+//     * 获取当前登录用户ID
+//     * </p>
+//     * @param token
+//     * 			登录签名
+//     * @return
+//     */
+//    public String getLoginUser(String token) {
+//		String cuserId = (String) this.session.getAttribute("userId");
+//		if (StringUtils.isBlank(cuserId)) {
+//			TokenCode tokenCode = TokenCodeUtil.getTokenCode(token);
+//			if (tokenCode != null && StringUtils.isNotBlank(tokenCode.getUserId())) {
+//				cuserId = tokenCode.getUserId();
+//			}
+//		}
+//		return cuserId;
+//	}
     
 	
 	/**

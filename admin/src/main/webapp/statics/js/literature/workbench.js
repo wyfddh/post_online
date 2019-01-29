@@ -69,17 +69,18 @@ var main={
 main.init();
 
 function loadCount() {
+    var module = localStorage.functinId;
     $.ajax({
         type:"get",
         async:false,
-        url:property.getProjectPath()+"postLiterature/getVideoCjCount.do",
+        url:property.getProjectPath()+"postLiterature/getVideoCjCount.do?module="+module,
         success:function(result) {
             if (result.success == 1) {
                 var data = result.data;
                 Tcount = parseInt(data.Tcount);
                 Scount = parseInt(data.Scount);
                 Ycount = parseInt(data.Ycount);
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.error.message);
             }
         },
@@ -91,14 +92,14 @@ function loadCount() {
     $.ajax({
         type:"get",
         async:false,
-        url:property.getProjectPath()+"postLiterature/getVideoCxCount.do",
+        url:property.getProjectPath()+"postLiterature/getVideoCxCount.do?module="+module,
         success:function(result) {
             if (result.success == 1) {
                 var data = result.data;
                 openVideoCount = parseInt(data.videoOpenCount);
                 applyCount = parseInt(data.videoCxApply);
                 approvalCount = parseInt(data.videoCxApproval);
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.error.message);
             }
         },
@@ -119,7 +120,7 @@ function loadTask() {
             if (result.success == 1) {
                 var data = result.data;
                 undoTask = data;
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.error.message);
             }
         },
@@ -136,7 +137,7 @@ function loadTask() {
             if (result.success == 1) {
                 var data = result.data;
                 doneTask = data;
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.error.message);
             }
         },
@@ -153,7 +154,7 @@ function loadTask() {
             if (result.success == 1) {
                 var data = result.data;
                 finishTask = data;
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.error.message);
             }
         },
@@ -186,7 +187,7 @@ function loadNotice() {
                     var id = $(this).attr("data-id");
                     showNotice(id);
                 })
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.error.message);
             }
         },
@@ -208,7 +209,7 @@ function showTask(processInstId,pageStatus) {
                 var data = result.data;
 
                 goPage(1,JSON.stringify(data),data.id,pageStatus);
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.error.message);
             }
         },
@@ -253,7 +254,7 @@ function getShortcutEntrance() {
                         continue;
                     }
                     var tempLi = '<li class="layui-nav-item"><a class="cy-page shortcut" href="javascript:;" data-name="'
-                        +shortcutEntranceList[i].name+'" data-url="'+shortcutEntranceList[i].url+'"><img'
+                        +shortcutEntranceList[i].name+'" data="'+shortcutEntranceList[i].id+'" data-url="'+shortcutEntranceList[i].url+'"><img'
                         +' src="'+shortcutEntranceList[i].icon+'" alt=""><span>'+shortcutEntranceList[i].name+'</span></a></li>';
                     liList = liList+tempLi;
                 }
@@ -262,9 +263,10 @@ function getShortcutEntrance() {
                 $(".shortcut").click(function () {
                     var dataUrl = $(this).attr("data-url");
                     var name = $(this).attr("data-name");
+                    localStorage.functinId = $(this).attr("data");
                     parent.$t.goToPageSimple(dataUrl,name,"page/literature/workbench.html");
                 })
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.error.message);
             }
         },
@@ -316,7 +318,7 @@ function setShortcutEntrance() {
                             var data = result.data;
                             successMsg("设置成功!");
                             getShortcutEntrance();
-                        } else {
+                        } else if (result.success == 0){
                             errorMsg(result.error.message);
                         }
                     },
@@ -341,7 +343,7 @@ function showNotice(id,pageStatus) {
                 var data = result.data;
                 updateNotice(id);
                 goPage("1",JSON.stringify(data),data.id,pageStatus);
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.error.message);
             }
         },
@@ -361,7 +363,7 @@ function updateNotice(id) {
         success:function(result) {
             if (result.success == 1) {
                 var data = result.data;
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.error.message);
             }
         },

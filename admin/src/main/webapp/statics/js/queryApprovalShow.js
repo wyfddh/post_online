@@ -6,6 +6,7 @@ var tableId = '';
 var attachmentsList = null;
 var commentsList = new Array();
 var statusDictList = property.getDictData("video_status");
+var approvalStatusDictList = property.getDictData("approval_status");
 var form1;
 var videoId = null;
 var processInstId = null;
@@ -68,7 +69,6 @@ var main={
                 url:property.getProjectPath()+"PostVideo/queryPostVideoDtoById.do",
                 success:function(result) {
                     if (result.success == 1) {
-                        console.log(result.data);
                         setFormData(result.data);
 
                         //设置按钮的显示与隐藏
@@ -106,7 +106,7 @@ var main={
                         }
                         main.initTable();
                         main.tabBind();
-                    } else {
+                    } else if (result.success == 0){
                         errorMsg(result.error.message);
                     }
                 },
@@ -150,7 +150,7 @@ var main={
                         if (result.success == 1) {
                             successMsg("申请成功");
                             parent.$t.goback("page/video/applyMangerList.html");
-                        } else {
+                        } else if (result.success == 0){
                             errorMsg(result.error.message);
                         }
                     },
@@ -186,7 +186,7 @@ var main={
                         if (result.success == 1) {
                             successMsg("申请成功");
                             parent.$t.goback("page/video/applyMangerList.html");
-                        } else {
+                        } else if (result.success == 0){
                             errorMsg(result.error.message);
                         }
                     },
@@ -353,10 +353,9 @@ function loadData(id) {
             url:property.getProjectPath()+"PostVideo/queryPostVideoDtoById.do",
             success:function(result) {
                 if (result.success == 1) {
-                    console.log(result.data);
                     setFormData(result.data);
                     form.render('select');
-                } else {
+                } else if (result.success == 0){
                     errorMsg(result.error.message);
                 }
             },
@@ -407,9 +406,8 @@ function loadAttachments(fkId) {
         url:property.getProjectPath()+"attach/getAttachmentsByFkId.do",
         success:function(result) {
             if (result.success == 1) {
-                console.log(result.data);
                 datas = result.data;
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.data);
             }
         },
@@ -430,9 +428,8 @@ function queryPostVideoComments(postVideoId) {
         url:property.getProjectPath()+"PostVideoComments/queryPostVideoComments.do",
         success:function(result) {
             if (result.success == 1) {
-                console.log(result.data);
                 datas = result.data;
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.data);
             }
         },
@@ -471,7 +468,7 @@ function loadTable() {
 
         table.render({
             elem: '#approvalInfo'
-            ,url:property.getProjectPath()+'PostVideo/getQueryVideoInfo.do?id='+videoId+"&currentUserId="+userInfo.userId
+            ,url:property.getProjectPath()+'PostVideo/getQueryApplyRecord.do?processInstId='+processInstId
             ,cols: [[
                 {type:'numbers',title:'序号'}
                 ,{field:'actionTime', title:'时间',templet: function(res){
@@ -485,7 +482,7 @@ function loadTable() {
                     return property.getTextByValuePlus(orgList,res.applyOrg,"departmentId",'departmentName');
                 }}
                 ,{field:'actionResult', title:'资料状态',templet: function(res){
-                    return property.getTextByValuePlus(statusDictList,res.actionResult,"dictCode",'dictName');
+                    return property.getTextByValuePlus(approvalStatusDictList,res.actionResult,"dictCode",'dictName');
                 }}
                 ,{field:'remark', title:'备注'}
             ]]
@@ -511,7 +508,7 @@ function loadApplyInfo(processInstId){
                 $("#applyReason").val(datas.actionName);
                 $("#remark").val(datas.remark);
                 $("#approval").val(datas.approval);
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.data);
             }
         },

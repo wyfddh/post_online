@@ -43,4 +43,6 @@ public interface WfDetailMapper {
     List<WfDetail> getWfDetailByPid(@Param("processInstId") String processInstId);
 
     List<WfDetail> getByMap(HashMap<String, Object> map);
+
+    Integer deleteWfDetailByProcessId(@Param("processId") String processId);
 }

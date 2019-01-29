@@ -93,7 +93,7 @@ public class PostVolunteerActivitiesServiceImpl implements PostVolunteerActiviti
         PostVolunteerActivitiesVo vo = postVolunteerActivitiesMapper.getActivitiesById(id);
         String coverId = vo.getCoverId();
         if (!StringUtils.isEmpty(coverId)) {
-            Attachment attachment = attachmentService.getAttachmentsById(coverId);
+            Attachment attachment = attachmentService.getFileTransPath(coverId);
             if (null != attachment) {
                 vo.setCoverUrl(attachment.getAttPath());
             }

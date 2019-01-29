@@ -1,6 +1,6 @@
 var yc = {
 
-    password: '**********',
+    info: '**********',
 
     arrayToJsonObject: function (keyArray, valueArray) {
         var datas = {};
@@ -123,7 +123,7 @@ var yc = {
                     if (!yc.isNull(msg)) {
                         successMsg(msg);
                     }
-                } else {
+                } else if (result.success == 0){
                     errorMsg(result.error.message);
                 }
             },
@@ -150,7 +150,7 @@ var yc = {
                     if (!yc.isNull(msg)) {
                         successMsg(msg);
                     }
-                } else {
+                } else if (result.success == 0){
                     errorMsg(result.error.message);
                 }
             },
@@ -175,7 +175,7 @@ var yc = {
             success: function (result) {
                 if (result.success == 1) {
                     datas = result;
-                } else {
+                } else if (result.success == 0){
                     errorMsg(result.error.message);
                 }
             },
@@ -202,7 +202,7 @@ var yc = {
                     if (!yc.isNull(msg)) {
                         successMsg(msg);
                     }
-                } else {
+                } else if (result.success == 0){
                     errorMsg(result.error.message);
                 }
             },
@@ -231,7 +231,7 @@ var yc = {
                     if (!yc.isNull(msg)) {
                         successMsg(msg);
                     }
-                } else {
+                } else if (result.success == 0){
                     // errorMsg
                     errorMsg(result.error.message);
                 }
@@ -262,7 +262,7 @@ var yc = {
                             parent.$t.goback("page/Exhibition/videoList.html");
                         });
                     }
-                } else {
+                } else if (result.success == 0){
                     // errorMsg
                     errorMsg(result.error.message);
                     //加下非空校验

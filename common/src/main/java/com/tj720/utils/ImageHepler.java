@@ -261,10 +261,11 @@ public class ImageHepler {
         {
             for(int j = 0; j < imgHeight; ++j)
             {
-                if(bImage.getRGB(i, j) == c)
-                    bi.setRGB(i, j, c & 0x00ffffff);//这里把背景设为透明
-                else
-                    bi.setRGB(i, j, bImage.getRGB(i, j));
+                if(bImage.getRGB(i, j) == c) {
+					bi.setRGB(i, j, c & 0x00ffffff);//这里把背景设为透明
+				} else {
+					bi.setRGB(i, j, bImage.getRGB(i, j));
+				}
             }
         }
 		return bImage;

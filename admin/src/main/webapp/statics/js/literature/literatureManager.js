@@ -11,13 +11,14 @@ var main = {
     })
   },
   initTable: function () {
+    var module = localStorage.functinId;
     var _this = this;
     layui.use(['form','table'], function () {
       var form = layui.form;
       table = layui.table;
       tableIns = table.render({
         elem: '#literature'
-        , url: projectName + '/postLiterature/postLiteratureList.do'
+        , url: projectName + '/postLiterature/postLiteratureList.do?module='+module
         , request:{
               pageName: 'currentPage',
               limitName: 'size'
@@ -78,7 +79,7 @@ var main = {
                     success:function(result) {
                       if (result.success == "1") {
                         successMsg("批量撤回成功！");
-                      } else {
+                      } else if (result.success == "0"){
                         var resultMsg = result.error.message;
                         errorMsg(resultMsg);
                       }
@@ -150,7 +151,7 @@ var main = {
                   success:function(result) {
                     if (result.success == "1") {
                       successMsg("批量设置成功！");
-                    } else {
+                    } else if (result.success == 0){
                       var resultMsg = result.error.message;
                       errorMsg(resultMsg);
                     }
@@ -226,7 +227,7 @@ var main = {
               success:function(result) {
                 if (result.success == "1") {
                   successMsg("删除成功！");
-                } else {
+                } else if (result.success == "0"){
                   var resultMsg = result.error.message;
                   errorMsg(resultMsg);
                 }
@@ -255,7 +256,7 @@ var main = {
               success:function(result) {
                 if (result.success == "1") {
                   successMsg("发布成功！");
-                } else {
+                } else if (result.success == "0"){
                   var resultMsg = result.error.message;
                   errorMsg(resultMsg);
                 }
@@ -281,7 +282,7 @@ var main = {
               success:function(result) {
                 if (result.success == "1") {
                   successMsg("撤回成功！");
-                } else {
+                } else if (result.success == "0"){
                   var resultMsg = result.error.message;
                   errorMsg(resultMsg);
                 }
@@ -334,7 +335,7 @@ var main = {
               success:function(result) {
                 if (result.success == "1") {
                   successMsg("设置成功！");
-                } else {
+                } else if (result.success == "0"){
                   var resultMsg = result.error.message;
                   errorMsg(resultMsg);
                 }
@@ -509,7 +510,7 @@ function uploadValue(value) {
         if (result.success == "1") {
           successMsg("批量导入成功！")
           tableIns.reload();
-        } else {
+        } else if (result.success == 0){
           var resultMsg = result.error.message;
           errorMsg(resultMsg);
         }
@@ -517,8 +518,7 @@ function uploadValue(value) {
       error:function(result) {
         resetFileInput($("#uploadFile"));
         layui.layer.close(loadingIndex);
-        var resultMsg = result.error.message;
-        errorMsg(resultMsg);
+        errorMsg("系统异常");
       }
     })
   } else {

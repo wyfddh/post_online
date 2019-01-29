@@ -14,7 +14,7 @@ public class Constants {
 	public static final Integer RES_SUCCESS = 1; 
 	
 	//未登录
-	public static final Integer RES_NotLogin = -1; 
+	public static final Integer RES_NOT_LOGIN = -1;
 	
 	//系统异常
 	public static final Integer RES_FAIL = 0; 

@@ -12,6 +12,7 @@ import com.tj720.model.common.education.Education;
 import com.tj720.model.common.education.EducationDto;
 import com.tj720.service.AttachmentService;
 import com.tj720.service.EducationService;
+import com.tj720.service.ImageUtiilService;
 import com.tj720.utils.Page;
 import com.tj720.utils.Tools;
 import com.tj720.utils.common.IdUtils;
@@ -32,9 +33,8 @@ import java.util.*;
  **/
 @Service
 public class EducationServiceImpl implements EducationService {
-
-
-
+    @Autowired
+    ImageUtiilService imageUtilService;
 
     private Education setTimeInfo(Education education, String type) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -79,7 +79,7 @@ public class EducationServiceImpl implements EducationService {
             educationDto.setOther1(education.getOther1());
             educationDto.setOther2(education.getOther2());
             educationDto.setOther3(education.getOther3());
-            List<Attachment> attList = getListUseAttachments(picId);
+            List<Attachment> attList = attachmentService.getFileTransPathList(picId);
             educationDto.setAttachmentList(attList);
             educationDtos.add(educationDto);
         }
@@ -124,6 +124,7 @@ public class EducationServiceImpl implements EducationService {
             education = setTimeInfo(education, "0");
             if(education!= null){
                 education.setMsg(education.getMsg().trim());
+                education.setMsg(imageUtilService.backContent(education.getMsg()));
             }
             int count = educationMapper.insertSelective(education);
             if (count > 0) {
@@ -141,6 +142,7 @@ public class EducationServiceImpl implements EducationService {
     public JsonResult updateEducation(Education education) {
         try {
             education = setTimeInfo(education, "1");
+            education.setMsg(imageUtilService.backContent(education.getMsg()));
             int count = educationMapper.updateByPrimaryKeySelective(education);
             if (count == 1) {
                 return new JsonResult(1, null);
@@ -180,7 +182,7 @@ public class EducationServiceImpl implements EducationService {
                 educationDto.setTitle(education.getTitle());
                 String picId = education.getPicId();
                 educationDto.setPicId(picId);
-                educationDto.setMsg(education.getMsg());
+                educationDto.setMsg(imageUtilService.getContent(education.getMsg(),"1"));
                 educationDto.setMsgPicId(education.getMsgPicId());
                 educationDto.setSort(education.getSort());
                 educationDto.setCreateTime(education.getCreateTime());
@@ -190,7 +192,7 @@ public class EducationServiceImpl implements EducationService {
                 educationDto.setOther1(education.getOther1());
                 educationDto.setOther2(education.getOther2());
                 educationDto.setOther3(education.getOther3());
-                List<Attachment> attList = getListUseAttachments(picId);
+                List<Attachment> attList = attachmentService.getFileTransPathList(picId);
                 educationDto.setAttachmentList(attList);
                 if (education.getId() != null) {
                     return new JsonResult(1, educationDto);
@@ -235,12 +237,12 @@ public class EducationServiceImpl implements EducationService {
                 //获取图片url
                 education.setMainPicUrl("");
                 List<Attachment> picList = new ArrayList<Attachment>();
-                picList = attachmentService.getListByIds(education.getPicId());
-                for (Attachment attachment : picList) {
-                    if(! attachment.getAttPath().contains(config.getRootUrl())){
-                        attachment.setAttPath(config.getRootUrl()+attachment.getAttPath());
-                    }
-                }
+                picList = attachmentService.getFileTransPathList(education.getPicId());
+//                for (Attachment attachment : picList) {
+////                    if(! attachment.getAttPath().contains(config.getRootUrl())){
+////                        attachment.setAttPath(config.getRootUrl()+attachment.getAttPath());
+////                    }
+//                }
                 education.setPicList(picList);
             }
 
@@ -267,7 +269,7 @@ public class EducationServiceImpl implements EducationService {
         try {
             Integer size = ids.size();
             Integer i = educationMapper.updateEducationByIds(ids);
-            if (size == i) {
+            if (size.equals(i)) {
                 return new JsonResult(1, null);
             } else {
                 return new JsonResult(0, "41000014");

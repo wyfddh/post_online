@@ -7,9 +7,11 @@ import javax.servlet.http.HttpServletRequest;
 public class MyString {
 	public static boolean isEquals(String tagValue,String value)
 	{
-		if(isEmpty(tagValue) || isEmpty(value))
-			return false;
-		else return tagValue.equals(value);
+		if(isEmpty(tagValue) || isEmpty(value)) {
+            return false;
+        } else {
+            return tagValue.equals(value);
+        }
 	}
 	/**
 	 * 判断对象是否为空
@@ -22,10 +24,12 @@ public class MyString {
 	public static boolean isEmpty(Object object)
 	{
 		if(object instanceof String){
-            return object == null || object.toString().trim().equals("") || object.toString().trim().equalsIgnoreCase("null") || object.toString().equals("undefined");
+            return object == null || "".equals(object.toString().trim()) || "null".equalsIgnoreCase(object.toString().trim()) || "undefined".equals(object.toString());
 		}else if(object instanceof List<?>){
             return object == null || ((List<?>) object).size() == 0;
-		}else return object == null;
+		}else {
+            return object == null;
+        }
     }
 	
 	// 从request中获取值

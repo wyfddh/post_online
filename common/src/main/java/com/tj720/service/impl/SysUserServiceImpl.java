@@ -27,6 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @Author: 余超
@@ -47,7 +48,6 @@ public class SysUserServiceImpl implements SysUserService {
     @Autowired
     UserDeptService userDeptService;
 
-    private static String userId = "sysadmin";
 
     private SysUser setTimeInfo(SysUser sysUser, String type) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -59,36 +59,42 @@ public class SysUserServiceImpl implements SysUserService {
             e.printStackTrace();
         }
         sysUser.setUpdateTime(date);
-        sysUser.setUpdater(userId);
+        sysUser.setUpdater(Tools.getUserId());
         // 0代表 没有创建的用户，录入创建人和创建时间
         if ("0".equals(type)) {
             sysUser.setCreateTime(date);
-            sysUser.setCreator(userId);
+            sysUser.setCreator(Tools.getUserId());
         }
         return sysUser;
     }
 
     @Override
+    @Transactional
     public JsonResult addSysUser(SysUserDto sysUserDto) {
         List<SysUser> user = null;
         //检测该用户是否存在，（用户名）
         String userName = sysUserDto.getSysUser().getUserName();
-        if (!StringUtils.isEmpty(userName)) {
+        if (StringUtils.isEmpty(userName)) {
 //            SysUserExample example = new SysUserExample();
 //            SysUserExample.Criteria criteria = example.createCriteria();
 //            criteria.andUserNameEqualTo(userName);
 //            criteria.andIsdeleteEqualTo(0);
 //            user = sysUserMapper.selectByExample(example);
+//            HashMap<String,Object> map = new HashMap<String,Object>();
+//            map.put("userName",userName);
+////            map.put("isdelete",0);
+//            user = sysUserMapper.getByMap(map);
+            return new JsonResult("20000022");
+
+        }else{
             HashMap<String,Object> map = new HashMap<String,Object>();
             map.put("userName",userName);
-            map.put("isdelete",0);
             user = sysUserMapper.getByMap(map);
-
         }
 
-        if (!Utils.isEmpty(user))
+        if (user != null && user.size()>0) {
             return new JsonResult(0, null, "20000002");
-        else {
+        } else {
             try {
                 // 设置主键
                 String id = IdUtils.getIncreaseIdByNanoTime();
@@ -121,6 +127,7 @@ public class SysUserServiceImpl implements SysUserService {
 
     // 此时编辑用户时，需不需要校验密码
     @Override
+    @Transactional
     public JsonResult updateSysUser(SysUserDto sysUserDto) {
 
         int userNum = 1;
@@ -129,7 +136,6 @@ public class SysUserServiceImpl implements SysUserService {
         if (StringUtils.isEmpty(userId)) {
             return new JsonResult(0, null, "20000007");
         }
-
         else {
 //            SysUserExample example = new SysUserExample();
 //            SysUserExample.Criteria criteria = example.createCriteria();
@@ -138,19 +144,17 @@ public class SysUserServiceImpl implements SysUserService {
 //            userNum = sysUserMapper.countByExample(example);
             HashMap<String,Object> map = new HashMap<String,Object>();
             map.put("userId",userId);
-            map.put("isdelete",0);
             userNum = sysUserMapper.countByMap(map);
         }
-        if (userNum <= 0)
+        if (userNum <= 0) {
             return new JsonResult(0, null, "20000008");
-        else {
+        } else {
             try {
                 SysUser sysUser = sysUserDto.getSysUser();
                 sysUser = setTimeInfo(sysUser, "1");
+                sysUser.setStatus(1);
                 // 加密密码
                 sysUser.setPassword(sysUserDto.getSysUser().getPassword());
-                sysUser.setStatus(1);
-                sysUser.setIsdelete(0);
                 int count = sysUserMapper.updateByPrimaryKeySelective(sysUser);
                 JsonResult URjsonResult = roleAuthService.updateRoleAuth(sysUserDto.getSysRoleAuth().getRoleId(), sysUserDto
                         .getSysUser().getId(), "user");
@@ -198,7 +202,7 @@ public class SysUserServiceImpl implements SysUserService {
     @Override
     public JsonResult updateSysUserType(SysUser sysUser) {
         try {
-            if (Utils.isEmpty(sysUser.getId())) {
+            if (StringUtils.isEmpty(sysUser.getId())) {
                 return new JsonResult(0, null, "20000001");
             } else {
                 int count = sysUserMapper.updateByPrimaryKeySelective(sysUser);
@@ -222,9 +226,10 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
+    @Transactional
     public JsonResult deleteSysUser(SysUserDto sysUserDto) {
         try {
-            if (Utils.isEmpty(sysUserDto.getSysUser().getId())) {
+            if (StringUtils.isEmpty(sysUserDto.getSysUser().getId())) {
                 return new JsonResult(0, null, "20000008");
             }
             // 是否删除关联表的数据 -> 删除
@@ -245,17 +250,18 @@ public class SysUserServiceImpl implements SysUserService {
     }
 
     @Override
+    @Transactional
     public JsonResult deleteSysUserById(String sysUserId) {
         if (StringUtils.isEmpty(sysUserId)) {
             return new JsonResult(0, null, "20000008");
         }
         try {
-            SysUser sysUser = setTimeInfo(new SysUser(), "1");
-            sysUser.setId(sysUserId);
-            sysUser.setIsdelete(1);
+
 
             // 假删除 控制isdelete 字段 1 为删除  0为存在
-            int count = sysUserMapper.updateByPrimaryKeySelective(sysUser);
+//            int count = sysUserMapper.updateByPrimaryKeySelective(sysUser);
+
+            int count = sysUserMapper.deleteByPrimaryKey(sysUserId);
             int URcount = roleAuthService.deleteRoleAuthById(null, sysUserId, "user").getSuccess();
             int UDcount = userDeptService.deleteUserDeptById(sysUserId).getSuccess();
 
@@ -338,7 +344,6 @@ public class SysUserServiceImpl implements SysUserService {
 
             HashMap<String,Object> map = new HashMap<String,Object>();
             map.put("userName",sysUserName);
-            map.put("isdelete",0);
             List<SysUser> sysUserList = sysUserMapper.getByMap(map);
 
             int size = sysUserList.size();

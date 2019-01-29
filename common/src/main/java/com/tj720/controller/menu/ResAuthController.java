@@ -143,7 +143,7 @@ public class ResAuthController {
     public JsonResult queryMenuListByPid(String pId,@RequestParam(defaultValue = "0") String type
             ,@RequestParam(defaultValue = "0") String queryType,@RequestParam String currentUserId){
         try {
-            if (queryType.equals("1") ){
+            if ("1".equals(queryType)){
                 List<SysFunction> list = resAuthService.selectByParentIdPlus(pId,type,currentUserId);
                 return new JsonResult(1,list);
             }else {
@@ -185,8 +185,21 @@ public class ResAuthController {
 
     @ControllerAop(action = "根据用户id查询功能列表")
     @RequestMapping("/getFunctionByUser")
-    public JsonResult getFunctionByUser(@RequestParam String userId,@RequestParam(defaultValue = "1") String type){
-        JsonResult jsonResult = resAuthService.getFunctionByUser(userId,type);
+    public JsonResult getFunctionByUser(@RequestParam String userId,@RequestParam(defaultValue = "1") String type,String currentId){
+        JsonResult jsonResult = resAuthService.getFunctionByUser(userId,type,currentId);
+        return jsonResult;
+    }
+
+    @ControllerAop(action = "根据用户id查询功能列表")
+    @RequestMapping("/getFunctionTreeByUser")
+    public JsonResult getFunctionTreeByUser(@RequestParam String userId,@RequestParam(defaultValue = "1") String type,String currentId){
+        JsonResult jsonResult = resAuthService.getFunctionTreeByUser(userId,type,currentId);
+        return jsonResult;
+    }
+
+    @RequestMapping("/getFunctionTreeByRole")
+    public JsonResult getFunctionTreeByRole(@RequestParam String roleId,@RequestParam(defaultValue = "1") String type,String currentId){
+        JsonResult jsonResult = resAuthService.getFunctionTreeByRole(roleId,type,currentId);
         return jsonResult;
     }
 }

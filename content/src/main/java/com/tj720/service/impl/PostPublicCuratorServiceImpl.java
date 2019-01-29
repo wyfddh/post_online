@@ -16,6 +16,7 @@ import com.tj720.service.PostPublicCuratorService;
 import com.tj720.utils.Page;
 import com.tj720.utils.Tools;
 import com.tj720.utils.common.IdUtils;
+import javax.tools.Tool;
 import net.sf.json.JSONArray;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @ClassName: PosPublicCuratorServiceImpl
@@ -34,6 +36,7 @@ import java.util.List;
  **/
 @Service
 public class PostPublicCuratorServiceImpl implements PostPublicCuratorService{
+
 
     @Autowired
     private PostPublicCuratorMapper postPublicCuratorMapper;
@@ -59,32 +62,35 @@ public class PostPublicCuratorServiceImpl implements PostPublicCuratorService{
     @Override
     public JsonResult getCuratorList(String themeName, String processState, String processResult, Page page) throws Exception{
         try {
-            Integer count = postPublicCuratorMapper.count(themeName, processState, processResult, page.getCurrentPage(), page.getSize());
-            page.setAllRow(count);
-            List<PostThemeShow> curatorList = postPublicCuratorMapper.getCuratorList(themeName, processState, processResult, page.getStart(),
-                    page.getSize());
-            //查询分页数据
-            for (PostThemeShow postThemeShow : curatorList){
-                List<CollectDto> collectList = postCollectionTypeMapper.selectCollectByThemeId(postThemeShow.getId());
-                postThemeShow.setCollectionAmount(String.valueOf(collectList.size()));
-                //获取图片url
-                postThemeShow.setMainPicUrl("");
-                List<Attachment> picList = new ArrayList<Attachment>();
-                picList = attachmentService.getListByIds(postThemeShow.getDatumIds());
-                for (Attachment attachment : picList) {
-                    if(!attachment.getAttPath().contains(config.getRootUrl())){
-                        attachment.setAttPath(config.getRootUrl()+attachment.getAttPath());
-                    }
+            String userId = Tools.getUserId();
+            if (StringUtils.isNotBlank(userId)) {
 
-                    if (attachment.getIsMain().equals("1")){
-                        postThemeShow.setMainPicUrl(attachment.getAttPath());
-                        break;
+                Integer count = postPublicCuratorMapper.count(themeName, processState, processResult, page.getCurrentPage(), page.getSize());
+                page.setAllRow(count);
+                List<PostThemeShow> curatorList = postPublicCuratorMapper.getCuratorList(themeName, processState, processResult, page.getStart(),
+                        page.getSize(),userId);
+                //查询分页数据
+                for (PostThemeShow postThemeShow : curatorList){
+                    List<CollectDto> collectList = postCollectionTypeMapper.selectCollectByThemeId(postThemeShow.getId());
+                    postThemeShow.setCollectionAmount(String.valueOf(collectList.size()));
+                    //获取图片url
+                    postThemeShow.setMainPicUrl("");
+                    List<Attachment> picList = new ArrayList<Attachment>();
+                    picList = attachmentService.getFileTransPathList(postThemeShow.getDatumIds());
+                    for (Attachment attachment : picList) {
+                        if ("1".equals(attachment.getIsMain())){
+                            postThemeShow.setMainPicUrl(attachment.getAttPath());
+                            break;
+                        }
                     }
+                    postThemeShow.setPicList(picList);
                 }
-                postThemeShow.setPicList(picList);
+                return new JsonResult(1,curatorList);
+            }  else {
+                return new JsonResult(0,null,"111116");
             }
 
-            return new JsonResult(1,curatorList);
+
         }catch (Exception e){
             e.printStackTrace();
             return new JsonResult(0,null,"90000012");
@@ -93,32 +99,33 @@ public class PostPublicCuratorServiceImpl implements PostPublicCuratorService{
 
     @Override
     public JsonResult selectByPrimaryKey(String id) throws Exception {
-        PostThemeShow postPublicCurator  =  null;
+//        PostThemeShow postPublicCurator  =  null;
         try {
             if(StringUtils.isBlank(id)){
                 return new JsonResult(0,"参数错误");
             }
-            if(StringUtils.isNotBlank(id)){
-                 postPublicCurator = postPublicCuratorMapper.selectByPrimaryKey(id);
-            }
+            PostThemeShow postPublicCurator = postPublicCuratorMapper.selectByPrimaryKey(id);
 
-            if(!StringUtils.isBlank(postPublicCurator.getDatumIds())){
-                //获取图片url
-                postPublicCurator.setMainPicUrl("");
-                List<Attachment> picList = new ArrayList<Attachment>();
-                picList = attachmentService.getListByIds(postPublicCurator.getDatumIds());
-                for (Attachment attachment : picList) {
-                    if(!attachment.getAttPath().contains(config.getRootUrl())){
-                        attachment.setAttPath(config.getRootUrl()+attachment.getAttPath());
-                    }
-                    if (attachment.getIsMain().equals("1")){
-                        postPublicCurator.setMainPicUrl(attachment.getAttPath());
-                        break;
-                    }
-                }
-                postPublicCurator.setPicList(picList);
-            }
+
             if (null != postPublicCurator) {
+
+                if(!StringUtils.isBlank(postPublicCurator.getDatumIds())){
+                    //获取图片url
+                    postPublicCurator.setMainPicUrl("");
+                    List<Attachment> picList = new ArrayList<Attachment>();
+                    picList = attachmentService.getFileTransPathList(postPublicCurator.getDatumIds());
+                    for (Attachment attachment : picList) {
+//                        if(!attachment.getAttPath().contains(CheckConfig.getRootUrl())){
+//                            attachment.setAttPath(CheckConfig.getRootUrl()+attachment.getAttPath());
+//                        }
+                        if ("1".equals(attachment.getIsMain())){
+                            postPublicCurator.setMainPicUrl(attachment.getAttPath());
+                            break;
+                        }
+                    }
+                    postPublicCurator.setPicList(picList);
+                }
+
                 List<CollectDto> collectList = postCollectionTypeMapper.selectCollectByThemeId(postPublicCurator.getId());
                 List<CollectDto> res = new ArrayList<CollectDto>();
                 for (int i = 0, length = collectList.size(); i < length; i++) {
@@ -176,6 +183,7 @@ public class PostPublicCuratorServiceImpl implements PostPublicCuratorService{
 //    }
 
     @Override
+    @Transactional
     public JsonResult updateByPrimaryKeySelective(PostThemeShow record,String picids) {
         JsonResult  jsonResult = null;
         String objectListStr = record.getObjectListStr();
@@ -194,16 +202,16 @@ public class PostPublicCuratorServiceImpl implements PostPublicCuratorService{
 
                 postThemeShowMapper.updateByPrimaryKeySelective(record);
                 //插入关联藏品数据
-            postCollectionTypeMapper.deleteByThemeId(record.getId());
-            for(PostCollectionType collInfo:collectionListArray){
-                collInfo.setThemeShowId(record.getId());   //这里是公共策展id
-                collInfo.setStatus("1");
-                collInfo.setCreateBy(userId);
-                collInfo.setCreateDate(new Date());
-                collInfo.setUpdateBy(userId);
-                collInfo.setUpdateDate(new Date());
-                collInfo.setId(IdUtils.getIncreaseIdByNanoTime());
-            }
+                postCollectionTypeMapper.deleteByThemeId(record.getId());
+                for(PostCollectionType collInfo:collectionListArray){
+                    collInfo.setThemeShowId(record.getId());   //这里是公共策展id
+                    collInfo.setStatus("1");
+                    collInfo.setCreateBy(userId);
+                    collInfo.setCreateDate(new Date());
+                    collInfo.setUpdateBy(userId);
+                    collInfo.setUpdateDate(new Date());
+                    collInfo.setId(IdUtils.getIncreaseIdByNanoTime());
+                }
             postCollectionTypeMapper.batchSave(collectionListArray);
                 jsonResult = new JsonResult(1);
             }
@@ -218,20 +226,26 @@ public class PostPublicCuratorServiceImpl implements PostPublicCuratorService{
     @Override
     public JsonResult deleteByPrimaryKey(String id){
         JsonResult jsonResult = null;
-        PostThemeShow postPublicCurator = postPublicCuratorMapper.selectByPrimaryKey(id);
-        if (postPublicCurator != null) {
-            postPublicCurator.setDataState("0");
-            postPublicCurator.setUpdateDate(new Date());
-            postPublicCurator.setUpdateBy(Tools.getUserId());
+        String userId = Tools.getUserId();
+        if (StringUtils.isNotBlank(userId)) {
+            PostThemeShow postPublicCurator = postPublicCuratorMapper.selectByPrimaryKey(id);
+            if (postPublicCurator != null) {
+                postPublicCurator.setDataState("0");
+                postPublicCurator.setUpdateDate(new Date());
+                postPublicCurator.setUpdateBy(Tools.getUserId());
 
-            try {
-                postThemeShowMapper.updateByPrimaryKeySelective(postPublicCurator);
-                jsonResult = new JsonResult(1);
-            } catch (Exception e) {
-                e.printStackTrace();
-                jsonResult = new JsonResult("90000015");
+                try {
+                    postThemeShowMapper.updateByPrimaryKeySelective(postPublicCurator);
+                    jsonResult = new JsonResult(1);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    jsonResult = new JsonResult("90000015");
+                }
             }
+        } else {
+            jsonResult = new JsonResult("111116");
         }
+
         return jsonResult;
     }
 
@@ -248,6 +262,22 @@ public class PostPublicCuratorServiceImpl implements PostPublicCuratorService{
             e.printStackTrace();
             return new JsonResult(0, null, "系统异常");
         }
+    }
+    @Override
+    public JsonResult approvalInfo(String id,String approval,String remarks){
+        try {
+            PostThemeShow record = new PostThemeShow();
+            record.setId(id);
+            record.setProcessState("1");
+            record.setProcessResult(approval);
+            record.setRemarks(remarks);
+            postPublicCuratorMapper.updateByPrimaryKeySelective(record);
+            return new JsonResult(1);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new JsonResult(0, null, "系统异常");
+        }
+
     }
 
 }

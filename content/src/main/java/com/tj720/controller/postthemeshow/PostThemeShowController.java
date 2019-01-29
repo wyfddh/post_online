@@ -153,8 +153,8 @@ public class PostThemeShowController{
         JsonResult jsonResult = null;
             if (StringUtils.isNotBlank(recommendStatus) && StringUtils.isNotBlank(recommendId) && StringUtils.isNotBlank(recommendName)) {
                 PostThemeShow postThemeShow = (PostThemeShow)postThemeShowService.selectByPrimaryKey(recommendId).getData();
-                if (recommendName.equals("sytj")) {
-                    if (recommendStatus.equals("1")) {
+                if ("sytj".equals(recommendName)) {
+                    if ("1".equals(recommendStatus)) {
                         //查询首页推荐数，限制1
                         Integer countSytj = postThemeShowService.CountSytj();
                         if (countSytj ==0 ) {
@@ -162,11 +162,11 @@ public class PostThemeShowController{
                         } else {
                             return new JsonResult("50000012");
                         }
-                    } else if (recommendStatus.equals("0")) {
+                    } else if ("0".equals(recommendStatus)) {
                         postThemeShow.setPageRecommend(recommendStatus);
                     }
-                } else if (recommendName.equals("jctj")) {
-                    if (recommendStatus.equals("1")) {
+                } else if ("jctj".equals(recommendName)) {
+                    if ("1".equals(recommendStatus)) {
                         //查询精选专题总数，限制3
                         Integer countJczj = postThemeShowService.CountJczj();
                         if (countJczj < 3) {

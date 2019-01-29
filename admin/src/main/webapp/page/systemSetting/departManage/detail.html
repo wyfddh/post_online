@@ -2,6 +2,7 @@
 <html>
     <head>
         <script src="../../../statics/libs/jquery-1.10.2.min.js"></script>
+        <script src="../../../statics/js/jquery.extend.js"></script>
         <link rel="stylesheet" href="../../../statics/css/font-awesome.min.css">
         <!--layui ztree样式-->
         <link rel="stylesheet" href="../../../statics/plugins/layui/css/layui.css" media="all">
@@ -53,7 +54,7 @@
                                <li class="layui-row">
                                     <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">上级部门</div>
                                     <div class="layui-form-item m0 layui-col-md6 layui-col-sm6" id="result">
-                                        <input    value="-1"  id="parentid"  cyType="treeTool"
+                                        <input    value="-1"  id="parentid"  cyType="treeTool" disabled="disabled"
                                                   cyprops="url:'/frontframe/json/select.json',name:'parentId'" placeholder="请选择上级菜单" class="layui-input"/>
                                     </div>
                                     <div class="layui-inline layui-col-md4 layui-col-sm4 pdl60 g-text-aux">不选择默认为一级部门</div>

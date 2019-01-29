@@ -85,7 +85,7 @@ function loadTable(id){
             success:function(result) {
                 if (result.success == 1) {
                     setFormData(result.data);
-                } else {
+                } else if (result.success == 0){
                     //top.layer.msg(result.error.message);
                     errorMsg("系统异常");
                 }
@@ -115,6 +115,14 @@ function setFormData(data){
     $("#activitiesStatus").html((today.getTime() > endTime.getTime()) ? "已结束":"进行中");
     $("#cover").attr('src',data.coverUrl);
     $('input,select,textarea').attr("disabled","disabled");
+
+    var endSignTime = $("#endSignTime").text();
+    var startTime = $("#startTime").text();
+    var endTime = $("#endTime").text();
+    $("#endSignTime").text(formatDate(endSignTime));
+    $("#startTime").text(formatDate(startTime));
+    $("#endTime").text(formatDate(endTime));
+
 }
 
 

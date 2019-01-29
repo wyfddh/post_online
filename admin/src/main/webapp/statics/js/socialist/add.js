@@ -82,7 +82,7 @@ var main = {
                                 successMsg("添加社教成功");
                             }
                             parent.$t.goback("page/socialist/list.html");
-                        } else {
+                        } else if (result.success == 0){
                             //top.layer.msg(result.error.message);
                             errorMsg("操作社教数据异常");
                         }
@@ -127,7 +127,6 @@ var main = {
                             ,tds = tr.children();
                         tds.eq(1).html('<span style="color: red;">正在上传</span>');
                         element.progress('progressBar'+index, value+'%')//设置页面进度条
-                        // console.log(e,value);
                     }
                     ,bindAction: '#testListAction'
                     ,choose: function(obj){
@@ -143,20 +142,34 @@ var main = {
                                  ,'<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
                                  ,'</td>'
                                  ,'</tr>'].join(''));*/
-                            var tr=$(["<li>" +
+                         /*   var tr=$(["<li>" +
                             "                                    <div class='upLeft' id='upload-"+index+"'>" +
                             "                                        <span class=\"fileName\">"+file.name+"</span>" +
                             "                                        <span class=\"fileState\">准备上传</span>" +
                             "                                    </div>" +
                             "                                    <div class=\"upRight\">" +
                             "                                        <div class='layui-progress layui-col-md8 layui-col-sm8' lay-showPercent='yes' lay-filter='progressBar"+index+"'>" +
-                            "                                            <div class=\"layui-progress-bar layui-progress-big layui-bg-red\" lay-percent=\"30%\">" +
+                            "                                            <div class=\"layui-progress-bar layui-progress-big layui-bg-blue\" lay-percent=\"30%\">" +
                             '<span class="layui-progress-text">'+'0%'+'</span>'+'</div>' +
                             "                                        </div>" +
                             "                                        <a href=\"javascript:void (0);\" style='margin-left:15px;' class=\"layui-col-md1 layui-col-sm1 layui-hide demo-reload\">重传</a>" +
                             "                                        <a href=\"javascript:void (0);\" style='margin-left:15px;' class=\"layui-col-md1 layui-col-sm1 demo-cancel\">取消</a>" +
                             "                                    </div>" +
-                            "                                </li>"].join(''));
+                            "                                </li>"].join(''));*/
+                            var tr=$(["<li>" +
+                            "<div class='upLeft' id='upload-"+index+"'>" +
+                            "<span class=\"fileName\">"+file.name+"</span>" +
+                            "<span class=\"fileState\">准备上传</span>" +
+                            "</div>" +
+                            "<div class=\"upRight\">" +
+                            "<div class='layui-progress layui-col-md8 layui-col-sm8' lay-showPercent='yes' lay-filter='progressBar"+index+"'>" +
+                            "<div class=\"layui-progress-bar layui-progress-big layui-bg-blue\" lay-percent=\"30%\">" +
+                            '<span class="layui-progress-text">'+'0%'+'</span>'+'</div>' +
+                            "</div>" +
+                            "<a href=\"javascript:void (0);\" style='margin-left:15px;' class=\"layui-col-md1 layui-col-sm1 layui-hide demo-reload\">重传</a>" +
+                            "<a href=\"javascript:void (0);\" style='margin-left:15px;' class=\"layui-col-md1 layui-col-sm1 demo-cancel\">取消</a>" +
+                            "</div>" +
+                            "</li>"].join(''));
                             //单个重传
                             tr.find('.demo-reload').on('click', function(){
                                 obj.upload(index, file);
@@ -182,8 +195,8 @@ var main = {
                             tr.siblings(".upRight").find(".demo-cancel").attr("data-id",res.data.id);
                             tr.siblings(".upRight").find(".demo-delete").removeClass("demo-cancel");
 
-                            tr.siblings(".upRight").find(".layui-bg-red").addClass("layui-bg-green");
-                            tr.siblings(".upRight").find(".layui-bg-green").removeClass("layui-bg-red");
+                            tr.siblings(".upRight").find(".layui-bg-blue").addClass("layui-bg-green");
+                            tr.siblings(".upRight").find(".layui-bg-green").removeClass("layui-bg-blue");
                             //重新设置下拉框
                             attachmentsList = loadAttachments(tableId);
                             var attachmentsListSelect  = component.getSelectSimplePlus(attachmentsList,null,"attachmentList","attId","attName");
@@ -208,6 +221,8 @@ var main = {
                         //     ,tds = tr.children();
                         // tds.eq(1).html('<span style="color: #FF5722;">上传失败</span>');
                         tr.siblings(".upRight").find('.demo-reload').removeClass('layui-hide'); //显示重传
+                        tr.siblings(".upRight").find(".layui-bg-blue").addClass("layui-bg-red");
+                        tr.siblings(".upRight").find(".layui-bg-red").removeClass("layui-bg-blue");
                     }
                 });
 
@@ -277,7 +292,7 @@ function loadData(id) {
                     if (null != attachmentsList){
                         $("#demoList").append(component.getAttachmentList(attachmentsList));
                     }
-                } else {
+                } else if (result.success == 0){
                     //top.layer.msg(result.error.message);
                     errorMsg("操作数据异常");
                 }
@@ -337,9 +352,8 @@ function loadAttachments(fkId) {
         url:property.getProjectPath()+"attach/getAttachmentsByFkId.do",
         success:function(result) {
             if (result.success == 1) {
-                console.log(result.data);
                 datas = result.data;
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.data);
             }
         },
@@ -371,7 +385,7 @@ function deleteAttachment(attId) {
                 $("#attachmentsList").append(attachmentsListSelect);
                 //form.render('select');
                 //form1.render('select');
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.data);
             }
         },

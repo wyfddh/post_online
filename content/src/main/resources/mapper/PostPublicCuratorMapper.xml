@@ -134,7 +134,6 @@
     <if test="processResult != null and processResult !=''">
       and  process_result = #{processResult}
     </if>
-    order by update_date  desc
   </select>
 
 
@@ -274,5 +273,9 @@
       process_result    processResult
     from post_theme_show
     where id = #{id} and data_state = 1
+  </select>
+
+  <select id="checkBizUserId">
+    select 1
   </select>
 </mapper>

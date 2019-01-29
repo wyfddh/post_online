@@ -436,6 +436,7 @@
   <select id="queryPostVideoTypeListTree" resultType="com.tj720.model.common.system.menu.MenuTreeDto">
     select id,name as functionname,pid from
     post_video_type
+    where status = 1
   </select>
 
   <select id="queryPostVideoTypeListDist" resultType="com.tj720.model.common.video.PostVideoType">

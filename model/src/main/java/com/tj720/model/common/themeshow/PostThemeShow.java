@@ -15,6 +15,106 @@ public class PostThemeShow extends  AppCommonVO  implements Serializable{
 
     private static final long serialVersionUID = 5350557632635455435L;
 
+    private String collectId;
+
+    private String themeContent;
+
+    private String amount;
+
+    private String remark;
+
+    private Date createTime;
+
+    private Date updateTime;
+
+    private String creator;
+
+    private String updater;
+
+    private String other2;
+
+    private String other3;
+
+    public String getOther3() {
+        return other3;
+    }
+
+    public void setOther3(String other3) {
+        this.other3 = other3;
+    }
+
+    public String getOther2() {
+        return other2;
+    }
+
+    public void setOther2(String other2) {
+        this.other2 = other2;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    public String getUpdater() {
+        return updater;
+    }
+
+    public void setUpdater(String updater) {
+        this.updater = updater;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public String getAmount() {
+        return amount;
+    }
+
+    public void setAmount(String amount) {
+        this.amount = amount;
+    }
+
+    public String getThemeContent() {
+        return themeContent;
+    }
+
+    public void setThemeContent(String themeContent) {
+        this.themeContent = themeContent;
+    }
+
+    public String getCollectId() {
+        return collectId;
+    }
+
+    public void setCollectId(String collectId) {
+        this.collectId = collectId;
+    }
+
     private String id;        //主题展览id
 
     private String userId;      // 用户id

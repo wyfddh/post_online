@@ -12,8 +12,9 @@ public enum ProjectType {
 	
 	public static String getNameByValue(int type){
 		for(ProjectType projectType : ProjectType.values()){
-			if(projectType.getType() == type)
-				return projectType.getName();
+			if(projectType.getType() == type) {
+                return projectType.getName();
+            }
 		}
 		return "";
 	}

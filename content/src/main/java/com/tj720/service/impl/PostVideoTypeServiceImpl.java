@@ -9,6 +9,7 @@ import com.tj720.model.common.video.PostVideoType;
 import com.tj720.model.common.video.PostVideoTypeExample;
 import com.tj720.service.PostVideoTypeService;
 import com.tj720.utils.Page;
+import com.tj720.utils.Tools;
 import com.tj720.utils.common.IdUtils;
 import org.omg.CORBA.TRANSACTION_MODE;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,6 @@ import java.util.List;
 public class PostVideoTypeServiceImpl implements PostVideoTypeService {
     @Autowired
     PostVideoTypeMapper postVideoTypeMapper;
-    private static String userId = "sysadmin";
 
     private PostVideoType setActionInfo(PostVideoType postVideoType, String type){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -39,11 +39,11 @@ public class PostVideoTypeServiceImpl implements PostVideoTypeService {
         }catch (Exception e){
             e.printStackTrace();
         }
-        postVideoType.setUpdater(userId);
+        postVideoType.setUpdater(Tools.getUserId());
         postVideoType.setUpdateTime(date);
         if (type == "0"){
             postVideoType.setCreateTime(date);
-            postVideoType.setCreator(userId);
+            postVideoType.setCreator(Tools.getUserId());
         }
         return postVideoType;
     }
@@ -90,13 +90,6 @@ public class PostVideoTypeServiceImpl implements PostVideoTypeService {
             return new JsonResult("200510");
         }
         try {
-            JsonResult postVideoTypeByName = getPostVideoTypeByName(postVideoType.getName());
-            if (null != postVideoTypeByName && postVideoTypeByName.getSuccess()==1){
-                List<PostVideoType> postVideoTypes = (List<PostVideoType>)postVideoTypeByName.getData();
-                if (postVideoTypes != null && postVideoTypes.size()>0){
-                    return new JsonResult("200512");
-                }
-            }
             postVideoType = setActionInfo(postVideoType,"1");
             if (!StringUtils.isEmpty(postVideoType.getTypeLevel())){
                 PostVideoType postVideoType1 = postVideoTypeMapper.selectByPrimaryKey(postVideoType.getPid());

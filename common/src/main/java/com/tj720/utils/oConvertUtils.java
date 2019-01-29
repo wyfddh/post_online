@@ -1,5 +1,6 @@
 package com.tj720.utils;
 
+import com.tj720.utils.common.IdUtils;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -19,6 +20,7 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 
@@ -26,18 +28,23 @@ import org.apache.commons.lang3.StringUtils;
  *
  */
 public class oConvertUtils {
+	private static Pattern p = Pattern.compile("\\s*|\t|\r|\n");
+
+	@Autowired
+	private static HttpServletRequest request;
+
 	public static boolean isEmpty(Object object) {
 		if (object == null) {
 			return (true);
 		}
-		if (object.equals("")) {
+		if ("".equals(object)) {
 			return (true);
 		}
-        return object.equals("null");
+        return "null".equals(object);
     }
 	
 	public static boolean isNotEmpty(Object object) {
-        return object != null && !object.equals("") && !object.equals("null");
+        return object != null && !"".equals(object) && !"null".equals(object);
     }
 
 	public static String decode(String strIn, String sourceCode, String targetCode) {
@@ -59,8 +66,9 @@ public class oConvertUtils {
 
 	private static String code2code(String strIn, String sourceCode, String targetCode) {
 		String strOut = null;
-		if (strIn == null || (strIn.trim()).equals(""))
-			return strIn;
+		if (strIn == null || "".equals((strIn.trim()))) {
+            return strIn;
+        }
 		try {
 			byte[] b = strIn.getBytes(sourceCode);
 			for (int i = 0; i < b.length; i++) {
@@ -224,10 +232,11 @@ public class oConvertUtils {
 	public static String getIp() {
 		String ip = null;
 		try {
-			InetAddress address = InetAddress.getLocalHost();
-			ip = address.getHostAddress();
-
-		} catch (UnknownHostException e) {
+//			InetAddress address = InetAddress.getLocalHost();
+//			ip = address.getHostAddress();
+			ip = Tools.getIpAddress(request);
+//			ip = IdUtils.getIPAddress(address.getHostAddress());
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return ip;
@@ -245,29 +254,10 @@ public class oConvertUtils {
 	}
 
 	/**
-	 * @param request
-	 *            IP
-	 * @return IP Address
-	 */
-	public static String getIpAddrByRequest(HttpServletRequest request) {
-		String ip = request.getHeader("x-forwarded-for");
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-			ip = request.getHeader("Proxy-Client-IP");
-		}
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-			ip = request.getHeader("WL-Proxy-Client-IP");
-		}
-		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-			ip = request.getRemoteAddr();
-		}
-		return ip;
-	}
-
-	/**
 	 * @return 本机IP
 	 * @throws SocketException
 	 */
-	public static String getRealIp() throws SocketException {
+	public static String getRealIp() throws Exception {
 		String localip = null;// 本地IP，如果没有配置外网IP则返回它
 		String netip = null;// 外网IP
 
@@ -279,12 +269,15 @@ public class oConvertUtils {
 			Enumeration<InetAddress> address = ni.getInetAddresses();
 			while (address.hasMoreElements()) {
 				ip = address.nextElement();
-				if (!ip.isSiteLocalAddress() && !ip.isLoopbackAddress() && ip.getHostAddress().indexOf(":") == -1) {// 外网IP
-					netip = ip.getHostAddress();
+//				String hostAddress = ip.getHostAddress();
+				String hostAddress = Tools.getIpAddress(request);
+//				String ipAddress = IdUtils.getIPAddress(hostAddress);
+				if (!ip.isSiteLocalAddress() && !ip.isLoopbackAddress() && hostAddress.indexOf(":") == -1) {// 外网IP
+					netip = hostAddress;
 					finded = true;
 					break;
-				} else if (ip.isSiteLocalAddress() && !ip.isLoopbackAddress() && ip.getHostAddress().indexOf(":") == -1) {// 内网IP
-					localip = ip.getHostAddress();
+				} else if (ip.isSiteLocalAddress() && !ip.isLoopbackAddress() && hostAddress.indexOf(":") == -1) {// 内网IP
+					localip = hostAddress;
 				}
 			}
 		}
@@ -305,7 +298,6 @@ public class oConvertUtils {
 	public static String replaceBlank(String str) {
 		String dest = "";
 		if (str != null) {
-			Pattern p = Pattern.compile("\\s*|\t|\r|\n");
 			Matcher m = p.matcher(str);
 			dest = m.replaceAll("");
 		}
@@ -343,7 +335,7 @@ public class oConvertUtils {
 	/**
 	 * SET转换MAP
 	 * 
-	 * @param str
+	 * @param
 	 * @return
 	 */
 	public static Map<Object, Object> SetToMap(Set<Object> setobj) {
@@ -368,7 +360,7 @@ public class oConvertUtils {
 		long bEnd = getIpNum("172.31.255.255");
 		long cBegin = getIpNum("192.168.0.0");
 		long cEnd = getIpNum("192.168.255.255");
-		isInnerIp = isInner(ipNum, aBegin, aEnd) || isInner(ipNum, bBegin, bEnd) || isInner(ipNum, cBegin, cEnd) || ipAddress.equals("127.0.0.1");
+		isInnerIp = isInner(ipNum, aBegin, aEnd) || isInner(ipNum, bBegin, bEnd) || isInner(ipNum, cBegin, cEnd) || "127.0.0.1".equals(ipAddress);
 		return isInnerIp;
 	}
 
@@ -431,12 +423,12 @@ public class oConvertUtils {
 	 * 如果转换前的下划线大写方式命名的字符串为空，则返回空字符串。</br>
 	 * 例如：hello_world,test_id->helloWorld,testId
 	 * 
-	 * @param name
+	 * @param names
 	 *            转换前的下划线大写方式命名的字符串
 	 * @return 转换后的驼峰式命名的字符串
 	 */
 	public static String camelNames(String names) {
-		if(names==null||names.equals("")){
+		if(names==null||"".equals(names)){
 			return null;
 		}
 		StringBuffer sf = new StringBuffer();

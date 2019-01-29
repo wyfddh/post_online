@@ -2,6 +2,7 @@
 <html>
 <head>
     <script src="../../statics/libs/jquery-1.10.2.min.js"></script>
+    <script src="../../statics/js/jquery.extend.js"></script>
     <link rel="stylesheet" href="../../statics/css/font-awesome.min.css">
     <!--layui ztree样式-->
     <link rel="stylesheet" href="../../statics/plugins/layui/css/layui.css" media="all">
@@ -67,7 +68,7 @@
         </div>
         <div class="flexRight">
             <form action="" class="layui-form">
-                <button type="button" class="layui-btn  myBtn" id="addNew" title="发起申请" data-url="page/literature/applyAdd.html">
+                <button type="button" class="layui-btn  myBtn layui-hide" id="addNew" title="发起申请" data-url="page/literature/applyAdd.html">
                     发起申请
                 </button>
                 <div class="layui-input-inline" style="width:100px;">
@@ -84,7 +85,7 @@
 
         <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-sm" lay-event="getCheckData" id="batchApprove">批量审批</button>
+                <button class="layui-btn layui-btn-sm layui-hide"  lay-event="getCheckData" id="batchApprove">批量审批</button>
             </div>
         </script>
     </div>

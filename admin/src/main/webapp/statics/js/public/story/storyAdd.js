@@ -84,7 +84,7 @@ var main = {
                                 successMsg("添加邮政故事成功");
                             }
                             parent.$t.goback("page/public/story/list.html");
-                        } else {
+                        } else if (result.success == 0){
                             //top.layer.msg(result.error.message);
                             errorMsg("操作邮政故事数据异常");
                         }
@@ -181,7 +181,7 @@ function loadData(id) {
                 if (result.success == 1) {
                     getSelectData(result.data);
                     setFormData(result.data);
-                } else {
+                } else if (result.success == 0){
                     //top.layer.msg(result.error.message);
                     errorMsg("操作数据异常");
                 }

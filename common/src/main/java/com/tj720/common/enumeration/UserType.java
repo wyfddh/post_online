@@ -12,8 +12,9 @@ public enum UserType {
 	
 	public static String getNameByValue(byte type){
 		for(UserType userType : UserType.values()){
-			if(userType.getType() == type)
-				return userType.getName();
+			if(userType.getType() == type) {
+                return userType.getName();
+            }
 		}
 		return "";
 	}

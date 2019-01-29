@@ -29,8 +29,8 @@ var main = {
     getDetailData: function(datas) {
         layui.use('form', function() {
             var form = layui.form;
-            datas.password = yc.password;
-            datas.surePassword = yc.password;
+            // datas.password = yc.info;
+            // datas.surePassword = yc.info;
             form.val("myform", datas);
         });
     }

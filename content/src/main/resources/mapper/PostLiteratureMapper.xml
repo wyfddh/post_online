@@ -80,8 +80,8 @@
     press, publishing_time, warehouses,
     warehousing_time, inventory_state, author,
     paginal_number, format, edition,
-    congbianming, congbianzhe, attachment_id,
-    literature_type_one, literature_type_two, literature_related,
+    congbianming, congbianzhe
+    literature_type_one, literature_related,
     permissions_settings, create_time, update_time,
     creator, updater, sequence,
     status, retrieval_words, summary,
@@ -91,9 +91,8 @@
     #{press,jdbcType=VARCHAR}, #{publishingTime,jdbcType=VARCHAR}, #{warehouses,jdbcType=VARCHAR},
     #{warehousingTime,jdbcType=VARCHAR}, #{inventoryState,jdbcType=VARCHAR}, #{author,jdbcType=VARCHAR},
     #{paginalNumber,jdbcType=INTEGER}, #{format,jdbcType=VARCHAR}, #{edition,jdbcType=VARCHAR},
-    #{congbianming,jdbcType=VARCHAR}, #{congbianzhe,jdbcType=VARCHAR}, #{attachmentId,jdbcType=VARCHAR},
-    #{literatureTypeOne,jdbcType=VARCHAR}, #{literatureTypeTwo,jdbcType=VARCHAR}, #
-    {literatureRelated,jdbcType=VARCHAR},
+    #{congbianming,jdbcType=VARCHAR}, #{congbianzhe,jdbcType=VARCHAR},
+    #{literatureTypeOne,jdbcType=VARCHAR}, #{literatureRelated,jdbcType=VARCHAR},
     #{permissionsSettings,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP},
     #{creator,jdbcType=VARCHAR}, #{updater,jdbcType=VARCHAR}, #{sequence,jdbcType=INTEGER},
     #{status,jdbcType=VARCHAR}, #{retrievalWords,jdbcType=LONGVARCHAR}, #{summary,jdbcType=LONGVARCHAR},
@@ -476,24 +475,25 @@
     select count(1) from post_literature
     where 1 = 1
     <if test="key != null and key != ''">
-      and data_name like concat('%',#{key},'%')
-      or press like concat('%',#{key},'%')
+      and
+      (data_name like concat('%',#{key},'%')
+      or press like concat('%',#{key},'%'))
     </if>
     <if test="dataType != null and dataType != ''">
       and data_type = #{dataType}
     </if>
     <if test="status != null and status != ''">
       and status = #{status}
+      <if test="open != null and open != ''">
+        and permissions_settings &gt; 1
+      </if>
     </if>
     <if test="inventoryState != null and inventoryState != ''">
       and inventory_state = #{inventoryState}
     </if>
     and status &gt; 0
-    <if test="orderBy == 1" >
-      order by update_time desc
-    </if>
-    <if test="orderBy == 2" >
-      order by create_time desc
+    <if test="dataRule == 1">
+      and creator = #{userId}
     </if>
   </select>
   <sql id="Column_List">
@@ -511,24 +511,31 @@
     left join post_attachment c on a.attachment_id = c.att_id
     where 1 = 1
     <if test="key != null and key != ''">
-      and a.data_name like concat('%',#{key},'%')
-      or a.press like concat('%',#{key},'%')
+      and
+      (a.data_name like concat('%',#{key},'%')
+      or a.press like concat('%',#{key},'%'))
     </if>
     <if test="dataType != null and dataType != ''">
       and a.data_type = #{dataType}
     </if>
     <if test="status != null and status != ''">
       and a.status = #{status}
+      <if test="open != null and open != ''">
+        and a.permissions_settings &gt; 1
+      </if>
     </if>
     <if test="inventoryState != null and inventoryState != ''">
-      and inventory_state = #{inventoryState}
+      and a.inventory_state = #{inventoryState}
+    </if>
+    <if test="dataRule == 1">
+      and a.creator = #{userId}
     </if>
     and a.status &gt; 0
     <if test="orderBy == 1" >
-      order by a.update_time desc
+      order by a.update_time desc,a.sequence asc
     </if>
     <if test="orderBy == 2" >
-      order by a.create_time desc
+      order by a.create_time desc,a.sequence asc
     </if>
     limit #{start},#{end}
   </select>
@@ -562,31 +569,25 @@
     </foreach>
   </update>
   <insert id="batchInsert" parameterType="java.util.List">
-    insert into post_literature (id, data_name, data_type, ISBN_num,call_no, number, price, press, publishing_time,
+    insert into post_literature (id, data_name, data_type, ISBN_num,call_no, number, press, publishing_time,
     warehouses,
     warehousing_time, inventory_state, author, paginal_number, format, edition, congbianming,
-    congbianzhe, attachment_id, literature_type_one, literature_type_two, literature_related,
+    congbianzhe, literature_type_one, literature_related,
     permissions_settings, create_time, update_time, creator, updater, sequence, status,retrieval_words, summary,
     remark,search_value)
     VALUES
     <foreach collection="list" item="item" separator=","  >
       (
       #{item.id,jdbcType=VARCHAR}, #{item.dataName,jdbcType=VARCHAR}, #{item.dataType,jdbcType=VARCHAR},
-      #{item.isbnNum,jdbcType=VARCHAR},#{item.callNo,jdbcType=VARCHAR}, #{item.number,jdbcType=INTEGER}, #
-      {item.price,jdbcType=DECIMAL},
+      #{item.isbnNum,jdbcType=VARCHAR},#{item.callNo,jdbcType=VARCHAR}, #{item.number,jdbcType=INTEGER},
       #{item.press,jdbcType=VARCHAR}, #{item.publishingTime,jdbcType=VARCHAR}, #{item.warehouses,jdbcType=VARCHAR},
-      #{item.warehousingTime,jdbcType=VARCHAR}, #{item.inventoryState,jdbcType=VARCHAR}, #
-      {item.author,jdbcType=VARCHAR},
+      #{item.warehousingTime,jdbcType=VARCHAR}, #{item.inventoryState,jdbcType=VARCHAR}, #{item.author,jdbcType=VARCHAR},
       #{item.paginalNumber,jdbcType=INTEGER}, #{item.format,jdbcType=VARCHAR}, #{item.edition,jdbcType=VARCHAR},
-      #{item.congbianming,jdbcType=VARCHAR}, #{item.congbianzhe,jdbcType=VARCHAR}, #
-      {item.attachmentId,jdbcType=VARCHAR},
-      #{item.literatureTypeOne,jdbcType=VARCHAR}, #{item.literatureTypeTwo,jdbcType=VARCHAR}, #
-      {item.literatureRelated,jdbcType=VARCHAR},
-      #{item.permissionsSettings,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #
-      {item.updateTime,jdbcType=TIMESTAMP},
+      #{item.congbianming,jdbcType=VARCHAR}, #{item.congbianzhe,jdbcType=VARCHAR},
+      #{item.literatureTypeOne,jdbcType=VARCHAR}, #{item.literatureRelated,jdbcType=VARCHAR},
+      #{item.permissionsSettings,jdbcType=VARCHAR}, #{item.createTime,jdbcType=TIMESTAMP}, #{item.updateTime,jdbcType=TIMESTAMP},
       #{item.creator,jdbcType=VARCHAR}, #{item.updater,jdbcType=VARCHAR}, #{item.sequence,jdbcType=INTEGER},
-      #{item.status,jdbcType=VARCHAR}, #{item.retrievalWords,jdbcType=LONGVARCHAR}, #
-      {item.summary,jdbcType=LONGVARCHAR},
+      #{item.status,jdbcType=VARCHAR}, #{item.retrievalWords,jdbcType=LONGVARCHAR}, #{item.summary,jdbcType=LONGVARCHAR},
       #{item.remark,jdbcType=LONGVARCHAR},#{item.searchValue,jdbcType=VARCHAR}
       )
     </foreach>
@@ -707,31 +708,29 @@
   </select>
 
   <select id="getVideoCjPie" parameterType="java.util.HashMap" resultType="java.util.HashMap">
-    SELECT
-    CASE
-    WHEN t.dict_code = '1' THEN
-    '纸质版本'
-    WHEN t.dict_code = '2' THEN
-    '电子版本'
-    WHEN t.dict_code = '3' THEN
-    '档案版本'
-    ELSE
-    p.data_type
-    END AS 'name',
-    count(p.data_type) AS 'value'
-    FROM
-    post_literature p
-    RIGHT JOIN sys_dict t ON (
-    p.data_type = t.dict_code
+    select '纸质版本' as name,count(1)
+    as value from post_literature p
+    where p.data_type = '1'
     and p.`status`>0
     <if test="startTime != null and startTime !=''">
       and left(p.update_time,10) BETWEEN #{startTime} and #{endTime}
     </if>
-    )
-    WHERE
-    t.dict_type = 'literature_type'
-    GROUP BY
-    t.dict_code
+    union
+    select '电子版本' as name,count(1)
+    as value from post_literature p
+    where p.data_type = '2'
+    and p.`status`>0
+    <if test="startTime != null and startTime !=''">
+      and left(p.update_time,10) BETWEEN #{startTime} and #{endTime}
+    </if>
+    union
+    select '档案版本' as name,count(1)
+    as value from post_literature p
+    where p.data_type = '3'
+    and p.`status`>0
+    <if test="startTime != null and startTime !=''">
+      and left(p.update_time,10) BETWEEN #{startTime} and #{endTime}
+    </if>
   </select>
 
 
@@ -758,10 +757,10 @@
     on(
     c.date = left(p.update_time,10)
     and left(p.update_time,10) between #{startTime} and #{endTime}
-      and p.status > 0
+    and p.status > 0
     )
-     where
- 		c.date between #{startTime} and #{endTime}
+    where
+    c.date between #{startTime} and #{endTime}
     group by c.date
   </select>
 
@@ -1080,14 +1079,14 @@
     RIGHT JOIN calendar c
     on(
     c.date = left(p.update_time,10)
-     and left(p.update_time,10) between #{startTime} and #{endTime}
-      and p.apply_type = '1'
+    and left(p.update_time,10) between #{startTime} and #{endTime}
+    and p.apply_type = '1'
     )
-     where c.date between #{startTime} and #{endTime}
+    where c.date between #{startTime} and #{endTime}
     group by c.date
   </select>
 
-  <select id="getVideoCjCount" resultType="java.util.HashMap">
+  <select id="getVideoCjCount" resultType="java.util.HashMap" parameterType="java.util.HashMap">
     select
     count(
     case when data_type = '1'
@@ -1106,20 +1105,33 @@
     end) as Ycount
     from post_literature
     where `status` = '2'
+    <if test="dataRule == 1">
+      and creator = #{userId}
+    </if>
   </select>
 
-  <select id="getVideoOpenCount" resultType="java.lang.Integer">
+  <select id="getVideoOpenCount" resultType="java.lang.Integer" parameterType="java.util.HashMap">
     select count(1) as openVideoCount from post_literature
     where `status` = '2'
+    and permissions_settings &gt; 1
+    <if test="dataRule == 1">
+      and creator = #{userId}
+    </if>
   </select>
 
-  <select id="getVideoCxApply" resultType="java.lang.Integer">
+  <select id="getVideoCxApply" resultType="java.lang.Integer" parameterType="java.util.HashMap">
     select count(1) as applyCount from post_literature_process
     where approve_status = '1'
+    <if test="dataRule == 1">
+      and applicant = #{userId}
+    </if>
   </select>
-  <select id="getVideoCxApproval" resultType="java.lang.Integer">
+  <select id="getVideoCxApproval" resultType="java.lang.Integer" parameterType="java.util.HashMap">
     select count(1) as approvalCount from post_literature_process
     where apply_status = '2'
+    <if test="dataRule == 1">
+      and applicant = #{userId}
+    </if>
   </select>
 
   <!--查询待办-->
@@ -1143,7 +1155,7 @@
     LEFT JOIN post_literature p ON p.id = a.literature_id
     WHERE
     w. process_status = 1
-     and w.process_user_id = #{currentUserId}
+    and w.process_user_id = #{currentUserId}
     order by w.create_time desc
     limit 0,6
   </select>
@@ -1175,7 +1187,7 @@
     post_literature_process_detail f
     WHERE
     f.process_id = a.id
-     AND f.process_user_id = #{currentUserId}
+    AND f.process_user_id = #{currentUserId}
     and f.process_status = 2
     )
     order by a.create_time desc
@@ -1208,7 +1220,7 @@
     post_literature_process_detail f
     WHERE
     f.process_id = a.id
-     AND f.process_user_id = #{currentUserId}
+    AND f.process_user_id = #{currentUserId}
     and f.process_status = 3
     )
     order by a.create_time desc

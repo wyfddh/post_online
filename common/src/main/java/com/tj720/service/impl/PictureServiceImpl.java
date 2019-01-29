@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @Author wyf
@@ -54,6 +55,7 @@ public class PictureServiceImpl implements PictureService{
      * @throws Exception
      */
     @Override
+    @Transactional
     public Boolean setMain(String picids,String isMain,String delpicids) throws Exception{
         Boolean flag = true;
         try {

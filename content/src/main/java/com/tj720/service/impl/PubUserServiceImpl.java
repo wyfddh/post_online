@@ -11,6 +11,7 @@ import com.tj720.model.common.pubuser.PubUser;
 import com.tj720.model.common.pubuser.PubUserDto;
 import com.tj720.model.common.themeshow.PostThemeShow;
 import com.tj720.service.AttachmentService;
+import com.tj720.service.ImageUtiilService;
 import com.tj720.service.PictureService;
 import com.tj720.service.PubUserService;
 import com.tj720.utils.DateFormartUtil;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @Author: 余超
@@ -30,6 +32,8 @@ import java.util.*;
  */
 @Service
 public class PubUserServiceImpl implements PubUserService {
+    @Autowired
+    ImageUtiilService imageUtiilService;
 
     @Autowired
     PubUserMapper pubUserMapper;
@@ -48,9 +52,6 @@ public class PubUserServiceImpl implements PubUserService {
     @Autowired
     private Config config;
 
-
-    private static String userId = "sysadmin";
-
     private PubUser setTimeInfo(PubUser pubUser, String type) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date();
@@ -61,11 +62,11 @@ public class PubUserServiceImpl implements PubUserService {
             e.printStackTrace();
         }
         pubUser.setUpdateTime(date);
-        pubUser.setUpdater(userId);
+        pubUser.setUpdater(Tools.getUserId());
         // 0代表 没有创建的用户，录入创建人和创建时间
         if ("0".equals(type)) {
             pubUser.setCreateTime(date);
-            pubUser.setCreator(userId);
+            pubUser.setCreator(Tools.getUserId());
         }
         return pubUser;
     }
@@ -144,17 +145,22 @@ public class PubUserServiceImpl implements PubUserService {
                 //获取图片url
                 pubUser.setMainPicUrl("");
                 List<Attachment> picList = new ArrayList<Attachment>();
-                picList = attachmentService.getListByIds(pubUser.getAvatarurl());
-                for (Attachment attachment : picList) {
-                    if(! attachment.getAttPath().contains(config.getRootUrl())){
-                        attachment.setAttPath(config.getRootUrl()+attachment.getAttPath());
+                picList = attachmentService.getFileTransPathList(pubUser.getAvatarurl());
+                if(null != picList && picList.size()>0){
+                    for (Attachment attachment : picList) {
+//                        if(! attachment.getAttPath().contains(CheckConfig.getRootUrl())){
+//                            attachment.setAttPath(CheckConfig.getRootUrl()+attachment.getAttPath());
+//                        }
+                        if (attachment.getIsMain().equals("1")){
+                            pubUser.setMainPicUrl(attachment.getAttPath());
+                            break;
+                        }
                     }
-                    if (attachment.getIsMain().equals("1")){
-                        pubUser.setMainPicUrl(attachment.getAttPath());
-                        break;
-                    }
+                    pubUser.setPicList(picList);
+                }else{
+                    pubUser.setPicList(null);
                 }
-                pubUser.setPicList(picList);
+
 
                 if (pubUser.getId() != null) {
                     return new JsonResult(1, pubUser);
@@ -204,17 +210,22 @@ public class PubUserServiceImpl implements PubUserService {
                 //获取图片url
                 pubUser.setMainPicUrl("");
                 List<Attachment> picList = new ArrayList<Attachment>();
-                picList = attachmentService.getListByIds(pubUser.getAvatarurl());
-                for (Attachment attachment : picList) {
-                    if(! attachment.getAttPath().contains(config.getRootUrl())){
-                        attachment.setAttPath(config.getRootUrl()+attachment.getAttPath());
+                picList = attachmentService.getFileTransPathList(pubUser.getAvatarurl());
+                if(null != picList && picList.size()>0){
+                    for (Attachment attachment : picList) {
+//                        if(! attachment.getAttPath().contains(CheckConfig.getRootUrl())){
+//                            attachment.setAttPath(CheckConfig.getRootUrl()+attachment.getAttPath());
+//                        }
+                        if (attachment.getIsMain().equals("1")){
+                            pubUser.setMainPicUrl(attachment.getAttPath());
+                            break;
+                        }
                     }
-                    if (attachment.getIsMain().equals("1")){
-                        pubUser.setMainPicUrl(attachment.getAttPath());
-                        break;
-                    }
+                    pubUser.setPicList(picList);
+                }else{
+                    pubUser.setPicList(null);
                 }
-                pubUser.setPicList(picList);
+
             }
 
 
@@ -235,11 +246,12 @@ public class PubUserServiceImpl implements PubUserService {
     }
 
     @Override
+    @Transactional
     public JsonResult updatePubUserByIds(List<String> ids) {
         try {
             Integer size = ids.size();
             Integer i = pubUserMapper.updatePubUserByIds(ids);
-            if (size == i) {
+            if (size.equals(i)) {
                 return new JsonResult(1, null);
             } else {
                 return new JsonResult(0, "41000014");
@@ -296,21 +308,22 @@ public class PubUserServiceImpl implements PubUserService {
             //根据用户id 查询相关的藏品list
             List<Attachment> picList1 = new ArrayList<Attachment>();
             List<Collect> collectList = new ArrayList<Collect>();
+
             collectList = pubUserMapper.getCollectsByUserId(map);
             for(Collect  collect: collectList){
                 if(StringUtils.isNotBlank(collect.getPictureids())){
-                    picList1 = attachmentService.getListByIds(collect.getPictureids());
+                    picList1 = attachmentService.getFileTransPathList(collect.getPictureids());
                     if(picList1.size()>0 && StringUtils.isNotBlank(picList1.get(0).getAttPath())){
-                        //if(! collect.getMainPicUrl().contains(config.getRootUrl())){
-                        collect.setMainPicUrl(config.getRootUrl()+picList1.get(0).getAttPath());
+                        //if(! collect.getMainPicUrl().contains(CheckConfig.getRootUrl())){
+                        collect.setMainPicUrl(picList1.get(0).getAttPath());
                         //}
                     }
                 }
 
 
                /* for (Attachment attachment : picList1) {
-                    if(! attachment.getAttPath().contains(config.getRootUrl())){
-                        attachment.setAttPath(config.getRootUrl()+attachment.getAttPath());
+                    if(! attachment.getAttPath().contains(CheckConfig.getRootUrl())){
+                        attachment.setAttPath(CheckConfig.getRootUrl()+attachment.getAttPath());
                     }
                 }
                 collect.setPicList(picList1);*/
@@ -347,15 +360,15 @@ public class PubUserServiceImpl implements PubUserService {
             List<PostThemeShow> themeList = new ArrayList<PostThemeShow>();
             themeList = pubUserMapper.getThemeByUserId(map);
             for(PostThemeShow  postThemeShow: themeList){
-                picList1 = attachmentService.getListByIds(postThemeShow.getDatumIds());
+                picList1 = attachmentService.getFileTransPathList(postThemeShow.getDatumIds());
                 if(picList1.size()>0 && StringUtils.isNotBlank(picList1.get(0).getAttPath())){
-                    //if(! postThemeShow.getMainPicUrl().contains(config.getRootUrl())){
-                      postThemeShow.setMainPicUrl(config.getRootUrl()+picList1.get(0).getAttPath());
+                    //if(! postThemeShow.getMainPicUrl().contains(CheckConfig.getRootUrl())){
+                      postThemeShow.setMainPicUrl(picList1.get(0).getAttPath());
                     //}
                 }
                /* for (Attachment attachment : picList1) {
-                    if(! attachment.getAttPath().contains(config.getRootUrl())){
-                        attachment.setAttPath(config.getRootUrl()+attachment.getAttPath());
+                    if(! attachment.getAttPath().contains(CheckConfig.getRootUrl())){
+                        attachment.setAttPath(CheckConfig.getRootUrl()+attachment.getAttPath());
                     }
                 }
                 postThemeShow.setPicList(picList1);*/
@@ -386,15 +399,19 @@ public class PubUserServiceImpl implements PubUserService {
             List<Attachment> picList1 = new ArrayList<Attachment>();
             List<PubUserDto> userDtoList = pubUserMapper.getUserDtoByUid(userId);
             for(PubUserDto  pubUserDto: userDtoList){
-                picList1 = attachmentService.getListByIds(pubUserDto.getAvatarurl());
-                if(picList1.size()>0 && StringUtils.isNotBlank(picList1.get(0).getAttPath())){
-                    if(! pubUserDto.getAvatarurl().contains(config.getRootUrl())){
-                        pubUserDto.setAvatarurl(config.getRootUrl()+picList1.get(0).getAttPath());
-                        break;
-                    }
+//                pubUserDto.setAvatarurl(attachmentService.getFileTransPathByPath(pubUserDto.getAvatarurl()));
+                picList1 = attachmentService.getFileTransPathList(pubUserDto.getAvatarurl());
+                //if(picList1.size()>0 && StringUtils.isNotBlank(picList1.get(0).getAttPath())){
+                if(null!=picList1 &&  picList1.size()>0){
+                    pubUserDto.setAvatarurl(picList1.get(0).getAttPath());
+//                    pubUserDto.setAvatarurl(attachmentService.getFileTransPathByPath(pubUserDto.getAvatarurl()));
+                    pubUserDto.setPicList(picList1);
+                }else{
+                    pubUserDto.setPicList(null);
                 }
-                pubUserDto.setPicList(picList1);
+
             }
+
             return new JsonResult(1,userDtoList,page);
         }catch (Exception e){
             e.printStackTrace();

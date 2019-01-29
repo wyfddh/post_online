@@ -120,17 +120,15 @@ public interface SysRoleAuthMapper {
     /**
      * 根据id查询单个用户
      * @param userId 用户ID
-     * @param isDelete 用户状态
      * @return
      */
-    SysUser getUserByUserId(@Param("userId") String userId,@Param("isDelete") String isDelete);
+    SysUser getUserByUserId(@Param("userId") String userId);
     /**
      * 根据名称查询用户列表(模糊匹配)
      * @param userName 用户名
-     * @param isDelete 用户状态
      * @return
      */
-    List<SysUser> getUserListByName(@Param("userName") String userName,@Param("isDelete") String isDelete);
+    List<SysUser> getUserListByName(@Param("userName") String userName);
 
 
     List<SysRoleAuth> getAllRoleAuthInfo();

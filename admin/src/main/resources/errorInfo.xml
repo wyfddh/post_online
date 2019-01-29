@@ -16,7 +16,7 @@
 				<entry key="000010" value="验证码输入有误" />
 				<entry key="000011" value="图形验证码已失效，请刷新验证码" />
 				<entry key="000012" value="查找数据失败" />
-				<entry key="000013" value="用户名不存在" />
+				<entry key="000013" value="该账户已冻结" />
 				<entry key="000014" value="用密码有误" />
 				<entry key="000015" value="用户名已被使用，请更换用户名" />
 				<entry key="000016" value="文件地址不能为空" />
@@ -112,29 +112,30 @@
 				<entry key="10000002" value="密码为空,不允许登录" />
 				<entry key="10000003" value="您频繁登录，ip登录受限！" />
 				<entry key="10000004" value="用户名或密码错误" />
-				<entry key="10000005" value="用户名不存在" />
-				<entry key="10000006" value="用户信息不合法" />
+				<entry key="10000005" value="用户名或密码错误" />
+				<entry key="10000006" value="用户名或密码错误" />
 				<entry key="10000007" value="验证码为空" />
 				<entry key="10000008" value="验证码不正确" />
-				<entry key="10000009" value="用户名已被注销" />
-				<entry key="10000010" value="用户信息不存在" />
-				<entry key="10000011" value="密码不正确" />
+				<entry key="10000009" value="用户名或密码错误" />
+				<entry key="10000010" value="用户名或密码错误" />
+				<entry key="10000011" value="用户名或密码错误" />
+				<entry key="10000012" value="用户名或密码不符合要求" />
 				<!-- 登录管理-->
 
 				<!-- 用户管理 -->
-				<entry key="20000001" value="用户不存在，不允许登录" />
+				<entry key="20000001" value="用户名或密码错误" />
 				<entry key="20000002" value="用户名重复，请更换用户名" />
 				<entry key="20000003" value="系统错误，请联系管理员" />
 				<entry key="20000004" value="密码错误,登录失败" />
 				<entry key="20000005" value="用户名不存在" />
 				<entry key="20000006" value="用户新增失败，请联系管理员" />
 				<entry key="20000007" value="修改失败，请联系管理员" />
-				<entry key="20000008" value="该用户不存在，请联系管理员" />
+				<entry key="20000008" value="用户名或密码错误" />
 				<entry key="20000009" value="用户编辑失败，请联系管理员" />
 				<entry key="20000010" value="修改用户名不能为空" />
 				<entry key="20000011" value="旧密码输入错误！" />
 				<entry key="20000012" value="用户删除失败，请联系管理员" />
-				<entry key="20000013" value="用户已被注销，请联系管理员" />
+				<entry key="20000013" value="用户名或密码错误" />
 				<entry key="20000014" value="该手机号不存在或未注册吧" />
 				<entry key="20000015" value="验证码发送错误" />
 				<entry key="20000016" value="注册用户错误" />
@@ -142,6 +143,9 @@
 				<entry key="20000018" value="验证码发送错误" />
 				<entry key="20000019" value="信息发送错误" />
 				<entry key="20000020" value="修改密码错误" />
+				<entry key="20000021" value="用户名或密码错误" />
+				<entry key="20000022" value="用户名为空，不允许新增" />
+				<entry key="20000023" value="用户名或密码错误" />
 
 				<!-- 用户管理-->
 
@@ -261,7 +265,7 @@
 
 
 				<!--影视资料管理-->
-				<entry key="51000001" value="您已提交过过申请，不允许再次提交" />
+				<entry key="51000001" value="您已提交过该申请，不允许再次提交" />
 				<!--影视资料管理-->
 
 				<entry key="51000002" value="设置失败" />
@@ -303,7 +307,7 @@
 				<entry key="110000028" value="请再次输入新密码" />
 				<entry key="110000029" value="新旧密码不能一致" />
 				<entry key="110000030" value="用户不存在！" />
-				<entry key="110000031" value="请输入正确的密码！" />
+				<entry key="110000031" value="输入的原密码不正确！" />
                 <!--用户信息管理-->
 
 				<!--志愿者活动-->

@@ -47,7 +47,7 @@ var main={
                         if (result.success == 1) {
                             loadTable();
                             form.render();
-                        } else {
+                        } else if (result.success == 0){
                             if(recommendStatus == "1"){
                                 $(data.elem).attr("checked",false);
                             }else{
@@ -133,6 +133,7 @@ var main={
                 $(this).prev().click();
             });
 
+
             //排序方式
             form.on('select(orderBy)',function(){
                 loadTable();
@@ -183,6 +184,10 @@ function loadTable(){
         table.render({
             elem: '#test'
             ,url: property.getProjectPath() + "pubUser/getListPubUser.do?name="+name+"&phone="+phone+"&createTime="+createTime+"&orderBy="+orderBy
+            ,request:{
+                pageName: 'currentPage',
+                limitName: 'size'
+            }
             ,toolbar: '#toolbarDemo'
             ,title: '用户数据表'
             ,cols: [[
@@ -226,7 +231,6 @@ function loadTable(){
         //监听行工具事件
         table.on('tool(test)', function(obj){
             var data = obj.data;
-            //console.log(obj)
             if(obj.event === 'del'){
                 layer.confirm('确定要删除么',{icon:3, title:'删除确认'}, function(index){
                     var json = {"id":data.id};
@@ -239,7 +243,7 @@ function loadTable(){
                             if (result.success == 1) {
                                 successMsg("删除公众用户成功");
                                 loadTable();
-                            } else {
+                            } else if (result.success == 0){
                                 errorMsg("删除公众用户失败");
                             }
                         },

@@ -50,12 +50,12 @@ function loadTable() {
             ,url:property.getProjectPath()+"sysDict/getSysDictList.do?dictType="+dictType+"&dictCode="+dictCode+"&dictName="+dictName
             ,title: '业务字典表'
             ,cols: [[
-                {type:'numbers', title:'序号', width:80, fixed: 'left', unresize: true, sort: true}
-                ,{field:'dictCode', title:'字典编码',sort: true}
+                {type:'numbers', title:'序号'}
+                ,{field:'dictCode', title:'字典编码'}
                 ,{field:'dictName', title:'字典名称'}
-                ,{field:'dictType', title:'字典类型',sort: true}
+                ,{field:'dictType', title:'字典类型'}
                 ,{field:'description', title:'字典描述'}
-                ,{field:'dictOrder', title:'字典排序',sort: true}
+                ,{field:'dictOrder', title:'字典排序'}
                 ,{field:'pid', title:'上级字典',templet: function(res){
                     if (res.pid == '-1'){
                         return '根目录';
@@ -73,7 +73,7 @@ function loadTable() {
         table.on('tool(test)', function(obj){
             var data = obj.data;
             if(obj.event === 'del') {
-                layer.confirm('真的删除行么', function(index){
+                layer.confirm('确定要删除么',{icon:3, title:'删除确认'}, function(index){
                     var json = {"dictId":data.id};
                     $.ajax({
                         type:"get",
@@ -84,7 +84,7 @@ function loadTable() {
                             if (result.success == 1) {
                                 successMsg("删除字典成功");
                                 loadTable();
-                            } else {
+                            } else if (result.success == 0){
                                 errorMsg(result.data);
                             }
                         },
@@ -116,7 +116,7 @@ function getDictList() {
         success:function(result) {
             if (result.success == 1) {
                 datas = result.data;
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.data);
             }
         },

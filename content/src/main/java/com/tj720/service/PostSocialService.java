@@ -13,7 +13,7 @@ public interface PostSocialService {
 
 	JsonResult deleteByPrimaryKey(String id) throws  Exception;
 
-	JSONObject getSocials(String keywords,String orderBy, Integer currentPage, Integer size) throws Exception;
+	JSONObject getSocials(String keywords,String orderBy, Integer currentPage, Integer size,String module) throws Exception;
 
 	JsonResult insert(PostSocial record) throws  Exception;
 

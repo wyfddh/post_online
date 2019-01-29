@@ -2,6 +2,7 @@
 <html>
 <head>
     <script src="../../../statics/libs/jquery-1.10.2.min.js"></script>
+    <script src="../../../statics/js/jquery.extend.js"></script>
     <link rel="stylesheet" href="../../../statics/css/font-awesome.min.css">
     <!--layui ztree样式-->
     <link rel="stylesheet" href="../../../statics/plugins/layui/css/layui.css" media="all">
@@ -37,10 +38,10 @@
                 <button class="layui-btn layui-btn-green" lay-submit="" lay-filter="moreSearch">
                     <i class="fa fa-chevron-down">&nbsp;</i>展开筛选
                 </button>
-                <button class="layui-btn search-btn myBtn"  lay-submit="" lay-filter="formDemo">
+                <button class="layui-btn search-btn myBtn layui-hide" id="search"  lay-submit="" lay-filter="formDemo">
                     <!--<i class="fa fa-search">&nbsp;</i>-->查询
                 </button>
-                <button type="reset" class="layui-btn myBtn" lay-submit="" lay-filter="clear"><!--<i class="fa fa-refresh">&nbsp;</i>-->重置</button>
+                <button type="reset" class="layui-btn myBtn layui-hide" id="reset" lay-submit="" lay-filter="clear"><!--<i class="fa fa-refresh">&nbsp;</i>-->重置</button>
             </div>
         </div>
         <div class="layui-card-body">
@@ -67,36 +68,6 @@
                     </div>
                 </div>
             </div>
-           <!-- <div class="layui-row more-search">
-                <div class="layui-form-item layui-col-md4 layui-col-sm4 ">
-                    <label class="layui-form-label">姓名:</label>
-                    <div class="layui-input-block">
-                        <input type="text" name="nameVague" placeholder="请输入姓名" class="layui-input">
-                    </div>
-                </div>
-                <div class="layui-form-item layui-col-md4 layui-col-sm4">
-                    <label class="layui-form-label">年龄:</label>
-                    <div class="layui-input-block">
-                        <select name="city">
-
-                        </select>
-                    </div>
-                </div>
-                <div class="layui-form-item layui-col-md4 layui-col-sm4">
-                    <label class="layui-form-label">提交时间:</label>
-                    <div class="layui-col-md4 layui-col-sm4 mr10">
-                        <input readonly="readonly" type="text" name="startDate" id="startDate" maxlength="20" value=""
-                               placeholder="请选择开始时间" class="layui-input Wdate"
-                               onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',readOnly:true,maxDate:'#F{$dp.$D(\'endDate\')}'})">
-                    </div>
-                    <div class="layui-col-md4 layui-col-sm4">
-                        <input readonly="readonly" type="text" name="endDate" id="endDate" maxlength="20" value=""
-                               placeholder="请选择截止时间" class="layui-input Wdate"
-                               onfocus="WdatePicker({dateFmt:'yyyy-MM-dd',readOnly:true,minDate:'#F{$dp.$D(\'startDate\')}'})">
-                    </div>
-                </div>
-            </div>
-        </div>-->
     </form>
 </div>
 
@@ -111,19 +82,6 @@
         <div class=" flexRight">
 
             <form action="" class="layui-form">
-              <!--  <button class="layui-btn layui-btn-green upload">
-                    上传资料
-                </button>-->
-                <!--<div class="layui-input-inline" style="width:100px;">
-                    <select>
-                        <option value="">显示条数</option>
-                        <option value="0">北京</option>
-                        <option value="1">上海</option>
-                        <option value="2">广州</option>
-                        <option value="3">深圳</option>
-                        <option value="4">杭州</option>
-                    </select>
-                </div>-->
                 <div class="layui-input-inline" style="width:100px;">
                     <select name="orderBy" id="orderBy" lay-verify="required" lay-filter="orderBy">
                         <option value="">排列方式</option>

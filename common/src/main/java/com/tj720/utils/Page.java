@@ -17,13 +17,15 @@ public class Page {
 		this.allRow = allRow;
 	}
 	public Integer getCurrentPage() {
-		if(currentPage < 1)
-			return 1;
+		if(currentPage < 1) {
+            return 1;
+        }
 		return currentPage;
 	}
 	public void setCurrentPage(Integer currentPage) {
-		if(currentPage != null)
-			this.currentPage = currentPage;
+		if(currentPage != null) {
+            this.currentPage = currentPage;
+        }
 	}
 	public void setStrCurrentPage(String str) {
 		try{
@@ -31,8 +33,9 @@ public class Page {
 		}catch(Exception e){
 			this.currentPage =1;
 		}
-        if(this.currentPage<1)
-			this.currentPage=1;
+        if(this.currentPage<1) {
+            this.currentPage=1;
+        }
 	}
 	public Integer getStart(){
 		return  this.getSize() * (this.getCurrentPage() - 1);

@@ -6,6 +6,7 @@ import com.tj720.dao.PostInformationManageMapper;
 import com.tj720.model.common.Attachment;
 import com.tj720.model.common.informationmanage.PostInformationManage;
 import com.tj720.service.AttachmentService;
+import com.tj720.service.ImageUtiilService;
 import com.tj720.service.PictureService;
 import com.tj720.service.PostInformationManagerService;
 import com.tj720.utils.Page;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @ClassName: PostInformationManagerServiceImpl
@@ -40,6 +42,9 @@ public class PostInformationManagerServiceImpl implements PostInformationManager
     @Autowired
     private Config config;
 
+    @Autowired
+    ImageUtiilService imageUtiilService;
+
 
     @Override
     public JsonResult getInformationList(String informationType, String createTime,String orderBy, Page page) throws Exception{
@@ -55,12 +60,9 @@ public class PostInformationManagerServiceImpl implements PostInformationManager
                 //获取图片url
                 postInformationManage.setMainPicUrl("");
                 List<Attachment> picList = new ArrayList<Attachment>();
-                picList = attachmentService.getListByIds(postInformationManage.getDatumIds());
+                picList = attachmentService.getFileTransPathList(postInformationManage.getDatumIds());
                 for (Attachment attachment : picList) {
-                    if(! attachment.getAttPath().contains(config.getRootUrl())) {
-                        attachment.setAttPath(config.getRootUrl() + attachment.getAttPath());
-                    }
-                    if (attachment.getIsMain().equals("1")){
+                    if ("1".equals(attachment.getIsMain())){
                         postInformationManage.setMainPicUrl(attachment.getAttPath());
                         break;
                     }
@@ -86,18 +88,16 @@ public class PostInformationManagerServiceImpl implements PostInformationManager
                 //获取图片url
                 postInformationManage.setMainPicUrl("");
                 List<Attachment> picList = new ArrayList<Attachment>();
-                picList = attachmentService.getListByIds(postInformationManage.getDatumIds());
+                picList = attachmentService.getFileTransPathList(postInformationManage.getDatumIds());
                 for (Attachment attachment : picList) {
-                    if(! attachment.getAttPath().contains(config.getRootUrl())) {
-                        attachment.setAttPath(config.getRootUrl() + attachment.getAttPath());
-                    }
-                    if (attachment.getIsMain().equals("1")){
+                    if ("1".equals(attachment.getIsMain())){
                         postInformationManage.setMainPicUrl(attachment.getAttPath());
                         break;
                     }
                 }
                 postInformationManage.setPicList(picList);
             }
+            postInformationManage.setInformationContent(imageUtiilService.getContent(postInformationManage.getInformationContent(),"1"));
             return new JsonResult(1,postInformationManage);
         }catch (Exception e){
             e.printStackTrace();
@@ -106,6 +106,7 @@ public class PostInformationManagerServiceImpl implements PostInformationManager
     }
 
     @Override
+    @Transactional
     public JsonResult insertSelective(PostInformationManage record,String picids){
         JsonResult jsonResult = null;
         //设置主图
@@ -122,7 +123,7 @@ public class PostInformationManagerServiceImpl implements PostInformationManager
                 record.setDataState("1");
                 record.setCreator(userId);
                 record.setCreateTime(new Date());
-
+                record.setInformationContent(imageUtiilService.backContent(record.getInformationContent()));
                 postInformationManageMapper.insertSelective(record);
 
             }
@@ -136,6 +137,7 @@ public class PostInformationManagerServiceImpl implements PostInformationManager
     }
 
     @Override
+    @Transactional
     public JsonResult updateByPrimaryKeySelective(PostInformationManage record, String picids) {
         JsonResult jsonResult = null;
         //设置主图

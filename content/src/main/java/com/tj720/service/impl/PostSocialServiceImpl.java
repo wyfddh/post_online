@@ -7,10 +7,14 @@ package com.tj720.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.tj720.controller.framework.JsonResult;
 import com.tj720.dao.PostSocialMapper;
+import com.tj720.dao.SysDepartmentMapper;
 import com.tj720.model.common.social.PostSocial;
+import com.tj720.model.common.system.department.SysDepartment;
 import com.tj720.service.PostSocialService;
+import com.tj720.service.ResAuthService;
 import com.tj720.utils.DateFormartUtil;
 import com.tj720.utils.Page;
+import com.tj720.utils.Tools;
 import com.tj720.utils.common.IdUtils;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang3.StringUtils;
@@ -29,6 +33,11 @@ public class PostSocialServiceImpl implements PostSocialService {
     @Autowired
     private PostSocialMapper postSocialMapper;
 
+    @Autowired
+    SysDepartmentMapper sysDepartmentMapper;
+
+    @Autowired
+    ResAuthService resAuthService;
     
     @Override
     public JsonResult deleteByPrimaryKey(String id) throws Exception{
@@ -50,9 +59,9 @@ public class PostSocialServiceImpl implements PostSocialService {
     }
 
     @Override
-    public JSONObject getSocials(String keywords, String orderBy,Integer currentPage, Integer size) throws Exception {
+    public JSONObject getSocials(String keywords, String orderBy,Integer currentPage, Integer size,String module) throws Exception {
         JSONObject jsonObject = new JSONObject();
-        try {
+//        try {
             Page page = new Page();
             page.setSize(size);
             page.setCurrentPage(currentPage);
@@ -64,25 +73,47 @@ public class PostSocialServiceImpl implements PostSocialService {
             if (StringUtils.isNotBlank(orderBy)){
                 map.put("orderBy",orderBy);
             }
-            //符合条件总数
-            Integer count = postSocialMapper.count(map);
-            page.setAllRow(count);
-            map.put("start",page.getStart());
-            map.put("end",page.getSize());
-            //查询分页数据
-            List<PostSocial> socialList = postSocialMapper.getSocials(map);
-            String jsonString = JSON.toJSONString(socialList);
-            jsonObject.put("code", 0);
-            jsonObject.put("msg", "");
-            jsonObject.put("count", page.getAllRow());
-            jsonObject.put("data", jsonString);
-        }catch (Exception e){
-            jsonObject.put("code", 1);
-            jsonObject.put("msg", e.getMessage());
-            jsonObject.put("count", 0);
-            jsonObject.put("data", null);
-        }
-        return jsonObject;
+            String userId = Tools.getUserId();
+//        JSONObject jsonObject = new JSONObject();
+            if (null != userId) {
+                try {
+                    SysDepartment deptById = sysDepartmentMapper.getDeptById(userId);
+                    String orgId = deptById.getDepartmentId();
+                    map.put("userId", userId);
+                    map.put("orgId", orgId);
+                    JsonResult jsonResult = resAuthService.getDataAuthRule(userId, module);
+                    String dataRule = (String) jsonResult.getData();
+                    if (dataRule.equals("")) {
+                        jsonObject.put("code", 0);
+                        jsonObject.put("msg", "");
+                        jsonObject.put("count", 0);
+                        jsonObject.put("data", null);
+                        return jsonObject;
+                    }
+                    map.put("dataRule", dataRule);
+                    map.put("userId", userId);
+                    //符合条件总数
+                    Integer count = postSocialMapper.count(map);
+                    page.setAllRow(count);
+                    map.put("start", page.getStart());
+                    map.put("end", page.getSize());
+                    //查询分页数据
+                    List<PostSocial> socialList = postSocialMapper.getSocials(map);
+                    String jsonString = JSON.toJSONString(socialList);
+                    jsonObject.put("code", 0);
+                    jsonObject.put("msg", "");
+                    jsonObject.put("count", page.getAllRow());
+                    jsonObject.put("data", jsonString);
+                } catch (Exception e) {
+                    jsonObject.put("code", 1);
+                    jsonObject.put("msg", e.getMessage());
+                    jsonObject.put("count", 0);
+                    jsonObject.put("data", null);
+                }
+                return jsonObject;
+            }else {
+                return jsonObject;
+            }
     }
 
     @Override
@@ -97,7 +128,7 @@ public class PostSocialServiceImpl implements PostSocialService {
             //record.setHoldTime(DateFormartUtil.string2DateSimple(record.getHoldTimeStr()));
             record.setCreateTime(new Date());
             record.setUpdateTime(new Date());
-            record.setCreator("sysadmin");
+            record.setCreator(Tools.getUserId());
             int count =   postSocialMapper.insertSelective(record);
             if (count >0){
                 return new JsonResult(1,null);
@@ -133,9 +164,9 @@ public class PostSocialServiceImpl implements PostSocialService {
             }
             if(StringUtils.isNotBlank(record.getId())){
                 record.setHoldTime(DateFormartUtil.string2DateSimple(record.getHoldTimeStr()));
-                record.setUpdater("sysadmin");
+                record.setUpdater(Tools.getUserId());
                 record.setUpdateTime(new Date());
-                int count =   postSocialMapper.updateByPrimaryKey(record);
+                int count =   postSocialMapper.updateByPrimaryKeySelective(record);
                 if (count >0){
                     return new JsonResult(1,null);
                 }

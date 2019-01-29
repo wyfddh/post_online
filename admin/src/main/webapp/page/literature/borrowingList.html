@@ -2,6 +2,7 @@
 <html>
 <head>
     <script src="../../statics/libs/jquery-1.10.2.min.js"></script>
+    <script src="../../statics/js/jquery.extend.js"></script>
     <link rel="stylesheet" href="../../statics/css/font-awesome.min.css">
     <!--layui ztree样式-->
     <link rel="stylesheet" href="../../statics/plugins/layui/css/layui.css" media="all">
@@ -25,10 +26,10 @@
                 <button class="layui-btn layui-btn-green" lay-submit="" lay-filter="moreSearch">
                     <i class="fa fa-chevron-up">&nbsp;</i>收起筛选
                 </button>
-                <button class="layui-btn search-btn myBtn"  lay-submit="" lay-filter="formDemo">
+                <button class="layui-btn search-btn myBtn layui-hide" id="search"  lay-submit="" lay-filter="formDemo">
                     <!--<i class="fa fa-search">&nbsp;</i>-->查询
                 </button>
-                <button type="reset" class="layui-btn myBtn"lay-filter="clear"><!--<i class="fa fa-refresh">&nbsp;</i>-->重置</button>
+                <button type="reset" class="layui-btn myBtn layui-hide" lay-filter="clear" id="reset"><!--<i class="fa fa-refresh">&nbsp;</i>-->重置</button>
             </div>
         </div>
         <div class="layui-card-body">
@@ -69,7 +70,7 @@
         </div>
         <div class="flexRight">
             <form action="" class="layui-form">
-                <button class="layui-btn myBtn" type="button" id="addNew" title="新增借阅"  data-url="page/literature/paperBorrowing.html">
+                <button class="layui-btn myBtn layui-hide" type="button" id="addNew" title="新增借阅"  data-url="page/literature/paperBorrowing.html">
                     新增借阅
                 </button>
 

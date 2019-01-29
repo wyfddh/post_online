@@ -27,7 +27,9 @@ public class RedisKeyExpiredListener extends JedisPubSub {
     @Override
     public void onPMessage(String pattern, String channel, String key) {
     	//自己判断 key是否需要进行处理
-        if(!key.startsWith("expire:")) return;
+        if(!key.startsWith("expire:")) {
+            return;
+        }
        
         //获取id
         int index = key.lastIndexOf(":");

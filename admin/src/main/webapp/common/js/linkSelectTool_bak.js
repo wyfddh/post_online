@@ -1,6 +1,5 @@
 /**
  * Created by 陈熠 on 2017/8/16
- * email   :  228112142@qq.com
  * 联动选择框控件
  */
 (function ($) {

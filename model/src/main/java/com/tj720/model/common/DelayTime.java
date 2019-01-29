@@ -6,9 +6,9 @@ package com.tj720.model.common;
  * @Date: 2018/11/3 20:07
  */
 public class DelayTime {
-    private final static long delayTime = 2*60*100;//两分钟
+    private final static long DELAT_TIME = 2*60*60*100;//两分钟
 
     public static long getDelayTime() {
-        return delayTime;
+        return DELAT_TIME;
     }
 }

@@ -7,6 +7,7 @@ import com.tj720.model.common.Attachment;
 import com.tj720.model.common.stampstory.PostStampStory;
 import com.tj720.model.common.themeshow.PostThemeShow;
 import com.tj720.service.AttachmentService;
+import com.tj720.service.ImageUtiilService;
 import com.tj720.service.PictureService;
 import com.tj720.service.PostStampStoryService;
 import com.tj720.utils.Page;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @ClassName: PostStampStoryServiceImpl
@@ -41,6 +43,9 @@ public class PostStampStoryServiceImpl implements PostStampStoryService{
     @Autowired
     private Config config;
 
+    @Autowired
+    ImageUtiilService imageUtiilService;
+
 
     @Override
     public JsonResult getStampStoryList(String storyType, String createTime,String orderBy,Page page) throws Exception{
@@ -56,13 +61,13 @@ public class PostStampStoryServiceImpl implements PostStampStoryService{
                 //获取图片url
                 postStampStory.setMainPicUrl("");
                 List<Attachment> picList = new ArrayList<Attachment>();
-                picList = attachmentService.getListByIds(postStampStory.getDatumIds());
+                picList = attachmentService.getFileTransPathList(postStampStory.getDatumIds());
                 for (Attachment attachment : picList) {
-                    if(! attachment.getAttPath().contains(config.getRootUrl())){
-                        attachment.setAttPath(config.getRootUrl()+attachment.getAttPath());
-                    }
+//                    if(! attachment.getAttPath().contains(CheckConfig.getRootUrl())){
+//                        attachment.setAttPath(CheckConfig.getRootUrl()+attachment.getAttPath());
+//                    }
 
-                    if (attachment.getIsMain().equals("1")){
+                    if ("1".equals(attachment.getIsMain())){
                         postStampStory.setMainPicUrl(attachment.getAttPath());
                         break;
                     }
@@ -85,17 +90,18 @@ public class PostStampStoryServiceImpl implements PostStampStoryService{
                 return new JsonResult(0,"参数错误");
             }
             PostStampStory postStampStory = postStampStoryMapper.selectByPrimaryKey(id);
+            postStampStory.setStoryContent(imageUtiilService.getContent(postStampStory.getStoryContent(),"1"));
             if(!StringUtils.isBlank(postStampStory.getDatumIds())){
                 //获取图片url
                 postStampStory.setMainPicUrl("");
                 List<Attachment> picList = new ArrayList<Attachment>();
-                picList = attachmentService.getListByIds(postStampStory.getDatumIds());
+                picList = attachmentService.getFileTransPathList(postStampStory.getDatumIds());
                 for (Attachment attachment : picList) {
-                    if(! attachment.getAttPath().contains(config.getRootUrl())){
-                        attachment.setAttPath(config.getRootUrl()+attachment.getAttPath());
-                    }
+//                    if(! attachment.getAttPath().contains(CheckConfig.getRootUrl())){
+//                        attachment.setAttPath(CheckConfig.getRootUrl()+attachment.getAttPath());
+//                    }
 
-                    if (attachment.getIsMain().equals("1")){
+                    if ("1".equals(attachment.getIsMain())){
                         postStampStory.setMainPicUrl(attachment.getAttPath());
                         break;
                     }
@@ -111,6 +117,7 @@ public class PostStampStoryServiceImpl implements PostStampStoryService{
     }
 
     @Override
+    @Transactional
     public JsonResult insertSelective(PostStampStory record,String picids){
         JsonResult jsonResult = null;
         //设置主图
@@ -121,6 +128,7 @@ public class PostStampStoryServiceImpl implements PostStampStoryService{
             record.setDatumIds(picids);
             record.setUpdater(userId );
             record.setUpdateTime(new Date());
+            record.setStoryContent(imageUtiilService.backContent(record.getStoryContent()));
             //新增
             if (StringUtils.isBlank(record.getId())) {
                 record.setId(IdUtils.getIncreaseIdByNanoTime());
@@ -141,6 +149,7 @@ public class PostStampStoryServiceImpl implements PostStampStoryService{
     }
 
     @Override
+    @Transactional
     public JsonResult updateByPrimaryKeySelective(PostStampStory record,String picids){
         JsonResult jsonResult = null;
         //设置主图
@@ -151,7 +160,7 @@ public class PostStampStoryServiceImpl implements PostStampStoryService{
             record.setDatumIds(picids);
             record.setUpdater(Tools.getUserId());
             record.setUpdateTime(new Date());
-
+            record.setStoryContent(imageUtiilService.backContent(record.getStoryContent()));
             postStampStoryMapper.updateByPrimaryKeySelective(record);
 
             jsonResult = new JsonResult(1);

@@ -216,9 +216,11 @@ public class DateFormartUtil {
 		SimpleDateFormat dafe=new SimpleDateFormat(daf);
 		return getDateByFormat(date,dafe);
 	}
-	public static String getDateByFormat(Date date,SimpleDateFormat daf){
-		String dateStr=daf.format(date);
-		return  dateStr;
+	public  static String getDateByFormat(Date date,SimpleDateFormat daf){
+		synchronized (DateFormartUtil.class){
+			String dateStr=daf.format(date);
+			return  dateStr;
+		}
 	}
 	public static String getDateByTimeMillis(Long str){
 		return getDateByTimeMillis(str.toString(),YYYY_MM_DD_HH_mm);

@@ -7,6 +7,7 @@ import com.github.pagehelper.StringUtil;
 import com.tj720.controller.framework.JsonResult;
 import com.tj720.dao.ResearchMapper;
 import com.tj720.model.common.research.Research;
+import com.tj720.service.ImageUtiilService;
 import com.tj720.service.ResearchService;
 import com.tj720.utils.Page;
 import com.tj720.utils.Tools;
@@ -21,6 +22,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @ClassName: ResearchServiceImpl
@@ -32,7 +34,8 @@ import java.util.Map;
 @Service
 public class ResearchServiceImpl implements ResearchService {
 
-
+    @Autowired
+    ImageUtiilService imageUtiilService;
 
 
     private Research setTimeInfo(Research research, String type) {
@@ -65,6 +68,7 @@ public class ResearchServiceImpl implements ResearchService {
         try {
             research = setTimeInfo(research, "0");
             research.setCreateTime(new Date());
+            research.setMsg(imageUtiilService.backContent(research.getMsg()));
             int count = researchMapper.insertSelective(research);
             if (count > 0) {
                 return new JsonResult(1, null);
@@ -81,6 +85,7 @@ public class ResearchServiceImpl implements ResearchService {
     public JsonResult updateResearch(Research research) {
         try {
             research = setTimeInfo(research, "1");
+            research.setMsg(imageUtiilService.backContent(research.getMsg()));
             int count = researchMapper.updateByPrimaryKeySelective(research);
             if (count == 1) {
                 return new JsonResult(1, null);
@@ -114,6 +119,7 @@ public class ResearchServiceImpl implements ResearchService {
                 return new JsonResult(0, "20000003");
             } else {
                 Research research = researchMapper.selectByPrimaryKey(id);
+                research.setMsg(imageUtiilService.getContent(research.getMsg(),"1"));
                 if (research.getId() != null) {
                     return new JsonResult(1, research);
                 } else {
@@ -176,11 +182,12 @@ public class ResearchServiceImpl implements ResearchService {
     }
 
     @Override
+    @Transactional
     public JsonResult updateResearchByIds(List<String> ids) {
         try {
             Integer size = ids.size();
             Integer i = researchMapper.updateResearchByIds(ids);
-            if (size == i) {
+            if (size.equals(i)) {
                 return new JsonResult(1, null);
             } else {
                 return new JsonResult(0, "41000014");

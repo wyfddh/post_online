@@ -107,5 +107,23 @@ public interface ResAuthService {
      * @param type
      * @return
      */
-    public JsonResult getFunctionByUser(String userId,String type);
+    public JsonResult getFunctionByUser(String userId,String type,String currentId);
+
+    /**
+     * 查询菜单
+     * @param userId
+     * @param type
+     * @return
+     */
+    public JsonResult getFunctionTreeByUser(String userId,String type,String currentId);
+
+    public JsonResult getFunctionTreeByRole(String roleId,String type,String currentId);
+
+    /**
+     * 查询数据权限规则
+     * @param userId 用户id
+     * @param module 所属模块
+     * @return
+     */
+    public JsonResult getDataAuthRule(String userId,String module);
 }

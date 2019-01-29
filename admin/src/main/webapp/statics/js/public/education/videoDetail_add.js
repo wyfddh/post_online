@@ -22,13 +22,13 @@ var main = {
                 var picStr1;
                 if (picList[i].isMain === "1") {
                     picStr1 = '<div class="img" id="img'+ picList[i].attId +'">'
-                        +'<div class="img1"><img src='+ picList[i].attPath +' alt="" ></div>'
+                        +'<div class="img1"><img src="'+ picList[i].attPath +'" alt="" ></div>'
                         +'<div class="img2"><span class="img3" type-isMain = ' + 1 + ' id="span'+ picList[i].attId +'" mark='+ picList[i].attId +' style="color:red">主图</span><span class="img4" mark='+ picList[i].attId +'>删除图片</span></div>'
                         +'</div>'
                     $("#isMain").val(picList[i].attId);
                 } else {
                     picStr1 = '<div class="img picDiv" id="img'+ picList[i].attId +'">'
-                        +'<div class="img1"><img src='+ picList[i].attPath +' alt="" ></div>'
+                        +'<div class="img1"><img src="'+ picList[i].attPath +'" alt="" ></div>'
                         +'<div class="img2"><span class="img3" type-isMain = ' + 0 + ' id="span'+ picList[i].attId +'" mark='+ picList[i].attId +'>更换主图</span><span class="img4" mark='+ picList[i].attId +'>删除图片</span></div>'
                         +'</div>'
                 }
@@ -90,9 +90,13 @@ var main = {
                 var url = 'education/addEducation.do';
                 var msg = '新增成功';
                 var arrays = $("#educationForm").serializeArray();
-                debugger;
-                datas.msg = arrays.filter(obj => obj.name === 'msg').map(obj => obj.value)[0];
 
+                /*datas.msg = arrays.filter(obj => obj.name === 'msg').map(obj => obj.value)[0];*/
+                datas.msg = arrays.filter(function (obj) {
+                    return obj.name === 'msg';
+                }).map(function (obj) {
+                    return obj.value;
+                })[0];
                 if (pageType == 'edit') {
                     datas.id = that.id;
                     url = 'education/updateEducation.do';
@@ -147,7 +151,6 @@ var main = {
                 // , url: '/upload/' //上传接口
                 , url: property.getProjectPath() + 'attach/cutPicture.do'
                 , done: function (res) {
-                    debugger;
                     //上传完毕回调
                 }
                 , error: function () {
@@ -192,7 +195,6 @@ var main = {
             //监听行工具事件
             table.on('tool(test)', function (obj) {
                 var data = obj.data;
-                //console.log(obj)
                 if (obj.event === 'del') {
                     layer.confirm('真的删除行么', function (index) {
                         obj.del();

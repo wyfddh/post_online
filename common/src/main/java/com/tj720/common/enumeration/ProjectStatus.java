@@ -12,8 +12,9 @@ public enum ProjectStatus {
 	
 	public static String getNameByValue(int status){
 		for(ProjectStatus projectStatus : ProjectStatus.values()){
-			if(projectStatus.getStatus() == status)
-				return projectStatus.getName();
+			if(projectStatus.getStatus() == status) {
+                return projectStatus.getName();
+            }
 		}
 		return "";
 	}

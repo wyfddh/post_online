@@ -2,6 +2,7 @@
 <html>
 <head>
     <script src="../../statics/libs/jquery-1.10.2.min.js"></script>
+    <script src="../../statics/js/jquery.extend.js"></script>
     <link rel="stylesheet" href="../../statics/css/font-awesome.min.css">
     <!--layui ztree样式-->
     <link rel="stylesheet" href="../../statics/plugins/layui/css/layui.css" media="all">
@@ -22,13 +23,13 @@
                 <span class="carFont">筛选查询</span>
             </div>
             <div class="layui-btn-group flexRight">
-                <button class="layui-btn layui-btn-green" lay-submit="" lay-filter="moreSearch">
+                <button class="layui-btn layui-btn-green " lay-submit="" lay-filter="moreSearch">
                     <i class="fa fa-chevron-down">&nbsp;</i>展开筛选
                 </button>
-                <button class="layui-btn search-btn myBtn"  lay-submit="" lay-filter="formDemo">
+                <button class="layui-btn search-btn myBtn layui-hide"  lay-submit="" lay-filter="formDemo" id="search">
                     <!--<i class="fa fa-search">&nbsp;</i>-->查询
                 </button>
-                <button type="reset" class="layui-btn myBtn" lay-submit="" lay-filter="clear"><!--<i class="fa fa-refresh">&nbsp;</i>-->重置</button>
+                <button type="reset" class="layui-btn myBtn layui-hide" lay-submit="" lay-filter="clear" id="reset"><!--<i class="fa fa-refresh">&nbsp;</i>-->重置</button>
             </div>
         </div>
         <div class="layui-card-body">
@@ -87,7 +88,7 @@
         </script>
         <script type="text/html" id="toolbarDemo">
             <div class="layui-btn-container">
-                <button class="layui-btn layui-btn-sm" lay-event="batchDownload">批量下载</button>
+                <button class="layui-btn layui-btn-sm layui-hide" id="batchDownload" lay-event="batchDownload">批量下载</button>
             </div>
         </script>
         <script type="text/html" id="barDemo">

@@ -480,6 +480,21 @@
     where r.party_id = #{userId}
     and r.party_type = 'user'
     and f.type = #{type}
+    <if test="currentId != null and currentId != ''">
+        and f.parentId = #{currentId}
+    </if>
+  </select>
+
+  <select id="getFunctionByRole" resultMap="BaseResultMap1">
+    select f.* from
+     sys_res_auth s
+    left join sys_function f
+    on s.function_id = f.id
+    where s.role_id = #{roleId}
+    and f.type = #{type}
+    <if test="currentId != null and currentId != ''">
+      and f.parentId = #{currentId}
+    </if>
   </select>
 
   <delete id="deleteByRoleId" parameterType="java.lang.String">
@@ -494,14 +509,36 @@
 
   <select id="selectByMap" resultMap="BaseResultMap" parameterType="java.util.Map">
     select
-    <include refid="Base_Column_List" />
-    from sys_res_auth
+    s.id, s.role_id, s.function_id, f.type as function_type, s.sort, s.remark, s.status, s.creator, s.updater,
+    s.create_time, s.update_time, s.ext1, s.ext2, s.ext3
+    from sys_res_auth s left join sys_function f on (f.id = s.function_id)
     where 1=1
     <if test="roleId != null and roleId != ''">
-      and role_id = #{roleId}
+      and s.role_id = #{roleId}
     </if>
     <if test="functionId != null and functionId != ''">
-      and function_id = #{functionId}
+      and s.function_id = #{functionId}
     </if>
+    <if test="type != null and type != ''">
+      and f.type = #{type}
+    </if>
+  </select>
+
+  <select id="getDataRule" resultMap="BaseResultMap1">
+     select
+      f.id, f.functionName, f.functionUrl, f.parentId, f.iconRemark, f.type, f.creator, f.updater, f.create_time,
+      f.update_time, f.status, f.sort, f.ext1, f.ext2, f.ext3
+      from sys_res_auth s left join sys_function f on (f.id = s.function_id)
+      where 1=1
+      <if test="module != null and module !=''">
+          and f.parentid = #{module}
+      </if>
+    <if test="type != null and type !=''">
+      and f.type = #{type}
+    </if>
+      <if test="roleId != null and roleId !=''">
+        and s.role_id = #{roleId}
+      </if>
+
   </select>
 </mapper>

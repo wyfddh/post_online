@@ -4,6 +4,7 @@ import com.tj720.controller.framework.JsonResult;
 import com.tj720.controller.springbeans.Config;
 import com.tj720.dao.SysFunctionMapper;
 import com.tj720.dao.SysResAuthMapper;
+import com.tj720.dao.SysRoleAuthMapper;
 import com.tj720.dao.SysUserMapper;
 import com.tj720.model.common.system.menu.*;
 import com.tj720.model.common.system.role.SysRoleAuth;
@@ -15,6 +16,7 @@ import com.tj720.utils.Tools;
 import com.tj720.utils.common.IdUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.text.SimpleDateFormat;
@@ -27,7 +29,6 @@ import java.util.*;
 @Service
 public class ResAuthServiceImpl implements ResAuthService{
     //    private static String userId = Tools.getUserId();
-    private static String userId = "sysadmin";
     @Autowired
     SysResAuthMapper sysResAuthMapper;
     @Autowired
@@ -50,11 +51,11 @@ public class ResAuthServiceImpl implements ResAuthService{
         }catch (Exception e){
             e.printStackTrace();
         }
-        sysResAuth.setUpdater(userId);
+        sysResAuth.setUpdater(Tools.getUserId());
         sysResAuth.setUpdateTime(date);
         if (type == "0"){
             sysResAuth.setCreateTime(date);
-            sysResAuth.setCreator(userId);
+            sysResAuth.setCreator(Tools.getUserId());
         }
         return sysResAuth;
     }
@@ -111,6 +112,7 @@ public class ResAuthServiceImpl implements ResAuthService{
     }
 
     @Override
+    @Transactional
     public JsonResult batchUpdateResAuth(String roleId, List<HashMap<String, String>> res) {
         //删除原有权限
 //        SysResAuthExample example = new SysResAuthExample();
@@ -323,13 +325,13 @@ public class ResAuthServiceImpl implements ResAuthService{
 //        SysFunction collect = new SysFunction();
 //        collect.setId("-1");
 //        collect.setFunctionname("藏品");
-//        collect.setFunctionurl(config.getInterfaceCollectPath() + "/loginController.do?login&u_=" + user.getUserName() + "&p_=" + user.getPassword());
+//        collect.setFunctionurl(CheckConfig.getInterfaceCollectPath() + "/loginController.do?login&u_=" + user.getUserName() + "&p_=" + user.getPassword());
 //        result.add(collect);
         List<SysFunction> functions = (List<SysFunction>)roleAuthList.getData();
         for (SysFunction function : functionList) {
             for (SysFunction sysFunction : functions) {
                 if (sysFunction.getId().equals(function.getId())){
-                    if (sysFunction.getFunctionname().equals("藏品")){
+                    if ("藏品".equals(sysFunction.getFunctionname())){
                         function.setId("-1");
                         function.setFunctionurl(config.getInterfaceCollectPath() + "/loginController.do?login&u_=" + user.getUserName() + "&p_=" + user.getPassword());
                     }
@@ -349,13 +351,112 @@ public class ResAuthServiceImpl implements ResAuthService{
      * @return
      */
     @Override
-    public JsonResult getFunctionByUser(String userId, String type) {
+    public JsonResult getFunctionByUser(String userId, String type,String currentId) {
         try {
-            List<SysFunction> functionByUser = sysResAuthMapper.getFunctionByUser(userId, type);
+            List<SysFunction> functionByUser = sysResAuthMapper.getFunctionByUser(userId, type,currentId);
             return new JsonResult(1,functionByUser);
         }catch (Exception e){
             e.printStackTrace();
             return new JsonResult("200309");
+        }
+    }
+
+    /**
+     * 查询菜单
+     *
+     * @param userId
+     * @param type
+     * @return
+     */
+    @Override
+    public JsonResult getFunctionTreeByUser(String userId, String type,String currentId) {
+        try {
+            List<SysFunction> functionByUser = sysResAuthMapper.getFunctionByUser(userId, type,currentId);
+            List<HashMap<String,Object>> list = new ArrayList<HashMap<String,Object>>();
+            for (SysFunction sysFunction : functionByUser) {
+                HashMap<String,Object> temp = new HashMap<String,Object>();
+                temp.put("key",sysFunction.getId());
+                temp.put("label",sysFunction.getFunctionname());
+                list.add(temp);
+            }
+            return new JsonResult(1,list);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new JsonResult("200309");
+        }
+    }
+
+    /**
+     * 查询菜单
+     *
+     * @param userId
+     * @param type
+     * @return
+     */
+    @Override
+    public JsonResult getFunctionTreeByRole(String userId, String type,String currentId) {
+        try {
+            List<SysFunction> functionByUser = sysResAuthMapper.getFunctionByRole(userId, type,currentId);
+            List<HashMap<String,Object>> list = new ArrayList<HashMap<String,Object>>();
+            for (SysFunction sysFunction : functionByUser) {
+                HashMap<String,Object> temp = new HashMap<String,Object>();
+                temp.put("key",sysFunction.getId());
+                temp.put("label",sysFunction.getFunctionname());
+                list.add(temp);
+            }
+            return new JsonResult(1,list);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new JsonResult("200309");
+        }
+    }
+
+    /**
+     * 查询数据权限规则
+     *
+     * @param userId 用户id
+     * @param module 所属模块
+     * @return
+     */
+    @Override
+    public JsonResult getDataAuthRule(String userId, String module) {
+        //综合查询
+        if (module.equals("-2")){
+            return new JsonResult(1,"3");
+        }
+        JsonResult jsonResult = roleAuthService.getRoleAuthList(userId,"user");
+
+        if(jsonResult.getSuccess()==1){
+            List<SysRoleAuth> roleAuths = (List<SysRoleAuth>)jsonResult.getData();
+            String auth = "";
+            if (null != roleAuths && roleAuths.size()>0){
+                HashMap<String,Object> condition = new HashMap<String,Object>();
+                condition.put("type","2");
+                condition.put("module",module);
+                for (SysRoleAuth roleAuth : roleAuths) {
+                    String roleId = roleAuth.getRoleId();
+                    condition.put("roleId",roleId);
+                    List<SysFunction> functions = sysResAuthMapper.getDataRule(condition);
+                    if(null != functions && functions.size()>0){
+                        for (SysFunction function : functions) {
+                            if (function.getFunctionurl().equals("1")){
+                                auth = function.getFunctionurl();
+                                continue;
+                            }else if (function.getFunctionurl().equals("2")){
+                                auth = function.getFunctionurl();
+                                continue;
+                            }else {
+                                auth = function.getFunctionurl();
+                                break;
+                            }
+                        }
+                    }
+
+                }
+            }
+            return new JsonResult(1,auth);
+        }else {
+            return jsonResult;
         }
     }
 }

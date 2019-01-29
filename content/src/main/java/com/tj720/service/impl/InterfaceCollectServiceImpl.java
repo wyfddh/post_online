@@ -8,7 +8,6 @@ import com.tj720.model.common.interfacecollect.InterfaceCollect;
 import com.tj720.model.common.interfacecollect.InterfaceCollectType;
 import com.tj720.service.InterfaceCollectService;
 import com.tj720.utils.HttpPostGet;
-import com.tj720.utils.Tools;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,12 +52,12 @@ public class InterfaceCollectServiceImpl implements InterfaceCollectService {
         header.put("CONTENT_TYPE", HttpPostGet.ACCEPT_JSON);
         try {
             StringBuilder url = new StringBuilder(config.getInterfaceCollectPath()).append("/icmsApi/icmsRestController/getShareCulList?pageIndex=1&pageSize=200");
-//            if (StringUtils.isNotBlank(culCategory)) {
-//                url.append("&culCategory=").append(culCategory);
-//            }
-//            if (StringUtils.isNotBlank(culName)) {
-//                url.append("&culName=").append(culName);
-//            }
+            if (StringUtils.isNotBlank(culCategory)) {
+                url.append("&classificationno=").append(culCategory);
+            }
+            if (StringUtils.isNotBlank(culName)) {
+                url.append("&culName=").append(culName);
+            }
             String res = HttpPostGet.get(url.toString(), null, header);
             JSONObject jsonObject = JSONObject.parseObject(res);
             Integer status = jsonObject.getInteger("status");
@@ -66,31 +65,43 @@ public class InterfaceCollectServiceImpl implements InterfaceCollectService {
                 if (status != 0) {
                     return new JsonResult(0, null, "150000001");
                 } else {
-                    List<InterfaceCollect> collects = JSONArray.parseArray(jsonObject.getString("data"), InterfaceCollect.class);
-                    List<InterfaceCollect> resultList = new ArrayList<InterfaceCollect>();
-                    for (InterfaceCollect collect : collects) {
-                        if (!StringUtils.isEmpty(culCategory)){
-                            if (!StringUtils.isEmpty(culName)){
-                                if (culName.equals(collect.getCulName())){
-                                    resultList.add(collect);
-                                }
-                            }else{
-                                if (culCategory.equals(collect.getCulCategory())){
-                                    resultList.add(collect);
-                                }
-                            }
-                        }else{
-                            if (!StringUtils.isEmpty(culName)){
-                                if (culName.equals(collect.getCulName())){
-                                    resultList.add(collect);
-                                }
-                            }else {
-                                resultList.add(collect);
-                            }
+                    net.sf.json.JSONArray array = net.sf.json.JSONArray.fromObject(jsonObject.getString("data"));
+                    List<Map<String, Object>> tcList = new ArrayList<Map<String, Object>>();
+                    for (int i = 0; i < array.size(); i++) {
+                        net.sf.json.JSONObject arrayJSONObject = array.getJSONObject(i);
+                        Map<String, Object> map1 = new HashMap<String, Object>();
+                        for (Iterator<?> iter = arrayJSONObject.keys(); iter.hasNext(); ) {
+                            String key = (String) iter.next();
+                            Object value = arrayJSONObject.get(key);
+                            map1.put(key, value);
                         }
-
+                        tcList.add(map1);
                     }
-                    JsonResult result = new JsonResult(1, resultList);
+
+//                    List<InterfaceCollect> resultList = new ArrayList<InterfaceCollect>();
+//                    for (InterfaceCollect collect : collects) {
+//                        if (!StringUtils.isEmpty(culCategory)){
+//                            if (!StringUtils.isEmpty(culName)){
+//                                if (culName.equals(collect.getCulName())){
+//                                    resultList.add(collect);
+//                                }
+//                            }else{
+//                                if (culCategory.equals(collect.getCulCategory())){
+//                                    resultList.add(collect);
+//                                }
+//                            }
+//                        }else{
+//                            if (!StringUtils.isEmpty(culName)){
+//                                if (culName.equals(collect.getCulName())){
+//                                    resultList.add(collect);
+//                                }
+//                            }else {
+//                                resultList.add(collect);
+//                            }
+//                        }
+//
+//                    }
+                    JsonResult result = new JsonResult(1, tcList);
                     result.setCode(0);
                     return result;
                 }
@@ -123,7 +134,7 @@ public class InterfaceCollectServiceImpl implements InterfaceCollectService {
         }
         return new JsonResult(0, null, "150000002");
     }
-
+    @Override
     public Map<String, Object> getShareCulFieldAndDataList(String keyWord, Integer pageIndex, Integer pageSize) {
         Map<String, Object> result = new HashMap<String, Object>(4);
         result.put("code", 1);

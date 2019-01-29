@@ -81,7 +81,7 @@ public class PostVolunteerActivitiesController extends BaseController {
      */
     @ControllerAop(action = "获取单个活动信息")
     @RequestMapping("/getActivitiesById")
-    private JsonResult getActivitiesById(String id) {
+    public JsonResult getActivitiesById(String id) {
         try {
             return postVolunteerActivitiesService.getActivitiesById(id);
         } catch (Exception e) {
@@ -97,7 +97,7 @@ public class PostVolunteerActivitiesController extends BaseController {
      */
     @ControllerAop(action = "修改志愿者活动")
     @RequestMapping("/updateActivities")
-    private JsonResult updateActivities(@RequestBody PostVolunteerActivities postVolunteerActivities) {
+    public JsonResult updateActivities(@RequestBody PostVolunteerActivities postVolunteerActivities) {
         try {
             return postVolunteerActivitiesService.updateActivities(postVolunteerActivities);
         } catch (Exception e) {
@@ -115,8 +115,8 @@ public class PostVolunteerActivitiesController extends BaseController {
      */
     @ControllerAop(action = "查询志愿者申请列表")
     @RequestMapping("/getVolunteerApplyList")
-    private LayUiTableJson getVolunteerApplyList(@RequestParam String id,@RequestParam(defaultValue = "1") Integer currentPage
-            ,@RequestParam(defaultValue = "10") Integer size) {
+    public LayUiTableJson getVolunteerApplyList(@RequestParam String id,@RequestParam(defaultValue = "1") Integer
+            currentPage,@RequestParam(defaultValue = "10") Integer size) {
         try {
             Page page = new Page();
             page.setCurrentPage(currentPage);

@@ -2,6 +2,7 @@
 <html>
 <head>
     <script src="../../statics/libs/jquery-1.10.2.min.js"></script>
+    <script src="../../statics/js/jquery.extend.js"></script>
     <link rel="stylesheet" href="../../statics/css/font-awesome.min.css">
     <!--layui ztree样式-->
     <link rel="stylesheet" href="../../statics/plugins/layui/css/layui.css" media="all">
@@ -15,6 +16,18 @@
     <script src="../../statics/plugins/editgrid/plugin/My97DatePicker/WdatePicker.js" type="text/javascript" charset="utf-8"></script>
 
     <script src="../../statics/plugins/echarts/echarts.js"></script>
+    <style>
+        .layui-card .layui-btn {
+            color: #666;
+            width: 100px;
+            height: 35px;
+            background: rgba(255,255,255,1);
+             border-radius: 0!important;
+            border: 1px solid rgba(29,116,78,1);
+            line-height: 35px;
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
 <div class="layui-card">
@@ -42,11 +55,14 @@
                         <div class="oneBody">
                             <ul class="myTable">
                                 <li class="layui-row">
+                                    <input type="text" name="watermarkPath" id="watermarkPath"   autocomplete="off" class="layui-hide">
+
                                     <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">水印设置</div>
                                     <div class="layui-form-item m0 layui-col-md10 layui-col-sm6">
                                         <div class="layui-input-inline">
-                                            <input type="radio" name="watermarkStatus" value="0" title="关闭" checked="">
-                                            <input type="radio" name="watermarkStatus" value="1" title="开启">
+
+                                            <input type="radio" name="watermarkStatus" lay-filter="watermarkStatus" value="0" title="关闭" checked="">
+                                            <input type="radio" name="watermarkStatus" lay-filter="watermarkStatus" value="1" title="开启">
                                         </div>
                                         <div class="layui-input-inline">
                                             <button type="button" class="layui-btn" id="upload" style="width: auto!important;margin: 10px">
@@ -62,8 +78,11 @@
                                     <div class="layui-inline layui-col-md2 layui-col-sm2 tableTR">版权设置</div>
                                     <div class="layui-form-item m0 layui-col-md10 layui-col-sm6">
                                         <div class="layui-input-inline">
-                                            <input type="radio" name="copyrightStatus" value="0" title="关闭" checked="">
-                                            <input type="radio" name="copyrightStatus" value="1" title="开启">
+                                            <input type="radio" name="copyrightStatus" lay-filter="copyrightStatus" value="0" title="关闭">
+                                            <input type="radio" name="copyrightStatus" lay-filter="copyrightStatus" value="1" title="开启">
+                                        </div>
+                                        <div class="layui-input-inline">
+                                            <input type="text" name="copyrightContent" id="copyrightContent"  PLACEHOLDER="请输入"  autocomplete="off" class="layui-input">
                                         </div>
                                     </div>
                                 </li>
@@ -74,7 +93,7 @@
 
                 <div class="layui-form-item mt34">
                     <div class="layui-input-block bodyBtn">
-                        <button id="submit" class="layui-btn" lay-submit lay-filter="formSubmit">保存</button>
+                        <button id="submit" class="layui-btn" >保存</button>
                         <button id="cancel" class="layui-btn layui-btn-primary">取消</button>
                     </div>
                 </div>

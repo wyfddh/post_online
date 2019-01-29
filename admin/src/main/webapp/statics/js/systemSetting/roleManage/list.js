@@ -41,7 +41,7 @@ var main = {
                         if (result.success == 1) {
                             // loadTable();
                             successMsg("操作成功");
-                        } else {
+                        } else if (result.success == 0){
                             errorMsg(result.error.message);
                         }
                     },
@@ -94,7 +94,7 @@ function loadTable() {
                             if (result.success == 1) {
                                 successMsg("删除角色成功");
                                 loadTable();
-                            } else {
+                            } else if (result.success == 0){
                                 errorMsg(result.error.message);
                             }
                         },

@@ -86,7 +86,7 @@
           </button>
           <label class="btn btn-primary btn-upload btn-sm" for="inputImage" title="Upload image file">
             <form id="registerForm" enctype="multipart/form-data"  method="post" action=""> <!-- class="sr-only" id="inputImage" -->
-              <input type="file" name="file" class="sr-only" id="inputImage" accept=".jpg,.jpeg,.png,.gif,.bmp,.tiff">
+              <input type="file" name="file" class="sr-only" id="inputImage" accept=".jpg,.jpeg,.png,.gif,.bmp,.tiff" onchange="verificationPicFile(this)">
               <input type="hidden" id="tailor" name="tailor" vlaue="" >
               <input type="hidden" id="cezhan_id" name="id" vlaue="" >
               <input type="hidden" id="num" name="num" vlaue="" >
@@ -216,7 +216,7 @@
                         parent.layui.layer.close(cropIndex);
                         //              把标题和图片清空
                     } else {
-                        console.log(result.error.message);
+//                        console.log(result.error.message);
                         layer.alert(result.error.message, {icon: 0});
                         /*layer.alert(result.data,{
                          icon: 0,
@@ -225,7 +225,7 @@
                     }
                 },
                 error: function (errData) {
-                    console.log(errData);
+//                    console.log(errData);
                 }
             });
         })
@@ -238,6 +238,28 @@
         }
     })
 
+    function verificationPicFile(file) {
+        var fileTypes = [".jpg",".jpeg",".png",".gif",".bmp",".tiff"];
+        var filePath = file.value;
+        //当括号里面的值为0、空字符、false 、null 、undefined的时候就相当于false
+        if(filePath){
+            var isNext = false;
+            var fileEnd = filePath.substring(filePath.lastIndexOf("."));
+            for (var i = 0; i < fileTypes.length; i++) {
+                if (fileTypes[i] == fileEnd) {
+                    isNext = true;
+                    break;
+                }
+            }
+            if (!isNext){
+                alert('不接受此文件类型');
+                file.value = "";
+                return false;
+            }
+        }else {
+            return false;
+        }
+    }
 </script>
 </body>
 </html>

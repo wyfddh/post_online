@@ -81,7 +81,6 @@ var main={
             });
             table.on('tool(test)', function(obj){
                 var data = obj.data;
-                //console.log(obj)
                 if(obj.event === 'detail'){
                     localStorage.videoId = data.id;
                     localStorage.pageType = "detail";
@@ -102,7 +101,6 @@ var main={
 
             table.on('tool(test)', function(obj){
                 var data = obj.data;
-                //console.log(obj)
                 if(obj.event === 'detail'){
                     localStorage.videoId = data.id;
                     localStorage.pageType = "detail";
@@ -182,7 +180,7 @@ function getDictData() {
             if (result.code == 0) {
                 videoMarkList = result.data;
             } else {
-                errorMsg(result.message);
+                errorMsg();
             }
         },
         error:function(result) {

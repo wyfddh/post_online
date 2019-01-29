@@ -1,5 +1,5 @@
-var typeList = [{"value":0,"text":"菜单"},{"value":1,"text":"按钮"}];
-var parentidList = [{"value":0,"text":"菜单"},{"value":1,"text":"按钮"}];
+var typeList = [{"value":0,"text":"菜单"},{"value":1,"text":"按钮"},{"value":2,"text":"其他"}];
+var parentidList = [{"value":0,"text":"菜单"},{"value":1,"text":"按钮"},{"value":2,"text":"其他"}];
 var main={
 
     init:function () {
@@ -51,9 +51,7 @@ function loadTable() {
         var table = layui.table;
         var layer = layui.layer;
         var treetable = layui.treetable;
-        debugger;
         var type = $("#typeSelect").val();
-        console.log(type);
         var functionName = $("#functionName").val();
         // 渲染表格
         var renderTable = function () {
@@ -88,7 +86,6 @@ function loadTable() {
 
         table.on('tool(test)', function(obj){
             var data = obj.data;
-            //console.log(obj)
             if(obj.event === 'del'){
                 layer.confirm('您确定要删除么', function(index){
                     // obj.del();
@@ -136,7 +133,7 @@ function deleteMenu(id) {
             if (result.success == 1) {
                 successMsg("删除功能成功");
                 loadTable();
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.error.message);
             }
         },
@@ -157,7 +154,7 @@ function getDictData() {
             if (result.success == 1) {
                typeList = result.data.typeList;
                parentidList = result.data.typeList;
-            } else {
+            } else if (result.success == 0){
                 errorMsg(result.error.message);
             }
         },

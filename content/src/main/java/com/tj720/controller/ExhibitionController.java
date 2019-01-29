@@ -81,9 +81,9 @@ public class ExhibitionController {
      */
     @ControllerAop(action = "查询展陈列表")
     @RequestMapping("/getListExhibition")
-    public JSONObject getListExhibition(String name, String planTime, @RequestParam(defaultValue = "1") String orderBy,
+    public JSONObject getListExhibition(String name, String planTime, @RequestParam(defaultValue = "1") String orderBy,@RequestParam String module,
                                         @RequestParam(defaultValue = "1") Integer currentPage, @RequestParam(defaultValue = "10") Integer size) {
-        return exhibitionService.getListExhibition(name, planTime, orderBy, currentPage, size);
+        return exhibitionService.getListExhibition(name, planTime, orderBy, currentPage, size,module);
     }
 
     /**

@@ -81,6 +81,16 @@ public interface WebInterfaceService{
     JsonResult  themeshowWebList(String themeName,String themeSource,String userId,String id,Integer currentPage,
                                  Integer size) throws Exception;
 
+    JsonResult getThemShow(String id);
+
+
+
+    /**
+     * 查询主题展览集合(主题展页面显示)
+     */
+    JsonResult  themeshowWebRelationList(String themeName,String themeSource,String userId,String id,Integer
+            currentPage, Integer size) throws Exception;
+
 
 
 

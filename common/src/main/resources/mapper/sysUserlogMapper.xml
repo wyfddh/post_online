@@ -35,7 +35,10 @@
       and user_name like concat('%',#{username},'%')
     </if>
     <if test="logintime != null and logintime !=''">
-      and  date(login_time) = #{logintime}
+      and  login_time &gt;= #{logintime}
+    </if>
+    <if test="endTime != null and endTime !=''">
+      and  login_time &lt;= #{endTime}
     </if>
     order by login_time desc
     <if test="start != null and end != null">

@@ -28,10 +28,14 @@ public class Const {
 	public static final String AUTH_LOG = "LOG";
 	public static final String AUTH_PROJECT = "PROJECT_";
 	// 缓存
+
+	public static final String LOGIN_FLAG=":loginFlag";//登陆标志
 	public static final String CACHE_USER= ":user";// 用户登录信息
 	public static final String CACHE_CUSER= ":cuser";// 企业用户登录信息
 	public static final String CACHE_IMGCODE = ":imgCode";
 	public static final String CACHE_IMGCODE_TIMES = ":imgCodeTimes";
+	public static final String CACHE_ADMIN_IMGCODE = ":adminImgCode";
+	public static final String CACHE_ADMIN_IMGCODE_TIMES = ":adminImgCodeTimes";
 	//public static final String CACHE_TEMP_PWD = ":tempPwd";
 	public static final String CACHE_TEMP_MM = ":tempPwd";
 	public static final String CACHE_SEARCH_WORDS = ":searchWords";
@@ -60,7 +64,7 @@ public class Const {
 	public static final String COOKIE_CUSERID = "cookieCUserId";
 	public static final String COOKIE_USERNAME = "cookieUserName";
 	public static final String COOKIE_PHONE = "cookiePhone";
-	public static final String COOKIE_PASSWORD = "cookiePassword";
+	public static final String COOKIE_INFO = "cookiePassword";
 	public static final String COOKIE_TOKEN= "token";
 	public static final String COOKIE_UUID = "uuid";
 	public static final String COOKIE_DEPTID = "cookieDeptId";

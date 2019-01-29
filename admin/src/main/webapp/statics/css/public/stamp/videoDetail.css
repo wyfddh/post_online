@@ -165,7 +165,7 @@ th>div,td>div{
     line-height: 50px;
 }
 .oneBody .layui-row input{
-    margin: 10px 0;
+    /*margin: 10px 0;*/
 }
 .tableTR{
     text-align: left;

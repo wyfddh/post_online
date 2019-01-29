@@ -2,6 +2,7 @@
  * author: zhangwei
  * 用户管理列表
  */
+var projectName = property.getProjectPath();
 var main = {
 
     init: function() {
@@ -22,13 +23,14 @@ var main = {
     tabBind: function() {
         var that = this;
 
-        layui.use(['form'], function () {
-            var form = layui.form;
+        layui.use(['form', 'table'], function () {
+          var table = layui.table,
+              form = layui.form;
             //监听查询
             form.on('submit(formDemo)', function(data){
                 // layer.msg(JSON.stringify(data.field))
                 var name = $("#userOrName").val();
-                var dept = $("#selectDept").val();
+                var dept = $("#department").val();
                 var datas = {"name": name, "departmentName": dept};
                 loadTable(datas);
                 return false;
@@ -68,8 +70,12 @@ var main = {
 
             //监听重置
             $("[type='reset']").click(function () {
-                $(this).parents(".layui-form").find("input").val("");
-                $(this).prev().click();
+
+              $(this).parents(".layui-form").find("input").val("");
+              $(this).parents(".layui-form").find("select").val("");
+              form.render();
+              loadTable();
+              return false;
             });
 
 
@@ -104,6 +110,24 @@ function  getSelectData(data){
         orderType = property.getDictData('order_by');
         var orderTypeSelect = component.getSelectSimplePlus(orderType, null, 'orderBy', 'dictCode', 'dictName');
         $("#orderBy").append(orderTypeSelect);
+
+      $.ajax({
+        type:'post',
+        url:projectName + '/sysdepartment/getDeptOptions.do',
+        contentType:"application/json; charset=utf-8",
+        success:function(res) {
+          if (res.code == 0) {
+            var list = res.data;
+            var departmentStr = "";
+            for(var j = 0;j < list.length;j++) {
+              departmentStr +="<option value='"+list[j].departmentId+"' >"+list[j].departmentName+"</option>"
+            }
+            $("#department").append(departmentStr);
+            form.render();
+          }
+        }
+      });
+
         form.render('select');
     });
 }
@@ -120,7 +144,7 @@ function loadTable(){
         var form = layui.form;
         var util = layui.util;
         var  name  =  $("#userOrName").val();
-        var  departmentName  =  $("#selectDept").val();
+        var  departmentName  =  $("#department").val();
         var  orderBy  =  $("#orderBy").val();
         table.render({
             elem: '#test'
@@ -149,13 +173,14 @@ function loadTable(){
                 ,{title:'操作', toolbar: '#barDemo', width:200}
             ]]
             ,page: true
+            ,id : "userListTable"
         });
 
         //监听行工具事件
         table.on('tool(test)', function(obj){
             var data = obj.data;
             if(obj.event === 'del') {
-                layer.confirm('真的删除行么', function(index){
+                layer.confirm('确定要删除么',{icon:3, title:'删除确认'}, function(index){
                     var objs = {'id': data.id};
                     var msg = "删除用户成功";
                     var datas = yc.ajaxGetByParams('sysUser/deleteSysUserById', objs, null, msg);

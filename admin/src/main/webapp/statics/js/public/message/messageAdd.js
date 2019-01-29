@@ -83,7 +83,7 @@ var main = {
                                 successMsg("添加资讯管理成功");
                             }
                             parent.$t.goback("page/public/message/list.html");
-                        } else {
+                        } else if (result.success == 0){
                             //top.layer.msg(result.error.message);
                             errorMsg("操作资讯管理数据异常");
                         }
@@ -98,7 +98,6 @@ var main = {
 
             //更换图片
             $('.picture').on("click",".img3",function(){
-                debugger
                 $('.uploadBtn').click();
 
             })
@@ -162,7 +161,6 @@ var main = {
                    ,xhr:xhrOnProgress
                     ,progress:function(index,value){//上传进度回调 value进度值
                         element.progress('progressBar'+index, value+'%')//设置页面进度条
-                        console.log(e,value);
                     }
                     ,bindAction: '#testListAction'
                     ,choose: function(obj){
@@ -257,7 +255,7 @@ function loadData(id) {
                 if (result.success == 1) {
                     getSelectData(result.data);
                     setFormData(result.data);
-                } else {
+                } else if (result.success == 0) {
                     //top.layer.msg(result.error.message);
                     errorMsg("操作数据异常");
                 }
@@ -318,7 +316,7 @@ function setFormData(data) {
         for (var i = 0;i < picList.length;i++) {
             var picStr1;
             picStr1 = '<div class="img picDiv" id="img'+ picList[i].attId +'">'
-                +'<div class="img1"><img src='+ picList[i].attPath +' alt="" ></div>'
+                +'<div class="img1"><img src="'+ picList[i].attPath +'" alt="" ></div>'
                 +'<div class="img2"><span class="img3" id="span'+ picList[i].attId +'" mark='+ picList[i].attId +'>更换图片</span><span class="img4" mark='+ picList[i].attId +'>删除图片</span></div>'
                 +'</div>'
 
